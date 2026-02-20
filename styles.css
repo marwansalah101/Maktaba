@@ -48,18 +48,24 @@ body {
 }   
 
 .sign-in-button {
-    background-color: transparent;
-    color: #706f6f;
+    background-color: rgb(245, 245, 249);
+    color: #1b1b1b;
     padding: 5px 15px;
-    text-decoration: none;
+    text-decoration:none;
     font-size: 18px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     border: none;
+  border-radius: 20px ;
+   font-family: 'Times New Roman', Times, serif;
+
+
+   
+   
 }
 .sign-in-button:hover {
-    background-color: #a8d1e0;
-    color: #c1c8c8;
+    background-color: #a8acad;
+    color: #c1c3c3;
     text-decoration: none;
 }
