@@ -4,3 +4,45 @@ body {
     margin: 0;
     overflow-x: hidden;
 }
+.navbar {
+    DISPLAY: flex;   
+    padding: 10px 15px -5px;
+    margin:0px;
+    background-color: transparent;
+    list-style-type: none;
+    overflow:hidden;
+    justify-content: center;
+} 
+.navbar ul li a{
+    text-decoration: none;
+    color: #c1c8c8;
+    display:text;
+    text-align: right;
+    justify-content: space-evenly;
+    font-size: 18px;
+}
+#Maktaba a{
+   text-decoration: none;
+    color: #d4d3d3;
+    display:text;
+    text-align: left;
+    justify-content: space-evenly;
+    font-size: 40px;
+    font-weight: bold;
+    font: Times New Roman (serif);
+}
+.navbar  li{
+    display: inline-block;
+    text-align: right;
+    padding: 15px 15px 8px 15px;
+}
+.navbar a:hover{
+    color: #706f6f;
+    text-decoration: underline;
+}
+.right{
+  margin-left: auto;
+}
+.left{
+    margin-right: auto;
+}   
