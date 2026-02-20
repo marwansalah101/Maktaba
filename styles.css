@@ -46,3 +46,20 @@ body {
 .left{
     margin-right: auto;
 }   
+
+.sign-in-button {
+    background-color: transparent;
+    color: #706f6f;
+    padding: 5px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+}
+.sign-in-button:hover {
+    background-color: #a8d1e0;
+    color: #c1c8c8;
+    text-decoration: none;
+}
