@@ -1,71 +1,77 @@
 body {
-    background: linear-gradient(180deg, #0B0E11 0%, #07090C 100%);
+    background: #FDF5E6;
     height: 100vh;
     margin: 0;
     overflow-x: hidden;
 }
 .navbar {
-    DISPLAY: flex;   
-    padding: 10px 15px -5px;
-    margin:0px;
+    display: flex;   
+    align-items: center;
+    padding: 10px 40px;
     background-color: transparent;
-    list-style-type: none;
-    overflow:hidden;
-    justify-content: center;
+    justify-content: space-between;
+    margin: 0;
 } 
+.navbar ul{
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    flex:11;
+    margin: 0;
+    padding: 0;
+}
 .navbar ul li a{
     text-decoration: none;
-    color: #c1c8c8;
-    display:text;
-    text-align: right;
-    justify-content: space-evenly;
+    color: #4A2C2A;
     font-size: 18px;
+    font-weight: bold;
+    font: Times New Roman (serif);
+    padding:0px 15px;
+}
+#Maktaba{
+    flex:1;
 }
 #Maktaba a{
    text-decoration: none;
-    color: #d4d3d3;
-    display:text;
+    color: #8f7d64;
+    display:block;
     text-align: left;
     justify-content: space-evenly;
     font-size: 40px;
-    font-weight: bold;
-    font: Times New Roman (serif);
+    font-weight: 700;
+letter-spacing: -1px;
+    font-family: 'Playfair Display', serif;
 }
 .navbar  li{
     display: inline-block;
-    text-align: right;
-    padding: 15px 15px 8px 15px;
+    text-align: center;
+    padding: 5px 15px 8px 15px;
+    justify-content: center;
+    align-items: center;
 }
 .navbar a:hover{
     color: #706f6f;
     text-decoration: underline;
 }
-.right{
-  margin-left: auto;
-}
-.left{
-    margin-right: auto;
-}   
-
 .sign-in-button {
-    background-color: rgb(245, 245, 249);
-    color: #1b1b1b;
+    background-color: rgb(80, 71, 63)   ;
+    color: #FDF5E6;
     padding: 5px 15px;
     text-decoration:none;
-    font-size: 18px;
+    font-size: 15PX ;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     border: none;
-  border-radius: 20px ;
-   font-family: 'Times New Roman', Times, serif;
+    border-radius: 20px ;
+    font-family: 'Times New Roman', Times, serif;
 
 
    
    
 }
 .sign-in-button:hover {
-    background-color: #a8acad;
+    background-color: #8f7d64;
     color: #c1c3c3;
     text-decoration: none;
 }
