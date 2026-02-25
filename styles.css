@@ -98,20 +98,78 @@ body {
 .homeBox {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items:baseline;
+    justify-content:baseline;  
     width: 350px;
     height: 400px;
     background: white;
     border-radius: 25px;
-    padding: 30px;
+    padding: 40px;
     margin-top: 50px;
     margin-left: 67%;
     margin-right: 40px;
-    text-align: center;
+    text-align:left;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     left: 35%;
 }
+.writebox {
+   
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    
+  
+    margin-bottom: 10px; 
+}
+
+
+.writebox p {
+    margin: 0; 
+    padding: 0;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 14px;
+    color: #4A2C2A;
+    margin-bottom: 30px;
+}
+
+
+.writebox h3 {
+   margin: 0; 
+  line-height: 1.1; 
+  font-family: 'Playfair Display', serif;
+  color: #4A2C2A;
+  font-size: 45px;
+  line-height: 1.1;
+  margin: 0 0 30px 0;
+
+}
+
+.description {
+   font-family: 'Georgia', serif; 
+    font-size: 16px;               
+    color: #7d6b69;               
+    line-height: 1.6;             
+    margin-top: 0px;              
+    font-weight: normal;
+    margin-bottom:20px;
+}
+
+
+.explore-link{
+
+    font-family:'Playfair Display', serif;
+            text-decoration: none;
+            color: #4A2C2A;
+            font-weight: bold;
+            font-size: 20px;
+            letter-spacing: 1px;
+          
+            align-items: center;
+}
+
+
 
 .book-video {
     width: 500px;
@@ -119,13 +177,7 @@ body {
     margin-bottom: 30px;
 }
 
-.homeBox p {
-    color: #4A2C2A;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    line-height: 1.5;
-    word-wrap: break-word;
-}
+
 
 .dropdown button {
     background-color: transparent;
