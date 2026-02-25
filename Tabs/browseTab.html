@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Maktaba</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <nav class="navbarb">
+        <span id="Maktabab">
+            <a href="#Maktaba" style="margin-left: 20px;">Maktaba</a>
+        </span>
+        <ul style="align-items: right; justify-content: flex-end; gap: 20px;">
+            <li>
+                <a href="Home.html">
+                    <img src="../resources/img/homeIcon.png" alt="Home Icon" style="width: 20px; height: 20px;">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="../resources/img/favouriteIcon.png" alt="Favorites Icon" style="width: 20px; height: 20px;">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="../resources/img/ShoppingBag.png" alt="Shopping bag Icon" style="width: 20px; height: 20px;">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="../resources/img/ProfileIcon.png" alt="Profile Icon" style="width: 20px; height: 20px;">
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- El Banner -->
+    <div class="hero-banner">
+        <div class="hero-overlay">
+        </div>
+        <img src="../resources/img/33.jpg" alt="Browse Banner" class="hero-img">
+    </div>
+
+    <!-- hetet l search -->
+    <div class="search-section-container">
+    
+    <div class="search-row-flex">
+        <div class="search">
+            <img src="../resources/img/searchIcon.png" alt="Search" style="width: 15px;">
+            <input class="search-input" type="search" placeholder="Search for books...">
+        </div>
+        <button class="search-button" type="submit">Search</button>
+        <button id="toggleBtn" class="search-filters-button"> 
+            <img src="../resources/img/filters.png" alt="filters" style="width: 30px;">
+        </button>
+    </div>
+        <div id ="expandBox" class="search-filters-content">
+            <div class="Genres">Genre</div>
+            <div class="line">
+            <a href="#">Fiction</a>
+            <a href="#">Mystery & Thriller</a>
+            <a href="#">Sci fi</a>
+            <a href="#">Fantasy</a>
+            <a href="#">Romance</a>
+            <a href="#">Non-fiction</a>
+            <a href="#">Biographies</a>
+            <a href="#">Self-help</a>
+            <a href="#">Religious books</a>
+            </div>
+        </div>
+    </div>
+    <div style="height: 100px; margin-left: 5%; font-weight: bold;">Books</div>
+    <!-- grid -->
+    <div class="book-grid">
+  <div class="book-card">
+    <div class="book-cover"><img src="../resources/img/UglyLove.jpg" alt="Book 1" style="width: 150px; height:150px;" ></div>
+    <button class="add-to-cart" type="submit">Add to Cart</button>
+    <span class="book-meta">Romance · 2014</span>
+    <h3 class="book-title">Ugly Love</h3>
+    <p class="book-author">Colleen Hoover</p>
+    <div class="book-action">
+      <span>→ View Details</span>
+    </div>
+  </div>
+
+  <div class="book-card">
+    
+    <div class="book-cover"><img src="../resources/img/TheGreatGasby.jpg" alt="Book 2" style="width: 150px; height:150px;"></div>
+    <button class="add-to-cart" type="submit">Add to Cart</button>
+    <span class="book-meta">Fiction · 1925</span>
+    <h3 class="book-title">The Great Gatsby</h3>
+    <p class="book-author">F. Scott Fitzgerald</p>
+    <div class="book-action">
+      <span>→ View Details</span>
+    </div>
+  </div>
+
+  <!-- Repeat more cards as needed -->
+</div>
+
+
+
+<script src="../script.js"></script>
+</body>
+
+</html>
