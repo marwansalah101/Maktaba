@@ -122,6 +122,13 @@ body {
     margin-bottom: 10px; 
 }
 
+.homeBox:hover{
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+    transition: all 0.5s ease-in-out;
+
+
+}
 
 .writebox p {
     margin: 0; 
@@ -140,7 +147,7 @@ body {
   line-height: 1.1; 
   font-family: 'Playfair Display', serif;
   color: #4A2C2A;
-  font-size: 45px;
+  font-size: 47px;
   line-height: 1.1;
   margin: 0 0 30px 0;
 
@@ -157,18 +164,38 @@ body {
 }
 
 
-.explore-link{
+.explore-link a{
 
-    font-family:'Playfair Display', serif;
+    font-family:"Georgia", serif;
             text-decoration: none;
             color: #4A2C2A;
-            font-weight: bold;
-            font-size: 20px;
+            font-weight: 500;
+            font-size: 17px;
             letter-spacing: 1px;
-          
+          text-transform: uppercase;
             align-items: center;
 }
 
+
+.explore-link a:hover {
+  text-decoration: none;
+  opacity:0.8;
+    color: #b89058;
+   
+    transition: all 0.3s ease-in-out;
+
+
+
+}
+
+
+.explore-link .arrow {
+  margin-left: 8px;
+  font-size: 18px;  
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+}
 
 
 .book-video {
