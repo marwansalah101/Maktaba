@@ -291,37 +291,48 @@ body {
 .navbarb {
     display: flex;
     align-items: center;
-    padding: 10px 40px;
-    background-color: rgba(253, 245, 230, 0.7);;
+    padding: 10px 60px;
+    background-color: rgba(253, 245, 230, 0.7);
     width: 100%;
     box-sizing: border-box;
     border-bottom: 1px solid rgba(74, 44, 42, 0.15);
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
     z-index: 1000;
     justify-content: space-between;
     margin: 0;
     backdrop-filter: blur(12px);              
     -webkit-backdrop-filter: blur(12px)
 }
+.material-symbols-outlined{
+    color:#4A2C2A;
+}
 
 .navbarb ul {
     display: flex;
-    justify-content: center;
     list-style: none;
-    flex: 11;
     margin: 0;
     padding: 0;
+    gap: 30px;
+}
+.navbarb-text {
+    flex: 2;
+    display: flex;
+    justify-content: center;
 }
 
 .navbarb ul li a {
     position: relative;
     text-decoration: none;
     color: #4A2C2A;
-    font-size: 18px;
-    font: Times New Roman (serif);
-    padding: 0px 10px;
+    font: 15px "Times New Roman", serif;
+    padding: 10px 0px;
+    text-decoration: none !important;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;  
+    line-height: 1.4;
+    max-width: 300px;
 }
 .navbarb ul li a:after {
     content: "";
@@ -330,27 +341,38 @@ body {
     height: 2px;
     width: 0; 
     left: 0;
-    bottom: -5px; 
+    border-bottom: 0.3 #4A2C2A solid;
+    bottom: -1px; 
     transition: width 0.3s ease;
 }
 .navbarb ul li a:hover:after {
     width: 100%;
 }
+.navbarb-icons{ 
+    margin-left: auto;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
 
 #Maktabab {
-    flex: 1;
+    margin-right: auto;
 }
 
 #Maktabab a {
     display: flex;
     align-items: center;
     gap: 10px;
+    padding:0;
+    margin-bottom: 0;
     text-decoration: none;
     color: #8f7d64;
-    font-size: 40px;
-    font-weight: 700;
-    letter-spacing: -1px;
+    font-weight:bold;
+    letter-spacing: 5px;
     font-family: 'Playfair Display', serif;
+    text-transform: uppercase;
+    font-size: 1rem;
+    line-height: 2rem;
 }
 
 .navbarb li {
@@ -372,72 +394,43 @@ body {
     text-decoration: underline;
 }
 
-.page-content {
-    padding-top: 80px;
-    display: flex;
-    justify-content: center;
-    padding-left: 40px;
-    padding-right: 40px;
-}
-
-.hero-banner {
-    position: relative;
-    width: 100%;
-    height: 420px;
-    margin-top: 62px;
-    overflow: hidden;
-}
-
-.hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    mask-image: linear-gradient(
-    to bottom,
-    hsl(34, 78%, 95%) 0%,
-    hsla(34, 78%, 95%, 0.95) 10%,
-    hsla(34, 78%, 95%, 0.7) 50%,
-    hsla(34, 78%, 95%, 0.3) 75%,
-    transparent 100%
-  );
-}
-
 .hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: #FDF5E6;
+    background: radial-gradient(
+        circle at center, 
+        #fffcf5 0%,   /* Very bright cream/white in the middle */
+        #FDF5E6 70%,  /* Your standard cream background */
+        #f7ecd6 100%  /* Slightly darker tan at the very edges */
+    );
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    padding: 20px;
+    flex-direction:column;
+    align-items:left;
+    gap: 10px;
+    padding: 0px 60px 0px;
+    backdrop-filter: blur(12px);              
+    -webkit-backdrop-filter: blur(12px)
 }
 
 .hero-title {
-    color: #ffffff;
-    font-family: 'Playfair Display', serif;
+    color: #4A2C2A;
+    font-family: 'Times New Roman', Times, serif;
     font-size: 72px;
     font-weight: 700;
     letter-spacing: 2px;
-    margin: 0;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
-
-.hero-search-section {
-    padding: 24px 0 10px 60px;
+.hero-subtitle{
+    color: #4A2C2A;
+    font-family: 'Playfair Display', serif;
+    opacity:70%;
+    margin-top:-40px;
 }
+.search-section-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;      
+    width: 100%;
+    max-width: 900px;       
+    margin: 40px auto;        
 
-.hero-search-section .search {
-    width: 560px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-.hero-search-section {
-    padding: 28px 0 16px 60px;
 }
 .search{
     width: 560px;
@@ -555,15 +548,6 @@ body {
   opacity: 1;             
   padding: 20px;          
   margin-top: 30px;
-}
-.search-section-container {
-    display: flex;
-    flex-direction: column; 
-    align-items: center;      
-    width: 100%;
-    max-width: 900px;       
-    margin: 40px auto;        
-
 }
 .search-row-flex {
     display: flex;
