@@ -3,18 +3,45 @@ body {
     margin: 0;
     overflow-x: hidden;
 }
+
+.book-bg {
+   height: calc(100vh - 80px); 
+    
+    background-image: url('resources/img/homePagePicture.jpg');
+    background-size: cover;
+    background-position: center;
+    display: grid;
+  grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-right: 0 8%;
+    mask-image: linear-gradient(to left, #DECFAC, #F6F7DD); 
+    
+}
+
+
 .homepage{
     background-color: #fcf4e8;
 
 }
 
 .navbar {
-    display: flex;
+     display: flex;
     align-items: center;
-    padding: 10px 40px;
-    background-color: transparent;
+    padding: 10px 60px;
+    background-color: rgba(253, 245, 230, 0.7);
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(74, 44, 42, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
     justify-content: space-between;
     margin: 0;
+    backdrop-filter: blur(12px);              
+    -webkit-backdrop-filter: blur(12px)
+ 
+   
+     
 }
 
 .navbar ul {
@@ -43,12 +70,16 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    padding:0;
+    margin-bottom: 0;
     text-decoration: none;
     color: #8f7d64;
-    font-size: 40px;
-    font-weight: 700;
-    letter-spacing: -1px;
+    font-weight:bold;
+    letter-spacing: 5px;
     font-family: 'Playfair Display', serif;
+    text-transform: uppercase;
+    font-size: 30px;
+    line-height: 2rem;
 }
 
 .navbar li {
@@ -95,6 +126,50 @@ body {
     padding: 40px;
 }
 
+
+.hero-text {
+   
+     width: 70%; 
+    display: flex;
+    flex-direction: column;
+   margin-left:40px;
+    margin-bottom: 10px; 
+     
+}
+
+.est h3 {
+     margin: 0; 
+  line-height: 1.1; 
+  font-family: 'Playfair Display', serif;
+  color: #e3dfde;
+  font-size: 70px;
+  margin: 0 0 30px 0;
+  
+}
+
+.est p{
+     margin: 0; 
+    padding: 0;
+   font-family: 'Montserrat', 'Arial', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+
+    color:#e7e1e0;
+    margin-bottom: 30px; 
+    font-size: 0.75rem;
+    font-weight: 600;    
+}
+.sub-est {
+  font-family: 'Georgia', serif; 
+    font-size: 16px;               
+    color: #ecd1ce;               
+    line-height: 1.6;             
+    margin-top: 0px;              
+    font-weight: normal;
+    margin-bottom:20px; 
+}
+
+
 .homeBox {
     display: flex;
     flex-direction: column;
@@ -105,8 +180,8 @@ body {
     background: white;
     border-radius: 25px;
     padding: 40px;
-    margin-top: 50px;
-    margin-left: 67%;
+    margin-top: 40px;
+    margin-left: 33%;
     margin-right: 40px;
     text-align:left;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
