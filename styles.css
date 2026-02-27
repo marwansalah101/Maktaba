@@ -333,18 +333,23 @@ body {
     letter-spacing: 1px;  
     line-height: 1.4;
     max-width: 300px;
+    font-size: 16.5px;
+    font-family: 'Times New Roman', serif;
+    padding: 0px 10px;
+    border-bottom: none;
 }
 .navbarb ul li a:after {
     content: "";
     position: absolute;
     background-color: #4A2C2A;
-    height: 2px;
-    width: 0; 
+    height: 3px;
+    width: 0;
     left: 0;
     border-bottom: 0.3 #4A2C2A solid;
     bottom: -1px; 
     transition: width 0.3s ease;
 }
+
 .navbarb ul li a:hover:after {
     width: 100%;
 }
@@ -374,33 +379,22 @@ body {
     font-size: 1rem;
     line-height: 2rem;
 }
-
-.navbarb li {
-    display: inline-block;
-    text-align: center;
-    padding: 5px 15px 8px 15px;
-    justify-content: center;
-    align-items: center;
+.hero-container {
+    /* This gradient covers BOTH the text and the search area */
+    background: linear-gradient(to bottom, 
+        #FDF5E6 0%, 
+        #FDF5E6 70%, 
+        #ffffff 100%
+    );
+    display: flex;
+    flex-direction: column;
+    padding: 100px 20px 60px 20px; /* Top padding for navbar, bottom for breathing room */
+    gap: 40px;              /* The specific space between text and search */
 }
 
-.navbarb ul li a:hover img {
-    filter: brightness(0.8) sepia(1) hue-rotate(20deg);
-    transform: translateY(-1px);
-    color: #706f6f;
-}
-
-.navbarb a:hover {
-    color: #706f6f;
-    text-decoration: underline;
-}
 
 .hero-overlay {
-    background: radial-gradient(
-        circle at center, 
-        #fffcf5 0%,   /* Very bright cream/white in the middle */
-        #FDF5E6 70%,  /* Your standard cream background */
-        #f7ecd6 100%  /* Slightly darker tan at the very edges */
-    );
+    
     display: flex;
     flex-direction:column;
     align-items:left;
@@ -409,12 +403,20 @@ body {
     backdrop-filter: blur(12px);              
     -webkit-backdrop-filter: blur(12px)
 }
+.hero-img{
+    position: absolute;
+    right: 10%;         /* Pins the books to the right side */
+    top: 50%;           /* Moves it to the vertical center */
+    transform: translateY(-50%); /* Perfectly centers it vertically */
+    width: 350px;       /* Scale it up so it fills the "weird" empty space */
+    z-index: 1;
+}
 
 .hero-title {
     color: #4A2C2A;
     font-family: 'Times New Roman', Times, serif;
     font-size: 72px;
-    font-weight: 700;
+    font-weight:300;
     letter-spacing: 2px;
 }
 .hero-subtitle{
@@ -422,6 +424,18 @@ body {
     font-family: 'Playfair Display', serif;
     opacity:70%;
     margin-top:-40px;
+}
+.hero-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: #4A2C2A;
+    opacity: 0.6;
+    max-width: 400px;
+    margin-top: 30px;
+    padding-left: 20px;
+    border-left: 2px solid #d4af37; /* Gold accent line from your reference */
+    line-height: 1.6;
 }
 .search-section-container {
     display: flex;
@@ -694,3 +708,61 @@ body {
     transform: translateY(-3);
   }
 }
+.genres-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    text-align: center;
+    position: relative;
+    background-color: hsla(32, 25%, 90%, 0.5);
+    height: 300px;
+}
+
+.genre-pageTitle {
+    font-family: 'Playfair Display', serif;
+    font-weight: bold;
+    color: #4A2C2A;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;;
+    font-size: 20px;
+}
+.genre-pagePretitle {
+    font-family: 12px 'Times New Roman', sans-serif;
+    color: #4A2C2A;
+    font-size: 12px;
+    opacity: 0.5;
+    text-transform: uppercase;
+     letter-spacing: 1.1px;
+    margin-top: 10px;
+}
+.genre-pageSubtitle {
+    font-family: 18px 'Playfair Display', serif;
+    color: #4A2C2A;
+    font-weight: 600;
+    opacity: 0.7;
+    width:500px;
+    text-align: center;
+    letter-spacing: 1.4px;
+     
+}
+.genre-title {
+    font-family: 'Times New Roman', serif;
+    font-size: 18px;
+    opacity: 0.8;
+    color: #4A2C2A;
+    margin-bottom: 5px;
+}
+.genre-card {
+    background-color: #ffffff;
+    border: 1px solid #e8e0d4;
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: #4A2C2A;
+    text-align: center;
+}
+
