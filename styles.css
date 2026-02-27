@@ -711,21 +711,26 @@ body {
 .genres-container{
     display: flex;
     flex-direction: column;
-    justify-content: center; 
+    justify-content: flex-start; 
     text-align: center;
+    align-items: center;
     position: relative;
+    padding-top: 40px;  
+    gap:8px;
     background-color: hsla(32, 25%, 90%, 0.5);
     height: 300px;
 }
 
 .genre-pageTitle {
     font-family: 'Playfair Display', serif;
-    font-weight: bold;
+    font-weight: 600;
     color: #4A2C2A;
     opacity: 0.8;
     text-transform: uppercase;
     letter-spacing: 1.4px;;
     font-size: 20px;
+    margin: 0;
+    transform: translateY(-15px);
 }
 .genre-pagePretitle {
     font-family: 12px 'Times New Roman', sans-serif;
@@ -733,25 +738,37 @@ body {
     font-size: 12px;
     opacity: 0.5;
     text-transform: uppercase;
-     letter-spacing: 1.1px;
-    margin-top: 10px;
+    letter-spacing: 1.1px;
+    transform: translateY(30px);
+     margin: 0;
 }
 .genre-pageSubtitle {
     font-family: 18px 'Playfair Display', serif;
     color: #4A2C2A;
     font-weight: 600;
     opacity: 0.7;
+    margin: -10px auto 0 auto;
     width:500px;
     text-align: center;
     letter-spacing: 1.4px;
+    line-height: 1.6;
      
+    transform: translateY(-45px);
 }
 .genre-title {
     font-family: 'Times New Roman', serif;
     font-size: 18px;
     opacity: 0.8;
     color: #4A2C2A;
-    margin-bottom: 5px;
+}
+.genre-categories {
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 100px;
 }
 .genre-card {
     background-color: #ffffff;
@@ -764,5 +781,34 @@ body {
     font-size: 1rem;
     color: #4A2C2A;
     text-align: center;
+    width: 350px;
+    height: 500px;
+     display: flex;
+}
+.genre-card:hover {
+    box-shadow: 0 8px 30px rgba(74, 44, 42, 0.1);
+    transform: translateY(-2px);
+    color: #f7c86b;
+}
+.card-fantasy {
+    background-image: url('../resources/img/Dragon.jpg');
+    background-size: cover;      /* Ensures the image fills the whole card */
+    background-position: center; /* Keeps the dragon's head in view */
+    position: relative;
+    overflow: hidden; 
+    transition: transform 0.5s ease-in-out;           /* Keeps the image inside the card's rounded corners */
+}
+.card-fantasy::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.2); /* Darkens the image slightly */
+    z-index: 1;
+}
+.card-fantasy:hover{
+    background-image: url('../resources/img/DragonGif.gif');
+    background-size: cover;      /* Ensures the image fills the whole card */
+    background-position: center;
+    transform: scale(1.05);
 }
 
