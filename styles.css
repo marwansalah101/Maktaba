@@ -675,7 +675,9 @@ body {
 @media (min-width: 1280px) {
   .book-grid { grid-template-columns: repeat(4, 1fr); }
 }
-
+.homepage-genre{
+    background-color: #FDF5E6;
+}
 .book-card {
   background: #ffffff;
   border: 1px solid #e8e0d4;
@@ -792,7 +794,6 @@ body {
     position: relative;
     padding-top: 40px;  
     gap:8px;
-    background-color: hsla(32, 25%, 90%, 0.5);
     height: 300px;
 }
 
@@ -865,25 +866,84 @@ body {
     transform: translateY(-2px);
     color: #f7c86b;
 }
-.card-fantasy {
-    background-image: url('../resources/img/Dragon.jpg');
-    background-size: cover;      /* Ensures the image fills the whole card */
-    background-position: center; /* Keeps the dragon's head in view */
+.genre-card h2 {
+    position: absolute;  
+    bottom: 20px;        
+    left: 20px;          
+    margin: 0;          
+    color: white;        
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8); 
+    z-index: 10;;
+}
+.card-Romance {
+    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication221/v4/1e/69/95/1e69958b-9234-d2f4-c015-86509811d481/9781501110375.jpg/10000x10000bb.jpg');
+    background-size: cover;      
+    background-position: center; 
     position: relative;
     overflow: hidden; 
-    transition: transform 0.5s ease-in-out;           /* Keeps the image inside the card's rounded corners */
+    transition: transform 0.5s ease-in-out;  
+}
+.card-fantasy {
+    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication221/v4/42/54/b1/4254b1db-13bd-6c95-7495-5f65992254a7/9780553897845.d.jpg/10000x10000bb.jpg');
+    background-size: cover;      
+    background-position: center;
+    position: relative;
+    overflow: hidden; 
+    transition: transform 0.5s ease-in-out;          
+}
+.card-Thriller {
+    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication122/v4/44/7a/69/447a69fc-adb7-10a7-729f-160ac188dfde/0000918963.jpg/10000x10000bb.jpg');
+    background-size: cover;      
+    background-position: center; 
+    position: relative;
+    overflow: hidden; 
+    transition: transform 0.5s ease-in-out;  
+}
+.card-Science-Fiction {
+    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication113/v4/39/53/92/395392d6-a757-06d3-8098-8d20b33c4ae7/9781440619236.jpg/10000x10000bb.jpg');
+    background-size: cover;      
+    background-position: center; 
+    position: relative;
+    overflow: hidden; 
+    transition: transform 0.5s ease-in-out;  
+}
+.card-poetry {
+    background-image: url('https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1566425108i/33.jpg');
+    background-size: cover;      
+    background-position: center; 
+    position: relative;
+    overflow: hidden; 
+    transition: transform 0.5s ease-in-out;  
+}
+.card-drama {
+    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication126/v4/df/01/5c/df015cda-24fa-4a18-9768-7337fadc79fe/9781338635188.jpg/10000x10000bb.jpg');
+    background-size: cover;      
+    background-position: center; 
+    position: relative;
+    overflow: hidden; 
+    transition: transform 0.5s ease-in-out;  
 }
 .card-fantasy::before {
     content: "";
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.2); /* Darkens the image slightly */
+    background: rgba(0, 0, 0, 0.2); 
     z-index: 1;
 }
 .card-fantasy:hover{
-    background-image: url('../resources/img/DragonGif.gif');
-    background-size: cover;      /* Ensures the image fills the whole card */
-    background-position: center;
-    transform: scale(1.05);
+    transform: scale(1.05); 
 }
 
+.card-Thriller:hover{
+    transform: scale(1.05);
+}
+.card-Science-Fiction:hover{
+    transform: scale(1.05);
+}
+.card-poetry:hover{
+    transform: scale(1.05);
+}
+.card-drama:hover{
+    transform: scale(1.05);
+}
