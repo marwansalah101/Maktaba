@@ -6,7 +6,11 @@
     <meta charset="UTF-8">
     <title>Maktaba</title>
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=person,shopping_bag" />
+    <link rel="stylesheet"
+href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 
 <body>
     <nav class="navbarb">
@@ -44,7 +48,7 @@
     <section class="hero-container">
     <div class="hero-overlay">
     <span class = hero-img>
-        <img src="../resources/img/edited-photo.png" alt="Books" style="height:500px; width: 500px">
+        <img src="../resources/img/Collections.png" alt="Books" style="height:450px; width: 450px ">
     </span>
         <h1 class="hero-title">Collections</h1>
         <p class="hero-subtitle">
@@ -58,16 +62,17 @@
     <div class="search-section-container">
     <div class="search-row-flex">
         <div class="search">
-            <img src="../resources/img/searchIcon.png" alt="Search" style="width: 15px;">
+            <span class="material-symbols-outlined">search</span>
             <input class="search-input" type="search" placeholder="Search for books...">
         </div>
         <button class="search-button" type="submit">Search</button>
         <button id="toggleBtn" class="search-filters-button"> 
-            <img src="../resources/img/filters.png" alt="filters" style="width: 30px;">
+            <span class="material-symbols-outlined" >filter_list</span>
+</span>
         </button>
     </div>
         <div id ="expandBox" class="search-filters-content">
-            <div class="Genres">Genre</div>
+            <div id="Genres">Genre</div>
             <div class="line">
             <a href="#">Fiction</a>
             <a href="#">Mystery & Thriller</a>
@@ -82,33 +87,46 @@
         </div>
     </div>
     </section>
-    <div style="height: 100px; margin-left: 5%; font-weight: bold;">Books</div>
     <!-- grid -->
     <div class="book-grid">
   <div class="book-card">
-    <div class="book-cover"><img src="../resources/img/UglyLove.jpg" alt="Book 1" style="width: 150px; height:150px;" ></div>
+    <div class="book-cover"><img src="../resources/Books/UglyLove.png" alt="Book 1" style="width: 250px; height:250px;" ></div>
     <button class="add-to-cart" type="submit">Add to Cart</button>
-    <span class="book-meta">Romance · 2014</span>
+    <span class="book-details"><h4>Romance · 2014</h4></span>
     <h3 class="book-title">Ugly Love</h3>
     <p class="book-author">Colleen Hoover</p>
-    <div class="book-action">
-      <span>→ View Details</span>
     </div>
-  </div>
 
   <div class="book-card">
     
-    <div class="book-cover"><img src="../resources/img/TheGreatGasby.jpg" alt="Book 2" style="width: 150px; height:150px;"></div>
+    <div class="book-cover"><img src="../resources/Books/GreatGasby.png" alt="Book 2" style="width: 250px; height:250px;"></div>
     <button class="add-to-cart" type="submit">Add to Cart</button>
-    <span class="book-meta">Fiction · 1925</span>
+    <span class="book-details"><h4>Fiction · 1925</h4></span>
     <h3 class="book-title">The Great Gatsby</h3>
     <p class="book-author">F. Scott Fitzgerald</p>
-    <div class="book-action">
-      <span>→ View Details</span>
     </div>
   </div>
 
   <!-- Repeat more cards as needed -->
+</div>
+<div id="bookModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+        <div class="modal-image-container">
+            <img id="modal-image" src="" alt="Book Cover" style="width:300px; height:450px; border-radius:8px;">
+        </div>
+        <div class="modal-book-info">
+        <span class="material-symbols-outlined" id="favoriteIcon">
+        favorite
+        </span>
+        <div class= "modal-info" id="modal-info">
+        
+        <p id="modal-details"></p>
+        <h2 id="modal-title"></h2>
+        <p id="modal-author"></p>
+        </div>
+    </div>
+    </div>
 </div>
 
 

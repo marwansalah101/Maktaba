@@ -340,28 +340,8 @@ body {
     text-decoration: none;
 }
 
-.search {
-    --padding: 14px;
-    display: flex;
-    text-align: left;
-    border-radius: 28px;
-    align-items: center;
-    padding: var(--padding);
-    background-color: #f6f6f6;
-    width: max-content;
-    width: 800px;
-}
+/*--------------COLLECTIONS PAGE ---------- */
 
-.search input {
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: 16px;
-    color: #333333;
-    font-family: 'Lexend', sans-serif;
-    margin-left: var(--padding);
-    flex: 1;
-}
 
 .navbarb {
     display: flex;
@@ -463,15 +443,10 @@ body {
     );
     display: flex;
     flex-direction: column;
-    padding: 100px 20px 60px 20px; /* Top padding for navbar, bottom for breathing room */
-    gap: 40px;              /* The specific space between text and search */
+    padding: 70px 20px 60px 20px; 
+    gap: 40px;             
 }
-
-
 .hero-overlay {
-    
-    display: flex;
-    flex-direction:column;
     align-items:left;
     gap: 10px;
     padding: 0px 60px 0px;
@@ -480,10 +455,10 @@ body {
 }
 .hero-img{
     position: absolute;
-    right: 10%;         /* Pins the books to the right side */
-    top: 50%;           /* Moves it to the vertical center */
-    transform: translateY(-50%); /* Perfectly centers it vertically */
-    width: 350px;       /* Scale it up so it fills the "weird" empty space */
+    right: 10%;         
+    top: 50%;           
+    transform: translateY(-50%); 
+    width: 350px;       
     z-index: 1;
 }
 
@@ -491,12 +466,12 @@ body {
     color: #4A2C2A;
     font-family: 'Times New Roman', Times, serif;
     font-size: 72px;
-    font-weight:300;
+    font-weight:400;
     letter-spacing: 2px;
 }
 .hero-subtitle{
     color: #4A2C2A;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Space Grotesk', sans-serif;
     opacity:70%;
     margin-top:-40px;
 }
@@ -521,15 +496,28 @@ body {
     margin: 40px auto;        
 
 }
-.search{
+.search {
+    --padding: 14px;
+    display: flex;
+    text-align: left;
+    border-radius: 28px;
+    align-items: center;
+    padding: var(--padding);
+    width: max-content;
     width: 560px;
-    background-color: #ffffff;
+    background-color: transparent;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
+
 .search input {
+    border: none;
+    background: transparent;
+    outline: none;
     font-size: 16px;
     color: #333333;
-    font-family: 'Lexend', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
+    margin-left: var(--padding);
+    flex: 1;
 }
 .search input::placeholder {
     color: #999999;
@@ -541,21 +529,21 @@ body {
 
 .search-button {
     padding: 14px 25px;
-    background-color: #4A2C2A;
-    color: #FDF5E6;
-    border: none;
-    border-radius: 28px;
-    font-family: 'Times New Roman', Times, serif;
+    background: transparent;
+    border: 1.5px solid #4a2c2a;
+    color: #4a2c2a;
+    border-radius: 30px;
+    font-family: "Space Grotesk", sans-serif;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    white-space: nowrap;
     transition: all 0.4s ease-in-out;
 }
 
 .search-button:hover {
     background-color: transparent;
-    color: #4A2C2A;
+    border:none;
+    transition: all 0.4s ease-in-out;
     scale: 1.05;
 }
 .search-filters{
@@ -564,18 +552,18 @@ body {
     margin-top: 16px;
 }
 .search-filters-button {
-    background-color: #ffffff;
+    background-color: transparent;
     border: 1px solid transparent;
     cursor: pointer;
     border-radius: 16px;
     display: flex;
-    padding: 5px 8px;
+    padding: 10px 8px;
     text-decoration: none;
     transition: all 0.4s ease-in-out;
 }
 .search-filters-button:hover {
     background-color: rgba(235, 165, 161, 0.05);
-    scale: 1.05;
+    scale: 1.5;
 }
 .search-filters-content {
     display: flex;
@@ -585,7 +573,7 @@ body {
     max-height: 0;                     
     opacity: 0;               
     overflow: hidden;         
-    width: 900px;
+    width: 700px;
     transition: all 0.4s ease-in-out;
     background-color: #ffffff;
     gap: 12px;
@@ -598,7 +586,7 @@ body {
     padding: 10px 20px;
     border-radius: 14px;
     text-decoration: none;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 12px;
 }
 
@@ -628,7 +616,6 @@ body {
   opacity: 0;              
   transition: all 0.5s ease; 
   background: white;
-  width: 300px; 
   position: relative;
   
 }
@@ -652,7 +639,7 @@ body {
     position: relative;
     gap: 12px;
 }
-.Genres{
+#Genres{
     font-family: 'Times New Roman', serif;
     font-size: 18px;
     opacity: 0.8;
@@ -694,15 +681,14 @@ body {
 }
 
 .book-cover {
-  width: 100%;
-  height: 12rem;
-  border-radius: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: auto;
   background:#ffffff;
   display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 3rem;
-  margin-bottom: 1.25rem;
+  margin: 0 auto 1.25rem auto;
   transition: transform 0.5s ease;
 }
 
@@ -710,10 +696,10 @@ body {
   transform: scale(1.08);
 }
 
-.book-meta {
-  font-family: 'Times New Roman', serif;
+.book-details {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 10px;
-  text-align: left;
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: #8b7d6b;
@@ -733,7 +719,7 @@ body {
 }
 
 .book-author {
-  font-family: 'Times New Roman', serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.875rem;
   color: #8b7d6b;
   margin: 0;
@@ -769,34 +755,133 @@ body {
     transform: scale(1.08);
     transition: opacity 0.3s ease;
     transform: translateY(-2px);
-    animation: fade-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: slide-up 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     margin-bottom: 1.25rem;
     Width: 100%;
 
 }
 
-@keyframes fade-up {
+@keyframes slide-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(0px);
   }
   to {
     opacity: 1;
     transform: translateY(-3);
   }
 }
+@keyframes fade-up {
+    from { transform: scale(0.8); transform: translateY(20px); opacity: 0; }
+    to { transform: scale(1); transform: translateY(0); opacity: 1; }
+}
+.modal {
+    display: flex;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+    
+    animation: fade-up 0.5s ease-in-out;
+    
+}
+
+.modal-content {
+     background-color: #ffffff;
+    width: 80%;
+    height: 90%;
+    border-radius: 15px;
+    position: relative;
+    margin:3% auto;
+    display: flex;               
+    align-items: center;
+}
+.close-button {
+    position: absolute;
+    right: 20px; top: 10px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1001;
+}
+.modal-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.modal-book-info{
+    display: flex;
+    position: relative;
+  background-color: #fdf5e6;
+  width: 50%;
+  height: 100%;
+  padding: 20px 70px;     /* THIS is what pulls text inward */
+  box-sizing: border-box;
+}
+#favoriteIcon{
+  position: absolute;
+  top: 100px;    
+  right: 55px;    
+  cursor: pointer;
+  font-size: 26px;
+  line-height: 1;
+}
+.modal-info{
+    display: flex;
+    flex-direction: column;
+     width: 100%;              
+    text-align: left;    
+    align-items: flex-start; 
+}
+#modal-details{
+    margin-top: 60px;
+    font-family: 'Times New Roman', serif;
+    font-size: 10px;
+    opacity: 0.8;
+    color: #4A2C2A;
+}
+#modal-title{
+    margin-top: 0; 
+    font-family: 'Times New Roman', serif;
+    font-size: 24px;
+    color: #4A2C2A;
+}
+#modal-author{
+     margin-top: 0; 
+    font-family: 'Times New Roman', serif;
+    font-size: 12px;
+    color: #4A2C2A; 
+}
+
+
+
+     /*--------------GENRE PAGE ---------- */
 .genres-container{
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
     text-align: center;
-    align-items: center;
     position: relative;
-    padding-top: 40px;  
     gap:8px;
     height: 300px;
 }
-
+.genre-3d-img1{
+    width:10px;
+    height:10px;
+    left: 15%;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
 .genre-pageTitle {
     font-family: 'Playfair Display', serif;
     font-weight: 600;
@@ -844,11 +929,11 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 20px;
-    gap: 100px;
+    gap: 60px;
 }
 .genre-card {
     background-color: #ffffff;
-    border: 1px solid #e8e0d4;
+    border: transparent;
     border-radius: 12px;
     padding: 1.5rem;
     cursor: pointer;
@@ -857,7 +942,7 @@ body {
     font-size: 1rem;
     color: #4A2C2A;
     text-align: center;
-    width: 350px;
+    width: 400px;
     height: 500px;
      display: flex;
 }
@@ -876,8 +961,9 @@ body {
     text-shadow: 2px 2px 10px rgba(0,0,0,0.8); 
     z-index: 10;;
 }
-.card-Romance {
-    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication221/v4/1e/69/95/1e69958b-9234-d2f4-c015-86509811d481/9781501110375.jpg/10000x10000bb.jpg');
+
+.card-Horror {
+    background-image: url('../resources/img/Horror.png');
     background-size: cover;      
     background-position: center; 
     position: relative;
@@ -885,7 +971,7 @@ body {
     transition: transform 0.5s ease-in-out;  
 }
 .card-fantasy {
-    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication221/v4/42/54/b1/4254b1db-13bd-6c95-7495-5f65992254a7/9780553897845.d.jpg/10000x10000bb.jpg');
+    background-image: url('https://static01.nyt.com/images/2019/05/22/arts/21thrones-notebook1/21thrones-notebook1-videoSixteenByNineJumbo1600-v2.jpg');
     background-size: cover;      
     background-position: center;
     position: relative;
@@ -893,7 +979,7 @@ body {
     transition: transform 0.5s ease-in-out;          
 }
 .card-Thriller {
-    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication122/v4/44/7a/69/447a69fc-adb7-10a7-729f-160ac188dfde/0000918963.jpg/10000x10000bb.jpg');
+    background-image: url('../resources/img/Thriller.png');
     background-size: cover;      
     background-position: center; 
     position: relative;
@@ -901,15 +987,15 @@ body {
     transition: transform 0.5s ease-in-out;  
 }
 .card-Science-Fiction {
-    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication113/v4/39/53/92/395392d6-a757-06d3-8098-8d20b33c4ae7/9781440619236.jpg/10000x10000bb.jpg');
+    background-image: url('../resources/img/Scifi.png');
     background-size: cover;      
     background-position: center; 
     position: relative;
     overflow: hidden; 
     transition: transform 0.5s ease-in-out;  
 }
-.card-poetry {
-    background-image: url('https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1566425108i/33.jpg');
+.card-Adventure {
+    background-image: url('../resources/img/Adventure.png');
     background-size: cover;      
     background-position: center; 
     position: relative;
@@ -917,7 +1003,7 @@ body {
     transition: transform 0.5s ease-in-out;  
 }
 .card-drama {
-    background-image: url('https://is1-ssl.mzstatic.com/image/thumb/Publication126/v4/df/01/5c/df015cda-24fa-4a18-9768-7337fadc79fe/9781338635188.jpg/10000x10000bb.jpg');
+    background-image: url('../resources/img/Drama.png');
     background-size: cover;      
     background-position: center; 
     position: relative;
@@ -931,19 +1017,69 @@ body {
     background: rgba(0, 0, 0, 0.2); 
     z-index: 1;
 }
+.card-Horror:hover{
+    background-image: url('https://i.pinimg.com/originals/06/24/4c/06244cf7abad2d00577d25bfe61bca59.gif');
+    transform: scale(1.05);
+}
 .card-fantasy:hover{
-    transform: scale(1.05); 
+    background-image: url('https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXE5MWdpaWE3YWd1dWk3OXp2eWxkbjl4d21sZjRmcGVjc214bmllcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kC2f897i83EK3BKUA4/giphy.gif');
+    transform: scale(1.05);
 }
 
 .card-Thriller:hover{
+    background-image: url('https://media1.tenor.com/m/rX0X1fGqGasAAAAC/crime-scene-investigation.gif');
     transform: scale(1.05);
 }
 .card-Science-Fiction:hover{
+    background-image: url('https://i.pinimg.com/originals/6f/83/fd/6f83fd773a3fe6ed314bf1163c81a077.gif');
     transform: scale(1.05);
 }
-.card-poetry:hover{
+.card-Adventure:hover{
+    background-image: url('https://i.pinimg.com/originals/a5/b6/d7/a5b6d7a271a9d74cff9e7b2a33bba985.gif');
     transform: scale(1.05);
 }
 .card-drama:hover{
+    background-image: url('https://i.pinimg.com/originals/34/05/e4/3405e487cb62a9a0d65e9acfec81f856.gif');
     transform: scale(1.05);
+}
+.bg-ripple {
+    position: fixed;
+    border-radius: 50%;
+    width: 300vmax;
+    height: 300vmax;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1),
+                opacity 0.6s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bg-ripple.active {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.bg-ripple-reverse {
+    z-index: -1;
+}
+
+.homepage-genre {
+    position: relative;
+}
+
+.homepage-genre .navbarb,
+.homepage-genre .genres-container,
+.homepage-genre .genre-categories {
+    position: relative;
+    z-index: 1;
+}
+.bg-ripple.active ~ .genre-categories,
+.bg-ripple.active ~ .genres-container {
+    color: white;
+    transition: color 0.5s ease;
+}
+.text-white, .text-white h1,.text-white p {
+    color: white !important;
+    transition: color 0.5s ease;
 }
