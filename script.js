@@ -29,7 +29,7 @@ if (modal && closeBtn) {
             document.getElementById('modal-image').src = imageSrc; // Sets the modal image
 
             // 3. Show and animate the modal
-            modal.style.display = "block";
+            modal.classList.add('show');
             setTimeout(() => {
                 document.querySelector('.modal-content').classList.add('is-visible');
             }, 10);
@@ -37,11 +37,11 @@ if (modal && closeBtn) {
     });
 
     // Close when clicking 'X'
-    closeBtn.onclick = () => modal.style.display = "none";
+    closeBtn.onclick = () => modal.classList.remove('show');
 
     // Close if clicking outside the box
     window.onclick = (event) => {
-        if (event.target == modal) modal.style.display = "none";
+        if (event.target == modal) modal.classList.remove('show');
     };
 }
 
