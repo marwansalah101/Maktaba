@@ -2,6 +2,7 @@ body {
     height: 100vh;
     margin: 0;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 .book-bg {
@@ -321,7 +322,7 @@ body {
    font-size:3rem;
    text-align:center;
    align-content:center;
-    border-radius: o.2em;
+    border-radius: 0.2em;
      align-items: center;
     justify-content: center;
   
@@ -418,6 +419,7 @@ margin: 0;
 .navbarb {
     display: flex;
     align-items: center;
+    text-align: center;
     padding: 10px 60px;
     background-color: rgba(253, 245, 230, 0.7);
     width: 100%;
@@ -429,7 +431,7 @@ margin: 0;
     justify-content: space-between;
     margin: 0;
     backdrop-filter: blur(12px);              
-    -webkit-backdrop-filter: blur(12px)
+    -webkit-backdrop-filter: blur(12px);
 }
 .material-symbols-outlined{
     color:#4A2C2A;
@@ -498,7 +500,7 @@ margin: 0;
     padding:0;
     margin-bottom: 0;
     text-decoration: none;
-    color: #8f7d64;
+    color: #4A2C2A;
     font-weight:bold;
     letter-spacing: 5px;
     font-family: 'Playfair Display', serif;
@@ -507,7 +509,6 @@ margin: 0;
     line-height: 2rem;
 }
 .hero-container {
-    /* This gradient covers BOTH the text and the search area */
     background: linear-gradient(to bottom, 
         #FDF5E6 0%, 
         #FDF5E6 70%, 
@@ -521,7 +522,7 @@ margin: 0;
 .hero-overlay {
     align-items:left;
     gap: 10px;
-    padding: 0px 60px 0px;
+    padding: 5px 60px 0px;
     backdrop-filter: blur(12px);              
     -webkit-backdrop-filter: blur(12px)
 }
@@ -545,7 +546,7 @@ margin: 0;
     color: #4A2C2A;
     font-family: 'Space Grotesk', sans-serif;
     opacity:70%;
-    margin-top:-40px;
+    margin-top:-25px;
 }
 .hero-quote {
     font-family: 'Playfair Display', serif;
@@ -840,7 +841,7 @@ margin: 0;
   }
   to {
     opacity: 1;
-    transform: translateY(-3);
+    transform: translateY(-3px);
   }
 }
 @keyframes fade-up {
@@ -848,7 +849,7 @@ margin: 0;
     to { transform: scale(1); transform: translateY(0); opacity: 1; }
 }
 .modal {
-    display: flex;
+    display: none; /* hidden by default */
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -856,12 +857,13 @@ margin: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.8);
-    backdrop-filter: blur(5px);
     align-items: center;
     justify-content: center;
-    
     animation: fade-up 0.5s ease-in-out;
-    
+}
+
+.modal.show {
+    display: flex;
 }
 
 .modal-content {
