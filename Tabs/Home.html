@@ -87,6 +87,123 @@
 <br>
 <br>
 
+
+
+
+
+
+
+
+<div class="carousel-wrapper"> 
+  <div class="new-release-section">
+    <h2>New Release</h2>
+    
+    <div class="carousel-container">
+      
+      <button class="nav-btn left-btn" id="slideLeft">&#10094;</button>
+      
+      <div class="carousel-track" id="track">
+
+        
+        
+        <div class="book-card">
+            <img src="../resources/Books/GreatGasby.png" alt="A book cover of The Great Gatsby">
+        <div class="book-info">
+          <h3>A book of The Great Gatsby</h3>
+          <p>Emily St. John</p>
+          <span class="genre-tag">Fiction</span>
+        </div>  
+        </div>
+
+
+
+
+
+     <div class="book-card">
+            <img src="../resources/img/endswithusposter.jpg" style="width: 100%; height: 300px;" alt="A book cover of The Great Gatsby">
+        <div class="book-info">
+          <h3>Ugly Love</h3>
+          <p>Emily St. John</p>
+          <span class="genre-tag">Romance </span>
+        </div>  
+        </div>
+
+
+
+
+
+
+     <div class="book-card">
+            <img src="../resources/Books/GreatGasby.png" alt="A book cover of The Great Gatsby">
+        <div class="book-info">
+          <h3>A book of The Great Gatsby</h3>
+          <p>Emily St. John</p>
+          <span class="genre-tag">Fiction</span>
+        </div>  
+        </div>
+
+
+
+
+
+        <div class="book-card">
+            <img src="../resources/Books/GreatGasby.png" alt="A book cover of The Great Gatsby">
+        <div class="book-info">
+          <h3>A book of The Great Gatsby</h3>
+          <p>Emily St. John</p>
+          <span class="genre-tag">Fiction</span>
+        </div>  
+        </div>
+
+
+
+
+
+
+        <div class="book-card">
+            <img src="../resources/Books/GreatGasby.png" alt="A book cover of The Great Gatsby">
+        <div class="book-info">
+          <h3>A book of The Great Gatsby</h3>
+          <p>Emily St. John</p>
+          <span class="genre-tag">Fiction</span>
+        </div>  
+        </div>
+
+
+
+
+
+
+        <div class="book-card">
+            <img src="../resources/Books/GreatGasby.png" alt="A book cover of The Great Gatsby">
+        <div class="book-info">
+          <h3>A book of The Great Gatsby</h3>
+          <p>Emily St. John</p>
+          <span class="genre-tag">Fiction</span>
+        </div>  
+        </div>
+
+
+
+
+
+      </div>
+      
+      <button class="nav-btn right-btn" id="slideRight">&#10095;</button>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<br>
+<br>
+<br>
 <h1> Best Sellers </h1>
 
 
@@ -135,11 +252,28 @@
 
 
 
-<br>
-<br>
 
 
 
+
+
+<script>
+  const track = document.getElementById('track');
+  const slideLeft = document.getElementById('slideLeft');
+  const slideRight = document.getElementById('slideRight');
+
+  // The distance to scroll per click. 
+  // Adjust this based on your card width + gap!
+  const scrollAmount = 230; 
+
+  slideLeft.addEventListener('click', () => {
+    track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  });
+
+  slideRight.addEventListener('click', () => {
+    track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  });
+</script>
 
 
 
