@@ -281,6 +281,78 @@ body {
 
 
 
+
+.Carousole{
+  
+  display: flex;
+  border:5px solid #4A2C2A;
+  border-radius: 15px;
+  overflow-x: auto;
+  margin:70px auto;
+  width:90%;
+  gap:2em;
+ 
+
+
+
+}
+
+.Carousole::-webkit-scrollbar {
+  display: none; 
+}
+
+
+
+.group{
+    display: flex;
+    gap: 3em;
+    align-items: center;
+    justify-content: center;
+    animation: spin 20s linear infinite;
+    padding-right: 3em;
+}
+
+
+.Images-carousole{
+    flex: 0 0 5em;
+   
+    height: 5em;
+    padding: 1em;
+   font-size:3rem;
+   text-align:center;
+   align-content:center;
+    border-radius: o.2em;
+     align-items: center;
+    justify-content: center;
+  
+}
+
+h1{
+
+margin: 0; 
+  line-height: 1.1; 
+  font-family: 'Playfair Display', serif;
+  color: #4A2C2A;
+  font-size: 47px;
+  line-height: 1.1;
+  margin: 0 0 30px 0;
+  padding-left:30px;
+
+}
+
+@keyframes spin {
+
+    from{translate:0;}
+    to{translate:-100%;}
+
+    
+    
+}
+
+
+
+
+
 .dropdown button {
     background-color: transparent;
     color: #4A2C2A;
