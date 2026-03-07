@@ -1,51 +1,27 @@
-// 1. Grab the elements
+//Filters box
 const btn = document.getElementById('toggleBtn');
 const box = document.getElementById('expandBox');
 
-// 2. Only run if BOTH exist on the current page
 if (btn && box) {
     btn.addEventListener('click', () => {
         box.classList.toggle('open');
         console.log("Filter menu toggled!");
     });
 }
-const modal = document.getElementById("bookModal");
-const closeBtn = document.querySelector(".close-button");
+// Search button
+const searchBtn = document.getElementById('searchBtn');
+const searchInput = document.querySelector('.search-input');
 
-if (modal && closeBtn) {
-    // Select all your book cards
-    document.querySelectorAll('.book-card').forEach(card => {
-        card.addEventListener('click', () => {
-            // 1. Get the data from the card
-            const title = card.querySelector('h3').innerText; 
-            const author = card.querySelector('p').innerText;
-            const details = card.querySelector('h4').innerText; // If you have a hidden details element
-            const imageSrc = card.querySelector('img').src; // Grabs the cover
-
-            // 2. Inject the data into the modal
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-author').innerText = author;
-            document.getElementById('modal-details').innerText = details;
-            document.getElementById('modal-image').src = imageSrc; // Sets the modal image
-
-            // 3. Show and animate the modal
-            modal.classList.add('show');
-            setTimeout(() => {
-                document.querySelector('.modal-content').classList.add('is-visible');
-            }, 10);
-        });
+if (searchBtn && searchInput) {
+    searchBtn.addEventListener('click', () => {
+        const query = searchInput.value.trim();
     });
-
-    // Close when clicking 'X'
-    closeBtn.onclick = () => modal.classList.remove('show');
-
-    // Close if clicking outside the box
-    window.onclick = (event) => {
-        if (event.target == modal) modal.classList.remove('show');
-    };
 }
+const BookSearchBtn = document.getElementById('BookSearchBtn');
 
-// ── Organic Ripple Background on Genre Card Hover ──
+
+
+// Genre tab background
 const ripple = document.getElementById('bgRipple');
 
 if (ripple) {
@@ -109,3 +85,74 @@ if (ripple) {
         });
     });
 }
+
+    const Books=[
+        {
+            title: "Ugly Love",
+            author: "Colleen Hoover",
+            genre: "Drama",
+            year: "2014",
+            image: "../resources/Books/UglyLove.png",
+            pages: "336"
+        },
+        {
+            title: "Journey to the center of the earth",
+            author: "Jules Verne",
+            genre: "Adventure",
+            year: "1864",
+            image: "../resources/Books/JourneyToThe CentreOfTheEarth.png",
+            pages: "240"
+        },
+        {
+            title: "A Song Of Ice And Fire",
+            author: "George R.R. Martin",
+            genre: "Fantasy",
+            year: "1996",
+            image: "../resources/Books/ASongOfIceAndFire.png",
+            pages: "720"
+
+        },
+        {
+            title: "Verity",
+            author: "Colleen Hoover",
+            genre: "Thriller",
+            year: "2018",
+            image: "../resources/Books/Verity.png",
+            pages: "336"
+            
+        },
+        {
+            title: "Chapterhouse: Dune",
+            author: "Frank Herbert",
+            genre: "Science-Fiction",
+            year: "1985",
+            image: "../resources/Books/Dune.png",
+            pages: "622"
+        },
+        {
+            title: "The Shining",
+            author: "Stephen King",
+            genre: "Horror",
+            year: "1977",
+            image: "../resources/Books/TheShining.png",
+            pages: "468"
+        }
+
+    ];
+const container = document.getElementById("books-container");
+
+Books.forEach(book => {
+  const card = document.createElement("div");
+  card.classList.add("book-listing");
+
+  card.innerHTML = `
+    <img class= "book-cover" src="${book.image}" >
+    <button class="add-to-cart" type="submit">Add to cart</button>
+    <p class= "book-details">${book.genre} | ${book.year}</p>
+    <h3 class= "book-title">${book.title}</h3>
+    <p class="book-author">${book.author}</p>
+    
+  `;
+
+  container.appendChild(card);
+});
