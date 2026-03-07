@@ -58,7 +58,8 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         <p class="hero-quote">EXPLORE NOW</p>
         
     </div>
-
+    
+    </section>
     <!-- hetet l search -->
     <div class="search-section-container">
     <div class="search-row-flex">
@@ -66,10 +67,9 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
             <span class="material-symbols-outlined">search</span>
             <input class="search-input" type="search" placeholder="Search for books...">
         </div>
-        <button class="search-button" type="submit">Search</button>
-        <button id="toggleBtn" class="search-filters-button"> 
+        <button id="searchBtn" class="search-button" type="button">Search</button>
+        <button id="toggleBtn" class="search-filters-button" type="button"> 
             <span class="material-symbols-outlined" >filter_list</span>
-</span>
         </button>
     </div>
         <div id ="expandBox" class="search-filters-content">
@@ -87,51 +87,11 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
             </div>
         </div>
     </div>
-    </section>
     <!-- grid -->
-    <div class="book-grid">
-  <div class="book-card">
-    <div class="book-cover"><img src="../resources/Books/UglyLove.png" alt="Book 1" style="width: 250px; height:250px;" ></div>
-    <button class="add-to-cart" type="submit">Add to Cart</button>
-    <span class="book-details"><h4>Romance · 2014</h4></span>
-    <h3 class="book-title">Ugly Love</h3>
-    <p class="book-author">Colleen Hoover</p>
-    </div>
-
-  <div class="book-card">
-    
-    <div class="book-cover"><img src="../resources/Books/GreatGasby.png" alt="Book 2" style="width: 250px; height:250px;"></div>
-    <button class="add-to-cart" type="submit">Add to Cart</button>
-    <span class="book-details"><h4>Fiction · 1925</h4></span>
-    <h3 class="book-title">The Great Gatsby</h3>
-    <p class="book-author">F. Scott Fitzgerald</p>
-    </div>
-  </div>
-
-  <!-- Repeat more cards as needed -->
-</div>
-<button class="modal-Button" type="button">Open Modal</button>
-<div id="bookModal" class="modal">
-  <div class="modal-content">
-    <span class="close-button">&times;</span>
-        <div class="modal-image-container">
-            <img id="modal-image" src="" alt="Book Cover" style="width:300px; height:450px; border-radius:8px;">
-        </div>
-        <div class="modal-book-info">
-        <span class="material-symbols-outlined" id="favoriteIcon">
-        favorite
-        </span>
-        <div class= "modal-info" id="modal-info">
-        
-        <p id="modal-details"></p>
-        <h2 id="modal-title"></h2>
-        <p id="modal-author"></p>
-        </div>
-    </div>
-    </div>  
-</div>
-
-<script src="../script.js"></script>
+    <a href="../Tabs/Product.html" style="text-decoration:none;"><div id="books-container"></div></a>
+ 
+<script src="../script.js">
+</script>
 </body>
 
-</html>
+</html>     
