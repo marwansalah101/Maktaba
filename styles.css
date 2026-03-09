@@ -1,3 +1,4 @@
+
 body {
     height: 100vh;
     margin: 0;
@@ -284,19 +285,25 @@ body {
 /*------------------CAROUSEL------------------*/
 
 .carousel-wrapper {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: #fcfaf7; 
   padding: 30px;
+ 
   margin-top: -40px;
   width: 100%; 
+  height: 90%;
   box-sizing: border-box;
+  
+ 
 }
 
 
 .new-release-section h2 {
   font-size: 20px;
   color: #4a4a4a;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: bold;
 }
 
 
@@ -304,8 +311,13 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 73%;
   height:100%;
+  justify-content: center;
+  margin-left:150px;
+    padding-left: 20px; 
+  padding-right: 20px;
+  
     
 }
 
@@ -320,8 +332,7 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   width: 100%;
- 
-  
+
   
 }
 
@@ -332,11 +343,12 @@ body {
 
 
 .book-card {
- min-width: 200px; 
-  max-width: 140px;
+ width: 200px; 
+  flex:0 0 auto;
   display: flex;
   flex-direction: column;
-  scroll-snap-align: start; /* Snaps beautifully when scrolling */
+  scroll-snap-align: start;
+ 
   
 }
 
@@ -366,7 +378,7 @@ body {
 
 .nav-btn {
   position: absolute;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%); /* Perfectly centers vertically */
   background-color: white;
   border: 1px solid #eaeaea;
@@ -391,11 +403,11 @@ body {
 
 
 .left-btn {
-  left: -40px; 
+  left: -50px; 
 }
 
 .right-btn {
-  right: -30px; 
+  right: -40px; 
 }
 
 
@@ -403,15 +415,43 @@ body {
 
 
 /* The Carousole itself */
+
+.carousel-background{
+
+ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #ad9f8b; 
+  padding: 30px;
+  margin-top: -40px;
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+.best-sellers h2{
+ font-family:'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 25px;
+  margin-bottom: 70px;
+  color: #dedede;
+}
+
 .Carousole{
   
   display: flex;
-  border:5px solid #4A2C2A;
+  border:5px solid #4a432a;
   border-radius: 15px;
-  overflow-x: auto;
+  overflow-x: hidden;/* It completely disables right/left scrolling */
+  overflow-y: hidden;/* It completely disables up/down scrolling */
   margin:70px auto;
-  width:90%;
+  width:80%;
+  height:300px;
   gap:2em;
+  border:transparent;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 50%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  
+  align-items: center;
+  
+ 
  
 
 
@@ -427,44 +467,66 @@ body {
 .group{
     display: flex;
     gap: 3em;
-    align-items: center;
-    justify-content: center;
-    animation: spin 20s linear infinite;
     padding-right: 3em;
+    align-items: center;
+    justify-content: flex-start;
+    animation: spin 20s linear infinite;
+    width: max-content;/* Forces the container to be as wide as all the duplicated books */
+}
+
+
+.group:hover {
+  
+  cursor: pointer; /* Changes the mouse to a pointing hand */
 }
 
 
 .Images-carousole{
     flex: 0 0 5em;
-   
-    height: 5em;
-    padding: 1em;
-   font-size:3rem;
+    padding: 2em;
+   font-size:30px;
    text-align:center;
    align-content:center;
     border-radius: o.2em;
      align-items: center;
     justify-content: center;
+    /* ADD THESE: Prevents the "ghost drag" but ALLOWS clicking */
+  -webkit-user-drag: none; 
+  user-select: none;
+
   
 }
 
-h1{
-
-margin: 0; 
-  line-height: 1.1; 
+.Images-carousole a {
+  text-decoration: none;
+}
+.book-info2 h3 {
+  font-size: 0.95rem;
+  color: #333;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+  text-align:center;
   font-family: 'Playfair Display', serif;
-  color: #4A2C2A;
-  font-size: 47px;
-  line-height: 1.1;
-  margin: 0 0 30px 0;
-  padding-left:30px;
 
 }
 
+.book-info2 p {
+  font-size: 0.8rem;
+  color: #777;
+  margin: 0 0 12px 0;
+}
+
+
+
 @keyframes spin {
 
-    from{translate:0;}
-    to{translate:-100%;}
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Moves exactly one set of books, then flawlessly resets */
+    transform: translateX(-50%); 
+  }
 
     
     
