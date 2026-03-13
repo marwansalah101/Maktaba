@@ -22,7 +22,7 @@ body {
 
 
 .homepage{
-    background-color: #fcf4e8;
+    background-color: #f7f7f7;
 
 }
 
@@ -286,7 +286,7 @@ body {
 
 .carousel-wrapper {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #fcfaf7; 
+  background-color:  #FAF2E8; 
   padding: 30px;
  
   margin-top: -40px;
@@ -300,7 +300,7 @@ body {
 
 .new-release-section h2 {
   font-size: 20px;
-  color: #4a4a4a;
+  color: #4a2c2a;
   margin-bottom: 40px;
   font-family: "Segoe UI", sans-serif;
   font-weight: bold;
@@ -364,7 +364,7 @@ body {
 
 .book-info h3 {
   font-size: 0.95rem;
-  color: #333;
+  color: #4a2c2a;
   margin: 0 0 6px 0;
   line-height: 1.2;
 }
@@ -380,13 +380,13 @@ body {
   position: absolute;
   top: 40%;
   transform: translateY(-50%); /* Perfectly centers vertically */
-  background-color: white;
+  background-color: #4a2c2a;
   border: 1px solid #eaeaea;
   border-radius: 50%;
   width: 44px;
   height: 44px;
   font-size: 1.2rem;
-  color: #333;
+  color: white;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 10;
@@ -412,6 +412,33 @@ body {
 
 
 
+/* The Image between the carrousel */
+
+.between-carousels{
+    
+     background-image: url('resources/img/0ebb6477186da4a48ea616925f1573f9.jpg');
+    background-size: cover;
+    background-position: center;
+     height: 300px;
+     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    
+   
+}
+
+.Slogan-Image p{
+
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: white;
+    opacity: 0.8;
+}
+
+
+
 
 
 /* The Carousole itself */
@@ -419,7 +446,7 @@ body {
 .carousel-background{
 
  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #ad9f8b; 
+  background-color:  #FDF5E6; 
   padding: 30px;
   margin-top: -40px;
   width: 100%; 
@@ -431,7 +458,9 @@ body {
   font-weight: bold;
   font-size: 25px;
   margin-bottom: 70px;
-  color: #dedede;
+  color: #4a2c2a;
+  align-items: center;
+  justify-content: center;
 }
 
 .Carousole{
@@ -512,8 +541,22 @@ body {
 
 .book-info2 p {
   font-size: 0.8rem;
-  color: #777;
+  color: #4a2c2a;
   margin: 0 0 12px 0;
+}
+
+
+
+/* The Pill-shaped Genre Tags */
+.genre-tag {
+  display: inline-block;
+  background-color:#4a2c2a;
+  color: #edeaea;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px; /* Creates the pill shape */
+  align-self: flex-start; /* Prevents the tag from stretching to full width */
 }
 
 
@@ -536,21 +579,118 @@ body {
 
 
 
+/* ABOUT US  */
 
-
-
-
-/* The Pill-shaped Genre Tags */
-.genre-tag {
-  display: inline-block;
-  background-color: #e8e8e8;
-  color: #666;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px; /* Creates the pill shape */
-  align-self: flex-start; /* Prevents the tag from stretching to full width */
+.about-us {
+    background-color: #FAF2E8; /* The cream background moves here */
+    padding: 90px 10px; /* Breathing room on the top/bottom and sides */
+    min-height: 100px;
+    
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+  
 }
+
+.about-us-section{
+ display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 850px;
+
+}
+
+
+.about-us-section h4 {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.25em; 
+    color: #8C7B75;
+    margin-bottom: -30px;
+    margin-top: -10px;
+}
+
+
+.about-us-section h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem); /* Scales smoothly on mobile */
+    font-weight: 400;
+    color: #4A3C38;
+    margin-bottom :10px;
+}
+
+
+
+
+.about-us-section p {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    line-height: 1.8; 
+    color: #6B5C57;
+    max-width: 850px;
+    margin-bottom:-15px; 
+}
+
+
+
+ .stats-card {
+    background-color: #FDFAF6; /* Very light cream/white */
+     width: 100%;
+     max-width: 1200px;
+     margin-top: 4rem;
+     padding: 3rem 2rem;
+     border-radius: 20px;
+     box-shadow: 0 15px 35px rgba(74, 60, 56, 0.05); /* Soft shadow */     
+    display: flex;
+    flex-wrap: wrap; /* Allows items to push to a new line if the screen gets too small */
+    justify-content: space-between; /* Spreads them evenly across the card */
+    align-items: center;
+    gap: 2rem;
+    }
+
+
+    .stats-card:hover{
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+    transition: all 0.5s ease-in-out;
+
+
+}
+
+ .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+       /* Tells each item to take up an equal share of the space */
+    flex: 1; 
+    
+    /* Prevents them from squishing into unreadable slivers on phones */
+    min-width: 180px;
+        }
+
+ .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: #4A3C38;
+        }
+
+ .stat-label {
+     font-family: 'Lora', serif;
+     font-size: 0.75rem;
+     text-transform: uppercase;
+     letter-spacing: 0.15em;
+     color: #8C7B75;
+       
+    }
+
+
 
 
 
