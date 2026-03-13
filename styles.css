@@ -286,7 +286,7 @@ body {
 
 .carousel-wrapper {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color:  #FAF2E8; 
+  background-color:  #FDF5E6; 
   padding: 30px;
  
   margin-top: -40px;
@@ -315,7 +315,7 @@ body {
   height:100%;
   justify-content: center;
   margin-left:150px;
-    padding-left: 20px; 
+  padding-left: 20px; 
   padding-right: 20px;
   
     
@@ -412,6 +412,7 @@ body {
 
 
 
+
 /* The Image between the carrousel */
 
 .between-carousels{
@@ -419,22 +420,47 @@ body {
      background-image: url('resources/img/0ebb6477186da4a48ea616925f1573f9.jpg');
     background-size: cover;
     background-position: center;
-     height: 300px;
-     width: 100%;
+    position: relative;
+    width: 100%;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    
-   
+    overflow: hidden; /* Important: keeps blur from spreading outside */
+    padding: 20px;
+    box-sizing: border-box;
+
+     
+}
+
+.between-carousels:before {
+    content: ''; /* Required for pseudo-elements */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(52, 51, 51, 0.6); /* Dark tint (60% black) */
+    backdrop-filter: blur(6px); /* The blurring effect */
+    -webkit-backdrop-filter: blur(6px); /* For Safari support */
+    z-index: 1; /* Puts overlay above image but below text */
+}
+
+
+.Slogan-Image{
+
+ z-index: 2; /* Important: Puts text ABOVE the blurry overlay */
+    text-align: center; /* Center-align the paragraphs */
+    color: #fff; /* White text for contrast */
+    font-family: serif; /* Matches the text style in second image */
+    font-size: 18px;
+    max-width: 80%;
+
 }
 
 .Slogan-Image p{
 
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    color: white;
-    opacity: 0.8;
+   margin: 5px 0;
 }
 
 
@@ -448,7 +474,7 @@ body {
  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color:  #FDF5E6; 
   padding: 30px;
-  margin-top: -40px;
+  margin-top: 0px;
   width: 100%; 
   box-sizing: border-box;
 }
@@ -456,13 +482,30 @@ body {
 .best-sellers h2{
  font-family:'Times New Roman', Times, serif;
   font-weight: bold;
-  font-size: 25px;
-  margin-bottom: 70px;
+  font-size: 30px;
   color: #4a2c2a;
-  align-items: center;
-  justify-content: center;
+  text-align:center;
+  margin-bottom: 5px;
+  margin-top:30px;
 }
 
+.title-underline {
+  width: 180px;      
+  height: 1px ;      
+  background-color: #333;      
+  margin: 0 auto 20px auto;    /* Centers the div and adds bottom space */
+}
+
+.best-sellers p{
+
+font-family:'Times New Roman', Times, serif;
+  font-size: 14px;
+  margin-bottom: 100px;
+  color: #4a2c2a;
+  text-align:center;
+
+
+}
 .Carousole{
   
   display: flex;
@@ -585,8 +628,6 @@ body {
     background-color: #FAF2E8; /* The cream background moves here */
     padding: 90px 10px; /* Breathing room on the top/bottom and sides */
     min-height: 100px;
-    
-    
     display: flex;
     flex-direction: column;
     align-items: center; 
@@ -641,7 +682,7 @@ body {
  .stats-card {
     background-color: #FDFAF6; /* Very light cream/white */
      width: 100%;
-     max-width: 1200px;
+     max-width: 1100px;
      margin-top: 4rem;
      padding: 3rem 2rem;
      border-radius: 20px;
@@ -689,6 +730,119 @@ body {
      color: #8C7B75;
        
     }
+
+
+
+    /* FAVORITE AUTHOURS */
+
+ .author-background{
+
+ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color:  #FDF5E6; 
+  padding: 30px;
+  margin-top: -40px;
+  width: 100%; 
+  height: 90%;
+  box-sizing: border-box;
+    
+ }
+ 
+ .Favorite-Authors h2{
+
+  font-family:'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 30px;
+  color: #4a2c2a;
+  text-align:center;
+  margin-bottom: 5px;
+
+
+ }
+
+
+ .Favorite-Authors p{
+
+ font-family:'Times New Roman', Times, serif;
+  font-size: 14px;
+  margin-bottom: 100px;
+  color: #4a2c2a;
+  text-align:center;
+
+
+ }
+
+ .author-caroussel{
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height:100%;
+  justify-content: center;
+  margin-left:150px;
+  padding-left: 20px; 
+  padding-right: 20px;
+
+ }
+
+ .author-section{
+
+  display: flex;
+  gap: 70px; 
+  overflow-x: auto; /* Enables horizontal scrolling */
+  padding-bottom: 20px; 
+  scroll-snap-type: x mandatory; /* Makes scrolling snap to the cards */
+  justify-content: flex-start;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+
+
+ }
+
+ .author-card{
+ text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  width: 150px;
+  
+ }
+
+ .author-card img{
+
+  width: 130px;  
+  height: 130px;
+  border-radius: 50%; /* This makes it a circle */
+  overflow: hidden;   
+  border: 2px solid #ddd; 
+  margin-bottom: 10px;    
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+ }
+
+ .author-info h3{
+
+font-size: 0.95rem;
+  color: #4a2c2a;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  /* Add "..." if the name is too long for the box */
+}
+
+ .author-info p{
+
+  font-size: 12px;
+  color: #777;
+  margin: 0 auto;
+  width: 90%;               /* Slightly smaller than the name for better look */
+
+ }
+
 
 
 
