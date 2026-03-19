@@ -1669,3 +1669,104 @@ font-size: 0.95rem;
     color: white !important;
     transition: color 0.5s ease;
 }
+
+
+/*!--sign in--*/
+
+/* Page background */
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:serif;
+
+    background:linear-gradient(rgba(123, 81, 36, 0.6), rgba(172, 105, 57, 0.6)), url("https://images.unsplash.com/photo-1507842217343-583bb7270b66");
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+}
+
+/* Form container */
+.form-container{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+}
+
+/* Inputs */
+input{
+    width: 365px;
+    height: 20px;
+    border-radius: 25px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+/* Input focus effect */
+input:focus{
+    border-color:#5a4638;
+}
+
+/* Sign-up button (top right) */
+.signup-btn{
+    position:absolute;
+    top:30px;
+    right:40px;
+    text-decoration:none;
+    color:#d4ae92;
+    background-color:#5a4638;
+    padding:10px 22px;
+    border-radius:25px;
+    font-size:16px;
+}
+
+/* Logo */
+.logo{
+    color: #504339;
+    font-size: 60px;
+    margin-top: -10px;
+    text-align: center;
+}
+
+/* Login button */
+.login-btn{
+    background-color:#504339;
+    color:#d4ae92;
+    width:280px;
+    padding:12px;
+    border-radius:30px;
+    border:none;
+    font-size:16px;
+    cursor:pointer;
+    display:block;
+    margin:auto;
+    transition: 0.3s;
+}
+
+/* Button hover */
+.login-btn:hover{
+    background-color:#3b3229;
+}
+
+/* Forgot password link */
+.forgot{
+    display:block;
+    text-align:center;
+    margin-top:10px;
+    text-decoration:none;
+    color:#504339;
+    font-size:15px;
+}
+
+
+
+/* -----sign Up------*/
+
