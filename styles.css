@@ -1673,100 +1673,92 @@ font-size: 0.95rem;
 
 /*!--sign in--*/
 
-/* Page background */
 body{
     margin:0;
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-family:serif;
-
-    background:linear-gradient(rgba(123, 81, 36, 0.6), rgba(172, 105, 57, 0.6)), url("https://images.unsplash.com/photo-1507842217343-583bb7270b66");
-    
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
+    background:#eaeaf2;
+    font-family:sans-serif;
 }
 
-/* Form container */
-.form-container{
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    align-items: center;
+/* Main container */
+.main-container{
+    display:flex;
+    width:900px;
+    height:550px;
+
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+
+    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* LEFT (FORM) */
+.form-side{
+    width:50%;
+    padding:50px;
+
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+/* Title */
+.form-side h2{
+    margin:0;
+}
+
+/* Description */
+.desc{
+    font-size:14px;
+    color:#666;
+}
+
+/* Labels */
+label{
+    font-size:14px;
+    margin-top:10px;
 }
 
 /* Inputs */
 input{
-    width: 365px;
-    height: 20px;
-    border-radius: 25px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    outline: none;
-    font-size: 16px;
-    transition: 0.3s;
-}
-
-/* Input focus effect */
-input:focus{
-    border-color:#5a4638;
-}
-
-/* Sign-up button (top right) */
-.signup-btn{
-    position:absolute;
-    top:30px;
-    right:40px;
-    text-decoration:none;
-    color:#d4ae92;
-    background-color:#5a4638;
-    padding:10px 22px;
-    border-radius:25px;
-    font-size:16px;
-}
-
-/* Logo */
-.logo{
-    color: #504339;
-    font-size: 60px;
-    margin-top: -10px;
-    text-align: center;
-}
-
-/* Login button */
-.login-btn{
-    background-color:#504339;
-    color:#d4ae92;
-    width:280px;
     padding:12px;
-    border-radius:30px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+/* Button */
+.login-btn{
+    margin-top:15px;
+    padding:12px;
     border:none;
-    font-size:16px;
+    border-radius:10px;
+
+    background:#5a4638;
+    color:white;
     cursor:pointer;
-    display:block;
-    margin:auto;
-    transition: 0.3s;
 }
 
-/* Button hover */
-.login-btn:hover{
-    background-color:#3b3229;
-}
-
-/* Forgot password link */
-.forgot{
-    display:block;
+/* Bottom text */
+.bottom-text{
+    font-size:13px;
     text-align:center;
-    margin-top:10px;
-    text-decoration:none;
-    color:#504339;
-    font-size:15px;
 }
 
+.bottom-text span{
+    color:#5a4638;
+    font-weight:bold;
+}
 
+/* RIGHT (IMAGE PANEL) */
+.image-side{
+    width:50%;
 
-/* -----sign Up------*/
+   
 
+    background: url("https://images.unsplash.com/photo-1512820790803-83ca734da794");
+    background-size: cover;
+    background-position: center;}
