@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Favorites - Maktaba</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body class="favorites-page">
+
+  <main class="favorites-wrapper">
+    <a href="Genres.html" class="favorites-back">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Back to Browse
+    </a>
+
+    <h1 class="favorites-title">Favorites</h1>
+    <p class="favorites-subtitle">Your handpicked collection of beloved titles.</p>
+
+    <section class="favorites-list">
+
+      <!-- item 1 -->
+      <div class="favorite-item">
+        <div class="favorite-left">
+          <img src="../resources/Books/ASongOfIceAndFire.png" alt="A song of Ice and Fire">
+          <div class="favorite-info">
+            <span class="favorite-category">FICTION</span>
+            <h3>A song of Ice and Fire</h3>
+            <p>Georger martin</p>
+          </div>
+        </div>
+
+        <div class="favorite-right">
+          <span class="favorite-price">€24.00</span>
+
+          <button class="favorite-bag-btn" aria-label="Add to cart">
+            <span class="material-symbols-outlined">shopping_bag</span>
+          </button>
+
+          <button class="favorite-heart-btn" aria-label="Add to favourites">
+            <span class="material-symbols-outlined">favorite</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- item 2 -->
+      <div class="favorite-item">
+        <div class="favorite-left">
+          <img src="../resources/Books/Dune.png" alt="Dune">
+          <div class="favorite-info">
+            <span class="favorite-category">chapterhouse</span>
+            <h3>Dune</h3>
+            <p>Frank Herbet</p>
+          </div>
+        </div>
+
+        <div class="favorite-right">
+          <span class="favorite-price">€19.00</span>
+
+          <button class="favorite-bag-btn" aria-label="Add to cart">
+            <span class="material-symbols-outlined">shopping_bag</span>
+          </button>
+
+          <button class="favorite-heart-btn" aria-label="Add to favourites">
+            <span class="material-symbols-outlined">favorite</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- item 3 -->
+      <div class="favorite-item">
+        <div class="favorite-left">
+          <img src="../resources/Books/TheShining.png" alt="the shining">
+          <div class="favorite-info">
+            <span class="favorite-category">SCI-FI</span>
+            <h3>The shining</h3>
+            <p>Stephen king</p>
+          </div>
+        </div>
+
+        <div class="favorite-right">
+          <span class="favorite-price">€29.00</span>
+
+          <button class="favorite-bag-btn" aria-label="Add to cart">
+            <span class="material-symbols-outlined">shopping_bag</span>
+          </button>
+
+          <button class="favorite-heart-btn" aria-label="Add to favourites">
+            <span class="material-symbols-outlined">favorite</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
