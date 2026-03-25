@@ -156,3 +156,113 @@ Books.forEach(book => {
 
   container.appendChild(card);
 });
+/*order succes*/
+const orderData = {
+    items: [
+        {
+            title: "Midnight Letters",
+            price: 19.00,
+            qty: 1,
+            img: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=200&h=300&fit=crop"
+        },
+        {
+            title: "Echoes of Tomorrow",
+            price: 29.00,
+            qty: 1,
+            img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=300&fit=crop"
+        },
+        {
+            title: "The Silent Garden",
+            price: 24.00,
+            qty: 1,
+            img: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=200&h=300&fit=crop"
+        }
+    ]
+};
+
+function renderOrder() {
+    const listContainer = document.getElementById("order-items-list");
+    const totalElement = document.getElementById("order-total");
+
+    if (!listContainer || !totalElement) return;
+
+    let total = 0;
+    listContainer.innerHTML = "";
+
+    orderData.items.forEach(item => {
+        total += item.price * item.qty;
+
+        const itemCard = document.createElement("div");
+        itemCard.className = "order-item";
+
+        itemCard.innerHTML = `
+            <img src="${item.img}" alt="${item.title}">
+            <div class="order-item-info">
+                <h4>${item.title}</h4>
+                <p>QTY: ${item.qty}</p>
+            </div>
+            <div class="order-item-price">€${item.price.toFixed(2)}</div>
+        `;
+
+        listContainer.appendChild(itemCard);
+    });
+
+    totalElement.textContent = `€${total.toFixed(2)}`;
+}
+
+function showToast() {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 400);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    renderOrder();
+    showToast();
+});
+
+/*favorites*/ 
+const favoritesData = [
+    { category: "FICTION", title: "The Silent Garden", author: "Eleanor Voss", price: "24.00", img: "HarryPotter.jpg" },
+    { category: "MYSTERY", title: "Midnight Letters", author: "James Hartley", price: "19.00", img: "GreatGasby.jpg" },
+    { category: "SCI-FI", title: "Echoes of Tomorrow", author: "Sana Mirza", price: "29.00", img: "Dune.jpg" }
+];
+
+function renderFavs() {
+    const list = document.getElementById('fav-list');
+    if (!list) return;
+    
+    list.innerHTML = favoritesData.map(item => `
+        <div class="fav-item">
+            <img src="${item.img}" class="fav-img">
+            <div class="fav-info">
+                <div class="fav-category">${item.category}</div>
+                <h3 class="fav-title">${item.title}</h3>
+                <p class="fav-author">${item.author}</p>
+            </div>
+            <div class="fav-price">€${item.price}</div>
+            <div class="actions">
+                <button class="cart-btn">🛒</button>
+                <button class="heart-btn active" onclick="toggleHeart(this)">❤</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function toggleHeart(btn) {
+    btn.classList.toggle('active');
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const hearts = document.querySelectorAll(".favorite-heart-btn");
+
+    hearts.forEach(btn => {
+        btn.addEventListener("click", function () {
+            this.classList.toggle("active");
+        });
+    });
+});
