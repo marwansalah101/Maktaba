@@ -1,83 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Genres</title>
-        <link rel="stylesheet" href="styles.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=person,shopping_bag" />
 
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genres</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=person,shopping_bag" />
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+</head>
+
 </html>
+
 <body class="homepage-genre">
     <nav class="navbarb ">
         <div id="Maktabab">
-            <a href="#Maktaba"><h1>Maktaba</h1></a>
+            <a href="#Maktaba">
+                <h1>Maktaba</h1>
+            </a>
         </div>
-            <ul class = "navrbarb-text">
-                <li>
-                    <a href="Home.html">
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="Genres.html">
-                        Browse
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        Favourites
-                    </a>
-                </li>
-            </ul>
-                <div class="navbarb-icons">
-                    <a href="#">
-                    <span class="material-symbols-outlined">shopping_bag</span>
-                    </a>
-                    <a href="#">
-                    <span class="material-symbols-outlined">person</span>
-                    </a>
-                </div>
+        <ul class="navrbarb-text">
+            <li>
+                <a href="Home.html">
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="Genres.html">
+                    Browse
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    Favourites
+                </a>
+            </li>
+        </ul>
+        <div class="navbarb-icons">
+            <a href="#">
+                <span class="material-symbols-outlined">shopping_bag</span>
+            </a>
+            <a href="#">
+                <span class="material-symbols-outlined">person</span>
+            </a>
+        </div>
     </nav>
-    
+
     <div class="genres-container">
-        <div class="genre-pagePretitle">
-            <p>Explore our wide range of collections</p>
-        </div>
-        <span class="genre-3d-img1"> <img src="../resources/asset/3DBOOK1.png" alt="3D Book" style="width: 50px; height: 50px;"></span>
-        <div class="genre-pageTitle">
-            <h1>Genres</h1>
-        </div>
-        <div class="genre-pageSubtitle">
-            <p>Discover your next chapter within our sanctuary of diverse voices and historical narratives</p>
-        </div>
+        <span class="genre-page-subtitle">— COLLECTION</span>
+        <h1 class="genre-page-title">Gen<span>res</span></h1>
     </div>
     <div class="bg-ripple" id="bgRipple"></div>
 
     <div class="genre-categories">
-        <div class="genre-card card-Horror" data-color="rgba(1, 23, 30)">
-            <h2>Horror</h2>
-        </div>
-        <a href="Collection.html"><div class="genre-card card-fantasy" data-color="rgba(55, 60, 65)">
-            
-            <h2>Fantasy</h2>
-        </div></a>
-        <a href="Collection.html"><div class="genre-card card-Thriller" data-color="rgba(25, 40, 70)">
-            <h2>Thriller</h2>
-        </div></a>
-        <a href="Collection.html"><div class="genre-card card-Science-Fiction" data-color="rgba(20, 35, 75)">
-            <h2>Science Fiction</h2>
-        </div></a>
-        <a href="Collection.html"><div class="genre-card card-Adventure" data-color="rgba(70, 95, 65)">
-            <h2>Adventure</h2>
-        </div></a>
-        <a href="Collection.html"><div class="genre-card card-drama" data-color="rgba(95, 55, 35)">
-            <h2>Drama</h2>
-        </div></a>
-                                                                
+        <a href="Collection.html">
+            <div class="genre-card-container">
+                <div class="genre-card card-Horror" data-color="rgba(1, 23, 30)">
+                </div>
+                <div class="genre-info">
+                    <h2 class="genre-title">Horror</h2>
+                    <p class="genre-description">Unleash your darkest fears with our spine-chilling horror collection.
+                    </p>
+                </div>
+            </div>
+        </a>
+        <a href="Collection.html">
+            <div class="genre-card-container">
+                <div class="genre-card card-fantasy" data-color="rgba(55, 60, 65)">
+                </div>
+                <div class="genre-info">
+                    <h2 class="genre-title">Fantasy</h2>
+                    <p class="genre-description">Journey through magical realms and mystical adventures.</p>
+                </div>
+            </div>
+        </a>
+        <a href="Collection.html">
+            <div class="genre-card-container">
+                <div class="genre-card card-Thriller" data-color="rgba(25, 40, 70)">
+                </div>
+                <div class="genre-info">
+                    <h2 class="genre-title">Thriller</h2>
+                    <p class="genre-description">Experience heart-pounding suspense and unexpected twists.</p>
+                </div>
+            </div>
+        </a>
+        <a href="Collection.html">
+            <div class="genre-card-container">
+                <div class="genre-card card-Science-Fiction" data-color="rgba(20, 35, 75)">
+                </div>
+                <div class="genre-info">
+                    <h2 class="genre-title">Science Fiction</h2>
+                    <p class="genre-description">Explore futuristic worlds and mind-bending discoveries.</p>
+                </div>
+            </div>
+        </a>
+        <a href="Collection.html">
+            <div class="genre-card-container">
+                <div class="genre-card card-Adventure" data-color="rgba(70, 95, 65)">
+                </div>
+                <div class="genre-info">
+                    <h2 class="genre-title">Adventure</h2>
+                    <p class="genre-description">Embark on thrilling journeys and daring expeditions.</p>
+                </div>
+            </div>
+        </a>
+        <a href="Collection.html">
+            <div class="genre-card-container">
+                <div class="genre-card card-drama" data-color="rgba(95, 55, 35)">
+                </div>
+                <div class="genre-info">
+                    <h2 class="genre-title">Drama</h2>
+                    <p class="genre-description">Immerse yourself in deeply emotional and compelling narratives.</p>
+                </div>
+            </div>
+        </a>
 
 
 
-<script src="../script.js"></script>
+
+        <script src="../script.js"></script>
 </body>
