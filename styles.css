@@ -273,11 +273,7 @@ body {
 }
 
 
-.book-video {
-    width: 500px;
-    border-radius: 15px;
-    margin-bottom: 30px;
-}
+
 
 
 /*------------------CAROUSEL------------------*/
@@ -351,6 +347,13 @@ body {
 
 
 }
+.book-card a {
+    text-decoration: none;
+    color: inherit;
+  
+}
+
+
 
 .book-card img {
     width: 100%;
@@ -360,6 +363,12 @@ body {
     margin-bottom: 16px;
     object-fit: cover;
 }
+
+.book-card img:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
 
 
 .book-info h3 {
@@ -771,7 +780,7 @@ body {
     padding: 30px;
     margin-top: -40px;
     width: 100%;
-    height: 90%;
+    height: 83%;
     box-sizing: border-box;
 
 }
@@ -841,6 +850,11 @@ body {
 
 }
 
+.author-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .author-card img {
 
     width: 130px;
@@ -879,6 +893,161 @@ body {
 
 
 
+
+
+/* THE FOOTER */
+
+.site-footer {
+  font-family: 'Georgia', serif; 
+    background-color:  #FAF2E8;
+    padding: 50px 40px;
+    border-top: 1px solid #e5e5e5;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+    padding:0;
+    Margin-left:80px;
+}
+
+.footer-col-brand-col{
+
+   flex: 2; /* Makes the first column wider to fit the text beautifully */
+   min-width: 250px;
+   Margin-right:400px;
+   
+
+}
+
+/* Individual Columns */
+.footer-col {
+    flex: 1;
+    min-width: 140px;
+    
+}
+
+
+
+
+
+/* Typography Styling */
+.footer-col-brand-col h3 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  
+    color:#4A3C38;
+}
+
+.footer-col-brand-col p {
+   font-family: 'Arial', Helvetica, sans-serif;
+    font-size: 14px;         /* Standard readable size for footer text */
+    font-weight: normal;     /* Ensures it is not bold */
+    line-height: 1.6;
+    color: #6B5C57;
+    
+}
+
+.footer-col h4 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #4A3C38;
+}
+
+
+.footer-col ul {
+   list-style-type: none;
+    padding: 0; /* This removes the default indent */
+    margin: 0;  /* This removes any default spacing around the list */
+}
+
+.footer-col ul li {
+    margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #6B5C57;
+    font-size: 13px;
+    font-family: 'Playfair Display', serif;
+    transition: color 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: #B8AEA0;
+}
+
+/* Social Media Icons */
+.social-icons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background-color: #412828;
+    color: #724747;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: #555;
+}
+
+
+.footer-bottom {
+    margin-top:  50px;       
+    padding-top: 25px;      
+    border-top: 1px solid rgba(0, 0, 0, 0.1); /* The "Underline" - a subtle, slightly transparent line */
+    
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    flex-wrap: wrap;        /* Allows wrapping on smaller screens */
+    gap: 15px;
+    margin-bottom:-25px;
+}
+
+.footer-bottom p {
+    font-size: 12px;       
+    margin: 0;
+}
+
+.footer-bottom-links {
+    display: flex;
+    gap: 60px;              
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-bottom-links li a {
+    text-decoration: none;
+    font-size: 12px;
+    color: inherit;         /* Automatically matches your other text colors */
+    transition: opacity 0.3s ease;
+}
+
+.footer-bottom-links li a:hover {
+    opacity: 0.6;           /* A gentle fade effect when hovered */
+}
 
 
 
