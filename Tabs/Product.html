@@ -1,140 +1,162 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Product</title>
-        <link rel="stylesheet" href="../styles.css">
+
+<head>
+    <title>Product</title>
+    <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
 
-    </head>
-</html>
 <body>
     <nav class="navbarb">
         <div id="Maktabab">
-            <a href="#Maktaba" style="margin-left: 20px;"><h1>Maktaba</h1></a>
+            <a href="#Maktaba" style="margin-left: 20px;">
+                <h1>Maktaba</h1>
+            </a>
         </div>
-            <ul class = "navrbarb-text">
-                <li>
-                    <a href="Home.html">
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="browseTab.html">
-                        Browse
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        Favourites
-                    </a>
-                </li>
-            </ul>
-                <div class="navbarb-icons">
-                    <a href="#">
-                    <span class="material-symbols-outlined">shopping_bag</span>
-                    </a>
-                    <a href="#">
-                    <span class="material-symbols-outlined">person</span>
-                    </a>
-                </div>
+        <ul class="navrbarb-text">
+            <li>
+                <a href="Home.html">
+                    Home
+                </a>
+            </li>
+            <li>
+                <a href="browseTab.html">
+                    Browse
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    Favourites
+                </a>
+            </li>
+        </ul>
+        <div class="navbarb-icons">
+            <a href="#">
+                <span class="material-symbols-outlined">shopping_bag</span>
+            </a>
+            <a href="#">
+                <span class="material-symbols-outlined">person</span>
+            </a>
+        </div>
     </nav>
-    <div class="product-page-gestalten">
-        <div class="product-header-gestalten">
-            <span class="gestalten-brand">Maktaba</span>
-            <span class="gestalten-page-title">Book Listing</span>
-            <span class="gestalten-cart-link">VIEW CART</span>
-        </div>
-        <div class="product-layout-gestalten">
-            <div class="gestalten-left-col">
-                <div class="gestalten-image-container">
-                    <div class="gestalten-bg-circle"></div>
-                    <img src="../resources/Books/UglyLove.png" alt="Book Cover" class="gestalten-book-cover" id="gestalten-main-img">
-                </div>
-                <div class="gestalten-preview-btn">CLICK FOR PREVIEW</div>
-            </div>
-            
-            <div class="gestalten-mid-col">
-                <h1 class="gestalten-title" id="gestalten-main-title">Debt — The First 5,000 Years</h1>
-                <p class="gestalten-author">by <span id="gestalten-main-author">DAVID GRAEBER</span></p>
-                
-                <div class="gestalten-description">
-                    <p class="gestalten-desc-intro" id="gestalten-main-desc-intro">Diminutive rooms, grand possibilities. Small Homes, Grand Living shows how to make use of a limited space and turn a small apartment into a design marvel.</p>
-                    <p class="gestalten-desc-body" id="gestalten-main-desc-body">Here anthropologist David Graeber presents a stunning reversal of conventional wisdom: he shows that before there was money, there was debt. For more than 5,000 years, since the beginnings of the first agrarian empires, humans have used elaborate credit systems to buy and sell goods—that is, long before the invention of coins or cash.</p>
-                </div>
-                
-                <div class="gestalten-details-grid">
-                    <div class="gestalten-detail-item">
-                        <span class="gestalten-label">Editors</span>
-                        <span class="gestalten-value">Maktaba</span>
-                    </div>
-                    <div class="gestalten-detail-item">
-                        <span class="gestalten-label">Features</span>
-                        <span class="gestalten-value" id="gestalten-main-pages">Full color, 256 pages</span>
-                    </div>
-                    <div class="gestalten-detail-item">
-                        <span class="gestalten-label">Release Date</span>
-                        <span class="gestalten-value" id="gestalten-main-year">May 2017</span>
-                    </div>
-                    <div class="gestalten-detail-item">
-                        <span class="gestalten-label">Language</span>
-                        <span class="gestalten-value">English</span>
-                    </div>
-                    <div class="gestalten-detail-item">
-                        <span class="gestalten-label">Format</span>
-                        <span class="gestalten-value">21 × 26 cm</span>
-                    </div>
-                    <div class="gestalten-detail-item">
-                        <span class="gestalten-label">ISBN</span>
-                        <span class="gestalten-value" id="gestalten-main-genre">978-3-89955-698-8</span>
-                    </div>
-                </div>
+    <div class="product-page">
+    <div class="product-image">
+        <img id="main-image" src="" alt="Loading...">
+    </div>
 
-                <div class="gestalten-review-section">
-                    <div class="gestalten-reviewer-header">
-                        <img src="https://i.pravatar.cc/150?img=11" alt="Reviewer" class="gestalten-reviewer-avatar">
-                        <div class="gestalten-reviewer-info">
-                            <span class="gestalten-reviewed-by">Reviewed By</span>
-                            <span class="gestalten-reviewer-name">Christopher Reath</span>
-                        </div>
-                    </div>
-                    <p class="gestalten-review-text">"I didn't really finish reading this book. I'm not qualified to review this shit"</p>
-                </div>
+    <div class="product-details">
+        <h1 id="main-title" class="product-title">Loading...</h1>
+
+        <div class="product-author">
+            <span style="color: #4A2C2A; font-weight: bold;">By</span>
+            <span id="main-author"></span>
+        </div>
+
+        <div class="product-price" id="main-price"></div>
+
+        <div class="product-quote">
+            <p id="main-quote"></p>
+        </div>
+
+        <div class="product-description">
+            <p id="main-description"></p>
+        </div>
+
+        <div class="product-purchase">
+            <button class="buy-now-btn">Buy Now</button>
+            <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+
+        <div class="product-availability">
+            <span style="color: #4A2C2A; font-weight: bold;">Availability:</span>
+            <span id="main-availability"></span>
+        </div>
+
+        <div class="product-data">
+            <div class="product-release-date">
+                <span style="color: #4A2C2A; font-weight: bold;">Release Year:</span>
+                <span id="main-year"></span>
             </div>
-            
-            <div class="gestalten-right-col">
-                <div class="gestalten-shelf-header">
-                    <span class="gestalten-expand-text">EXPAND BOOKSHELF</span>
-                </div>
-                <div class="gestalten-shelf-list" id="gestalten-shelf-list">
-                    <!-- Books dynamically inserted here -->
-                </div>
+            <div class="product-ISBN">
+                <span style="color: #4A2C2A; font-weight: bold;">ISBN:</span>
+                <span id="main-ISBN"></span>
+            </div>
+            <div class="product-language">
+                <span style="color: #4A2C2A; font-weight: bold;">Language:</span>
+                <span id="main-language"></span>
+            </div>
+            <div class="product-pages">
+                <span style="color: #4A2C2A; font-weight: bold;">Pages:</span>
+                <span id="main-pages"></span>
             </div>
         </div>
     </div>
+        <div class="product-suggestions">
+            <h3>You might also like</h3>
+            <div class="suggested-books">
+                <div class="suggested-book">
+                    <img src="../resources/Books/Dune.png" alt="Dune" style="height: 200px; width: 140px;">
+                    <div class="suggested-book-title">Dune</div>
+                </div>
+                <div class="suggested-book">
+                    <img src="../resources/Books/verity.png" alt="Verity" style="height: 200px; width: 140px;">
+                    <div class="suggested-book-title">Verity</div>
+                </div>
+                <div class="suggested-book">
+                    <img src="../resources/Books/TheShining.png" alt="The Shinning"
+                        style="height: 200px; width: 140px;">
+                    <div class="suggested-book-title">The Shining</div>
+                </div>
+                <div class="suggested-book">
+                    <img src="../resources/Books/JourneyToThe CentreOfTheEarth.png"
+                        alt="Journey to the Center of the Earth" style="height: 200px; width: 140px;">
+                    <div class="suggested-book-title">Journey to the Center of the Earth</div>
+                </div>
+                <div class="suggested-book">
+                    <img src="../resources/Books/AsongOfIceAndFire.png" alt="A Song of Ice and Fire"
+                        style="height: 200px; width: 140px;">
+                    <div class="suggested-book-title">A Song of Ice and Fire</div>
+                </div>
+            </div>
+        </div>
 
 
 
-<footer class="site-footer">
+    </div>
+
+
+    <footer class="site-footer">
         <div class="footer-container">
-            
+
             <div class="footer-col-brand-col">
                 <h3>MAKTABA</h3>
-                <p>Connecting readers with the stories they love. Discover, read, and share your favorite books with our growing community.</p>
+                <p>Connecting readers with the stories they love. Discover, read, and share your favorite books with our
+                    growing community.</p>
                 <div class="social-icons">
-                  
-                    <a href="#"><img src="../resources/img/WhatsApp.svg.png" alt="WhatsApp logo" style="height:30px;width:30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../resources/img/WhatsApp Image 2026-04-05 at 2.54.24 PM.png.jpeg" alt="Instagram logo" style="height:30px;width:30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../resources/img/WhatsApp Image 2026-04-05 at 2.52.10 PM.png.jpeg" alt="Twitter logo" style="height:30px;width: 30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../resources/img/images.png" alt="Facebook logo" style="height:30px;width:30px; border-radius:50%;"></a>
+
+                    <a href="#"><img src="../resources/img/WhatsApp.svg.png" alt="WhatsApp logo"
+                            style="height:30px;width:30px;border-radius:50%;"></a>
+                    <a href="#"><img src="../resources/img/WhatsApp Image 2026-04-05 at 2.54.24 PM.png.jpeg"
+                            alt="Instagram logo" style="height:30px;width:30px;border-radius:50%;"></a>
+                    <a href="#"><img src="../resources/img/WhatsApp Image 2026-04-05 at 2.52.10 PM.png.jpeg"
+                            alt="Twitter logo" style="height:30px;width: 30px;border-radius:50%;"></a>
+                    <a href="#"><img src="../resources/img/images.png" alt="Facebook logo"
+                            style="height:30px;width:30px; border-radius:50%;"></a>
                 </div>
             </div>
 
 
-              <div class="footer-col">
+            <div class="footer-col">
                 <h4>Explore</h4>
                 <ul>
                     <li><a href="#">New Realeases</a></li>
@@ -142,21 +164,21 @@
                     <li><a href="#">Collections</a></li>
                     <li><a href="#">Reviews</a></li>
                 </ul>
-              </div>
+            </div>
 
 
 
-              <div class="footer-col">
+            <div class="footer-col">
                 <h4>About</h4>
                 <ul>
                     <li><a href="#">About Us</a></li>
-                     <li><a href="#">Our Authors</a></li>
+                    <li><a href="#">Our Authors</a></li>
                     <li><a href="#">Contact Us</a></li>
                 </ul>
-               </div>
-             
+            </div>
 
-              <div class="footer-col">
+
+            <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
                     <li><a href="#">Shipping & Delivery</a></li>
@@ -165,15 +187,15 @@
                     <li><a href="#">Track Order</a></li>
                     <li><a href="#">FAQ</a></li>
                 </ul>
-              </div>
+            </div>
 
-            
-           
-          </div>
 
-          <div class="footer-bottom">
+
+        </div>
+
+        <div class="footer-bottom">
             <p>&copy; 2026 Maktaba. All rights reserved.</p>
-            
+
             <ul class="footer-bottom-links">
                 <li><a href="#">Privacy Policy</a></li>
                 <li><a href="#">Terms of Service</a></li>
@@ -182,6 +204,7 @@
         </div>
     </footer>
 
-
+    <script src="../data.js"></script>
+    <script src="../script.js"></script>
 
 </body>

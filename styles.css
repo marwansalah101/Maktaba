@@ -1790,7 +1790,9 @@ body {
     font-size: 12px;
     color: #4A2C2A;
 }
-
+.book-link{
+    text-decoration: none;
+}
 
 
 /*--------------GENRE PAGE ---------- */
@@ -2173,34 +2175,190 @@ input:focus {
 
 /* ---Product Page--- */
 .product-page {
-    background-color: #FDF5E6;
-    padding: 60px 20px;
+    background: #f8f1e7;
     min-height: 100vh;
+    min-width: 1520px;
+    padding: 0px 50px;
+    color: #4A2C2A;
+    font-family: 'Space Grotesk', sans-serif;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
+    flex-direction: row;
+    overflow: hidden;
 }
-
-.product-container {
-    display: grid;
-    grid-template-columns: 400px 300px 100px;
-}
-
 .product-image {
+    width: 320px;
+    height: auto;
+    position: relative;
+}
+.product-image img {
     width: 100%;
-    height: 500px;
+    height: 100%;
     object-fit: cover;
     border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
-
 .product-details {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 0 20px;
+    gap: 10px;
+    padding: 80px 60px;
+    max-width: 800px;
 }
+.product-title {
+    font-family: 'Times new roman', serif;
+    font-size: 36px;
+    color: #4A2C2A;
+    margin: 0;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+.product-author {
+    font-family: 'Times new roman', serif;
+    font-size: 14px;
+    color: #8C7B75;
+    margin: 0;
+    text-transform: uppercase;
+}
+.product-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-direction: row;
+}
+.product-price {
+    font-family: 'Times new roman', serif;
+    font-size: 24px;
+    color: #4A2C2A;
+    font-weight: 700;
+}
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.product-quote{
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: #4A2C2A;
+    opacity: 0.8;
+    max-width: 450px;
+    margin-top: 30px;
+    padding-left: 20px;
+    border-left: 2px solid #fec300;
+}
+.product-description {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    color: #4A2C2A;
+    line-height: 1.5;
+}
+.product-purchase {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap:20px;
+    margin-top: 30px;
+}
+.buy-now-btn {
+    background-color: #4A2C2A;
+    color: #FDF5E6;
+    padding: 12px 30px;
+    border-radius: 30px;
+    width:300px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.buy-now-btn:hover {
+    border: 1px solid #4A2C2A;
+    scale: 1.05;
+    transform: translateY(-2px);
+    transition: background-color 0.5s ease;
+}
+.add-to-cart-btn {
+    background-color: #FDF5E6;
+    color: #4A2C2A;
+    padding: 12px 30px;
+    border-radius: 30px;
+    width:300px;
+    border: none;
+    font-size: 16px;
+    border: 1px solid #4A2C2A;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+.add-to-cart-btn:hover {
+    scale: 1.05;
+    transform: translateY(-2px);
+    transition: background-color 0.5s ease;
+}
+.purchase-details{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+.product-data {
+    border-top: 1px solid #e5d9ce;
+    border-bottom: 1px solid #e5d9ce;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+.product-release-date,
+.product-language,
+.product-ISBN,
+.product-pages{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: #8C7B75;
+}
+.product-suggestions {
+   display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-left: 1px solid #e5d9ce;
+    width: 100%;
+    max-width: 220px;
+    height: 100vh;        
+    overflow-y: auto;    
+    overflow-x: hidden;
+}
+.suggested-books {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;            
+    width: 100%;
+    padding-bottom: 20px;
+}
+.suggested-book {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.suggested-book-title{
+    display:none;
+}
+.suggested-book:hover{
+    transform: translateY(-2px);
+    background-color: #f5f2f2;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.suggested-book:hover .suggested-book-title{
+    display:block;
+    font-size: 14px;
+    font-family: 'Times new roman', serif;
+    font-size: 20px;
+    color: #4A2C2A;
+    font-weight: 700;
+    transition: all 0.3s ease-in-out;
+}
+
+
 
 /*ordersucces*/
 /* =========================

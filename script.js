@@ -85,60 +85,6 @@ if (ripple) {
         });
     });
 }
-
-    const Books=[
-        {
-            title: "Ugly Love",
-            author: "Colleen Hoover",
-            genre: "Drama",
-            year: "2014",
-            image: "../resources/Books/UglyLove.png",
-            pages: "336"
-        },
-        {
-            title: "Journey to the center of the earth",
-            author: "Jules Verne",
-            genre: "Adventure",
-            year: "1864",
-            image: "../resources/Books/JourneyToThe CentreOfTheEarth.png",
-            pages: "240"
-        },
-        {
-            title: "A Song Of Ice And Fire",
-            author: "George R.R. Martin",
-            genre: "Fantasy",
-            year: "1996",
-            image: "../resources/Books/ASongOfIceAndFire.png",
-            pages: "720"
-
-        },
-        {
-            title: "Verity",
-            author: "Colleen Hoover",
-            genre: "Thriller",
-            year: "2018",
-            image: "../resources/Books/Verity.png",
-            pages: "336"
-            
-        },
-        {
-            title: "Chapterhouse: Dune",
-            author: "Frank Herbert",
-            genre: "Science-Fiction",
-            year: "1985",
-            image: "../resources/Books/Dune.png",
-            pages: "622"
-        },
-        {
-            title: "The Shining",
-            author: "Stephen King",
-            genre: "Horror",
-            year: "1977",
-            image: "../resources/Books/TheShining.png",
-            pages: "468"
-        }
-
-    ];
 const container = document.getElementById("books-container");
 
 if (container) {
@@ -146,17 +92,60 @@ if (container) {
     const card = document.createElement("div");
     card.classList.add("book-listing");
 
+    // We encode the title so spaces and special characters don't break the URL
+    const bookParam = encodeURIComponent(book.title);
+
     card.innerHTML = `
-      <img class= "book-cover" src="${book.image}" >
-      <button class="add-to-cart" type="submit">Add to cart</button>
-      <p class= "book-details">${book.genre} | ${book.year}</p>
-      <h3 class= "book-title">${book.title}</h3>
+      <a href="Product.html?title=${bookParam}" class="book-link">
+        <img class="book-cover" src="${book.image}" alt="${book.title}">
+      </a>
+      <button class="add-to-cart" type="button">Add to cart</button>
+      <p class="book-details">${book.genre} | ${book.year}</p>
+      <a href="Product.html?title=${bookParam}" class="book-link">
+        <h3 class="book-title">${book.title}</h3>
+      </a>
       <p class="book-author">${book.author}</p>
     `;
 
     container.appendChild(card);
   });
 }
+/*PRODUCT PAGE*/
+    document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const bookTitle = params.get('title');
+
+    if (bookTitle && typeof Books !== 'undefined') {
+        const selectedBook = Books.find(b => b.title === bookTitle);
+
+        if (selectedBook) {
+            document.getElementById('main-title').innerText = selectedBook.title;
+            document.getElementById('main-author').innerText = selectedBook.author;
+            document.getElementById('main-price').innerText = `$${selectedBook.price}`;
+            document.getElementById('main-description').innerText = selectedBook.description;
+            document.getElementById('main-quote').innerText = `"${selectedBook.quote}"`;
+            document.getElementById('main-image').src = selectedBook.image;
+            document.getElementById('main-image').alt = selectedBook.title;
+            document.getElementById('main-year').innerText = selectedBook.year;
+            document.getElementById('main-pages').innerText = `${selectedBook.pages} pages`;
+            document.getElementById('main-language').innerText = selectedBook.language; 
+            document.getElementById('main-ISBN').innerText = selectedBook.ISBN;
+
+            // --- Availability Logic ---
+            const availabilityEl = document.getElementById('main-availability');
+            if (selectedBook.available) {
+                availabilityEl.innerText = "In Stock";
+                availabilityEl.style.color = "#24d31e"; // Green
+            } else {
+                availabilityEl.innerText = "Out of Stock";
+                availabilityEl.style.color = "#d32424"; // Red
+            }
+            
+        } else {
+            document.querySelector('.product-page').innerHTML = "<h1>Book not found</h1>";
+        }
+    }
+});
 /*order succes*/
 const orderData = {
     items: [
