@@ -141,21 +141,22 @@ if (ripple) {
     ];
 const container = document.getElementById("books-container");
 
-Books.forEach(book => {
-  const card = document.createElement("div");
-  card.classList.add("book-listing");
+if (container) {
+  Books.forEach(book => {
+    const card = document.createElement("div");
+    card.classList.add("book-listing");
 
-  card.innerHTML = `
-    <img class= "book-cover" src="${book.image}" >
-    <button class="add-to-cart" type="submit">Add to cart</button>
-    <p class= "book-details">${book.genre} | ${book.year}</p>
-    <h3 class= "book-title">${book.title}</h3>
-    <p class="book-author">${book.author}</p>
-    
-  `;
+    card.innerHTML = `
+      <img class= "book-cover" src="${book.image}" >
+      <button class="add-to-cart" type="submit">Add to cart</button>
+      <p class= "book-details">${book.genre} | ${book.year}</p>
+      <h3 class= "book-title">${book.title}</h3>
+      <p class="book-author">${book.author}</p>
+    `;
 
-  container.appendChild(card);
-});
+    container.appendChild(card);
+  });
+}
 /*order succes*/
 const orderData = {
     items: [
@@ -186,22 +187,26 @@ function renderOrder() {
 
     if (!listContainer || !totalElement) return;
 
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
     let total = 0;
     listContainer.innerHTML = "";
 
-    orderData.items.forEach(item => {
-        total += item.price * item.qty;
+    cart.forEach(item => {
+        const qty = item.qty || 1;
+        const price = parseFloat(item.price);
+        total += price * qty;
 
         const itemCard = document.createElement("div");
         itemCard.className = "order-item";
 
         itemCard.innerHTML = `
-            <img src="${item.img}" alt="${item.title}">
+            <img src="${item.image}" alt="${item.title}">
             <div class="order-item-info">
                 <h4>${item.title}</h4>
-                <p>QTY: ${item.qty}</p>
+                <p>QTY: ${qty}</p>
             </div>
-            <div class="order-item-price">€${item.price.toFixed(2)}</div>
+            <div class="order-item-price">€${price.toFixed(2)}</div>
         `;
 
         listContainer.appendChild(itemCard);
@@ -260,6 +265,40 @@ function toggleHeart(btn) {
 document.addEventListener("DOMContentLoaded", function () {
     const hearts = document.querySelectorAll(".favorite-heart-btn");
 
+    hearts.forEach(btn => {
+        btn.addEventListener("click", function () {
+            this.classList.toggle("active");
+        });
+    });
+});
+/*favorites*/
+document.addEventListener("DOMContentLoaded", function () {
+    const bagBtns = document.querySelectorAll(".favorite-bag-btn");
+
+    bagBtns.forEach(btn => {
+        btn.addEventListener("click", function () {
+            const book = {
+                title: this.dataset.title,
+                author: this.dataset.author,
+                price: this.dataset.price,
+                image: this.dataset.image,
+                qty: 1
+            };
+
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const exists = cart.find(item => item.title === book.title);
+
+            if (!exists) {
+                cart.push(book);
+                localStorage.setItem("cart", JSON.stringify(cart));
+                alert(book.title + " added to cart!");
+            } else {
+                alert(book.title + " is already in your cart!");
+            }
+        });
+    });
+
+    const hearts = document.querySelectorAll(".favorite-heart-btn");
     hearts.forEach(btn => {
         btn.addEventListener("click", function () {
             this.classList.toggle("active");
