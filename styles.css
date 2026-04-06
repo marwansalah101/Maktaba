@@ -850,6 +850,98 @@ font-size: 0.95rem;
 
 
 
+/*Privacy Policy, Terms of Service, etc.*/
+
+.Privacy-policy-container {
+   padding-bottom: 20px;
+    margin: 0 auto;
+    width:100%;
+}
+
+
+.privacyPolicy-box {
+    background-color: #fcf8f4; 
+    text-align: center;
+    padding: 80px 20px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+}
+
+.privacyPolicy-box h1 {
+    font-size: 3rem;
+    color: #222;
+    margin-bottom:0px;
+    margin-top:0px;
+}
+
+/* Policy Content */
+.policy-body {
+   margin-left:22px;
+    color: #444;
+    line-height: 1.8;
+}
+
+.policy-body h2 {
+   margin-bottom:5px;
+    font-size: 1.5rem;
+}
+
+.policy-body h3 {
+   
+    font-size: 1.1rem;
+}
+
+.policy-body ul {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.policy-body ul li {
+    margin-bottom: 10px;
+}
+
+
+/* Legal Sub-Navigation */
+.legal-nav {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.legal-nav a {
+    text-decoration: none;
+    color: #666;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+/* Hover effect */
+.legal-nav a:hover {
+    color: #4d2626;
+}
+
+/* Style for the link representing the current page */
+.legal-nav a.active {
+    color: #4A3C38;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .dropdown button {
     background-color: transparent;
