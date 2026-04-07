@@ -1,238 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Edupage Sign Up</title>
-<style>
-#message{
-color:#5a4638;
-font-size:14px;
-margin-top:8px;
-}
-
-/* Page background */
-body{
-margin:0;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-font-family:serif;
-
-background: linear-gradient(to right,
-#5a4638 0%,
-#8a6b55 30%,
-blanchedalmond 50%,
-#8a6b55 70%,
-#5a4638 100%);
-}
-
-/* FORM BOX */
-.form-box{
-background:#d4ae92;
-padding:40px;
-border-radius:25px;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
-display:flex;
-flex-direction:column;
-gap:18px;
-align-items:center;
-width:380px;
-}
-
-/* Inputs */
-input{
-width:100%;
-padding:15px;
-border:1px solid #ccc;
-border-radius:30px;
-font-size:16px;
-outline:none;
-transition:0.3s;
-}
-
-/* Focus effect */
-input:focus{
-border:2px solid #504339;
-}
-
-/* Age dropdown container */
-.age-box{
-display:flex;
-gap:10px;
-width:100%;
-}
-
-select{
-flex:1;
-padding:10px;
-border-radius:20px;
-border:1px solid #ccc;
-}
-
-/* Login button */
-.login-btn{
-background-color:#504339;
-color:#d4ae92;
-width:100%;
-padding:12px;
-border-radius:30px;
-border:none;
-font-size:16px;
-cursor:pointer;
-}
-
-/* Google button */
-.google-btn{
-background:white;
-color:black;
-width:100%;
-padding:12px;
-border-radius:30px;
-border:1px solid #ccc;
-font-size:16px;
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-cursor:pointer;
-}
-
-/* Apple button */
-.apple-btn{
-background:black;
-color:white;
-width:100%;
-padding:12px;
-border-radius:30px;
-border:none;
-font-size:16px;
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-cursor:pointer;
-}
-</style>
-
+    <title>Maktaba - Sign Up</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../script.js"></script>
 </head>
 
 <body>
 
-<!-- Header -->
-<a href="../Tabs/Home.html"
-style="position:absolute;
-top:35px;
-left:50%;
-transform:translateX(-50%);
-text-decoration:none;
-font-size:50px;
-color:#504339;
-font-weight:bold;">
-M A K T B A
-</a>
+<div class="main-container">
 
-<!-- FORM BOX -->
-<div class="form-box">
+    <div class="form-side">
 
-<input type="text" placeholder="Full Name">
+<a class="logo" href=http://127.0.0.1:5500/Tabs/Home.html>M A K T A B A</a>
 
-<input type="email" id="email" placeholder="Email / Username">
+        <p class="desc">
+            Create your MAKTABA account and start building your personal bookshelf.
+        </p>
 
-<input type="password" id="password" placeholder="Password">
+        <!-- Name -->
+        <div class="input-group">
+            <label class="labels" for="name"><b>Full Name</b></label><br><br>
+            <input type="text" id="name" placeholder="Enter your name">
+        </div>
 
-<input type="password" id="confirmPassword" placeholder="Confirm Password">
+        <!-- Email -->
+        <div class="input-group">
+            <label class="labels" for="email"><b>Your email</b></label><br><br>
+            <input type="text" id="email" placeholder="Enter your email">
+        </div>
 
-<div class="age-box">
+        <!-- Password -->
+        <div class="input-group">
+            <label class="labels" for="password"><b>Password</b></label><br><br>
+            <input type="password" id="password" placeholder="Enter password">
+        </div>
 
-<select>
-<option>Day</option>
-<option>1</option><option>2</option><option>3</option>
-<option>4</option><option>5</option><option>6</option>
-<option>7</option><option>8</option><option>9</option>
-<option>10</option><option>11</option><option>12</option>
-<option>13</option><option>14</option><option>15</option>
-<option>16</option><option>17</option><option>18</option>
-<option>19</option><option>20</option><option>21</option>
-<option>22</option><option>23</option><option>24</option>
-<option>25</option><option>26</option><option>27</option>
-<option>28</option><option>29</option><option>30</option>
-<option>31</option>
-</select>
+        <!-- Confirm Password -->
+        <div class="input-group">
+            <label class="labels" for="confirm"><b>Confirm Password</b></label><br><br>
+            <input type="password" id="confirm" placeholder="Confirm password">
+        </div>
 
-<select>
-<option>Month</option>
-<option>January</option><option>February</option>
-<option>March</option><option>April</option>
-<option>May</option><option>June</option>
-<option>July</option><option>August</option>
-<option>September</option><option>October</option>
-<option>November</option><option>December</option>
-</select>
+        <!-- Button -->
+        <button class="login-btn">Create Account</button>
 
-<select>
-<option>Year</option>
-<option>2026</option><option>2025</option>
-<option>2024</option><option>2023</option>
-<option>2022</option><option>2021</option>
-</select>
+        <p class="continue">──────────── or continue with ────────────</p>
 
-</div>
+        <!-- Social -->
+        <div class="social-buttons">
 
-<button class="login-btn" onclick="validateForm()">
-Log-in
-</button>
+            <button class="google">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20">
+                Google
+            </button>
 
-<p id="message"></p>
+            <button class="facebook">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" width="20">
+                Facebook
+            </button>
 
-<button class="google-btn">
-<img src="https://img.icons8.com/color/48/google-logo.png" width="20">
-Sign in with Google
-</button>
+        </div>
 
-<button class="apple-btn">
-<img src="https://cdn.simpleicons.org/apple/ffffff" width="20">
-Sign in with Apple
-</button>
+        <br>
+
+        <p class="noaccp">
+            Already have an account?
+            <a class="link" href="signin.html"> Sign in</a>
+        </p>
+
+    </div>
+
+    <div class="image-side"></div>
 
 </div>
-
-<script>
-
-function validateForm(){
-
-let email = document.getElementById("email").value;
-let password = document.getElementById("password").value;
-let confirm = document.getElementById("confirmPassword").value;
-let message = document.getElementById("message");
-
-let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-
-if(email == ""){
-message.innerHTML = "Email must be filled";
-return false;
-}
-
-if(!email.match(emailPattern)){
-message.innerHTML = "Email must be in email format (example@email.com)";
-return false;
-}
-
-if(password == ""){
-message.innerHTML = "Password must be filled";
-return false;
-}
-
-if(password !== confirm){
-message.innerHTML = "Password and Confirm Password must be the same";
-return false;
-}
-
-message.style.color = "#5a4638";
-message.innerHTML = "Login Successful";
-
-}
-
-</script>
 
 </body>
 </html>

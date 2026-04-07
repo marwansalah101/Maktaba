@@ -3,6 +3,7 @@
 <head>
     <title>Maktaba</title>
     <link rel="stylesheet" href="../styles.css">
+    <script src="../script.js"></script>
 </head>
 
 <body>
@@ -15,7 +16,7 @@
 
     <div class="form-side">
 
-        <h1 class="logo">M A K T A B A</h1>
+<a class="logo" href=http://127.0.0.1:5500/Tabs/Home.html>M A K T A B A</a>
 
         <p class="desc">
             Log in to your MAKTABA account to manage your bookshelf and enjoy personalized recommendations.
@@ -29,7 +30,10 @@
         <label class="labels" for="password"><b>Password</b></label>
             <input type="password" id="password" placeholder=" Password">
         
-        <button class="login-btn">Get started</button><Br>
+        <button class="login-btn" type="submit" onclick="return login()">Get started</button><Br>
+
+<p id="message" class="form-message"></p>
+
             <p2 class="continue">──────────── or continue with ────────────</p2>
 
         
