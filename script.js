@@ -156,3 +156,49 @@ Books.forEach(book => {
 
   container.appendChild(card);
 });
+
+
+
+/*-----sign-in-----*/
+ 
+
+function login(){
+
+let email =document.getElementById("email").value;
+let password =document.getElementById("password").value;
+let pattern =/^(?=.*[A-Z])(?=.*\d).+$/;
+message.innerText = "";
+    message.className = "form-message";
+
+if(email=="" || password==""){
+message.innerText = "Some fields are not filled!";
+message.classList.add("error");
+return false;
+}
+else if(!email.includes(".") || !email.includes("@"))
+{
+message.innerText = "invalid email";
+        message.classList.add("error");
+        return false;
+
+}
+else if(password.length<6)
+{
+    message.innertext="password must me atleast 6 characters!"
+message.classList.add("error");
+return false;
+}
+else if(!pattern.test(password))
+{
+    message.innerText = "Password must contain a capital letter and a number";
+           message.classList.add("error");
+           return false;
+}
+
+message.innerText = "Login successful ";
+    message.classList.add("success");
+
+    return true;
+
+
+}
