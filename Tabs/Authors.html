@@ -1,0 +1,141 @@
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Privacy Policy</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<nav class="navbarb">
+        <div id="Maktabab">
+            <a href="#Maktaba" style="margin-left: 20px;"><h1>Maktaba</h1></a>
+        </div>
+            <ul class = "navrbarb-text">
+                <li>
+                    <a href="Home.html">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="Genres.html">
+                        Browse
+                    </a>
+                </li>
+                <li>
+                    <a href="Favorites.html">
+                        Favourites
+                    </a>
+                </li>
+            </ul>
+                <div class="navbarb-icons">
+                    <a href="#">
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    </a>
+                    <a href="#">
+                    <span class="material-symbols-outlined">person</span>
+                    </a>
+                </div>
+    </nav>
+
+
+
+
+ <div class="spotify-hero" id="hero">
+    <div class="authorPhoto-bg"></div> <div class="authorPhoto-content">
+        <h1>Nora Roberts</h1>
+        <p>21 Times RITA Awards Winner</p>
+    </div>
+</div>
+
+
+       
+
+
+
+
+
+<div class="books-section">
+        <div class="divider">
+            <span class="line"></span>
+            <span class="title">TopRated Books</span>
+            <span class="line"></span>
+        </div>
+        
+        <div class="books-row">
+            <div class="book-container">
+                <img src="../resources/Books/TheShining.png" class="book-img">
+            </div>
+            <div class="book-container">
+                <img src="../resources/Books/JourneyToThe CentreOfTheEarth.png" class="book-img">
+            </div>
+
+          
+            <div class="book-container">
+                <img src="../resources/Books/JourneyToThe CentreOfTheEarth.png" class="book-img">
+            </div>
+
+           
+
+           
+
+            </div>
+
+        <div class="footer-btn">
+            <a href="#" class="btn-outline">SEE MORE</a>
+        </div>
+    </div>
+</div>
+
+            
+     
+
+
+     
+
+<div class="books-section">
+        <div class="divider">
+            <span class="line"></span>
+            <span class="title">Recent Books</span>
+            <span class="line"></span>
+        </div>
+
+
+    </div>    
+    
+
+
+
+
+
+
+              
+
+
+ <script>
+   window.addEventListener('scroll', function() {
+    const scrollPos = window.scrollY;
+    const heroContent = document.querySelector('.authorPhoto-content');
+    const heroBg = document.querySelector('.authorPhoto-bg');
+
+    // 1. Fade out the text ("Amr Diab") as you scroll
+    let opacity = 1 - (scrollPos / 300);
+    if (opacity >= 0) {
+        heroContent.style.opacity = opacity;
+    }
+
+    // 2. Subtle Zoom/Parallax effect on the photo
+    heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
+});
+
+
+
+
+
+
+         </script>
+
+
+
+
+    </body>
+    </html>
