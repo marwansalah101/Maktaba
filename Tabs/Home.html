@@ -100,6 +100,9 @@
 <div class="carousel-wrapper"> 
   <div id="new-releases" class="new-release-section">
     <h2>New Release</h2>
+
+    <div class="title-underlines"></div>
+   <p>"The wait is over. Your next obsession is here"</p>
     
     <div class="carousel-container">
       
@@ -353,8 +356,10 @@
         <h4>Our Story</h4>
         <h1>More than a bookstore</h1>
         <p>Founded in 2024, Maktaba — meaning "library" in Arabic — was born from a simple belief:
-           that the right book, at the right moment, can change everything. We curate with intention, 
-           celebrate diverse voices, and serve readers who crave depth over distraction.</p>
+           that the right book, at the right moment, can change everything. "At Maktaba, we believe every book is a doorway. 
+             Our mission is to connect readers with stories that stay with them long after the final page.
+            From timeless classics to the latest bestsellers, 
+            we provide a curated space to discover, purchase, and immerse yourself in the world of literature."</p>
     </div>
 
     <div class="stats-card">
@@ -398,7 +403,7 @@
             <img src="../resources/Authors/316be4d7f6292c317b66ec05778384b8.jpg" alt="A book cover of The Great Gatsby">
         <div class="author-info">
           <h3>Ernest Hemingway</h3>
-          <p>American novelist and Nobel Prize winner</p>
+          <p>American novelist</p>
           
         </div>
         </a>  
@@ -411,7 +416,7 @@
             <img src="../resources/Authors/433bdb5b8cded5ed38f147685934a840.jpg" alt="A book cover of The Great Gatsby">
         <div class="author-info">
           <h3>Nora Roberts</h3>
-          <p>Prolific American romance and suspense author</p>
+          <p>American romance and suspense </p>
           
         </div>
         </a>  
@@ -425,7 +430,7 @@
             <img src="../resources/Authors/e74a07ca003304accf7e73675621697e.jpg" alt="A book cover of The Great Gatsby">
         <div class="author-info">
           <h3>Leo Tolstoy</h3>
-          <p>Famous Russian author of War and Peace</p>
+          <p> Russian author of War and Peace</p>
           
         </div> 
         </a> 
@@ -440,7 +445,7 @@
             <img src="../resources/Authors/Tamil_writer_Jeyamohan.jpg" alt="A book cover of The Great Gatsby">
         <div class="author-info">
           <h3>B. Jeyamohan</h3>
-          <p>Well-known Tamil writer and literary critic</p>
+          <p> writer and literary critic</p>
           
         </div>  
         </a>
@@ -454,7 +459,7 @@
             <img src="../resources/Authors/Terry-Pratchett-2011.webp" alt="A book cover of The Great Gatsby">
         <div class="author-info">
           <h3>Terry Pratchett</h3>
-          <p>Beloved English fantasy author of the Discworld series</p>
+          <p> English fantasy author </p>
           
         </div> 
         </a> 
@@ -468,7 +473,7 @@
             <img src="../resources/Authors/Astrid_Lindgren_(cropped).jpg" alt="A book cover of The Great Gatsby">
         <div class="author-info">
           <h3>Astrid Lindgren</h3>
-          <p>Swedish author famous for Pippi Longstocking</p>
+          <p>Swedish author </p>
           
          </div>  
         </a>
@@ -579,21 +584,45 @@
 
 
 <script>
-  const track = document.getElementById('track');
-  const slideLeft = document.getElementById('slideLeft');
-  const slideRight = document.getElementById('slideRight');
+  
+ const track = document.getElementById('track');
+const slideLeft = document.getElementById('slideLeft');
+const slideRight = document.getElementById('slideRight');
 
-  // The distance to scroll per click. 
-  // Adjust this based on your card width + gap!
-  const scrollAmount = 230; 
+const scrollAmount = 300; // Adjust to match your card width + gap
 
-  slideLeft.addEventListener('click', () => {
+function updateButtons() {
+    // Check if we are at the very start (Left)
+    if (track.scrollLeft <= 0) {
+        slideLeft.classList.add('disabled');
+    } else {
+        slideLeft.classList.remove('disabled');
+    }
+
+    // Check if we are at the very end (Right)
+    // scrollWidth is the total length, clientWidth is what you see
+    if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 1) {
+        slideRight.classList.add('disabled');
+    } else {
+        slideRight.classList.remove('disabled');
+    }
+}
+
+slideLeft.addEventListener('click', () => {
     track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-  });
+});
 
-  slideRight.addEventListener('click', () => {
+slideRight.addEventListener('click', () => {
     track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-  });
+});
+
+// Listen for the scroll to finish to update buttons
+track.addEventListener('scroll', updateButtons);
+
+// Run once on page load to set initial state
+updateButtons();
+
+
 </script>
 
 
