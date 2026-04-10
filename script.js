@@ -27,7 +27,7 @@ const ripple = document.getElementById('bgRipple');
 if (ripple) {
     const genreCards = document.querySelectorAll('.genre-card[data-color]');
     const genresContainer = document.querySelector('.genres-container');
-    const navbar = document.querySelector('.navbarb');
+    const navbar = document.querySelector('.navbar');
     let currentCard = null;
 
     genreCards.forEach(card => {
@@ -117,7 +117,7 @@ if (container) {
 
     if (bookTitle && typeof Books !== 'undefined') {
         const selectedBook = Books.find(b => b.title === bookTitle);
-
+ 
         if (selectedBook) {
             document.getElementById('main-title').innerText = selectedBook.title;
             document.getElementById('main-author').innerText = selectedBook.author;
