@@ -285,7 +285,7 @@ body {
 
     margin-top: -40px;
     width: 100%;
-    height: 90%;
+    height: 93%;
     box-sizing: border-box;
 
 
@@ -293,11 +293,30 @@ body {
 
 
 .new-release-section h2 {
-    font-size: 20px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    
+    font-size: 30px;
     color: #4a2c2a;
-    margin-bottom: 40px;
-    font-family: "Segoe UI", sans-serif;
-    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.new-release-section p{
+   font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    margin-bottom: 55px;
+    color: #4a2c2a;
+    text-align: center;
+
+}
+
+.title-underlines {
+    width: 120px;
+    height: 1px;
+    background-color: #333;
+    margin: 0 auto 10px auto;
+    /* Centers the div and adds bottom space */
 }
 
 
@@ -308,9 +327,10 @@ body {
     width: 73%;
     height: 100%;
     justify-content: center;
-    margin-left: 150px;
+    margin-left: 190px;
     padding-left: 20px;
     padding-right: 20px;
+    margin-bottom: 140px;
 
 
 }
@@ -382,6 +402,7 @@ body {
     font-size: 0.8rem;
     color: #777;
     margin: 0 0 12px 0;
+    text-align: left;
 }
 
 
@@ -422,6 +443,16 @@ body {
 }
 
 
+/* This class is added/removed by JavaScript */
+.disabled {
+    background-color: rgb(138, 134, 134) !important;
+    color: #ccc !important; /* Makes the arrow look greyed out */
+    border: 1px solid #ddd;
+    cursor: not-allowed;    /* Shows the "stop" sign on mouse hover */
+    opacity: 0.6;           /* Optional: makes it look slightly faded */
+    pointer-events: none;   /* Physically stops the click from working */
+}
+
 
 
 /* The Image between the carrousel */
@@ -433,7 +464,7 @@ body {
     background-position: center;
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 170px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -455,9 +486,9 @@ body {
     height: 100%;
     background-color: rgba(52, 51, 51, 0.6);
     /* Dark tint (60% black) */
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(7px);
     /* The blurring effect */
-    -webkit-backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(7px);
     /* For Safari support */
     z-index: 1;
     /* Puts overlay above image but below text */
@@ -1264,17 +1295,24 @@ body {
     margin: 0 auto 50px auto;
 }
 
-.divider .line {
+ .divider .line {
     flex: 1;
     height: 1px;
     background-color: #d1cfcd;
 }
 
-.divider .title {
+ .divider .title {
     padding: 0 20px;
-    font-style: italic;
-    color: #555;
-    font-size: 1.5rem;
+    
+    /* ADD THIS LINE */
+   font-family: 'Georgia', serif; 
+   font-weight: bold;
+    font-size: 25px;
+    color: #4a2c2a;
+    
+    /* AND THIS to remove the heavy boldness if needed */
+  
+   
 }
 
 /* THE FIX: Forcing books into one row and removing boxes */
@@ -1339,78 +1377,114 @@ body {
 
 
 
-.RecentBooks-shelf {
-    
-    margin: 0 auto;
-    padding: 40px 20px;
-    background-color: #999999;
+.main-wrapper {
+  padding: 40px;
+  font-family: 'Georgia', serif; /* Using a serif font to match the book vibe */
 }
 
-.carousel2-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 40px;
-    padding: 20px 0;
+.carousel-containers {
+  display: flex;
+  justify-content:center;
+  gap: 60px;            /* Slightly smaller gap to fit more */
+  max-width: 1200px;    /* Constrains the width so 3 fit perfectly */
+  margin: 0;
+  flex-wrap: wrap;         /* THIS allows them to move to the next line */
+  padding: 20px;
+  width:100%;
+  margin-left: 80px;
 }
 
-/* Fixed the text overlap issue */
-.carouselbook-card {
-    display: flex;
-    align-items: center;
-    /* Increased to allow space for text side-by-side */
-    gap: 20px;
-    flex-direction: column;
+.troop-card {
+  flex: 0 0 300px; /* Fixed width: doesn't grow, doesn't shrink, stays 300px */
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  height: 450px; /* SET A FIXED HEIGHT to make them identical */
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  margin-left: 30px;
+   transition: transform 0.3s ease; /* For the hover effect */
 
 }
-
-.carouselbook-card img {
-    width: 120px;
-    height: auto;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+ 
+.troop-card:hover {
+  transform: translateY(-10px);
 }
 
-.book-thumbnail {
-    width: 140px;
-    height: auto;
-  
-    border-radius: 4px;
+/* Image/Cover area */
+.card-image-box {
+  height: 180px; /* Lock the height */
+  min-height: 180px; 
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
 }
 
-.book-details {
-    font-family: 'Georgia', serif;
-    color: #333;
-}
+.card-image-box img {
 
-
-.book-details h1 {
-    font-size: 1.2rem;
-    margin: 0;
-    color: #4a2c2a;
-
-
-}
-.book-details p{
-    font-size: 0.9rem;
-    margin: 5px 0 0 0;
-    color: #777;
+height:250px;
+  width: auto;
+  object-fit: contain; /* Ensures images don't stretch weirdly */
 }
 
 
 
-
-.buy-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 25px;
-    border: 1px solid #d4a373;
-    color: #d4a373;
-    text-decoration: none;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
+.card-content {
+  padding: 20px;
+  flex-grow: 1; /* Pushes the stats bar/bottom to the very end of the fixed height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
+
+.level-tag {
+  color: #e67e22;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.card-content h2 {
+  margin: 10px 0;
+  font-family: sans-serif;
+  font-weight: 800;
+}
+
+.card-content p {
+  /* This prevents long text from making one box taller than others */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit description to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+/* Stats Bar */
+.card-stats {
+  display: flex;
+  color: white;
+  padding: 15px 0;
+}
+
+.stat-items {
+  flex: 1;
+  margin-right: -25px;
+  margin-left:-50px;
+  gap:10px;
+  text-align:center;
+}
+
+.stat-items span {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.barbarian .card-stats { background-color: #4e3b2a; }
 
 
 
