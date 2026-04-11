@@ -1,9 +1,31 @@
+html {
+  scroll-behavior: smooth;
+}
 body {
     height: 100vh;
     margin: 0;
     overflow-x: hidden;
     scroll-behavior: smooth;
 }
+
+/* 1. The initial state (Hidden and shifted down) */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out; /* Smooth timing */
+}
+
+/* 2. The active state (Visible and in place) */
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.book-card:nth-child(2) { transition-delay: 0.2s; }
+.book-card:nth-child(3) { transition-delay: 0.4s; }
+.book-card:nth-child(4) { transition-delay: 0.6s; }
+
+
 .navbar {
     display: flex;
     align-items: center;
@@ -109,7 +131,7 @@ body {
 .book-bg {
     height: calc(100vh - 65px);
 
-    background-image: url('resources/img/homePagePicture.jpg');
+    background-image: url('resources/img/052987e722712b613a758d07a56b21fb.jpg');
     background-size: cover;
     background-position: center;
     display: grid;
@@ -137,7 +159,7 @@ body {
     display: flex;
     flex-direction: column;
     margin-left: 40px;
-    margin-bottom: 10px;
+    margin-bottom: -30px;
 
 }
 
@@ -145,7 +167,7 @@ body {
     margin: 0;
     line-height: 1.1;
     font-family: 'Playfair Display', serif;
-    color: #e3dfde;
+    color: #FDF5E6;
     font-size: 70px;
     margin: 0 0 30px 0;
 
@@ -158,7 +180,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 3px;
 
-    color: #e7e1e0;
+    color: #FDF5E6;
     margin-bottom: 30px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -167,7 +189,7 @@ body {
 .sub-est {
     font-family: 'Georgia', serif;
     font-size: 16px;
-    color: #ecd1ce;
+    color: #FDF5E6;
     line-height: 1.6;
     margin-top: 0px;
     font-weight: normal;
@@ -218,7 +240,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 3px;
     font-size: 14px;
-    color: #4A2C2A;
+    color: #312F2C;
     margin-bottom: 30px;
 }
 
@@ -227,7 +249,7 @@ body {
     margin: 0;
     line-height: 1.1;
     font-family: 'Playfair Display', serif;
-    color: #4A2C2A;
+    color: #312F2C;
     font-size: 47px;
     line-height: 1.1;
     margin: 0 0 30px 0;
@@ -237,7 +259,7 @@ body {
 .description {
     font-family: 'Georgia', serif;
     font-size: 16px;
-    color: #7d6b69;
+    color: #312F2C;
     line-height: 1.6;
     margin-top: 0px;
     font-weight: normal;
@@ -255,7 +277,12 @@ body {
     letter-spacing: 1px;
     text-transform: uppercase;
     align-items: center;
+    transition: transform 0.10s ease;
+  display: inline-block;
+
 }
+
+
 
 
 .explore-link a:hover {
@@ -282,7 +309,7 @@ body {
 
 
 
-/*------------------CAROUSEL------------------*/
+/*------------------CAROUSEL(NEW RELEASE)------------------*/
 
 .carousel-wrapper {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -291,30 +318,38 @@ body {
 
     margin-top: -40px;
     width: 100%;
-    height: 93%;
+    height: 100%;
     box-sizing: border-box;
 
 
+}   
+
+.new-release-section .new-release-title {
+  display: flex; /* This keeps them side-by-side */
+  align-items: baseline; /* Keeps the bottoms of the letters lined up */
+  gap: 15px; /* Adjust this to change the space between the two words */
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 80px;
+  margin-left: 25px;
+  /* Adjust as needed */
+  line-height: 1;
 }
 
-
-.new-release-section h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
-    
-    font-size: 30px;
-    color: #312F2C;
-    text-align: center;
-    margin-bottom: 5px;
+/* Styling for the first word "New" */
+.word-new {
+  font-size:55px;      
+  color: #ffffff;   
+  font-weight: 400;    
+  opacity: 0.9;        /* Makes it look slightly blended with background */
 }
 
-.new-release-section p{
-   font-family: 'Times New Roman', Times, serif;
-    font-size: 14px;
-    margin-bottom: 55px;
-    color: #312F2C;
-    text-align: center;
-
+/* Styling for the second word "Release" */
+.word-release {
+  font-size: 55px;    
+  color: #312F2C;      
+  font-style: italic;  
+  font-weight: 400;
+  margin-left:-5px;
 }
 
 .title-underlines {
@@ -322,7 +357,7 @@ body {
     height: 1px;
     background-color: #312F2C;
     margin: 0 auto 10px auto;
-    /* Centers the div and adds bottom space */
+  
 }
 
 
@@ -350,6 +385,7 @@ body {
     padding-bottom: 20px;
     scroll-snap-type: x mandatory;
     /* Makes scrolling snap to the cards */
+    scroll-behavior: smooth;
     justify-content: flex-start;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -399,14 +435,14 @@ body {
 
 .book-info h3 {
     font-size: 0.95rem;
-    color: #4a2c2a;
+    color: #312F2C;
     margin: 0 0 6px 0;
     line-height: 1.2;
 }
 
 .book-info p {
     font-size: 0.8rem;
-    color: #777;
+    color: #312F2C;
     margin: 0 0 12px 0;
     text-align: left;
 }
@@ -417,7 +453,7 @@ body {
     top: 40%;
     transform: translateY(-50%);
     /* Perfectly centers vertically */
-    background-color: #4a2c2a;
+    background-color: #312F2C;
     border: none;
     border-radius: 50%;
     width: 44px;
@@ -430,7 +466,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .nav-btn:hover {
@@ -463,63 +499,66 @@ body {
 
 /* The Image between the carrousel */
 
-.between-carousels {
-
-    background-image: url('resources/img/0ebb6477186da4a48ea616925f1573f9.jpg');
-    background-size: cover;
-    background-position: center;
-    position: relative;
+.between-carouselss {
     width: 100%;
-    height: 170px;
+    background-color: #312F2C; /* Light cream/beige */
+    border-top: 1.5px solid #fefefe; /* Muted tan border */
+    border-bottom: 1.5px solid #ffffff; /* Muted tan border */
+    padding: 20px 0;
+    overflow: hidden;
+    display: flex;
+   
+}
+
+.Slogan-Images {
+    display: flex;
+    width: max-content;
+    /* Adjust '30s' to make it faster (20s) or slower (40s) */
+    animation: scroll-ticker 15s linear infinite;
+    will-change: transform; 
+}
+
+.ticker-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ticker-list li {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px; 
+    color: #FDF5E6;
+    padding: 0 60px;
+    white-space: nowrap;
     display: flex;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    /* Important: keeps blur from spreading outside */
-    padding: 20px;
-    box-sizing: border-box;
-
-
-}
-
-.between-carousels:before {
-    content: '';
-    /* Required for pseudo-elements */
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(52, 51, 51, 0.6);
-    /* Dark tint (60% black) */
-    backdrop-filter: blur(7px);
-    /* The blurring effect */
-    -webkit-backdrop-filter: blur(7px);
-    /* For Safari support */
-    z-index: 1;
-    /* Puts overlay above image but below text */
 }
 
 
-.Slogan-Image {
-
-    z-index: 2;
-    /* Important: Puts text ABOVE the blurry overlay */
-    text-align: center;
-    /* Center-align the paragraphs */
-    color: #fff;
-    /* White text for contrast */
-    font-family: serif;
-    /* Matches the text style in second image */
-    font-size: 18px;
-    max-width: 80%;
-
+.ticker-list li::after {
+    content: "★";
+    margin-left: 120px; /* Gap between text and star */
+    color: #A49F89;
+    font-size: 12px;
 }
 
-.Slogan-Image p {
 
-    margin: 5px 0;
+@keyframes scroll-ticker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        /* This moves exactly one full UL width to the left, 
+           making the reset invisible. */
+        transform: translateX(-50%);
+    }
 }
+
+
 
 
 
@@ -541,7 +580,7 @@ body {
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
     font-size: 30px;
-    color: #4a2c2a;
+    color: #312F2C;
     text-align: center;
     margin-bottom: 5px;
     margin-top: 30px;
@@ -560,7 +599,7 @@ body {
     font-family: 'Times New Roman', Times, serif;
     font-size: 14px;
     margin-bottom: 100px;
-    color: #4a2c2a;
+    color: #312F2C;
     text-align: center;
 
 
@@ -582,14 +621,7 @@ body {
     border: transparent;
     -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 50%, transparent);
     mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-
     align-items: center;
-
-
-
-
-
-
 }
 
 .Carousole::-webkit-scrollbar {
@@ -639,7 +671,7 @@ body {
 
 .book-info2 h3 {
     font-size: 0.95rem;
-    color: #333;
+    color: #312F2C;
     margin: 0 0 6px 0;
     line-height: 1.2;
     text-align: center;
@@ -649,7 +681,7 @@ body {
 
 .book-info2 p {
     font-size: 0.8rem;
-    color: #4a2c2a;
+    color: #312F2C;
     margin: 0 0 12px 0;
 }
 
@@ -658,7 +690,7 @@ body {
 /* The Pill-shaped Genre Tags */
 .genre-tag {
     display: inline-block;
-    background-color: #4a2c2a;
+    background-color: #312F2C;
     color: #edeaea;
     font-size: 0.7rem;
     font-weight: 600;
@@ -693,15 +725,18 @@ body {
 /* ABOUT US  */
 
 .about-us {
+
     background-color: #312F2C;
     /* The cream background moves here */
     padding: 90px 10px;
     /* Breathing room on the top/bottom and sides */
-    min-height: 850px;
+    min-height: 800px;
+    
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    
+   
 
 }
 
@@ -710,7 +745,9 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    max-width: 850px;
+    max-width: 800px;
+    margin-top:70px;
+    
 
 }
 
@@ -721,7 +758,7 @@ body {
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.25em;
-    color: #8C7B75;
+    color: #FDF5E6;
     margin-bottom: -30px;
     margin-top: -10px;
 }
@@ -732,7 +769,7 @@ body {
     font-size: clamp(2.5rem, 5vw, 4rem);
     /* Scales smoothly on mobile */
     font-weight: 400;
-    color: #FAF2E8;
+    color: #FDF5E6;
     margin-bottom: 10px;
 }
 
@@ -743,7 +780,7 @@ body {
     font-family: 'Lora', serif;
     font-size: 1.1rem;
     line-height: 1.8;
-    color: #FAF2E8;
+    color: #FDF5E6;
     max-width: 850px;
     margin-bottom: -15px;
 }
@@ -751,7 +788,7 @@ body {
 
 
 .stats-card {
-    background-color: #FDFAF6;
+    background-color: #FDF5E6;
     /* Very light cream/white */
     width: 100%;
     max-width: 1100px;
@@ -774,8 +811,6 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transform: scale(1.05);
     transition: all 0.5s ease-in-out;
-
-
 }
 
 .stat-item {
@@ -802,7 +837,7 @@ body {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: #8C7B75;
+    color: #312F2C;
 
 }
 
@@ -827,7 +862,7 @@ body {
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
     font-size: 30px;
-    color: #4a2c2a;
+    color: #312F2C;
     text-align: center;
     margin-bottom: 5px;
 
@@ -840,7 +875,7 @@ body {
     font-family: 'Times New Roman', Times, serif;
     font-size: 14px;
     margin-bottom: 100px;
-    color: #4a2c2a;
+    color: #312F2C;
     text-align: center;
 
 
@@ -907,7 +942,7 @@ body {
 .author-info h3 {
 
     font-size: 0.95rem;
-    color: #4a2c2a;
+    color: #312F2C;
     margin: 0 0 6px 0;
     line-height: 1.2;
     text-align: center;
@@ -919,7 +954,7 @@ body {
 .author-info p {
 
     font-size: 12px;
-    color: #777;
+    color: #312F2C;
     margin: 0 auto;
     width: 90%;
     /* Slightly smaller than the name for better look */
@@ -1098,16 +1133,16 @@ body {
 
 
 .privacyPolicy-box {
-    background-color: #F0EDE5; 
+    background-color: #312F2C; 
     text-align: center;
     padding: 80px 20px;
-    border-radius: 15px;
+   
     margin-bottom: 40px;
 }
 
 .privacyPolicy-box h1 {
     font-size: 3rem;
-    color: #F0EDE5;
+    color: #FDF5E6;
     margin-bottom:0px;
     margin-top:0px;
 }
@@ -1115,8 +1150,9 @@ body {
 
 .policy-body {
    margin-left:22px;
-    color: #F0EDE5;
+    color: #FDF5E6;
     line-height: 1.8;
+   background: transparent;
 }
 
 .policy-body h2 {
@@ -1167,6 +1203,14 @@ body {
     color: #F0EDE5;
     font-weight: bold;
 }
+
+
+
+
+
+
+
+
 
 
 .dropdown button {
