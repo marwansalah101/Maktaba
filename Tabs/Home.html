@@ -103,13 +103,15 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
 
 
-
 <div class="carousel-wrapper"> 
-  <div id="new-releases" class="new-release-section">
-    <h2>New Release</h2>
+  <div id="new-releases" class="new-release-section reveal">
+    
+   <h2 class="new-release-title">
+  <span class="word-new">New</span>
+  <span class="word-release">Release</span>
+</h2>
 
-    <div class="title-underlines"></div>
-   <p>"The wait is over. Your next obsession is here"</p>
+    
     
     <div class="carousel-container">
       
@@ -223,23 +225,35 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
 
 
-
-<div class="between-carousels">
-   <div class="Slogan-Image">
-
-    <p>"The more that you read, the more things you will know. The more that you learn, the more places you'll go."</p> 
     
 
-
-   </div>
-
+<div class="between-carouselss">
+    <div class="Slogan-Images">
+        <ul class="ticker-list">
+            <li>FREE SHIPPING ON ORDERS OVER £50</li>
+            <li>JOIN THE CLUB FOR 10% OFF</li>
+            <li>COMPLIMENTARY GIFT WRAPPING</li>
+        </ul>
+        <ul class="ticker-list" aria-hidden="true">
+            <li>FREE SHIPPING ON ORDERS OVER £50</li>
+            <li>JOIN THE CLUB FOR 10% OFF</li>
+            <li>COMPLIMENTARY GIFT WRAPPING</li>
+        </ul>
+    </div>
 </div>
 
 
 
 
+
+
+
+
+
+
+
 <div class="carousel-background"> 
- <div class = "best-sellers"> 
+ <div class = "best-sellers reveal"> 
    <h2> Bestselling Books </h2>
    
 
@@ -359,14 +373,19 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
  <div class="about-us">
     
-    <div class="about-us-section">
+    <div class="about-us-section reveal">
         <h4>Our Story</h4>
         <h1>More than a bookstore</h1>
-        <p>Founded in 2024, Maktaba — meaning "library" in Arabic — was born from a simple belief:
-           that the right book, at the right moment, can change everything. "At Maktaba, we believe every book is a doorway. 
-             Our mission is to connect readers with stories that stay with them long after the final page.
-            From timeless classics to the latest bestsellers, 
-            we provide a curated space to discover, purchase, and immerse yourself in the world of literature."</p>
+        <p>"Founded in 2024, Maktaba — meaning 'library' in Arabic — was born from a simple belief : that the right book,
+           at the right moment, can change everything. We see ourselves as more than just an online bookstore; 
+           we are a digital sanctuary for the modern bibliophile.
+           At Maktaba, we believe every book is a doorway to a new world. Our team hand-picks every edition, focusing on quality, 
+           cultural significance, and the power of the written word. Whether you are a lifelong scholar or a curious newcomer,
+           Our mission is to preserve the art of deep reading in a fast-paced age,
+            connecting readers with stories that linger long after the final page is turned. 
+            From the weathered wisdom of timeless classics to the bold voices of the latest bestsellers, 
+            we provide a curated space to discover, purchase, and truly immerse yourself in the world of literature. 
+            Maktaba is your partner in building a personal library that reflects who you are & who you want to become."</p>
     </div>
 
     <div class="stats-card">
@@ -396,7 +415,7 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
 
 <div class="author-background">
-  <div class="Favorite-Authors">
+  <div class="Favorite-Authors reveal">
     <h2>Favourite Authors</h2>
     <div class="title-underline"></div>
    <p>"Discover the literary legends and modern voices who have shaped our world"</p>
@@ -616,11 +635,11 @@ function updateButtons() {
 }
 
 slideLeft.addEventListener('click', () => {
-    track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    track.scrollBy({ left: -300, behavior: 'smooth' });
 });
 
 slideRight.addEventListener('click', () => {
-    track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    track.scrollBy({ left: 300, behavior: 'smooth' });
 });
 
 // Listen for the scroll to finish to update buttons
@@ -628,6 +647,34 @@ track.addEventListener('scroll', updateButtons);
 
 // Run once on page load to set initial state
 updateButtons();
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const observerOptions = {
+    threshold: 0.15 // Trigger when 15% of the element is visible
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+        // Optional: stop observing once it has appeared
+        // observer.unobserve(entry.target); 
+      }
+    });
+  }, observerOptions);
+
+  // Select all elements with the 'reveal' class and start watching them
+  const hiddenElements = document.querySelectorAll(".reveal");
+  hiddenElements.forEach((el) => observer.observe(el));
+});
+
 
 
 </script>
