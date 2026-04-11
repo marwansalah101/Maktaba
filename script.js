@@ -1,3 +1,16 @@
+const menuBtn = document.getElementById('menuBtn');
+const menuDropdown = document.getElementById('menuDropdown');
+
+if (menuBtn && menuDropdown) {
+    menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menuDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => {
+        menuDropdown.classList.remove('open');
+    });
+}
 //Filters box
 const btn = document.getElementById('toggleBtn');
 const box = document.getElementById('expandBox');
@@ -69,8 +82,8 @@ if (ripple) {
             reverseRipple.classList.add('bg-ripple', 'bg-ripple-reverse');
             reverseRipple.style.left = x + 'px';
             reverseRipple.style.top = y + 'px';
-            reverseRipple.style.backgroundColor = getComputedStyle(document.body).backgroundColor;
-            document.body.appendChild(reverseRipple);
+            reverseRipple.style.backgroundColor = '#F0EDE5';
+document.querySelector('.homepage-genre').appendChild(reverseRipple);
 
             // Trigger the animation
             void reverseRipple.offsetWidth;
