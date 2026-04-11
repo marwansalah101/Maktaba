@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping Cart - Maktaba</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="../styles.css">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f8f1e7;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #4A2C2A;
+      min-height: 100vh;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .cart-page-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 50px 40px 80px;
+    }
+
+    .cart-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #a08f83;
+      font-size: 14px;
+      margin-bottom: 40px;
+      transition: color 0.2s;
+    }
+    .cart-back-link:hover { color: #4A2C2A; }
+
+    /* ── GRID: LEFT + RIGHT ── */
+    .cart-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 50px;
+      align-items: start;
+    }
+
+    /* ── LEFT PANEL ── */
+    .cart-left h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 700;
+      color: #4A2C2A;
+      margin-bottom: 40px;
+    }
+
+    /* ── CART ITEM ── */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 24px 0;
+      border-bottom: 1px solid #e6d8cb;
+      position: relative;
+    }
+
+    .cart-item-img {
+      width: 72px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #4A2C2A;
+      margin-bottom: 4px;
+    }
+
+    .cart-item-info p {
+      font-size: 14px;
+      color: #8f7d73;
+      margin-bottom: 16px;
+    }
+
+    /* qty controls */
+    .qty-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: 1px solid #d4c4ba;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      color: #4A2C2A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      line-height: 1;
+    }
+    .qty-btn:hover { background: #e6d8cb; }
+
+    .qty-value {
+      width: 40px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: #4A2C2A;
+    }
+
+    .cart-item-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #4A2C2A;
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .cart-remove-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #c0a898;
+      font-size: 18px;
+      padding: 4px;
+      line-height: 1;
+      transition: color 0.2s;
+      position: absolute;
+      top: 24px;
+      right: 0;
+    }
+    .cart-remove-btn:hover { color: #c0392b; }
+
+    /* empty state */
+    .cart-empty {
+      text-align: center;
+      color: #a08f83;
+      padding: 80px 0;
+      font-size: 18px;
+      display: none;
+    }
+    .cart-empty .material-symbols-outlined {
+      font-size: 60px;
+      color: #d4c4ba;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    /* ── RIGHT PANEL: ORDER SUMMARY ── */
+    .order-summary-card {
+      background: rgba(255,255,255,0.65);
+      border: 1px solid #e5d9ce;
+      border-radius: 18px;
+      padding: 30px 28px;
+      box-shadow: 0 6px 24px rgba(74,44,42,0.06);
+      position: sticky;
+      top: 30px;
+    }
+
+    .order-summary-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #4A2C2A;
+      margin-bottom: 28px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      color: #7a6258;
+      margin-bottom: 14px;
+    }
+
+    .summary-divider {
+      height: 1px;
+      background: #e5d9ce;
+      margin: 18px 0;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #4A2C2A;
+      margin-bottom: 28px;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: #3b1f1f;
+      color: #f8f1e7;
+      border: none;
+      padding: 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+    .checkout-btn:hover { background: #5a3030; }
+    .checkout-btn:disabled {
+      background: #c0b0a8;
+      cursor: not-allowed;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .cart-grid { grid-template-columns: 1fr; }
+      .order-summary-card { position: static; }
+    }
+
+    @media (max-width: 600px) {
+      .cart-page-wrapper { padding: 30px 18px 60px; }
+      .cart-left h1 { font-size: 38px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div id="Maktaba">
+      <a href="Home.html">MAKTABA</a>
+    </div>
+    <div class="navbar-text">
+      <ul>
+        <li><a href="Home.html">HOME</a></li>
+        <li><a href="Genres.html">BROWSE</a></li>
+        <li><a href="Favorites.html">FAVOURITES</a></li>
+      </ul>
+    </div>
+    <div class="navbar-icons">
+      <span class="material-symbols-outlined" style="cursor:pointer;">shopping_bag</span>
+      <span class="material-symbols-outlined" style="cursor:pointer;">person</span>
+    </div>
+  </nav>
+
+  <!-- PAGE -->
+  <div class="cart-page-wrapper">
+
+    <a href="Favorites.html" class="cart-back-link">
+      ← Continue Shopping
+    </a>
+
+    <div class="cart-grid">
+
+      <!-- LEFT: items -->
+      <div class="cart-left">
+        <h1>Shopping Cart</h1>
+
+        <div id="cart-items-container"></div>
+
+        <div class="cart-empty" id="cart-empty-msg">
+          <span class="material-symbols-outlined">shopping_bag</span>
+          Your cart is empty.<br>
+          <a href="Favorites.html" style="color:#4A2C2A; margin-top:12px; display:inline-block;">Go to Favorites →</a>
+        </div>
+      </div>
+
+      <!-- RIGHT: summary -->
+      <div class="order-summary-card">
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="summary-subtotal">€0.00</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span id="summary-shipping">€5.00</span>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+          <span>Total</span>
+          <span id="summary-total">€5.00</span>
+        </div>
+
+        <button class="checkout-btn" id="checkout-btn" onclick="window.location.href='checkout.html'">
+  Proceed to Checkout
+</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const SHIPPING = 5;
+
+    function getCart() {
+      return JSON.parse(localStorage.getItem('cart')) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      const container = document.getElementById('cart-items-container');
+      const emptyMsg = document.getElementById('cart-empty-msg');
+      const checkoutBtn = document.getElementById('checkout-btn');
+
+      container.innerHTML = '';
+
+      if (cart.length === 0) {
+        emptyMsg.style.display = 'block';
+        checkoutBtn.disabled = true;
+        updateSummary(0);
+        return;
+      }
+
+      emptyMsg.style.display = 'none';
+      checkoutBtn.disabled = false;
+
+      let subtotal = 0;
+
+      cart.forEach((book, index) => {
+        const qty = book.qty || 1;
+        const price = parseFloat(book.price);
+        subtotal += price * qty;
+
+        const item = document.createElement('div');
+        item.className = 'cart-item';
+        item.innerHTML = `
+          <img class="cart-item-img" src="${book.image}" alt="${book.title}">
+          <div class="cart-item-info">
+            <h3>${book.title}</h3>
+            <p>${book.author}</p>
+            <div class="qty-row">
+              <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+              <span class="qty-value">${qty}</span>
+              <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+            </div>
+          </div>
+          <div class="cart-item-price">€${(price * qty).toFixed(2)}</div>
+          <button class="cart-remove-btn" onclick="removeItem(${index})">✕</button>
+        `;
+        container.appendChild(item);
+      });
+
+      updateSummary(subtotal);
+    }
+
+    function updateSummary(subtotal) {
+      const cart = getCart();
+      const shipping = cart.length > 0 ? SHIPPING : 0;
+      document.getElementById('summary-subtotal').textContent = `€${subtotal.toFixed(2)}`;
+      document.getElementById('summary-shipping').textContent = `€${shipping.toFixed(2)}`;
+      document.getElementById('summary-total').textContent = `€${(subtotal + shipping).toFixed(2)}`;
+    }
+
+    function changeQty(index, delta) {
+      const cart = getCart();
+      cart[index].qty = Math.max(1, (cart[index].qty || 1) + delta);
+      saveCart(cart);
+      renderCart();
+    }
+
+    function removeItem(index) {
+      const cart = getCart();
+      cart.splice(index, 1);
+      saveCart(cart);
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+
+</body>
+</html>
