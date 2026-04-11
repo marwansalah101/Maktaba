@@ -7,12 +7,11 @@
     <title>Genres</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=person,shopping_bag" />
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 
 </head>
 
-</html>
 
 <body class="homepage-genre">
     <nav class="navbar ">
@@ -45,6 +44,13 @@
             <a href="#">
                 <span class="material-symbols-outlined">person</span>
             </a>
+            <div class="menu-dropdown-wrapper">
+        <span class="material-symbols-outlined" id="menuBtn">menu</span>
+        <div class="menu-dropdown" id="menuDropdown">
+            <a href="signup.html">Profile</a>
+            <a href="#">Settings</a>
+            <a href="#">Contact Us</a>
+        </div>
         </div>
     </nav>
 
@@ -116,8 +122,9 @@
                 </div>
             </div>
         </a>
+    </div>
 
-
+        <div style="z-index: 1; position: relative; border:none;">
         <footer class="site-footer">
         <div class="footer-container">
             
@@ -181,7 +188,10 @@
             </ul>
         </div>
     </footer>
+    </div>
 
 
         <script src="../script.js"></script>
 </body>
+
+</html>
