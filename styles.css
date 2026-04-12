@@ -99,6 +99,8 @@ body {
 
 .navbar ul li a:hover:after {
     width: 100%;
+    content: "";
+    position: absolute;
 }
 
 .navbar-icons {
@@ -106,6 +108,48 @@ body {
     display: flex;
     gap: 30px;
     align-items: center;
+}
+.menu-dropdown-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 130%;
+    right: 0;
+    background-color: #EDE3D3;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    min-width: 160px;
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.menu-dropdown a {
+    display: block !important;
+    padding: 12px 20px !important;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: #312F2C !important;
+    text-decoration: none !important;
+    transition: background 0.2s ease;
+    pointer-events: all !important;
+    cursor: pointer !important;
+}
+
+.menu-dropdown a:hover {
+    background-color: #d4c4a8 !important;
+    color: #312F2C !important;
+}
+.menu-dropdown.open {
+    display: block;
+}
+.menu-dropdown a::after {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 #Maktaba {
@@ -2091,6 +2135,7 @@ height:250px;
     flex-wrap: wrap;
     justify-content: center;
     gap: 60px;
+    padding: 0 0 50px 0;
 }
 
 .genre-categories a {
@@ -2333,35 +2378,21 @@ height:250px;
 
 /*!--sign in--*/
 
-css
-
-
-
-/*!--sign in--*/
-
+/* Page background */
 body{
     margin:0;
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    background:#eaeaf2;
-    font-family:sans-serif;
-background-image:linear-gradient(rgba(90,70,56,0.6), rgba(90,70,56,0.6)),
- url(https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1920)
- 
-}
+    font-family:serif;
 
-.logo{
-    font-size: 32px;
-    font-weight: 700;
-text-decoration: none;
+    background:linear-gradient(rgba(123, 81, 36, 0.6), rgba(172, 105, 57, 0.6)), url("https://images.unsplash.com/photo-1507842217343-583bb7270b66");
     
-    font-style: italic; 
-    color: #4b2e1e; 
-    text-align: center;
-
-    margin-bottom: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
 }
 
 /* Main container */
