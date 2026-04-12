@@ -2379,7 +2379,7 @@ height:250px;
 /*!--sign in--*/
 
 /* Page background */
-body{
+.sign-in-body{
     margin:0;
     height:100vh;
     display:flex;
@@ -2387,14 +2387,18 @@ body{
     align-items:center;
     font-family:serif;
 
-    background:linear-gradient(rgba(123, 81, 36, 0.6), rgba(172, 105, 57, 0.6)), url("https://images.unsplash.com/photo-1507842217343-583bb7270b66");
-    
-    background-size: cover;
+
+background:  linear-gradient(
+        rgba(13, 7, 1, 0.75),
+                rgba(13, 7, 1, 0.75)
+
+    ),          url("https://images.unsplash.com/photo-1507842217343-583bb7270b66") ;
+
+             background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     
 }
-
 /* Main container */
 .main-container{
     display:flex;
@@ -2402,12 +2406,20 @@ body{
     width:1100px;
     height:650px;
 
-    background:white;
+    background:
+linear-gradient(
+        rgba(46, 25, 4, 0.75),
+                rgba(46, 25, 4, 0.75));
+
+
     border-radius:20px;
     overflow:hidden;
 
     box-shadow:0 20px 40px rgba(141, 91, 0, 0.692);
 }
+
+
+
 
 /* LEFT (FORM) */
 .form-side{
@@ -2423,18 +2435,21 @@ body{
     margin:0;
 }
 
-.desc{
-    font-size:14px;
-    color:#666;
-    margin-top: -20px;
-    margin-left: 80px;
+.signin-desc{
+    font-size:15px;
+    color:#fffefe;
+    margin-top: -1px;
+    margin-left: 135px;
+    width: 390px;
+    font-style: oblique;
 }
 
 
 .labels
 {
 margin-left: 110px;
-color: #696969;
+color: #ffffff;
+padding: 10px;
 
 }
 
@@ -2449,6 +2464,11 @@ input{
     margin-top: 1px;
 
 }
+
+
+
+
+
 
 /* Button */
 .login-btn{
@@ -2474,10 +2494,7 @@ input{
     text-align:center;
 }
 
-.bottom-text span{
-    color:#5a4638;
-    font-weight:bold;
-}
+
 
 
 .image-side{
@@ -2490,15 +2507,15 @@ input{
     
 
    
-    .logo{
-
-color: #3b2802;
-font-style:oblique;
+    .sign-in-logo{
+        font-size: 28px;
+font-style: oblique;
+color: #956403;
 margin-left: 210px;
-margin-top:-25px
-
-
+margin-top:-25px;
+text-decoration: none;
     }
+
     .continue{
 color: rgb(146, 146, 146);
 width: 600px;
@@ -2523,6 +2540,9 @@ height: 0px;
   background: transparent;
   cursor: pointer;
   height: 40px;
+
+  box-shadow: 
+        0 4px 15px rgba(166, 124, 82, 0.4)
 }
 
 .google {
@@ -2540,13 +2560,13 @@ height: 0px;
 .noaccp
 {
     margin-left:190px ;
-    color: #5c5c5c;
-    margin-top: -19px;
+    color: #f2f2f2;
+    margin-top: -1px;
 }
 .link
 {
-    color:#3b2802;
-    
+    color:#b07000;
+    text-decoration: none;
 }
 
 .form-message{
@@ -2554,6 +2574,7 @@ height: 0px;
       margin-top: -30px;
         font-size: 14px;
         text-align: center;
+        font-style: oblique;
 }
 
 .error{
@@ -2563,7 +2584,6 @@ height: 0px;
 .success{
     color: green;
 }
-
 /*----sign-up----*/
 
 

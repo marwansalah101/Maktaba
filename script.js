@@ -506,6 +506,7 @@ function login(){
 let email =document.getElementById("email").value;
 let password =document.getElementById("password").value;
 let pattern =/^(?=.*[A-Z])(?=.*\d).+$/;
+let length=6;
 message.innerText = "";
     message.className = "form-message";
 
@@ -521,7 +522,7 @@ message.innerText = "invalid email";
         return false;
 
 }
-else if(password.length<6)
+else if(password.length<length)
 {
     message.innertext="password must me atleast 6 characters!"
 message.classList.add("error");
@@ -541,3 +542,4 @@ message.innerText = "Login successful ";
 
 
 }
+
