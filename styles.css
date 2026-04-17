@@ -1129,7 +1129,7 @@ body {
 .footer-bottom {
     margin-top:  50px;       
     padding-top: 25px;      
-    border-top: 1px solid rgba(0, 0, 0, 0.1); /* The "Underline" transparent line */
+    border-top: 1px solid #F0EDE5; /* The "Underline" transparent line */
     
     display: flex;
     justify-content: space-between; 
@@ -1464,6 +1464,81 @@ body {
 
 
  
+/*........... about the author....*/
+
+
+
+
+.layered-section {
+    background-color: #312F2C;
+   height:450px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; /* Forces everything to the left */
+}
+
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    max-width: 1200px;
+    margin-top: 30px;
+    margin-left:30px;
+}
+
+/* 1. PHOTO ON THE LEFT */
+.photo-box {
+    position: relative;
+    z-index: 2;             /* Keeps photo on top layer */
+    flex: 0 0 450px;        /* Fixed width for the photo */
+}
+
+.photo-box img {
+   margin-left:40px;
+   margin-right:30px;
+
+    height: 300px;
+    display: block;
+    /* Shadow helps define the edge where it overlaps the text */
+    box-shadow: 15px 0 40px rgba(0,0,0,0.4); 
+}
+
+
+
+/* 2. TEXT BEHIND THE PHOTO */
+.text-box {
+    z-index: 1;             /* Lower layer than the photo */
+    margin-left: -80px;     /* THE MAGIC: Pulls text BEHIND the photo */
+    padding-left: 120px;    /* Offsets text so the words aren't fully hidden */
+    color: #F0EDE5;
+    max-width: 600px;
+}
+
+.text-box h2 {
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.text-box p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #F0EDE5;
+    margin-bottom: 20px;
+}
+
+.links {
+    color: #F0EDE5;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+
+
+
+
+
 
 
 /*----------Recent Books------------- */
@@ -1579,6 +1654,129 @@ height:250px;
 }
 
 .barbarian .card-stats { background-color: #4e3b2a; }
+
+
+
+
+
+
+
+
+
+.carousel-containerss {
+    padding: 60px 20px;
+    background-color:#F0EDE5;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+}
+
+.carousel-titless {
+    color: #fff;
+    margin-bottom: 40px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.carousel-view {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.carousel-trackss {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-cardss {
+    min-width: 280px;
+    /* Use min-height instead of height to let content breathe */
+    min-height: 350px; 
+    background-color:#312F2C;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    
+    /* This keeps everything inside and centered */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; 
+    padding: 30px;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0.5;
+    transform: scale(0.85);
+}
+
+.carousel-cardss.activess {
+  opacity: 1;
+    transform: scale(1.05) translateY(-10px);
+    background-color: #312F2C;
+     
+}
+
+.carousel-cardss img {
+  width: auto;
+    height: 280px; /* Adjust this to fit your screen */
+    
+    border-radius: 4px;
+    /* This creates the 3D depth effect */
+   
+    transition: transform 0.6s ease;
+}
+
+.carousel-cardss.activess img {
+  /* Slight tilt and lift for the "Motion" look */
+    transform: rotateY(-10deg) rotateX(5deg) translateY(-5px);
+}
+
+.card-infoss {
+  text-align: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.card-infoss h3 {
+     margin: 10px 0;
+  font-family: sans-serif;
+  font-weight: 800;
+}
+.card-infoss p {
+     font-size: 1.1rem;
+    color: #a0d2eb; /* A slight blue tint looks better on dark green */
+    font-weight: bold;
+    margin: 0;
+}
+
+.carousel-controls {
+    margin-top: 40px;
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btnss {
+    background-color:#312F2C;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 24px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.nav-btnss:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+
 
 
 
