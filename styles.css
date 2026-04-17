@@ -1465,7 +1465,8 @@ body {
     padding: 0 !important;  
     display: flex;
     align-items: flex-end; /* Keeps them all sitting on the same 'floor' */
-    justify-content: center;            /* REMOVES PADDING */
+    justify-content: center;            
+    
 }
 
 .book-img {
@@ -1828,38 +1829,37 @@ height:250px;
 /*--------------COLLECTIONS PAGE ---------- */
 
 
-
+.hero-section {
+        background-image:
+        radial-gradient(ellipse at 0% 0%,   rgba(255,220,180,0.55) 0%, transparent 55%),
+        radial-gradient(ellipse at 100% 0%,  rgba(230,200,255,0.30) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 60%,  rgba(255,235,180,0.40) 0%, transparent 60%),
+        radial-gradient(ellipse at 100% 100%,rgba(200,230,255,0.25) 0%, transparent 50%),
+        radial-gradient(ellipse at 0% 100%,  rgba(255,200,200,0.20) 0%, transparent 50%);
+}
 
 .hero-container {
-    background: linear-gradient(to bottom,
-            #FDF5E6 0%,
-            #FDF5E6 70%,
-            #ffffff 100%);
     display: flex;
-    flex-direction: column;
-    padding: 70px 20px 60px 20px;
-    gap: 40px;
+    flex-direction: row;
+    padding: 130px 0px 0px 25px;
+    gap:160px;
 }
 
 .hero-overlay {
-    align-items: left;
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
     padding: 5px 60px 0px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px)
 }
 
 .hero-img {
-    position: absolute;
-    right: 10%;
-    top: 50%;
-    transform: translateY(-50%);
+    position: relative;
     width: 350px;
     z-index: 1;
+    right: 0%;
 }
 
 .hero-title {
-    color: #4A2C2A;
+    color: #312F2C;
     font-family: 'Fraunces', serif;
     font-size: 72px;
     font-weight: 400;
@@ -1867,9 +1867,8 @@ height:250px;
 }
 
 .hero-subtitle {
-    color: #4A2C2A;
+    color: #312f2c96;
     font-family: 'Space Grotesk', sans-serif;
-    opacity: 70%;
     margin-top: -25px;
 }
 
@@ -1877,13 +1876,11 @@ height:250px;
     font-family: 'Playfair Display', serif;
     font-style: italic;
     font-size: 18px;
-    color: #4A2C2A;
-    opacity: 0.6;
+    color: #312f2c91;
     max-width: 400px;
     margin-top: 30px;
     padding-left: 20px;
-    border-left: 2px solid #d4af37;
-    /* Gold accent line from your reference */
+    border-left: 2px solid #3f2513;
     line-height: 1.6;
 }
 
@@ -2085,14 +2082,20 @@ height:250px;
 .book-listing {
     width: 100%;
     min-height: 350px;
-    background-color: #ffffff;
+    background-color: #fefefe;
     border: 1px solid #e8e0d4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.144);
     gap: 10px;
     border-radius: 12px;
     padding: 1.5rem 1.5rem 2rem 1.5rem;
     cursor: pointer;
     transition: box-shadow 0.4s ease, transform 0.4s ease;
     animation: fade-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.book-listing a, .book-link {
+    text-decoration: none;
+    color: inherit;
 }
 
 .book-listing:hover {
@@ -2294,35 +2297,20 @@ height:250px;
     align-items: flex-start;
 }
 
-#modal-details {
-    font-family: 'Times New Roman', serif;
-    font-size: 10px;
-    opacity: 0.8;
-    color: #4A2C2A;
-}
-
-#modal-title {
-    margin-top: 40px;
-    margin-bottom: 10px;
-    font-family: 'Times New Roman', serif;
-    font-size: 36px;
-    color: #4A2C2A;
-}
-
-#modal-author {
-    margin-top: 0;
-    font-family: 'Times New Roman', serif;
-    font-size: 12px;
-    color: #4A2C2A;
-}
-
 
 
 /*--------------GENRE PAGE ---------- */
 
 .homepage-genre {
     background-color: #FDF5E6;
+        background-image:
+        radial-gradient(ellipse at 0% 0%,   rgba(255,220,180,0.55) 0%, transparent 55%),
+        radial-gradient(ellipse at 100% 0%,  rgba(230,200,255,0.30) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 60%,  rgba(255,235,180,0.40) 0%, transparent 60%),
+        radial-gradient(ellipse at 100% 100%,rgba(200,230,255,0.25) 0%, transparent 50%),
+        radial-gradient(ellipse at 0% 100%,  rgba(255,200,200,0.20) 0%, transparent 50%);
     z-index: 1000;
+    margin-top:100px
 }
 
 .genres-container {
@@ -2346,7 +2334,7 @@ height:250px;
 .genre-page-title {
      font-family: 'Bebas Neue', sans-serif;
     font-size: 120px;
-    color: #3b2321;
+    color: #312F2C;
     letter-spacing: 0.04em;
     line-height: 0.9;
     margin: 0;        /* removes default heading margin */
@@ -2359,7 +2347,7 @@ height:250px;
 .genre-page-subtitle {
     font-family: 'Playfair Display', serif;
     font-size: 14px;
-    color: #4A2C2A;
+    color: #312F2C;
     opacity: 0.5;
     letter-spacing: 0.22em;  /* space between letters */
     margin-bottom: 12px; 
@@ -2404,7 +2392,7 @@ height:250px;
 
     font-family: 'Playfair Display', serif;
     font-size: 1rem;
-    color: #4A2C2A;
+    color: #312F2C;
     text-align: center;
     padding: 20px;
     width: 320px;
@@ -2413,13 +2401,6 @@ height:250px;
     overflow: hidden;
     /* IMPORTANT */
 }
-
-.genre-card:hover {
-    box-shadow: 0 8px 30px rgba(74, 44, 42, 0.1);
-    transform: translateY(-2px);
-    color: #f7c86b;
-}
-
 .genre-card h2 {
     position: absolute;
     bottom: 20px;
@@ -2433,7 +2414,7 @@ height:250px;
 }
 
 .genre-info {
-    color: #4A2C2A;
+    color: #312F2C;
     font-size: 14px;
     text-align: center;
     width: 400px;
@@ -2443,14 +2424,14 @@ height:250px;
     font-family: 'Times New Roman', serif;
     font-size: 24px;
     font-weight: bold;
-    color: #4A2C2A;
+    color: #312F2C;
     font-style: italic;
     transition: color 0.5s ease;
 }
 
 .genre-description {
     font-style: italic;
-    color: #666;
+    color: #312f2cb0;
     transition: color 0.5s ease;
 }
 .genre-card-container:hover{
@@ -3910,3 +3891,124 @@ height: 0px;
     transform: scale(1.1);
 }
 /**/
+
+/* -- BOOKSHELF MODE FOR COLLECTION PAGE -- */
+.bookshelf-mode {
+    display: grid !important; /* enforce grid over anything else */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+    gap: 0 !important;
+    row-gap: 120px !important;
+    padding: 80px 40px !important;
+    background: #fdf8f0 !important; /* Soft beige backdrop for the shelves */
+    border-radius: 16px;
+    margin: 20px 40px 60px;
+    box-shadow: inset 0 8px 24px rgba(0,0,0,0.02);
+    justify-items: center;
+}
+
+/* Base card behavior negated for shelf mode */
+.bookshelf-mode .book-listing {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    min-height: 220px !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+
+.bookshelf-mode .book-listing:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Hide texts and buttons to simulate pure shelves if needed 
+   or place them elegantly below the shelf */
+.bookshelf-mode .book-details,
+.bookshelf-mode .add-to-cart,
+.bookshelf-mode .book-author {
+    display: none !important;
+}
+
+.bookshelf-mode .book-title {
+    position: absolute;
+    bottom: -35px; /* below the shelf */
+    font-size: 0.9rem;
+    text-align: center;
+    width: 100%;
+    color: #4a2c2a;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 10px;
+}
+
+/* The actual Shelf line */
+.bookshelf-mode .book-listing::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: -5px; /* allow a slight overlap so shelves perfectly merge */
+    right: -5px;
+    height: 18px;
+    background: #e4d8c8; /* Wood/beige shelf color */
+    border-top: 1px solid #ffffffa1;
+    border-bottom: 2px solid #cebfa8;
+    box-shadow: 0 8px 12px rgba(0,0,0,0.06), inset 0px -2px 3px rgba(0,0,0,0.03);
+    z-index: -1; 
+    border-radius: 1px;
+}
+
+.bookshelf-mode .book-listing {
+    position: relative;
+    /* other styles are above */
+}
+
+/* The Book format for the shelf */
+.bookshelf-mode .book-link {
+    position: relative;
+    display: inline-block;
+}
+
+.bookshelf-mode .book-cover {
+    width: 130px !important;
+    height: 190px !important;
+    box-shadow: -4px 0px 8px rgba(0,0,0,0.1), 6px 4px 12px rgba(0,0,0,0.15) !important;
+    margin-bottom: 2px !important; 
+    border-radius: 3px 5px 5px 3px !important;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    object-position: center;
+}
+
+/* Add a spine line effect on covers */
+.bookshelf-mode .book-link::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 4px;
+    left: 0;
+    width: 6px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Scale up visually when hovering the *cover*, not the whole grid cell */
+.bookshelf-mode .book-link:hover .book-cover {
+    transform: translateY(-8px) scale(1.05) !important;
+}
+
+/* Container for continuous line */
+.bookshelf-mode .book-listing {
+    /* If the screen is big, the ::after fills exactly 1 fraction, creating a seamless line */
+}
+

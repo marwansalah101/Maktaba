@@ -62,20 +62,21 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
     </nav>
 
     <!-- El Banner -->
-    <section class="hero-container">
+     <section class="hero-section">
+    <div class="hero-container">
     <div class="hero-overlay">
-    <span class = hero-img>
-        <img src="../resources/img/Collections.png" alt="Books" style="height:450px; width: 450px ">
-    </span>
         <h1 class="hero-title">Collections</h1>
         <p class="hero-subtitle">
             Browse through centuries of literature — search by title, author, or explore by genre.
         </p>
         <p class="hero-quote">EXPLORE NOW</p>
+    </div>
         
+    <span class = hero-img>
+        <img src="../resources/img/Collections.png" alt="Books" style="height:450px; width: 450px ">
+    </span>
     </div>
     
-    </section>
     <!-- hetet l search -->
     <div class="search-section-container">
     <div class="search-row-flex">
@@ -104,7 +105,9 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         </div>
     </div>
     <!-- grid -->
-    <a href="../Tabs/Product.html" style="text-decoration:none;"><div id="books-container"></div></a>
+    <div id="books-container" class="bookshelf-mode"></div>
+
+    </section>
 <script src="../data.js"></script>
 <script src="../script.js">
     
