@@ -1,103 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Maktaba - Sign Up</title>
-    <link rel="stylesheet" href="../styles.css">
-    <script src="../script.js"></script>
+    <title>Maktaba sign up</title>
+
+<link rel="stylesheet" href="../styles.css">
+<script src="../script.js"></script><body class="signup-body">
+
 </head>
 
-<body>
 
-<!-- Header -->
-<a href="../Tabs/Home.html"
-style="position:absolute;
-top:35px;
-left:50%;
-transform:translateX(-50%);
-text-decoration:none;
-font-size:50px;
-color:#504339;
-font-weight:bold;">
-M A K T B A
-</a>
 
-<!-- FORM BOX -->
-<div class="form-box">
+<div class="signup-container">
 
-<input type="text" placeholder="Full Name">
+    <div class="signup-form-side">
 
-<input type="email" id="email" placeholder="Email / Username">
+<a class="signup-logo" href=http://127.0.0.1:5500/Tabs/Home.html><b>M A K T A B A</b></a>
 
-<input type="password" id="password" placeholder="Password">
+        <p class="signup-desc">
+ Welcome back to MAKTABA — a sanctuary for bibliophiles. Sign in to explore rare editions and rediscover timeless literary treasures.        </p>
 
-<input type="password" id="confirmPassword" placeholder="Confirm Password">
+        <div class="signup-input-group">
+            <label class="signup-labels" for="email"><b>Your email</b></label><br><br>
+            <input type="text" id="email" placeholder="Enter/Username">
+        </div>
+<div class="password-box">
+        <label class="signup-labels" for="password"><b>Password</b></label>
+            <input type="password" id="password" placeholder=" Password">
 
-<div class="age-box">
-
-<select>
-<option>Day</option>
-<option>1</option><option>2</option><option>3</option>
-<option>4</option><option>5</option><option>6</option>
-<option>7</option><option>8</option><option>9</option>
-<option>10</option><option>11</option><option>12</option>
-<option>13</option><option>14</option><option>15</option>
-<option>16</option><option>17</option><option>18</option>
-<option>19</option><option>20</option><option>21</option>
-<option>22</option><option>23</option><option>24</option>
-<option>25</option><option>26</option><option>27</option>
-<option>28</option><option>29</option><option>30</option>
-<option>31</option>
-</select>
-
-<select>
-<option>Month</option>
-<option>January</option><option>February</option>
-<option>March</option><option>April</option>
-<option>May</option><option>June</option>
-<option>July</option><option>August</option>
-<option>September</option><option>October</option>
-<option>November</option><option>December</option>
-</select>
-
-<select>
-<option>Year</option>
-<option>2026</option><option>2025</option>
-<option>2024</option><option>2023</option>
-<option>2022</option><option>2021</option>
-</select>
-
-</div>
-
-        <!-- Button -->
-        <button class="login-btn">Create Account</button>
-
-        <p class="continue">──────────── or continue with ────────────</p>
-
-        <!-- Social -->
-        <div class="social-buttons">
-
-            <button class="google">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20">
-                Google
-            </button>
-
-            <button class="facebook">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" width="20">
-                Facebook
-            </button>
 
         </div>
+        <button class="signup-login-btn" type="submit" onclick="return login()">Get started</button><Br>
 
-        <br>
+<p id="message" class="signup-form-message"></p>
 
-        <p class="noaccp">
-            Already have an account?
-            <a class="link" href="signin.html"> Sign in</a>
-        </p>
+            <p2 class="signup-continue">──────────── or continue with ────────────</p2>
+
+        
+<div class="signup-social-buttons">
+          <button class="google">
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20">
+
+
+          </button>
+
+
+
+
+  <button class="apple">
+<img src=https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png width="20">
+
+  </button>
+</div>
+<br>
+<p3 class="noaccp">Don't have an account?<a class="link" href="http://127.0.0.1:5500/Tabs/signup.html"> Sign up</a></p3> 
 
     </div>
 
-    <div class="image-side"></div>
+    <div class="signup-image-side"></div>
 
 </div>
 
