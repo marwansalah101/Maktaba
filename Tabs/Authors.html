@@ -92,6 +92,29 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
      
 
 
+      <div class="layered-section">
+    <div class="content-wrapper">
+        <div class="photo-box">
+            <img src="../resources/Authors/nora-e1429382209389.jpg" alt="Author Portrait">
+           
+        </div>
+
+        <div class="text-box">
+            <h2>ABOUT NORA ROBERTS</h2>
+            <p>
+                Nora Roberts is a Sunday Times and International best-selling author. 
+                Before writing fiction, Nora spent 11 years as a journalist, including 
+                11 at the Guardian as a political correspondent and news reporter.
+            </p>
+          
+        </div>
+    </div>
+</div>
+
+
+
+
+
      
 
 <div class="main-wrapper">
@@ -160,21 +183,83 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
 
 
+
   <div class="footer-btn">
             <a href="#" class="btn-outline">SEE MORE</a>
         </div>
 
      
 
+ </div>
+
+</div>
 
 
 
-
-
-
+        <div class="carousel-containerss">
+        <div class="divider">
+    <div class="line"></div>
+    <h1 class="title">Recent Books</h1>
+    <div class="line"></div>
   </div>
+    
+    <div class="carousel-view">
+        <div class="carousel-trackss" id="carouselTrackss">
+            <div class="carousel-cardss">
+                <img src="../resources/Books/GreatGasby.png" alt="Nike Air Force 1">
+                <div class="card-infoss">
+                    <h3>The Great Gatsby</h3>
+                    <p>$120</p>
+                </div>
+            </div>
+            <div class="carousel-cardss activess">
+                <img src="../resources/Books/UglyLove.png" alt="Nike Air Jordan 1">
+                <div class="card-infoss">
+                    <h3>Ugly Love</h3>
+                    <p>$140</p>
+                </div>
+            </div>
+            <div class="carousel-cardss">
+                <img src="../resources/Books/ASongOfIceAndFire.png" alt="Nike Air Max 90">
+                <div class="card-infoss">
+                    <h3>A Song of Ice and Fire</h3>
+                    <p>$170</p>
+                </div>
+              </div>
+                
 
-</div> 
+                
+
+
+           
+
+
+
+
+           <div class="carousel-cardss">
+                <img src="../resources/Books/GreatGasby.png" alt="Nike Air Force 1">
+                <div class="card-infoss">
+                    <h3>Nike Air Force 1</h3>
+                    <p>$120</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="carousel-controls">
+        <button class="nav-btnss" onclick="moveCarousel(-1)">Prev</button>
+        <button class="nav-btnss" onclick="moveCarousel(1)">Next</button>
+    </div>
+</div>
+
+
+
+
+
+
+
+  
     
 
 
@@ -202,6 +287,40 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 });
 
 
+
+
+
+
+let currentIndex = 1; // Start with the middle card (Jordan)
+const cards = document.querySelectorAll('.carousel-cardss');
+const track = document.getElementById('carouselTrackss');
+
+function updateCarousel() {
+    cards.forEach((card, index) => {
+        card.classList.remove('activess');
+        if (index === currentIndex) {
+            card.classList.add('activess');
+        }
+    });
+
+    // Calculate the offset to keep the active card centered
+    const cardWidth = cards[0].offsetWidth + 20; // width + gap
+    const offset = -(currentIndex - 1) * cardWidth;
+    track.style.transform = `translateX(${offset}px)`;
+}
+
+function moveCarousel(direction) {
+    currentIndex += direction;
+
+    // Boundary checks
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= cards.length) currentIndex = cards.length - 1;
+
+    updateCarousel();
+}
+
+// Initialize position
+updateCarousel();
 
 
 
