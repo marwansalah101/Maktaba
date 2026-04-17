@@ -17,9 +17,9 @@
 </head>
 
 <body>
-    <nav class="navbar">
+    <nav class="navbar ">
         <div id="Maktaba">
-            <a href="#Maktaba" style="margin-left: 20px;">
+            <a href="#Maktaba">
                 <h1>Maktaba</h1>
             </a>
         </div>
@@ -30,23 +30,33 @@
                 </a>
             </li>
             <li>
-                <a href="browseTab.html">
+                <a href="Genres.html">
                     Browse
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="Collection.html">
+                    Collection
+                </a>
+            </li>
+            <li>
+                <a href="Favorites.html">
                     Favourites
                 </a>
             </li>
         </ul>
         <div class="navbar-icons">
-            <a href="#">
-                <span class="material-symbols-outlined">shopping_bag</span>
+            <a href="AddtoCart.html">
+                <span class="material-symbols-outlined">shopping_bag</span>     
             </a>
-            <a href="#">
-                <span class="material-symbols-outlined">person</span>
-            </a>
+            <div class="menu-dropdown-wrapper" id="menuWrapper">
+                <span class="material-symbols-outlined" id="menuBtn">menu</span>
+            </div>
+            <div class="menu-dropdown" id="menuDropdown">
+                <a href="signup.html">Profile</a>
+                <a href="settings.html">Settings</a>
+                <a href="ContactUs.html" class="contact-placeholder">Contact Us</a>
+            </div>
         </div>
     </nav>
     <div class="product-page">
