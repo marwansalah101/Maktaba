@@ -1,74 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Maktaba sign up</title>
-
+    <title>Maktaba - Sign Up</title>
 <link rel="stylesheet" href="../styles.css">
-<script src="../script.js"></script><body class="signup-body">
-
 </head>
-
-
+<body class="signup-body">
 
 <div class="signup-container">
 
     <div class="signup-form-side">
 
-<a class="signup-logo" href=http://127.0.0.1:5500/Tabs/Home.html><b>M A K T A B A</b></a>
-
-        <p class="signup-desc">
-     Welcome Back!
-   sign-in to get started     </p>
-
-        <div class="signup-input-group">
-
-<label class="signup-labels" for="fname">Your name:</label><br><br>
-<input type="text" id="fname" placeholder="...">
+        <h1 class="signup-logo">M A K T A B A</h1>
 
 
+        <h2 class="signup-heading">Create account</h2>
+
+        <p class="signup-desc">Join our community of readers.</p>
+
+        <!-- Form -->
+        <form onsubmit="return signupUser()">
+
+            <div class="signup-field">
+                <label class="signup-labels">FULL NAME</label>
+                <input class="signup-input" type="text" id="signup-name" placeholder="Enter your name">
+            </div>
+
+            <div class="signup-field">
+                <label class="signup-labels">E-MAIL</label>
+                <input class="signup-input" type="email" id="signup-email" placeholder="Enter your e-mail">
+            </div>
 
 
-            <label class="signup-labels" for="email"><b>Your email</b></label><br><br>
-            <input type="text" id="email" placeholder="Enter/Username">
-        </div>
-<div class="password-box">
-        <label class="signup-labels" for="password"><b>Password</b></label>
-            <input type="password" id="password" placeholder=" Password">
+            <div class="signup-field">
+                <label class="signup-labels">PASSWORD</label>
+                <div class="signup-password-wrapper">
+                    <input class="signup-input" type="password" id="signup-password" placeholder="********">
+                    <span onclick="toggleSignupPassword()">👁</span>
+                </div>
+            </div>
 
-<label class="signup-labels" for="cpassword"><b >Confirm Password</b></label>
-            <input type="password" id="cpassword" placeholder="Re-enter Password">
-        </div>
-        <button class="signup-login-btn" type="submit" onclick="return login()">Get started</button><Br>
-
-<p id="message" class="signup-form-message"></p>
-
-            <p2 class="signup-continue">──────────── or continue with ────────────</p2>
-
-        
-<div class="signup-social-buttons">
-          <button class="google">
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20">
+            <div class="signup-field">
+                <label class="signup-labels">CONFIRM PASSWORD</label>
+                <div class="signup-password-wrapper">
+                    <input class="signup-input" type="password" id="signup-confirm" placeholder="********">
+                    <span onclick="toggleSignupConfirm()">👁</span>
+                </div>
+            </div>
 
 
-          </button>
+            <button class="signup-btn" type="submit">Get started</button>
 
+            <p id="signup-message" class="signup-form-message"></p>
 
+            <p class="signup-accs">
+                Already have an account?
+                <a href="signin.html">Log in</a>
+            </p>
 
-
-  <button class="apple">
-<img src=https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png width="20">
-
-  </button>
-</div>
-<br>
-<p3 class="noacc">Don't have an account?<a class="linkk" href="http://127.0.0.1:5500/Tabs/signup.html"> Sign up</a></p3> 
-
+        </form>
     </div>
-
-    <div class="signup-image-side"></div>
-
 </div>
 
+<script src="signup.js"></script>
 </body>
 </html>
