@@ -1,10 +1,59 @@
 const menuBtn = document.getElementById('menuBtn');
 const menuDropdown = document.getElementById('menuDropdown');
+const menuWrapper = document.querySelector('.menu-dropdown-wrapper');
 
-if (menuBtn && menuDropdown) {
+if (menuBtn && menuDropdown && menuWrapper) {
+    // Break dropdown out of navbar to avoid overflow:hidden clipping
+    document.body.appendChild(menuDropdown);
+
+    const positionDropdown = () => {
+        const btnRect = menuBtn.getBoundingClientRect();
+        // Position fixed just below the button and aligned to its right edge
+        menuDropdown.style.top = (btnRect.bottom + 15) + 'px';
+        menuDropdown.style.left = (btnRect.right - menuDropdown.offsetWidth) + 'px';
+    };
+
+    window.addEventListener('resize', positionDropdown);
+    window.addEventListener('scroll', positionDropdown);
+
+    let hoverTimeout;
+
+    // Hover logic
+    menuWrapper.addEventListener('mouseenter', () => {
+        clearTimeout(hoverTimeout);
+        positionDropdown();
+        menuDropdown.classList.add('open');
+    });
+
+    menuWrapper.addEventListener('mouseleave', () => {
+        hoverTimeout = setTimeout(() => {
+            menuDropdown.classList.remove('open');
+        }, 150); // slight delay for smooth hover
+    });
+
+    menuDropdown.addEventListener('mouseenter', () => {
+        clearTimeout(hoverTimeout);
+    });
+
+    menuDropdown.addEventListener('mouseleave', () => {
+        hoverTimeout = setTimeout(() => {
+            menuDropdown.classList.remove('open');
+        }, 150);
+    });
+
+    // Click logic
     menuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        positionDropdown();
         menuDropdown.classList.toggle('open');
+    });
+
+    menuWrapper.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    menuDropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
     });
 
     document.addEventListener('click', () => {
@@ -258,6 +307,40 @@ function renderFavs() {
         </div>
     `).join('');
 }
+
+/* Make navbar items white over dark backgrounds globally */
+function handleNavbarColorInversion() {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+
+    // Add any dark sections you want the navbar to invert over here
+    const darkSections = document.querySelectorAll('.site-footer, .book-bg');
+    const navRect = navbar.getBoundingClientRect();
+    
+    let isDark = false;
+    
+    darkSections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        // Check if navbar vertically overlaps the dark section
+        if (rect.top < navRect.bottom - 10 && rect.bottom > navRect.top + 10) {
+            isDark = true;
+        }
+    });
+
+    // We shouldn't interfere if the user is hovering a specific genre card that relies on it manually
+    const ripple = document.getElementById('bgRipple');
+    const isRippleActive = ripple && ripple.classList.contains('active');
+
+    if (isDark) {
+        navbar.classList.add('text-white');
+    } else if (!isRippleActive) {
+        navbar.classList.remove('text-white');
+    }
+}
+
+window.addEventListener('scroll', handleNavbarColorInversion);
+window.addEventListener('DOMContentLoaded', handleNavbarColorInversion);
+window.addEventListener('resize', handleNavbarColorInversion);
 
 function toggleHeart(btn) {
     btn.classList.toggle('active');
@@ -543,3 +626,21 @@ message.innerText = "Login successful ";
 
 }
 
+// Automatically set the active nav link based on current page
+document.addEventListener('DOMContentLoaded', () => {
+    let currentPath = window.location.pathname.split('/').pop() || 'Home.html';
+
+    // Highlight Browse tab if browsing inside products or authors
+    if (['Product.html', 'Authors.html'].includes(currentPath)) {
+        currentPath = 'Genres.html';
+    } 
+
+    // Add active styling
+    const navLinks = document.querySelectorAll('.navrbar-text li a, .navbar ul li a');
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath) {
+            link.classList.add('active-link');
+        }
+    });
+});
