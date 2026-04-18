@@ -695,12 +695,14 @@ body {
     overflow-y: hidden;
     /* It completely disables up/down scrolling */
     margin: 70px auto;
-    width: 80%;
+    width: 100%;
     height: 300px;
     gap: 2em;
     border: transparent;
-    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 50%, transparent);
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+   
+   mask-image: linear-gradient(90deg, 
+  transparent 0%, #F0EDE5 4%, 
+  #F0EDE5 98%, transparent 100%);
     align-items: center;
 }
 
@@ -716,16 +718,16 @@ body {
     padding-right: 3em;
     align-items: center;
     justify-content: flex-start;
-    animation: spin 20s linear infinite;
+    animation: spin 18s linear infinite;
     width: max-content;
     /* Forces the container to be as wide as all the duplicated books */
 }
 
 
 .group:hover {
-
-    cursor: pointer;
-    /* Changes the mouse to a pointing hand */
+    cursor: grab;
+    animation-play-state: paused;/* 3shan to2of*/
+    
 }
 
 
@@ -945,7 +947,6 @@ body {
     color: #312F2C;
     text-align: center;
     margin-bottom: 5px;
-
 
 }
 
@@ -1704,7 +1705,17 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
+.footer-link {
+    text-decoration: none;
+    color: #f5f5f5; /* Or your preferred text color */
+    transition: color 0.10s ease, padding-left 0.3s ease;
+    display: inline-block;
+}
 
+.footer-link:hover {
+    color: #d5d0cb; /* Matches your button hover color */
+    /* Subtle movement to show it's clickable */
+}
 
 
 
