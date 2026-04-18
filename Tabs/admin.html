@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maktaba - Admin Sign In</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../script.js"></script><body class="admin-body">
+
+
+</head>
+<body class="admin-body">
+
+<div class="admin-container">
+
+    <div class="admin-form-side">
+
+        <!-- Logo & heading -->
+        <h1 class="admin-title">M A K T A B A</h1>
+        <h2 class="admin-heading">Welcome sir</h2>
+        <p class="admin-sub">Please enter your data to log in as an admin</p>
+
+        <!-- Form -->
+        <form onsubmit="return adminSigninUser()">
+
+            <div class="admin-field">
+                <label class="admin-labels">E-MAIL</label>
+                <span class="admin-error-message" id="admin-error-email"></span>
+                <input class="admin-input" type="email" id="admin-email" placeholder="Enter your email">
+            </div>
+
+            <div class="admin-field">
+                <label class="admin-labels">PASSWORD</label>
+                <span class="admin-error-message" id="admin-error-password"></span>
+                <div class="admin-password-wrapper">
+                    <input class="admin-input" type="password" id="admin-password" placeholder="********">
+                    <span onclick="toggleAdminPassword()">👁</span>
+                </div>
+            </div>
+
+            <div class="admin-options">
+                
+                </label>
+                <a href="#" class="admin-forgot-password">Forgot password?</a>
+            </div>
+
+            <button class="admin-btn" type="submit">SIGN-IN AS AN ADMIN</button>
+
+            <p class="admin-footer">
+                Don't have an account?
+                <a href="admin-signup.html">Sign Up</a>
+            </p>
+
+        </form>
+
+    </div>
+</div>
+
+<script src="admin-signin.js"></script>
+</body>
+</html>

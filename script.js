@@ -626,6 +626,141 @@ message.innerText = "Login successful ";
 
 }
 
+
+
+/* -----------sign-up--------------*/
+
+
+ let name2 = document.getElementById("signup-name").value.trim();
+    let email2 = document.getElementById("signup-email").value.trim();
+    let password2 = document.getElementById("signup-password").value.trim();
+    let confirm = document.getElementById("signup-confirm").value.trim();
+
+    let message = document.getElementById("signup-message");
+    message.innerText = "";
+    message.className = "signup-form-message";
+
+    // One big if statement checking combinations
+    if (!name2 && email2 && password && confirm) {
+        message.innerText = "Please enter your full name!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (name2 && !email2 && password && confirm) {
+        message.innerText = "Please enter your email!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (name2 && email2 && !password2 && confirm) {
+        message.innerText = "Please enter your password!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (name2 && email2 && password2 && !confirm) {
+        message.innerText = "Please re-enter your password!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (!name2 && !email2 && password2 && confirm) {
+        message.innerText = "Please enter your name and email!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (!name2 && email2 && !password2 && confirm) {
+        message.innerText = "Please enter your name and password!";
+        message.classList.add("signup-error");
+        return false;
+    }
+
+    
+    if (password2 && confirm && password2 !== confirm) {
+        message.innerText = "Passwords do not match!";
+        message.classList.add("signup-error");
+        return false;
+    }
+
+   
+    if (email2 && (!email2.includes("@") || !email2.includes("."))) {
+        message.innerText = "Please enter a valid email!";
+        message.classList.add("signup-error");
+        return false;
+    }
+
+    
+    if (password2 && password2.length < 6) {
+        message.innerText = "Password must be at least 6 characters!";
+        message.classList.add("signup-error");
+        return false;
+    }
+
+    // Success
+    message.innerText = "Account created successfully!";
+    message.classList.add("signup-success");
+    return false; // prevent form submission
+
+
+
+function toggleSignupPassword() {
+    let input = document.getElementById("signup-password");
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+function toggleSignupConfirm() {
+    let input = document.getElementById("signup-confirm");
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+
+
+
+
+
+/*----------Admin-------------*/
+
+
+function toggleAdminPassword() {
+    let input = document.getElementById("admin-password");
+    input.type = input.type==="password" ? "text" : "password";
+}
+
+function adminSigninUser() {
+    let email = document.getElementById("admin-email").value.trim();
+    let password = document.getElementById("admin-password").value.trim();
+
+    let errorEmail = document.getElementById("admin-error-email");
+    let errorPassword = document.getElementById("admin-error-password");
+
+    // reset errors
+    errorEmail.innerText="";
+    errorPassword.innerText="";
+
+    let hasError=false;
+
+    if(!email){
+        errorEmail.innerText="Please enter your email!";
+        hasError=true;
+    }
+    else if(!email.includes("@") || !email.includes(".")){
+        errorEmail.innerText="Please enter a valid email!";
+        hasError=true;
+    }
+
+    if(!password){
+        errorPassword.innerText="Please enter your password!";
+        hasError=true;
+    }
+
+    if(hasError) return false;
+
+    alert("Admin signed in successfully!");
+    return false; // prevent reload
+}
+
+
+
+
+
+
+
+
+
+
+
 // Automatically set the active nav link based on current page
 document.addEventListener('DOMContentLoaded', () => {
     let currentPath = window.location.pathname.split('/').pop() || 'Home.html';
@@ -644,3 +779,191 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
+
+
+
+
+
+// AUTHOR PAGE
+
+
+window.addEventListener('scroll', function() {
+    const scrollPos = window.scrollY;
+    const heroContent = document.querySelector('.authorPhoto-content');
+    const heroBg = document.querySelector('.authorPhoto-bg');
+
+    // 1. Fade out the text ("Amr Diab") as you scroll
+    let opacity = 1 - (scrollPos / 300);
+    if (opacity >= 0) {
+        heroContent.style.opacity = opacity;
+    }
+
+    // 2. Subtle Zoom/Parallax effect on the photo
+    heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
+});
+
+
+
+
+
+window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authorId = urlParams.get('id');
+
+    if (authorId && authorData[authorId]) {
+        const data = authorData[authorId];
+
+        // 1. Update Banner & About Sections
+        document.getElementById('author-name-heading').textContent = data.name;
+        document.getElementById('author-stats-sub').textContent = data.stats;
+        document.getElementById('about-title').textContent = data.aboutTitle;
+        document.getElementById('about-description').textContent = data.aboutText;
+        
+        const banner = document.getElementById('dynamic-banner');
+        if (banner) {
+            banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('${data.bannerImg}')`;
+        }
+        
+        const aboutImg = document.getElementById('about-img');
+        if (aboutImg) aboutImg.src = data.profileImg;
+
+        // 2. Update Books Row with your EXACT CSS Structure
+        const bookRow = document.getElementById('books-container');
+if (bookRow) {
+    bookRow.innerHTML = ''; // Clears static placeholders
+    
+    data.books.forEach(book => {
+        // We use backticks (`) to create the exact HTML structure from your CSS
+        const bookHTML = `
+            <div class="book-container">
+                <img src="${book.cover}" class="book-img" alt="${book.title}">
+                
+                <div class="book-infosss">
+                    <div class="book-name">${book.title}</div>
+                    
+                    <div class="rating-row">
+                        <span class="star-icon">★</span>
+                        <span class="rating-num">${book.rating}</span>
+                        <span class="review-count">· ${book.reviews} reviews</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        bookRow.insertAdjacentHTML('beforeend', bookHTML);
+    });
+}
+    }
+});
+
+
+
+
+
+// HOME PAGE 
+
+
+/*  THE BUTTON JS  */
+ const track = document.getElementById('track');
+const slideLeft = document.getElementById('slideLeft');
+const slideRight = document.getElementById('slideRight');
+
+const scrollAmount = 300; // Adjust to match your card width + gap
+
+function updateButtons() {
+    // Check if we are at the very start (Left)
+    if (track.scrollLeft <= 0) {
+        slideLeft.classList.add('disabled');
+    } else {
+        slideLeft.classList.remove('disabled');
+    }
+
+    // Check if we are at the very end (Right)
+    // scrollWidth is the total length, clientWidth is what you see
+    if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 1) {
+        slideRight.classList.add('disabled');
+    } else {
+        slideRight.classList.remove('disabled');
+    }
+}
+
+slideLeft.addEventListener('click', () => {
+    track.scrollBy({ left: -300, behavior: 'smooth' });
+});
+
+slideRight.addEventListener('click', () => {
+    track.scrollBy({ left: 300, behavior: 'smooth' });
+});
+
+// Listen for the scroll to finish to update buttons
+track.addEventListener('scroll', updateButtons);
+
+// Run once on page load to set initial state
+updateButtons();
+
+
+
+
+
+
+
+   
+document.addEventListener("DOMContentLoaded", function () {
+  const observerOptions = {
+    threshold: 0.15 // Trigger when 15% of the element is visible
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+        // Optional: stop observing once it has appeared
+        // observer.unobserve(entry.target); 
+      }
+    });
+  }, observerOptions);
+
+  // Select all elements with the 'reveal' class and start watching them
+  const hiddenElements = document.querySelectorAll(".reveal");
+  hiddenElements.forEach((el) => observer.observe(el));
+});
+
+
+
+
+
+
+
+
+
+
+ /* THE FOOTER LINKS*/
+
+
+const footerLinks = document.querySelectorAll('.footer-link');
+
+footerLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault(); 
+
+        
+        const targetId = this.getAttribute('data-target');
+        const targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+            // Get the position and scroll smoothly
+            const offset = 80; // Space for your header/top padding
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = targetSection.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+    
