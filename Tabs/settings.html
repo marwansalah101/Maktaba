@@ -10,10 +10,271 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .settings-page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 60px;
+        }
+
+        .settings-sidebar h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 32px;
+        }
+
+        .settings-sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 10px 14px;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #312F2C;
+            cursor: pointer;
+            border: none;
+            background: none;
+            text-align: left;
+            font-family: 'DM Sans', sans-serif;
+            border-radius: 3px;
+            transition: background 0.15s;
+        }
+
+        .nav-item.active {
+            background: #312F2C;
+            color: #fff;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: #f5f3ef;
+        }
+
+        .settings-main {
+            border-left: 0.5px solid #e0ddd8;
+            padding-left: 48px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .section-label {
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #aaa;
+            font-weight: 500;
+            margin-top: 36px;
+            padding-bottom: 10px;
+            border-bottom: 0.5px solid #e0ddd8;
+        }
+
+        .section-label:first-of-type {
+            margin-top: 0;
+        }
+
+        .avatar-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 0.5px solid #e0ddd8;
+        }
+
+        .avatar-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #e0ddd8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #5a5550;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #d0cdc8;
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 0;
+            text-align: left;
+        }
+
+        .btn-link.upload {
+            color: #312F2C;
+            text-decoration: underline;
+        }
+
+        .btn-link.remove {
+            color: #bbb;
+        }
+
+        .btn-link.remove:hover {
+            color: #c0392b;
+        }
+
+        .field-row {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 0.5px solid #e0ddd8;
+            gap: 16px;
+        }
+
+        .field-label {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #aaa;
+            width: 130px;
+            flex-shrink: 0;
+        }
+
+        .field-value {
+            flex: 1;
+            font-size: 14px;
+            color: #312F2C;
+        }
+
+        .field-value input,
+        .field-value select {
+            border: none;
+            background: none;
+            font-size: 14px;
+            color: #312F2C;
+            font-family: 'DM Sans', sans-serif;
+            width: 100%;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .field-value input[type="password"] {
+            letter-spacing: 0.2em;
+        }
+
+        .field-edit {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #bbb;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            padding: 0;
+            transition: color 0.15s;
+        }
+
+        .field-edit:hover {
+            color: #312F2C;
+        }
+
+        .save-btn {
+            margin-top: 36px;
+            background: #312F2C;
+            color: #fff;
+            border: none;
+            padding: 13px 40px;
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: background 0.15s;
+        }
+
+        .save-btn:hover {
+            background: #4a4540;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #312F2C;
+            color: #fff;
+            padding: 14px 28px;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-family: 'DM Sans', sans-serif;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        #toast.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            .settings-page {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .settings-main {
+                border-left: none;
+                padding-left: 0;
+                border-top: 0.5px solid #e0ddd8;
+                padding-top: 32px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar ">
+    <nav class="navbar">
         <div id="Maktaba">
             <a href="#Maktaba">
                 <h1>Maktaba</h1>
@@ -21,29 +282,21 @@
         </div>
         <ul class="navrbar-text">
             <li>
-                <a href="Home.html">
-                    Home
-                </a>
+                <a href="Home.html">Home</a>
             </li>
             <li>
-                <a href="Genres.html">
-                    Browse
-                </a>
+                <a href="Genres.html">Browse</a>
             </li>
             <li>
-                <a href="Collection.html">
-                    Collection
-                </a>
+                <a href="Collection.html">Collection</a>
             </li>
             <li>
-                <a href="Favorites.html">
-                    Favourites
-                </a>
+                <a href="Favorites.html">Favourites</a>
             </li>
         </ul>
         <div class="navbar-icons">
             <a href="AddtoCart.html">
-                <span class="material-symbols-outlined">shopping_bag</span>     
+                <span class="material-symbols-outlined">shopping_bag</span>
             </a>
             <div class="menu-dropdown-wrapper" id="menuWrapper">
                 <span class="material-symbols-outlined" id="menuBtn">menu</span>
@@ -56,12 +309,134 @@
         </div>
     </nav>
 
-    <main style="padding: 80px 24px; text-align: center; color: #312F2C;">
-        <h1 style="font-family: 'Playfair Display', serif; font-size: 48px; margin: 0 0 16px;">Settings</h1>
-        <p style="font-family: 'DM Sans', sans-serif; font-size: 18px; margin: 0;">Your settings will appear here soon.</p>
-    </main>
+    <div class="settings-page">
+
+        <aside class="settings-sidebar">
+            <h2>Settings</h2>
+            <nav>
+                <button class="nav-item active" onclick="showTab('account', this)">Account</button>
+                <button class="nav-item" onclick="showTab('notifications', this)">Notifications</button>
+                <button class="nav-item" onclick="showTab('privacy', this)">Privacy</button>
+                <button class="nav-item" onclick="showTab('languages', this)">Languages</button>
+                <button class="nav-item" onclick="showTab('help', this)">Help</button>
+            </nav>
+        </aside>
+
+        <main class="settings-main">
+
+            <!-- ACCOUNT TAB -->
+            <div id="tab-account" class="tab-panel active">
+                <h1 class="page-title">Account Settings</h1>
+
+                <div class="section-label">Basic Info</div>
+
+                <div class="avatar-row">
+                    <div class="avatar-circle" id="avatarEl">WA</div>
+                    <div class="avatar-actions">
+                        <button class="btn-link upload" onclick="document.getElementById('avatarInput').click()">Upload new picture</button>
+                        <button class="btn-link remove" onclick="removeAvatar()">Remove</button>
+                        <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="previewAvatar(event)">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <span class="field-label">Name</span>
+                    <span class="field-value"><input type="text" value="Wade Armstrong" /></span>
+                    <button class="field-edit">Edit</button>
+                </div>
+                <div class="field-row">
+                    <span class="field-label">Date of Birth</span>
+                    <span class="field-value"><input type="text" value="December 24, 1991" /></span>
+                    <button class="field-edit">Edit</button>
+                </div>
+                <div class="field-row">
+                    <span class="field-label">Gender</span>
+                    <span class="field-value">
+                        <select>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Prefer not to say</option>
+                        </select>
+                    </span>
+                    <button class="field-edit">Edit</button>
+                </div>
+                <div class="field-row">
+                    <span class="field-label">Email</span>
+                    <span class="field-value"><input type="email" value="wade.armstrong@email.com" /></span>
+                    <button class="field-edit">Edit</button>
+                </div>
+
+                <div class="section-label">Account Info</div>
+
+                <div class="field-row">
+                    <span class="field-label">Username</span>
+                    <span class="field-value"><input type="text" value="wadearmstrong08" /></span>
+                    <button class="field-edit">Edit</button>
+                </div>
+                <div class="field-row">
+                    <span class="field-label">Password</span>
+                    <span class="field-value"><input type="password" value="password123" /></span>
+                    <button class="field-edit">Edit</button>
+                </div>
+
+                <button class="save-btn" onclick="showToast()">Save Changes</button>
+            </div>
+
+            <!-- NOTIFICATIONS TAB (empty) -->
+            <div id="tab-notifications" class="tab-panel">
+                <h1 class="page-title">Notifications</h1>
+            </div>
+
+            <!-- PRIVACY TAB (empty) -->
+            <div id="tab-privacy" class="tab-panel">
+                <h1 class="page-title">Privacy</h1>
+            </div>
+
+            <!-- LANGUAGES TAB (empty) -->
+            <div id="tab-languages" class="tab-panel">
+                <h1 class="page-title">Languages</h1>
+            </div>
+
+            <!-- HELP TAB (empty) -->
+            <div id="tab-help" class="tab-panel">
+                <h1 class="page-title">Help</h1>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="toast">Changes saved</div>
 
     <script src="../script.js"></script>
-</body>
+    <script>
+        function showTab(name, btn) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
 
+        function previewAvatar(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const el = document.getElementById('avatarEl');
+                el.innerHTML = '<img src="' + ev.target.result + '" alt="avatar">';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeAvatar() {
+            document.getElementById('avatarEl').innerHTML = 'WA';
+        }
+
+        function showToast() {
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+    </script>
+
+</body>
 </html>
