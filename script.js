@@ -626,6 +626,105 @@ message.innerText = "Login successful ";
 
 }
 
+
+
+/* -----------sign-up--------------*/
+
+
+ let name2 = document.getElementById("signup-name").value.trim();
+    let email2 = document.getElementById("signup-email").value.trim();
+    let password2 = document.getElementById("signup-password").value.trim();
+    let confirm = document.getElementById("signup-confirm").value.trim();
+
+    let message = document.getElementById("signup-message");
+    message.innerText = "";
+    message.className = "signup-form-message";
+
+    // One big if statement checking combinations
+    if (!name2 && email2 && password && confirm) {
+        message.innerText = "Please enter your full name!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (name2 && !email2 && password && confirm) {
+        message.innerText = "Please enter your email!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (name2 && email2 && !password2 && confirm) {
+        message.innerText = "Please enter your password!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (name2 && email2 && password2 && !confirm) {
+        message.innerText = "Please re-enter your password!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (!name2 && !email2 && password2 && confirm) {
+        message.innerText = "Please enter your name and email!";
+        message.classList.add("signup-error");
+        return false;
+    } else if (!name2 && email2 && !password2 && confirm) {
+        message.innerText = "Please enter your name and password!";
+        message.classList.add("signup-error");
+        return false;
+    }
+
+    
+    if (password2 && confirm && password2 !== confirm) {
+        message.innerText = "Passwords do not match!";
+        message.classList.add("signup-error");
+        return false;
+    }
+
+   
+    if (email2 && (!email2.includes("@") || !email2.includes("."))) {
+        message.innerText = "Please enter a valid email!";
+        message.classList.add("signup-error");
+        return false;
+    }
+
+    
+    if (password2 && password2.length < 6) {
+        message.innerText = "Password must be at least 6 characters!";
+        message.classList.add("signup-error");
+        return false;
+    }
+
+    // Success
+    message.innerText = "Account created successfully!";
+    message.classList.add("signup-success");
+    return false; // prevent form submission
+
+
+
+function toggleSignupPassword() {
+    let input = document.getElementById("signup-password");
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+function toggleSignupConfirm() {
+    let input = document.getElementById("signup-confirm");
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Automatically set the active nav link based on current page
 document.addEventListener('DOMContentLoaded', () => {
     let currentPath = window.location.pathname.split('/').pop() || 'Home.html';

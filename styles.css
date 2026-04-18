@@ -2751,12 +2751,129 @@ margin-right: 60px;
 
 
 
+/*-------admin----------*/
 
 
+/* Page background */
+.admin-body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:serif;
 
+    background: linear-gradient(
+        rgba(13,7,1,0.75),
+        rgba(13,7,1,0.75)
+    ),
+    url("https://images.unsplash.com/photo-1507842217343-583bb7270b66");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 
+/* Card container */
+.admin-container{
+    width:420px;
+    background:#f7f4ef;
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    text-align:center;
+}
 
+/* Titles */
+.admin-title{
+    font-size:32px;
+    color:#3a1800;
+    margin-bottom:10px;
+}
+.admin-heading{
+    font-size:25px;
+    color:#3a1800;
+    margin:0;
+}
+.admin-sub{
+    font-size:14px;
+    color:#6b4f3b;
+    margin-bottom:25px;
+}
 
+/* Fields */
+.admin-field{
+    text-align:left;
+    margin-bottom:20px;
+}
+.admin-field label{
+    font-size:12px;
+    color:#7a5a40;
+}
+.admin-input{
+    width:100%;
+    border:none;
+    border-bottom:1px solid #ccc;
+    padding:8px 0;
+    background:transparent;
+    outline:none;
+}
+.admin-input:focus{
+    border-bottom:1px solid #3a1800;
+}
+.admin-password-wrapper{
+    display:flex;
+    align-items:center;
+}
+.admin-password-wrapper span{
+    cursor:pointer;
+    margin-left:10px;
+}
+
+/* Options row */
+.admin-options{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+.admin-remember-me input{cursor:pointer;}
+.admin-forgot-password{
+    text-decoration:none;
+    font-size:12px;
+    color:#6b4f3b;
+}
+.admin-forgot-password:hover{text-decoration:underline;}
+
+/* Button */
+.admin-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background:#4a1f00;
+    color:white;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+/* Footer */
+.admin-footer{
+    margin-top:15px;
+    font-size:13px;
+}
+.admin-footer a{
+    color:#3a1800;
+    text-decoration:none;
+}
+
+/* Error messages */
+.admin-error-message{
+    color:red;
+    font-size:12px;
+    margin-bottom:3px;
+    display:block;
+    min-height:14px;
+}
 
 
 
@@ -2899,9 +3016,16 @@ margin-right: 60px;
 margin-left: 150px;
 }
 
+
+.requirments
+{
+color: #3a1800;  
+}
+
+
 /* Form message */
 .signup-form-message{
-    margin-top: 10px;
+    margin-top: 100px;
     font-size:14px;
     text-align:center;
     font-style: oblique;
