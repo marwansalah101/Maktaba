@@ -3,8 +3,10 @@
     <meta charset="UTF-8">
     <title>Privacy Policy</title>
     <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet"
+<link rel="stylesheet"
 href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -315,31 +317,18 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
                 <p>Connecting readers with the stories they love. Discover, read, and share your favorite books with our growing community.</p>
                 <div class="social-icons">
                   
-                    <a href="#"><img src="../resources/img/WhatsApp.svg.png" alt="WhatsApp logo" style="height:30px;width:30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../resources/img/WhatsApp Image 2026-04-05 at 2.54.24 PM.png.jpeg" alt="Instagram logo" style="height:30px;width:30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../resources/img/WhatsApp Image 2026-04-05 at 2.52.10 PM.png.jpeg" alt="Twitter logo" style="height:30px;width: 30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../resources/img/images.png" alt="Facebook logo" style="height:30px;width:30px; border-radius:50%;"></a>
+                   <a href="#"><img src="../resources/img/Instgram Image 2026-04-18 at 11.35.38 PM.jpeg" alt="Facebook logo" style="height:30px;width:30px;border-radius:50%;"></a>
+                    <a href="#"><img src="../resources/img/WhatsApp Image 2026-04-18 at 11.35.38 PM.jpeg" alt="Instagram logo" style="height:30px;width:30px;border-radius:50%;"></a>
+                    <a href="#"><img src="../resources/img/Twitter Image 2026-04-18 at 11.35.38 PM.jpeg" alt="Twitter logo" style="height:30px;width: 30px;border-radius:50%;"></a>
                 </div>
             </div>
 
 
-              <div class="footer-col">
-                <h4>Explore</h4>
-                <ul>
-                    <li><a href="#">New Realeases</a></li>
-                    <li><a href="#">Best sellers</a></li>
-                    <li><a href="#">Collections</a></li>
-                    <li><a href="#">Reviews</a></li>
-                </ul>
-              </div>
-
-
-
-              <div class="footer-col">
+             <div class="footer-col">
                 <h4>About</h4>
                 <ul>
-                    <li><a href="#">About Us</a></li>
-                     <li><a href="#">Our Authors</a></li>
+                     <li><a href="#" class="footer-link" data-target="reviews">Reviews</a></li>
+                     <li><a href="Home.html" class="footer-link" data-target="our-authors">Our Authors</a></li>
                     <li><a href="#">Contact Us</a></li>
                 </ul>
                </div>
@@ -355,7 +344,6 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
                     <li><a href="#">FAQ</a></li>
                 </ul>
               </div>
-
             
            
           </div>
@@ -371,192 +359,8 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
         </div>
     </footer>
 
-    
-
-
-
-
-
-
-              
-
-
- <script>
-   window.addEventListener('scroll', function() {
-    const scrollPos = window.scrollY;
-    const heroContent = document.querySelector('.authorPhoto-content');
-    const heroBg = document.querySelector('.authorPhoto-bg');
-
-    // 1. Fade out the text ("Amr Diab") as you scroll
-    let opacity = 1 - (scrollPos / 300);
-    if (opacity >= 0) {
-        heroContent.style.opacity = opacity;
-    }
-
-    // 2. Subtle Zoom/Parallax effect on the photo
-    heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
-});
-
-
-
-
-
-
-// 1. DATA OBJECT
-const authorData = {
-    "hemingway": {
-        name: "Ernest Hemingway",
-        stats: "Nobel Prize in Literature Winner",
-        aboutTitle: "ABOUT ERNEST HEMINGWAY",
-        aboutText: "Ernest Hemingway was an American novelist, short-story writer, and journalist. His economical and understated style—which he termed the iceberg theory—had a strong influence on 20th-century fiction.",
-        // ENSURE THIS FILE EXISTS: ../resources/Authors/ernest-hemingway-banner.jpg
-        bannerImg: "../resources/Authors/ernest-hemingway-800-450.png", 
-        profileImg: "../resources/Authors/ernest-hemingway-800-450.png",
-        books: [
-            { 
-            title: "The Old Man ", 
-            cover: "../resources/Books/UglyLove.png",
-            rating: "4.8", 
-            reviews: "4 m" 
-        },
-        { 
-            title: "A Farewell to Arms", 
-            cover: "../resources/Books/UglyLove.png",
-            rating: "4.5", 
-            reviews: "2 m" 
-        }
-        ]
-    },
-    "nora-roberts": {
-        name: "Nora Roberts",
-        stats: "21 Times RITA Awards Winner",
-        aboutTitle: "ABOUT NORA ROBERTS",
-        aboutText: "Nora Roberts is a Sunday Times and International best-selling author. Before writing fiction, Nora spent 11 years as a journalist.",
-        bannerImg: "../resources/Authors/nora-e1429382209389.jpg",
-        profileImg: "../resources/Authors/nora-e1429382209389.jpg",
-        books: [
-            { title: "The Shining", cover: "../resources/Books/TheShining.png" },
-            { title: "Journey to the Centre of the Earth", cover: "../resources/Books/JourneyToTheCentreOfTheEarth.png" }
-        ]
-    },
-    "tolstoy": {
-        name: "Leo Tolstoy",
-        stats: "Russian author of War and Peace",
-        aboutTitle: "ABOUT LEO TOLSTOY",
-        aboutText: "Count Lev Nikolayevich Tolstoy was a Russian writer who is regarded as one of the greatest authors of all time.",
-        bannerImg: "../resources/Authors/9228c6e3-8ac3-459f-b9a7-d0e72a2d9311_1200x992.jpg",
-        profileImg: "../resources/Authors/9228c6e3-8ac3-459f-b9a7-d0e72a2d9311_1200x992.jpg",
-        books: [
-            { title: "War and Peace", cover: "../resources/Books/WarAndPeace.png" },
-            { title: "Anna Karenina", cover: "../resources/Books/AnnaKarenina.png" }
-        ]
-    },
-    "jeyamohan": {
-        name: "B. Jeyamohan",
-        stats: "Writer and Literary Critic",
-        aboutTitle: "ABOUT B. JEYAMOHAN",
-        aboutText: "B. Jeyamohan is an Indian Tamil and Malayalam language novelist and literary critic.",
-        bannerImg: "../resources/Authors/jeyamohan-banner.jpg",
-        profileImg: "../resources/Authors/jeyamohan-profile.jpg",
-        books: [
-            { title: "Vishnupuram", cover: "../resources/Books/Vishnupuram.png" }
-        ]
-    },
-    "pratchett": {
-        name: "Terry Pratchett",
-        stats: "English Fantasy Author",
-        aboutTitle: "ABOUT TERRY PRATCHETT",
-        aboutText: "Sir Terry Pratchett was an English humorist and author of fantasy novels, best known for his Discworld series.",
-        bannerImg: "../resources/Authors/pratchett-banner.jpg",
-        profileImg: "../resources/Authors/pratchett-profile.jpg",
-        books: [
-            { title: "The Color of Magic", cover: "../resources/Books/ColorOfMagic.png" }
-        ]
-    },
-
-     "Astrid": {
-        name: "Terry Pratchett",
-        stats: "English Fantasy Author",
-        aboutTitle: "ABOUT TERRY PRATCHETT",
-        aboutText: "Sir Terry Pratchett was an English humorist and author of fantasy novels, best known for his Discworld series.",
-        bannerImg: "../resources/Authors/pratchett-banner.jpg",
-        profileImg: "../resources/Authors/pratchett-profile.jpg",
-        books: [
-            { title: "The Color of Magic", cover: "../resources/Books/ColorOfMagic.png" }
-        ]
-    },
-
-
-
-     "Indira": {
-        name: "Terry Pratchett",
-        stats: "English Fantasy Author",
-        aboutTitle: "ABOUT TERRY PRATCHETT",
-        aboutText: "Sir Terry Pratchett was an English humorist and author of fantasy novels, best known for his Discworld series.",
-        bannerImg: "../resources/Authors/pratchett-banner.jpg",
-        profileImg: "../resources/Authors/pratchett-profile.jpg",
-        books: [
-            { title: "The Color of Magic", cover: "../resources/Books/ColorOfMagic.png" }
-        ]
-    }
-
-
-};
-
-window.addEventListener('load', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const authorId = urlParams.get('id');
-
-    if (authorId && authorData[authorId]) {
-        const data = authorData[authorId];
-
-        // 1. Update Banner & About Sections
-        document.getElementById('author-name-heading').textContent = data.name;
-        document.getElementById('author-stats-sub').textContent = data.stats;
-        document.getElementById('about-title').textContent = data.aboutTitle;
-        document.getElementById('about-description').textContent = data.aboutText;
-        
-        const banner = document.getElementById('dynamic-banner');
-        if (banner) {
-            banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('${data.bannerImg}')`;
-        }
-        
-        const aboutImg = document.getElementById('about-img');
-        if (aboutImg) aboutImg.src = data.profileImg;
-
-        // 2. Update Books Row with your EXACT CSS Structure
-        const bookRow = document.getElementById('books-container');
-if (bookRow) {
-    bookRow.innerHTML = ''; // Clears static placeholders
-    
-    data.books.forEach(book => {
-        // We use backticks (`) to create the exact HTML structure from your CSS
-        const bookHTML = `
-            <div class="book-container">
-                <img src="${book.cover}" class="book-img" alt="${book.title}">
-                
-                <div class="book-infosss">
-                    <div class="book-name">${book.title}</div>
-                    
-                    <div class="rating-row">
-                        <span class="star-icon">★</span>
-                        <span class="rating-num">${book.rating}</span>
-                        <span class="review-count">· ${book.reviews} reviews</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        bookRow.insertAdjacentHTML('beforeend', bookHTML);
-    });
-}
-    }
-});
-
-
-         </script>
-
-
-
+    <script src="../data.js"></script>
+    <script src="../script.js"></script>
 
     </body>
     </html>
