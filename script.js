@@ -710,10 +710,46 @@ function toggleSignupConfirm() {
 
 
 
+/*----------Admin-------------*/
 
 
+function toggleAdminPassword() {
+    let input = document.getElementById("admin-password");
+    input.type = input.type==="password" ? "text" : "password";
+}
 
+function adminSigninUser() {
+    let email = document.getElementById("admin-email").value.trim();
+    let password = document.getElementById("admin-password").value.trim();
 
+    let errorEmail = document.getElementById("admin-error-email");
+    let errorPassword = document.getElementById("admin-error-password");
+
+    // reset errors
+    errorEmail.innerText="";
+    errorPassword.innerText="";
+
+    let hasError=false;
+
+    if(!email){
+        errorEmail.innerText="Please enter your email!";
+        hasError=true;
+    }
+    else if(!email.includes("@") || !email.includes(".")){
+        errorEmail.innerText="Please enter a valid email!";
+        hasError=true;
+    }
+
+    if(!password){
+        errorPassword.innerText="Please enter your password!";
+        hasError=true;
+    }
+
+    if(hasError) return false;
+
+    alert("Admin signed in successfully!");
+    return false; // prevent reload
+}
 
 
 

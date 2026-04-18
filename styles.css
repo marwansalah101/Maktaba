@@ -2672,7 +2672,18 @@ margin-right: 190px;
 
 
 
-
+.adminnn-btn
+{
+    width: 60px;
+     position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 5px 15px;
+    background: #4a1f00;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
 
 
 
