@@ -2526,7 +2526,7 @@ html {
   z-index: 0;
 }
 
-.card {
+.signup-container {
   position: relative;
   z-index: 1;
   background: #F0EDE5;
@@ -2602,7 +2602,7 @@ html {
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom:24px;
   position: relative;
 }
 
@@ -2654,7 +2654,7 @@ html {
   border: none;
   cursor: pointer;
   padding: 0;
-  color: rgba(44, 24, 16, 0.45);
+  color: rgba(62, 36, 26, 0.45);
   display: flex;
   align-items: center;
   transition: color 0.2s ease;
