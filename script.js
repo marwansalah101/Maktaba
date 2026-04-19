@@ -1,11 +1,3 @@
-
-
-
-
-    
-  
-
-
 const menuBtn = document.getElementById('menuBtn');
 const menuDropdown = document.getElementById('menuDropdown');
 const menuWrapper = document.querySelector('.menu-dropdown-wrapper');
@@ -140,7 +132,7 @@ if (ripple) {
             reverseRipple.style.left = x + 'px';
             reverseRipple.style.top = y + 'px';
             reverseRipple.style.backgroundColor = '#F0EDE5';
-document.querySelector('.homepage-genre').appendChild(reverseRipple);
+            document.querySelector('.homepage-genre').appendChild(reverseRipple);
 
             // Trigger the animation
             void reverseRipple.offsetWidth;
@@ -158,14 +150,14 @@ document.querySelector('.homepage-genre').appendChild(reverseRipple);
 const container = document.getElementById("books-container");
 
 if (container) {
-  Books.forEach(book => {
-    const card = document.createElement("div");
-    card.classList.add("book-listing");
+    Books.forEach(book => {
+        const card = document.createElement("div");
+        card.classList.add("book-listing");
 
-    // We encode the title so spaces and special characters don't break the URL
-    const bookParam = encodeURIComponent(book.title);
+        // We encode the title so spaces and special characters don't break the URL
+        const bookParam = encodeURIComponent(book.title);
 
-    card.innerHTML = `
+        card.innerHTML = `
       <a href="Product.html?title=${bookParam}" class="book-link">
         <img class="book-cover" src="${book.image}" alt="${book.title}">
       </a>
@@ -177,17 +169,17 @@ if (container) {
       <p class="book-author">${book.author}</p>
     `;
 
-    container.appendChild(card);
-  });
+        container.appendChild(card);
+    });
 }
 /*PRODUCT PAGE*/
-    document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const bookTitle = params.get('title');
 
     if (bookTitle && typeof Books !== 'undefined') {
         const selectedBook = Books.find(b => b.title === bookTitle);
- 
+
         if (selectedBook) {
             document.getElementById('main-title').innerText = selectedBook.title;
             document.getElementById('main-author').innerText = selectedBook.author;
@@ -198,7 +190,7 @@ if (container) {
             document.getElementById('main-image').alt = selectedBook.title;
             document.getElementById('main-year').innerText = selectedBook.year;
             document.getElementById('main-pages').innerText = `${selectedBook.pages} pages`;
-            document.getElementById('main-language').innerText = selectedBook.language; 
+            document.getElementById('main-language').innerText = selectedBook.language;
             document.getElementById('main-ISBN').innerText = selectedBook.ISBN;
 
             // --- Availability Logic ---
@@ -210,12 +202,13 @@ if (container) {
                 availabilityEl.innerText = "Out of Stock";
                 availabilityEl.style.color = "#d32424"; // Red
             }
-            
+
         } else {
             document.querySelector('.product-page').innerHTML = "<h1>Book not found</h1>";
         }
     }
 });
+
 /*order succes*/
 const orderData = {
     items: [
@@ -288,7 +281,7 @@ window.addEventListener("DOMContentLoaded", () => {
     showToast();
 });
 
-/*favorites*/ 
+/*favorites*/
 const favoritesData = [
     { category: "FICTION", title: "The Silent Garden", author: "Eleanor Voss", price: "24.00", img: "HarryPotter.jpg" },
     { category: "MYSTERY", title: "Midnight Letters", author: "James Hartley", price: "19.00", img: "GreatGasby.jpg" },
@@ -298,7 +291,7 @@ const favoritesData = [
 function renderFavs() {
     const list = document.getElementById('fav-list');
     if (!list) return;
-    
+
     list.innerHTML = favoritesData.map(item => `
         <div class="fav-item">
             <img src="${item.img}" class="fav-img">
@@ -324,9 +317,9 @@ function handleNavbarColorInversion() {
     // Add any dark sections you want the navbar to invert over here
     const darkSections = document.querySelectorAll('.site-footer, .book-bg');
     const navRect = navbar.getBoundingClientRect();
-    
+
     let isDark = false;
-    
+
     darkSections.forEach(section => {
         const rect = section.getBoundingClientRect();
         // Check if navbar vertically overlaps the dark section
@@ -390,55 +383,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-    window.addEventListener('load', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const authorId = urlParams.get('id');
-
-    if (typeof authorData !== "undefined" && authorId && authorData[authorId]) {
-        const data = authorData[authorId];
-
-        // 1. Update Banner & About Sections
-        document.getElementById('author-name-heading').textContent = data.name;
-        document.getElementById('author-stats-sub').textContent = data.stats;
-        document.getElementById('about-title').textContent = data.aboutTitle;
-        document.getElementById('about-description').textContent = data.aboutText;
-        
-        const banner = document.getElementById('dynamic-banner');
-        if (banner) {
-            banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('${data.bannerImg}')`;
-        }
-        
-        const aboutImg = document.getElementById('about-img');
-        if (aboutImg) aboutImg.src = data.profileImg;
-
-        // 2. Update Books Row with your EXACT CSS Structure
-        const bookRow = document.getElementById('books-container');
-if (bookRow) {
-    bookRow.innerHTML = ''; // Clears static placeholders
-    
-    data.books.forEach(book => {
-        // We use backticks (`) to create the exact HTML structure from your CSS
-        const bookHTML = `
-            <div class="book-container">
-                <img src="${book.cover}" class="book-img" alt="${book.title}">
-                
-                <div class="book-infosss">
-                    <div class="book-name">${book.title}</div>
-                    
-                    <div class="rating-row">
-                        <span class="star-icon">★</span>
-                        <span class="rating-num">${book.rating}</span>
-                        <span class="review-count">· ${book.reviews} reviews</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        bookRow.insertAdjacentHTML('beforeend', bookHTML);
-    });
-}
-    }
-});
-
 
     const hearts = document.querySelectorAll(".favorite-heart-btn");
     hearts.forEach(btn => {
@@ -546,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-/*checkout*/ 
+/*checkout*/
 /* ===== CHECKOUT PAGE JS ===== */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -589,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const shipping = cart.length > 0 ? 5 : 0;
         if (subtotalEl) subtotalEl.textContent = `€${subtotal.toFixed(2)}`;
         if (shippingEl) shippingEl.textContent = `€${shipping.toFixed(2)}`;
-        if (totalEl)    totalEl.textContent    = `€${(subtotal + shipping).toFixed(2)}`;
+        if (totalEl) totalEl.textContent = `€${(subtotal + shipping).toFixed(2)}`;
     }
 
     renderCheckoutItems();
@@ -623,13 +567,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         localStorage.setItem('shippingInfo', JSON.stringify({
             firstName: document.getElementById('co-fname').value,
-            lastName:  document.getElementById('co-lname').value,
-            email:     document.getElementById('co-email').value,
-            street:    document.getElementById('co-street').value,
-            number:    document.getElementById('co-number').value,
-            postcode:  document.getElementById('co-postcode').value,
-            place:     document.getElementById('co-place').value,
-            country:   document.getElementById('co-country').value
+            lastName: document.getElementById('co-lname').value,
+            email: document.getElementById('co-email').value,
+            street: document.getElementById('co-street').value,
+            number: document.getElementById('co-number').value,
+            postcode: document.getElementById('co-postcode').value,
+            place: document.getElementById('co-place').value,
+            country: document.getElementById('co-country').value
         }));
 
         window.location.href = 'ordersucces.html';
@@ -639,111 +583,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 /*-----sign-in-----*/
- 
-
-/*----------Admin-------------*/
-function toggleAdminPassword() {
-    let input = document.getElementById("admin-password");
-    input.type = input.type==="password" ? "text" : "password";
-}
-
-function adminSigninUser() {
-    let email = document.getElementById("admin-email").value.trim();
-    let password = document.getElementById("admin-password").value.trim();
-
-    let errorEmail = document.getElementById("admin-error-email");
-    let errorPassword = document.getElementById("admin-error-password");
-
-    // reset errors
-    errorEmail.innerText="";
-    errorPassword.innerText="";
-
-    let hasError=false;
-
-    if(!email){
-        errorEmail.innerText="Please enter your email!";
-        hasError=true;
-    }
-    else if(!email.includes("@") || !email.includes(".")){
-        errorEmail.innerText="Please enter a valid email!";
-        hasError=true;
-    }
-
-    if(!password){
-        errorPassword.innerText="Please enter your password!";
-        hasError=true;
-    }
-
-    if(hasError) return false;
-
-    alert("Admin signed in successfully!");
-    return false; // prevent reload
-}
-
-
-
-
-
-
-
-
-
-
-
-// Automatically set the active nav link based on current page
-document.addEventListener('DOMContentLoaded', () => {
-    let currentPath = window.location.pathname.split('/').pop() || 'Home.html';
-
-    // Highlight Browse tab if browsing inside products or authors
-    if (['Product.html', 'Authors.html'].includes(currentPath)) {
-        currentPath = 'Genres.html';
-    } 
-
-    // Add active styling
-    const navLinks = document.querySelectorAll('.navrbar-text li a, .navbar ul li a');
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === currentPath) {
-            link.classList.add('active-link');
-        }
-    });
-});
-
-
-
-
 
 
 
 // AUTHOR PAGE
 
 
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
     const scrollPos = window.scrollY;
     const heroContent = document.querySelector('.authorPhoto-content');
     const heroBg = document.querySelector('.authorPhoto-bg');
 
-    if (!heroContent || !heroBg) return; // Prevent crashes on other pages
-
     // 1. Fade out the text ("Amr Diab") as you scroll
-    let opacity = 1 - (scrollPos / 300);
-    if (opacity >= 0) {
-        heroContent.style.opacity = opacity;
+    if (heroContent) {
+        let opacity = 1 - (scrollPos / 300);
+        heroContent.style.opacity = opacity >= 0 ? opacity : 0;
     }
 
     // 2. Subtle Zoom/Parallax effect on the photo
-    heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
+    if (heroBg) {
+        heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
+    }
 });
 
 
 
 
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const authorId = urlParams.get('id');
 
-    if (typeof authorData !== "undefined" && authorId && authorData[authorId]) {
+    if (authorId && authorData[authorId]) {
         const data = authorData[authorId];
 
         // 1. Update Banner & About Sections
@@ -751,23 +622,23 @@ window.addEventListener('load', function() {
         document.getElementById('author-stats-sub').textContent = data.stats;
         document.getElementById('about-title').textContent = data.aboutTitle;
         document.getElementById('about-description').textContent = data.aboutText;
-        
+
         const banner = document.getElementById('dynamic-banner');
         if (banner) {
             banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('${data.bannerImg}')`;
         }
-        
+
         const aboutImg = document.getElementById('about-img');
         if (aboutImg) aboutImg.src = data.profileImg;
 
         // 2. Update Books Row with your EXACT CSS Structure
         const bookRow = document.getElementById('books-container');
-if (bookRow) {
-    bookRow.innerHTML = ''; // Clears static placeholders
-    
-    data.books.forEach(book => {
-        // We use backticks (`) to create the exact HTML structure from your CSS
-        const bookHTML = `
+        if (bookRow) {
+            bookRow.innerHTML = ''; // Clears static placeholders
+
+            data.books.forEach(book => {
+                // We use backticks (`) to create the exact HTML structure from your CSS
+                const bookHTML = `
             <div class="book-container">
                 <img src="${book.cover}" class="book-img" alt="${book.title}">
                 
@@ -782,9 +653,9 @@ if (bookRow) {
                 </div>
             </div>
         `;
-        bookRow.insertAdjacentHTML('beforeend', bookHTML);
-    });
-}
+                bookRow.insertAdjacentHTML('beforeend', bookHTML);
+            });
+        }
     }
 });
 
@@ -796,85 +667,15 @@ if (bookRow) {
 
 
 /*  THE BUTTON JS  */
-window.addEventListener('scroll', function() {
-    const scrollPos = window.scrollY;
-    const heroContent = document.querySelector('.authorPhoto-content');
-    const heroBg = document.querySelector('.authorPhoto-bg');
-
-    // 1. Fade out the text ("Amr Diab") as you scroll
-    let opacity = 1 - (scrollPos / 300);
-    if (opacity >= 0) {
-        heroContent.style.opacity = opacity;
-    }
-
-    // 2. Subtle Zoom/Parallax effect on the photo
-    heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
-});
-
-
-
-
-
-window.addEventListener('load', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const authorId = urlParams.get('id');
-
-    if (typeof authorData !== "undefined" && authorId && authorData[authorId]) {
-        const data = authorData[authorId];
-
-        // 1. Update Banner & About Sections
-        document.getElementById('author-name-heading').textContent = data.name;
-        document.getElementById('author-stats-sub').textContent = data.stats;
-        document.getElementById('about-title').textContent = data.aboutTitle;
-        document.getElementById('about-description').textContent = data.aboutText;
-        
-        const banner = document.getElementById('dynamic-banner');
-        if (banner) {
-            banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('${data.bannerImg}')`;
-        }
-        
-        const aboutImg = document.getElementById('about-img');
-        if (aboutImg) aboutImg.src = data.profileImg;
-
-        // 2. Update Books Row with your EXACT CSS Structure
-        const bookRow = document.getElementById('books-container');
-if (bookRow) {
-    bookRow.innerHTML = ''; // Clears static placeholders
-    
-    data.books.forEach(book => {
-        // We use backticks (`) to create the exact HTML structure from your CSS
-        const bookHTML = `
-            <div class="book-container">
-                <img src="${book.cover}" class="book-img" alt="${book.title}">
-                
-                <div class="book-infosss">
-                    <div class="book-name">${book.title}</div>
-                    
-                    <div class="rating-row">
-                        <span class="star-icon">★</span>
-                        <span class="rating-num">${book.rating}</span>
-                        <span class="review-count">· ${book.reviews} reviews</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        bookRow.insertAdjacentHTML('beforeend', bookHTML);
-    });
-}
-    }
-});
-
-
-
-
-
- const track = document.getElementById('track');
+const track = document.getElementById('track');
 const slideLeft = document.getElementById('slideLeft');
 const slideRight = document.getElementById('slideRight');
 
 const scrollAmount = 300; // Adjust to match your card width + gap
 
 function updateButtons() {
+    if (!track || !slideLeft || !slideRight) return;
+
     // Check if we are at the very start (Left)
     if (track.scrollLeft <= 0) {
         slideLeft.classList.add('disabled');
@@ -891,45 +692,43 @@ function updateButtons() {
     }
 }
 
-slideLeft.addEventListener('click', () => {
-    track.scrollBy({ left: -300, behavior: 'smooth' });
-});
-
-slideRight.addEventListener('click', () => {
-    track.scrollBy({ left: 300, behavior: 'smooth' });
-});
-
-// Listen for the scroll to finish to update buttons
-track.addEventListener('scroll', updateButtons);
-
-// Run once on page load to set initial state
-updateButtons();
-
-
-
-
-
-
-
-   
-document.addEventListener("DOMContentLoaded", function () {
-  const observerOptions = {
-    threshold: 0.15 // Trigger when 15% of the element is visible
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("active");
-        // Optional: stop observing once it has appeared
-        // observer.unobserve(entry.target); 
-      }
+if (track && slideLeft && slideRight) {
+    slideLeft.addEventListener('click', () => {
+        track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
     });
-  }, observerOptions);
 
-  // Select all elements with the 'reveal' class and start watching them
-  const hiddenElements = document.querySelectorAll(".reveal");
-  hiddenElements.forEach((el) => observer.observe(el));
+    slideRight.addEventListener('click', () => {
+        track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+
+    // Listen for the scroll to finish to update buttons
+    track.addEventListener('scroll', updateButtons);
+
+    // Run once on page load to set initial state
+    updateButtons();
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const observerOptions = {
+        threshold: 0.15 // Trigger when 15% of the element is visible
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+                // Optional: stop observing once it has appeared
+                // observer.unobserve(entry.target); 
+            }
+        });
+    }, observerOptions);
+
+    // Select all elements with the 'reveal' class and start watching them
+    const hiddenElements = document.querySelectorAll(".reveal");
+    hiddenElements.forEach((el) => observer.observe(el));
 });
 
 
@@ -939,16 +738,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
- /* THE FOOTER LINKS*/
+
+
+/* THE FOOTER LINKS */
 
 
 const footerLinks = document.querySelectorAll('.footer-link');
 
 footerLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault(); 
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
 
-        
+
         const targetId = this.getAttribute('data-target');
         const targetSection = document.getElementById(targetId);
 
@@ -967,166 +768,200 @@ footerLinks.forEach(link => {
         }
     });
 });
-    
 
+(() => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Automatically set the active nav link based on current page
-document.addEventListener('DOMContentLoaded', () => {
-    let currentPath = window.location.pathname.split('/').pop() || 'Home.html';
-
-    // Highlight Browse tab if browsing inside products or authors
-    if (['Product.html', 'Authors.html'].includes(currentPath)) {
-        currentPath = 'Genres.html';
-    } 
-
-    // Add active styling
-    const navLinks = document.querySelectorAll('.navrbar-text li a, .navbar ul li a');
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === currentPath) {
-            link.classList.add('active-link');
+    const rules = {
+        fullname: {
+            validate: v => v.trim().length >= 2,
+            message: 'Please enter your full name.'
+        },
+        email: {
+            validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+            message: 'Please enter a valid e-mail address.'
+        },
+        password_signup: {
+            validate: v => v.length >= 8,
+            message: 'Password must be at least 8 characters.'
+        },
+        password_signin: {
+            validate: v => v.length > 0,
+            message: 'Please enter your password.'
         }
+    };
+
+    function showError(inputEl, msg) {
+        inputEl.classList.add('error');
+        inputEl.classList.remove('valid');
+        const err = document.getElementById(inputEl.id + '-error');
+        if (err) { err.textContent = msg; err.classList.add('show'); }
+    }
+
+    function showValid(inputEl) {
+        inputEl.classList.remove('error');
+        inputEl.classList.add('valid');
+        const err = document.getElementById(inputEl.id + '-error');
+        if (err) { err.textContent = ''; err.classList.remove('show'); }
+    }
+
+    function clearState(inputEl) {
+        inputEl.classList.remove('error', 'valid');
+        const err = document.getElementById(inputEl.id + '-error');
+        if (err) { err.textContent = ''; err.classList.remove('show'); }
+    }
+
+    function getPasswordStrength(pw) {
+        let score = 0;
+        if (pw.length >= 8) score++;
+        if (pw.length >= 12) score++;
+        if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+        if (/[0-9]/.test(pw)) score++;
+        if (/[^A-Za-z0-9]/.test(pw)) score++;
+        return Math.min(4, score);
+    }
+
+    function updateStrengthBars(pw) {
+        const bars = document.querySelectorAll('.strength-bar');
+        if (!bars.length) return;
+        const score = getPasswordStrength(pw);
+        const cls = score <= 1 ? 'weak' : score <= 2 ? 'medium' : 'strong';
+        bars.forEach((bar, i) => {
+            bar.classList.remove('weak', 'medium', 'strong');
+            if (i < score) bar.classList.add(cls);
+        });
+    }
+
+    function setupTogglePassword() {
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.dataset.target;
+                const input = document.getElementById(targetId);
+                if (!input) return;
+                const isHidden = input.type === 'password';
+                input.type = isHidden ? 'text' : 'password';
+                const eyeIcon = btn.querySelector('svg');
+                if (!eyeIcon) return;
+                if (isHidden) {
+                    eyeIcon.innerHTML = `
+            <line x1="1" y1="1" x2="23" y2="23"/>
+            <path d="M10.94 6.08A6.93 6.93 0 0 1 12 6c3.18 0 6.17 2.29 7.76 6a15.23 15.23 0 0 1-.9 1.64"/>
+            <path d="M6.61 6.61A13.526 13.526 0 0 0 2.24 12c1.59 3.71 4.58 6 7.76 6a9.022 9.022 0 0 0 5.24-1.7"/>
+            <line x1="12" y1="9" x2="12" y2="9"/>`;
+                } else {
+                    eyeIcon.innerHTML = `
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>`;
+                }
+            });
+        });
+    }
+
+    function initSignup() {
+        const form = document.getElementById('signupForm');
+        if (!form) return;
+
+        const fullnameEl = document.getElementById('fullname');
+        const emailEl = document.getElementById('email');
+        const passwordEl = document.getElementById('password');
+
+        fullnameEl && fullnameEl.addEventListener('blur', () => {
+            if (!fullnameEl.value.trim()) { clearState(fullnameEl); return; }
+            rules.fullname.validate(fullnameEl.value)
+                ? showValid(fullnameEl)
+                : showError(fullnameEl, rules.fullname.message);
+        });
+
+        emailEl && emailEl.addEventListener('blur', () => {
+            if (!emailEl.value.trim()) { clearState(emailEl); return; }
+            rules.email.validate(emailEl.value)
+                ? showValid(emailEl)
+                : showError(emailEl, rules.email.message);
+        });
+
+        passwordEl && passwordEl.addEventListener('input', () => {
+            updateStrengthBars(passwordEl.value);
+            if (passwordEl.value.length > 0) {
+                rules.password_signup.validate(passwordEl.value)
+                    ? showValid(passwordEl)
+                    : showError(passwordEl, rules.password_signup.message);
+            } else {
+                clearState(passwordEl);
+            }
+        });
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            let valid = true;
+
+            if (!fullnameEl.value.trim() || !rules.fullname.validate(fullnameEl.value)) {
+                showError(fullnameEl, rules.fullname.message); valid = false;
+            }
+            if (!emailEl.value.trim() || !rules.email.validate(emailEl.value)) {
+                showError(emailEl, rules.email.message); valid = false;
+            }
+            if (!passwordEl.value || !rules.password_signup.validate(passwordEl.value)) {
+                showError(passwordEl, rules.password_signup.message); valid = false;
+            }
+
+            if (valid) {
+                const btn = form.querySelector('.btn-primary');
+                btn.textContent = 'Creating account…';
+                btn.disabled = true;
+                setTimeout(() => {
+                    btn.textContent = 'Sign Up';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        });
+    }
+
+    function initSignin() {
+        const form = document.getElementById('signinForm');
+        if (!form) return;
+
+        const emailEl = document.getElementById('email');
+        const passwordEl = document.getElementById('password');
+
+        emailEl && emailEl.addEventListener('blur', () => {
+            if (!emailEl.value.trim()) { clearState(emailEl); return; }
+            rules.email.validate(emailEl.value)
+                ? showValid(emailEl)
+                : showError(emailEl, rules.email.message);
+        });
+
+        passwordEl && passwordEl.addEventListener('blur', () => {
+            rules.password_signin.validate(passwordEl.value)
+                ? showValid(passwordEl)
+                : showError(passwordEl, rules.password_signin.message);
+        });
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            let valid = true;
+
+            if (!emailEl.value.trim() || !rules.email.validate(emailEl.value)) {
+                showError(emailEl, rules.email.message); valid = false;
+            }
+            if (!rules.password_signin.validate(passwordEl.value)) {
+                showError(passwordEl, rules.password_signin.message); valid = false;
+            }
+
+            if (valid) {
+                const btn = form.querySelector('.btn-primary');
+                btn.textContent = 'Signing in…';
+                btn.disabled = true;
+                setTimeout(() => {
+                    btn.textContent = 'Sign In';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setupTogglePassword();
+        initSignup();
+        initSignin();
     });
-});
 
-/*-----sign-in-----*/
-
-function login(){
-
-let email =document.getElementById("email").value;
-let password =document.getElementById("password").value;
-let message = document.getElementById("message"); // assuming there is a message span
-let pattern =/^(?=.*[A-Z])(?=.*\d).+$/;
-let length=6;
-
-if(message) {
-    message.innerText = "";
-    message.className = "form-message";
-}
-
-if(email=="" || password==""){
-  if(message) {
-      message.innerText = "Some fields are not filled!";
-      message.classList.add("error");
-  }
-return false;
-}
-else if(!email.includes(".") || !email.includes("@"))
-{
-  if(message) {
-      message.innerText = "invalid email";
-      message.classList.add("error");
-  }
-        return false;
-
-}
-else if(password.length<length)
-{
-  if(message) {
-      message.innerText="password must me atleast 6 characters!"
-      message.classList.add("error");
-  }
-  return false;
-}
-else if(!pattern.test(password))
-{
-  if(message) {
-      message.innerText = "Password must contain a capital letter and a number";
-      message.classList.add("error");
-  }
-             return false;
-}
-
-if(message) {
-  message.innerText = "Login successful ";
-  message.classList.add("success");
-}
-
-    window.location.href = 'Home.html';
-    return false;
-
-
-}
-
-/* -----------sign-up--------------*/
-
-function signupUser() {
-    let name2 = document.getElementById("signup-name").value.trim();
-    let email2 = document.getElementById("signup-email").value.trim();
-    let password2 = document.getElementById("signup-password").value.trim();
-    let confirm = document.getElementById("signup-confirm").value.trim();
-
-    let message = document.getElementById("signup-message");
-    if(message) {
-      message.innerText = "";
-      message.className = "signup-form-message";
-    }
-
-    // One big if statement checking combinations
-    if (!name2 && email2 && password2 && confirm) {
-        if(message) { message.innerText = "Please enter your full name!"; message.classList.add("signup-error"); }
-        return false;
-    } else if (name2 && !email2 && password2 && confirm) {
-        if(message) { message.innerText = "Please enter your email!"; message.classList.add("signup-error"); }
-        return false;
-    } else if (name2 && email2 && !password2 && confirm) {
-        if(message) { message.innerText = "Please enter your password!"; message.classList.add("signup-error"); }
-        return false;
-    } else if (name2 && email2 && password2 && !confirm) {
-        if(message) { message.innerText = "Please re-enter your password!"; message.classList.add("signup-error"); }
-        return false;
-    } else if (!name2 && !email2 && password2 && confirm) {
-        if(message) { message.innerText = "Please enter your name and email!"; message.classList.add("signup-error"); }
-        return false;
-    } else if (!name2 && email2 && !password2 && confirm) {
-        if(message) { message.innerText = "Please enter your name and password!"; message.classList.add("signup-error"); }
-        return false;
-    }
-
-    if (password2 && confirm && password2 !== confirm) {
-        if(message) { message.innerText = "Passwords do not match!"; message.classList.add("signup-error"); }
-        return false;
-    }
-
-    if (email2 && (!email2.includes("@") || !email2.includes("."))) {
-        if(message) { message.innerText = "Please enter a valid email!"; message.classList.add("signup-error"); }
-        return false;
-    }
-
-    if (password2 && password2.length < 6) {
-        if(message) { message.innerText = "Password must be at least 6 characters!"; message.classList.add("signup-error"); }
-        return false;
-    }
-
-    // Success
-    if(message) {
-      message.innerText = "Account created successfully!";
-      message.classList.add("signup-success");
-    }
-    
-    window.location.href = 'Home.html';
-    return false; // prevent form submission
-}
-
-function toggleSignupPassword() {
-    let input = document.getElementById("signup-password");
-    if(input) input.type = input.type === "password" ? "text" : "password";
-}
-
-function toggleSignupConfirm() {
-    let input = document.getElementById("signup-confirm");
-    if(input) input.type = input.type === "password" ? "text" : "password";
-}
+})();
