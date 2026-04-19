@@ -2487,547 +2487,323 @@ body {
 }
 
 
-/*!--sign in--------------------------------------------*/
 
 
 
 
 
+/*--------------sign-in--------------*/
 
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;700&family=Lora:wght@400;600&family=Cinzel:wght@400;500&family=Jost:wght@300;400;500&display=swap');
 
-
-
-
-
-
-
-/* Page background */
-.sign-in-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family:serif;
-
-
-background:  linear-gradient(
-        rgba(13, 7, 1, 0.75),
-                rgba(13, 7, 1, 0.75)
-
-    ),          url("https://images.unsplash.com/photo-1507842217343-583bb7270b66") ;
-
-             background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.main-container{
-    display:flex;
-    flex-direction:row-reverse;
-    width:600px;
-    height:670px;
-
-background: #f7f4ef;
-    border-radius:20px;
-    overflow:hidden;
-
-    box-shadow:0 20px 40px rgba(141, 91, 0, 0.4);
+html {
+  height: 100%;
+  font-family: 'Jost', sans-serif;
 }
 
-
-
-
-/* LEFT (FORM) */
-.form-side{
-    width:50%;
-    padding:50px;
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;  
-    justify-content:center;
-    gap:15px;
+.Sign-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: #b8855a url("../resources/img/homePagePicture.jpg")
 }
 
-.form-side h2{
-    margin:0;
+.Sign-in::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 12, 4, 0.52);
+  z-index: 0;
 }
 
-.signin-desc{
-    font-size:25px;
-    color:#3a1800;
-    margin-top: -5px;
-    margin-right: -60px;
-    width: 390px;
-    font-style: oblique;
-    height: 0;
-}
-.signin-descc
-{
-    font-size:14px;
-    color:#3a1800;
-    margin-top: -28px;
-    margin-right: -90px;
-    width: 390px;
-    font-style: oblique;
-    height: 0;
+.card {
+  position: relative;
+  z-index: 1;
+  background: #F0EDE5;
+  border-radius: 20px;
+  padding: 48px 52px 40px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 24px 80px rgba(10, 4, 0, 0.45), 0 2px 8px rgba(10, 4, 0, 0.15);
+  animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
 
-.labels{
-    margin-left:0;
-    color: #333;
-    padding: 5px;
-    align-self: flex-start;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-/* Inputs */
-
-
-input{
-    width: 300px;
-    padding:10px 5px;
-
-    border: none;
-    border-bottom: 2px solid #ccc; 
-
-    background: transparent; 
-
-    outline: none;
-    margin: 0;
-    transition: 0.3s;
-    margin-right: 220px;
+.card-brand {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: 0.04em;
+  color: #312F2C;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  padding-right: 0.42em;
 }
 
-
-
-input:focus{
-    border-bottom: 2px solid #b07000;
+.card-title {
+  font-family: 'Lora', serif;
+  font-weight: 400;
+  font-size: 26px;
+  color: #312F2C;
+  text-align: center;
+  margin-bottom: 6px;
 }
 
-
-/* Button */
-.login-btn{
-    margin-top:30px;
-    width: 260px;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-
-    background:#3a1800;
-    color:white;
-    cursor:pointer;
-margin-right: 190px;
-    box-shadow:0 4px 15px rgba(166, 124, 82, 0.4);
+.card-subtitle {
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: rgba(44, 24, 16, 0.45);
+  text-align: center;
+  margin-bottom: 36px;
 }
 
-
-
-
-
-/* Bottom text */
-.bottom-text{
-    font-size:13px;
-    text-align:center;
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
 }
 
-
-
-   
-  .sign-in-logo{
-    font-size: 32px;
-    font-style:inherit;
-    color: #3a1800;
-    margin: 0;
-    text-decoration: none;
-    margin-right: 190px;
-    margin-top: -280px;
+.divider-ornament .line {
+  flex: 1;
+  height: 0.5px;
+  background: rgba(180, 160, 130, 0.35);
 }
 
-
-
-
-.adminnn-btn
-{
-    width: 60px;
-     position: fixed;
-    top: 10px;
-    left: 10px;
-    padding: 5px 15px;
-    background: #4a1f00;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
+.divider-ornament .diamond {
+  width: 5px;
+  height: 5px;
+  background: #C8975A;
+  transform: rotate(45deg);
+  flex-shrink: 0;
 }
 
-
-
-
-
-
-    .continue{
-color: rgb(146, 146, 146);
-width: 600px;
-margin-left: 90px;
-height: 0px;
-margin-right: 60px;
-
-    }
-
-
-
-.social-buttons { display: flex;
-     gap: 20px; margin-top: 20px;
-      margin-right: 200px;
-    width: 400px; } 
-
-
-.social-buttons button { flex: 1;
-     padding: 10px; 
-     border-radius: 13px;
-      border: 1px solid #ccc; 
-      background: transparent;
-       cursor: pointer;
-        height: 40px;
-         box-shadow: 0 4px 15px rgba(57, 25, 0, 0.4) }
-
- .google { background: white;
-     width: 20px;
-      vertical-align: middle; } 
-
-
- .apple { background: rgb(255, 255, 255);
-     vertical-align:middle; }
-
-
-.noacc{
-    margin:0;
-    color:#4d2b00;
-    text-align: center;
-    margin-bottom: -300px;
-    margin-right: 150px;
-    width: 300px;
+.form-group {
+  margin-bottom: 24px;
+  position: relative;
 }
 
-
-.linkkk
-{
-    color:#381900;
-    text-decoration: none;
+.form-label {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: #312F2C;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
-.form-message{
-
-      margin-top: -30px;
-        font-size: 14px;
-        text-align: center;
-        font-style: oblique;
-        margin-right: 180px;
-        width: 180px;
+.form-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(180, 160, 130, 0.35);
+  padding: 8px 36px 8px 0;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  color: #312F2C;
+  outline: none;
+  transition: border-color 0.25s ease;
 }
 
-.error{
-
-    color: red;
-}
-.success{
-    color: green;
+.form-input::placeholder {
+  color: rgba(44, 24, 16, 0.3);
 }
 
-
-
-
-/*-------admin----------*/
-
-
-/* Page background */
-.admin-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family:serif;
-
-    background: linear-gradient(
-        rgba(13,7,1,0.75),
-        rgba(13,7,1,0.75)
-    ),
-    url("https://images.unsplash.com/photo-1507842217343-583bb7270b66");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+.form-input:focus {
+  border-bottom-color: #C8975A;
 }
 
-/* Card container */
-.admin-container{
-    width:420px;
-    background:#f7f4ef;
-    padding:40px;
-    border-radius:25px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
-    text-align:center;
+.form-input.error {
+  border-bottom-color: #a83228;
 }
 
-/* Titles */
-.admin-title{
-    font-size:32px;
-    color:#3a1800;
-    margin-bottom:10px;
-}
-.admin-heading{
-    font-size:25px;
-    color:#3a1800;
-    margin:0;
-}
-.admin-sub{
-    font-size:14px;
-    color:#6b4f3b;
-    margin-bottom:25px;
+.form-input.valid {
+  border-bottom-color: #3a6741;
 }
 
-/* Fields */
-.admin-field{
-    text-align:left;
-    margin-bottom:20px;
-}
-.admin-field label{
-    font-size:12px;
-    color:#7a5a40;
-}
-.admin-input{
-    width:100%;
-    border:none;
-    border-bottom:1px solid #ccc;
-    padding:8px 0;
-    background:transparent;
-    outline:none;
-}
-.admin-input:focus{
-    border-bottom:1px solid #3a1800;
-}
-.admin-password-wrapper{
-    display:flex;
-    align-items:center;
-}
-.admin-password-wrapper span{
-    cursor:pointer;
-    margin-left:10px;
+.toggle-password {
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: rgba(44, 24, 16, 0.45);
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
 }
 
-/* Options row */
-.admin-options{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
-}
-.admin-remember-me input{cursor:pointer;}
-.admin-forgot-password{
-    text-decoration:none;
-    font-size:12px;
-    color:#6b4f3b;
-}
-.admin-forgot-password:hover{text-decoration:underline;}
-
-/* Button */
-.admin-btn{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:12px;
-    background:#4a1f00;
-    color:white;
-    cursor:pointer;
-    margin-top:10px;
+.toggle-password:hover {
+  color: #312F2C;
 }
 
-/* Footer */
-.admin-footer{
-    margin-top:15px;
-    font-size:13px;
-}
-.admin-footer a{
-    color:#3a1800;
-    text-decoration:none;
+.error-msg {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  color: #a83228;
+  margin-top: 5px;
+  min-height: 14px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-/* Error messages */
-.admin-error-message{
-    color:red;
-    font-size:12px;
-    margin-bottom:3px;
-    display:block;
-    min-height:14px;
+.error-msg.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.password-strength {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 2px;
+  background: rgba(180, 160, 130, 0.35);
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.strength-bar.weak {
+  background: #a83228;
+}
+
+.strength-bar.medium {
+  background: #C8975A;
+}
+
+.strength-bar.strong {
+  background: #3a6741;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 15px;
+  background: #312F2C;
+  color: #F0EDE5;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+
+.btn-primary:hover {
+  background: #2c1008;
+}
+
+.btn-primary:active {
+  transform: scale(0.985);
+}
+
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 24px 0;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: rgba(44, 24, 16, 0.45);
+  text-transform: uppercase;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: rgba(180, 160, 130, 0.35);
+}
+
+.social-logins {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.btn-social {
+  width: 90px;
+  height: 38px;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.btn-social:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(0.98);
+}
+
+.btn-social svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.card-footer {
+  text-align: center;
+  margin-top: 28px;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: rgba(44, 24, 16, 0.45);
+}
+
+.card-footer a {
+  color: #312F2C;
+  text-decoration: none;
+  font-weight: 400;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.card-footer a:hover {
+  border-bottom-color: #312F2C;
 }
 
 
 
-
-
-
-
-/*----sign-up----*/
-
-
-
-
-
-
-/*----sign-up----*/
-
-/* Background */
-/* Page background */
-.signup-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family:serif;
-
-    background: linear-gradient(
-        rgba(13, 7, 1, 0.75),
-        rgba(13, 7, 1, 0.75)
-    ), url("https://images.unsplash.com/photo-1507842217343-583bb7270b66");
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* Main container */
-.signup-container{
-    display:flex;
-    flex-direction:column;
-    width:600px;
-    padding: 40px;
-    height:auto;
-
-    background: #f7f4ef;
-    border-radius:20px;
-    overflow:hidden;
-
-    box-shadow:0 20px 40px rgba(141, 91, 0, 0.4);
-}
-
-/* Form side */
-.signup-form-side{
-    display:flex;
-    flex-direction:column;
-    align-items:center;  
-    justify-content:center;
-    gap:15px;
-}
-
-/* Titles */
-.signup-title{
-    font-size:32px;
-    font-style:inherit;
-    color: #3a1800;
-    margin: 0 0 10px 0;
-    text-align:center;
-}
-
-.signup-logo{
-    font-size:25px;
-    color:#3a1800;
-    font-style: oblique;
-    text-align:center;
-    margin: -5px 0 0 0;
-}
-
-.signup-desc{
-    font-size:14px;
-    color:#3a1800;
-    font-style: oblique;
-    text-align:center;
-    margin: -5px 0 20px 0;
-}
-
-.signup-labels{
-    margin-left:0;
-    color: #333;
-    padding: 5px;
-    align-self: flex-start;
-}
-
-.signup-input{
-    width: 100%;
-    padding:10px 5px;
-    border: none;
-    border-bottom: 2px solid #ccc; 
-    background: transparent;
-    outline: none;
-    transition: 0.3s;
-    margin-bottom: 20px;
-}
-
-.signup-input:focus{
-    border-bottom: 2px solid #b07000;
-}
-
-.signup-password-wrapper{
-    display:flex;
-    align-items:center;
-}
-
-.signup-password-wrapper span{
-    cursor:pointer;
-    margin-left: 10px;
-}
-
-.signup-btn{
-    margin-top:30px;
-    width: 100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#3a1800;
-    color:white;
-    cursor:pointer;
-    box-shadow:0 4px 15px rgba(166, 124, 82, 0.4);
-}
-
-.signup-acc{
-    margin-top:15px;
-    font-size:13px;
-    text-align:center;
-    text-decoration: none;
-}
-
-.signup-accs{
-    color:#421c01;
-    text-decoration:none;
-margin-left: 150px;
-}
-
-
-.requirments
-{
-color: #3a1800;  
-}
-
-
-/* Form message */
-.signup-form-message{
-    margin-top: 100px;
-    font-size:14px;
-    text-align:center;
-    font-style: oblique;
-}
-
-.signup-error{
-    color:red;
-}
-
-.signup-success{
-    color:green;
-}
-
-/* -----sign Up------*/
 
 
 
