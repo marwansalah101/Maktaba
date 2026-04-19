@@ -177,12 +177,21 @@ if (container) {
     const params = new URLSearchParams(window.location.search);
     const bookTitle = params.get('title');
 
-    if (bookTitle && typeof Books !== 'undefined') {
-        const selectedBook = Books.find(b => b.title === bookTitle);
+    if (typeof Books !== 'undefined') {
+        let selectedBook = null;
+        if (bookTitle) {
+            selectedBook = Books.find(b => b.title === bookTitle);
+        }
+        
+        // Fallback to first book if no valid book parameter is given
+        if (!selectedBook && Books.length > 0) {
+            selectedBook = Books[0];
+        }
  
         if (selectedBook) {
             document.getElementById('main-title').innerText = selectedBook.title;
             document.getElementById('main-author').innerText = selectedBook.author;
+            document.getElementById('main-genre').innerText = selectedBook.genre;
             document.getElementById('main-price').innerText = `$${selectedBook.price}`;
             document.getElementById('main-description').innerText = selectedBook.description;
             document.getElementById('main-quote').innerText = `"${selectedBook.quote}"`;
