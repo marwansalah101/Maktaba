@@ -2526,7 +2526,7 @@ html {
   z-index: 0;
 }
 
-.signup-container {
+.card {
   position: relative;
   z-index: 1;
   background: #F0EDE5;
