@@ -364,3 +364,46 @@ href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wg
 
     </body>
     </html>
+
+
+
+
+
+
+              
+
+
+ <script>
+   window.addEventListener('scroll', function() {
+    const scrollPos = window.scrollY;
+    const heroContent = document.querySelector('.authorPhoto-content');
+    const heroBg = document.querySelector('.authorPhoto-bg');
+
+    // 1. Fade out the text ("Amr Diab") as you scroll
+    let opacity = 1 - (scrollPos / 300);
+    if (opacity >= 0) {
+        heroContent.style.opacity = opacity;
+    }
+
+    // 2. Subtle Zoom/Parallax effect on the photo
+    heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
+});
+
+
+
+
+
+
+// 1. DATA OBJECT
+
+  
+
+
+
+         </script>
+
+
+
+
+    </body>
+    </html>
