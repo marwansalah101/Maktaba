@@ -630,22 +630,32 @@ message.innerText = "Login successful ";
 
 /* -----------sign-up--------------*/
 
+function validateSignup(e) {
+    if (e) e.preventDefault();
+    
+    let nameInput = document.getElementById("signup-name");
+    let emailInput = document.getElementById("signup-email");
+    let passwordInput = document.getElementById("signup-password");
+    let confirmInput = document.getElementById("signup-confirm");
 
- let name2 = document.getElementById("signup-name").value.trim();
-    let email2 = document.getElementById("signup-email").value.trim();
-    let password2 = document.getElementById("signup-password").value.trim();
-    let confirm = document.getElementById("signup-confirm").value.trim();
+    if (!nameInput || !emailInput || !passwordInput || !confirmInput) return false;
+
+    let name2 = nameInput.value.trim();
+    let email2 = emailInput.value.trim();
+    let password2 = passwordInput.value.trim();
+    let confirm = confirmInput.value.trim();
 
     let message = document.getElementById("signup-message");
+    if (!message) return false;
     message.innerText = "";
     message.className = "signup-form-message";
 
     // One big if statement checking combinations
-    if (!name2 && email2 && password && confirm) {
+    if (!name2 && email2 && password2 && confirm) {
         message.innerText = "Please enter your full name!";
         message.classList.add("signup-error");
         return false;
-    } else if (name2 && !email2 && password && confirm) {
+    } else if (name2 && !email2 && password2 && confirm) {
         message.innerText = "Please enter your email!";
         message.classList.add("signup-error");
         return false;
@@ -667,21 +677,18 @@ message.innerText = "Login successful ";
         return false;
     }
 
-    
     if (password2 && confirm && password2 !== confirm) {
         message.innerText = "Passwords do not match!";
         message.classList.add("signup-error");
         return false;
     }
 
-   
     if (email2 && (!email2.includes("@") || !email2.includes("."))) {
         message.innerText = "Please enter a valid email!";
         message.classList.add("signup-error");
         return false;
     }
 
-    
     if (password2 && password2.length < 6) {
         message.innerText = "Password must be at least 6 characters!";
         message.classList.add("signup-error");
@@ -692,8 +699,7 @@ message.innerText = "Login successful ";
     message.innerText = "Account created successfully!";
     message.classList.add("signup-success");
     return false; // prevent form submission
-
-
+}
 
 function toggleSignupPassword() {
     let input = document.getElementById("signup-password");
@@ -865,42 +871,45 @@ if (bookRow) {
 
 
 /*  THE BUTTON JS  */
- const track = document.getElementById('track');
-const slideLeft = document.getElementById('slideLeft');
-const slideRight = document.getElementById('slideRight');
+const track = document.getElementById('track');
 
-const scrollAmount = 300; // Adjust to match your card width + gap
+if (track) {
+    const slideLeft = document.getElementById('slideLeft');
+    const slideRight = document.getElementById('slideRight');
 
-function updateButtons() {
-    // Check if we are at the very start (Left)
-    if (track.scrollLeft <= 0) {
-        slideLeft.classList.add('disabled');
-    } else {
-        slideLeft.classList.remove('disabled');
+    const scrollAmount = 300; // Adjust to match your card width + gap
+
+    function updateButtons() {
+        // Check if we are at the very start (Left)
+        if (track.scrollLeft <= 0) {
+            slideLeft.classList.add('disabled');
+        } else {
+            slideLeft.classList.remove('disabled');
+        }
+
+        // Check if we are at the very end (Right)
+        // scrollWidth is the total length, clientWidth is what you see
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 1) {
+            slideRight.classList.add('disabled');
+        } else {
+            slideRight.classList.remove('disabled');
+        }
     }
 
-    // Check if we are at the very end (Right)
-    // scrollWidth is the total length, clientWidth is what you see
-    if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 1) {
-        slideRight.classList.add('disabled');
-    } else {
-        slideRight.classList.remove('disabled');
-    }
+    slideLeft.addEventListener('click', () => {
+        track.scrollBy({ left: -300, behavior: 'smooth' });
+    });
+
+    slideRight.addEventListener('click', () => {
+        track.scrollBy({ left: 300, behavior: 'smooth' });
+    });
+
+    // Listen for the scroll to finish to update buttons
+    track.addEventListener('scroll', updateButtons);
+
+    // Run once on page load to set initial state
+    updateButtons();
 }
-
-slideLeft.addEventListener('click', () => {
-    track.scrollBy({ left: -300, behavior: 'smooth' });
-});
-
-slideRight.addEventListener('click', () => {
-    track.scrollBy({ left: 300, behavior: 'smooth' });
-});
-
-// Listen for the scroll to finish to update buttons
-track.addEventListener('scroll', updateButtons);
-
-// Run once on page load to set initial state
-updateButtons();
 
 
 
