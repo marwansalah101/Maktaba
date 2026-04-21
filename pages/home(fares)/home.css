@@ -1,0 +1,833 @@
+.book-bg {
+    height: 100vh;
+
+    background-image: url('resources/img/052987e722712b613a758d07a56b21fb.jpg');
+    background-size: cover;
+    background-position: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-right: 0 8%;
+    mask-image: linear-gradient(to left, #DECFAC, #F6F7DD);
+
+}
+
+
+.homepage {
+    background-color: #f7f7f7;
+
+}
+
+.HomePage {
+        padding: 40px;
+}
+
+
+.hero-text {
+
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
+    margin-bottom: -30px;
+
+}
+
+.est h3 {
+    margin: 0;
+    line-height: 1.1;
+    font-family: 'Playfair Display', serif;
+    color: #FDF5E6;
+    font-size: 70px;
+    margin: 0 0 30px 0;
+
+}
+
+.est p {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', 'Arial', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+
+    color: #FDF5E6;
+    margin-bottom: 30px;
+    font-size: 0.75rem; 
+    font-weight: 600;
+}
+
+.sub-est {
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    color: #FDF5E6;
+    line-height: 1.6;
+    margin-top: 0px;
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+
+.homeBox {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    justify-content: baseline;
+    width: 350px;
+    height: 400px;
+    background: #F0EDE5;
+    border-radius: 25px;
+    padding: 40px;
+    margin-top: 40px;
+    margin-left: 33%;
+    margin-right: 40px;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    left: 35%;
+}
+
+.writebox {
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+
+    margin-bottom: 10px;
+}
+
+.homeBox:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+    transition: all 0.5s ease-in-out;
+
+
+}
+
+.writebox p {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 14px;
+    color: #312F2C;
+    margin-bottom: 30px;
+}
+
+
+.writebox h3 {
+    margin: 0;
+    line-height: 1.1;
+    font-family: 'Playfair Display', serif;
+    color: #312F2C;
+    font-size: 47px;
+    line-height: 1.1;
+    margin: 0 0 30px 0;
+
+}
+
+.description {
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    color: #312F2C;
+    line-height: 1.6;
+    margin-top: 0px;
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+
+.explore-link a {
+
+    font-family: "Georgia", serif;
+    text-decoration: none;
+    color: #4A2C2A;
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    align-items: center;
+    transition: transform 0.10s ease;
+  display: inline-block;
+
+}
+
+
+
+
+.explore-link a:hover {
+    text-decoration: none;
+    opacity: 0.8;
+    color: #b89058;
+
+    transition: all 0.3s ease-in-out;
+
+
+
+}
+
+
+.explore-link .arrow {
+    margin-left: 8px;
+    font-size: 18px;
+    line-height: 1;
+    display: inline-block;
+    text-decoration: none;
+}
+
+
+
+
+
+/*------------------CAROUSEL(NEW RELEASE)------------------*/
+
+.carousel-wrapper {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #F0EDE5;
+    padding: 30px;
+
+    margin-top: -40px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+
+
+}   
+
+.new-release-section .new-release-title {
+  display: flex; /* This keeps them side-by-side */
+  align-items: baseline; /* Keeps the bottoms of the letters lined up */
+  gap: 15px; /* Adjust this to change the space between the two words */
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 80px;
+  margin-left: 25px;
+  /* Adjust as needed */
+  line-height: 1;
+}
+
+/* Styling for the first word "New" */
+.word-new {
+  font-size:55px;      
+  color: #ffffff;   
+  font-weight: 400;    
+  opacity: 0.9;        /* Makes it look slightly blended with background */
+}
+
+/* Styling for the second word "Release" */
+.word-release {
+  font-size: 55px;    
+  color: #312F2C;      
+  font-style: italic;  
+  font-weight: 400;
+  margin-left:-5px;
+}
+
+.title-underlines {
+    width: 120px;
+    height: 1px;
+    background-color: #312F2C;
+    margin: 0 auto 10px auto;
+  
+}
+
+
+.carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 73%;
+    height: 100%;
+    justify-content: center;
+    margin-left: 190px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 140px;
+
+
+}
+
+/* da beyt7akem fel cards we gapat w yeb2a fe scroll horizontal */
+.carousel-track {
+    display: flex;
+    gap: 70px;
+    overflow-x: auto;
+    /* Enables horizontal scrolling */
+    padding-bottom: 20px;
+    scroll-snap-type: x mandatory;
+    /* Makes scrolling snap to the cards */
+    scroll-behavior: smooth;
+    justify-content: flex-start;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+
+
+}
+
+
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+
+.book-card {
+    width: 200px;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+
+
+}
+.book-card a {
+    text-decoration: none;
+    color: inherit;
+  
+}
+
+
+
+.book-card img {
+    width: 100%;
+
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
+    object-fit: cover;
+}
+
+.book-card img:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+
+
+.book-info h3 {
+    font-size: 0.95rem;
+    color: #312F2C;
+    margin: 0 0 6px 0;
+    line-height: 1.2;
+}
+
+.book-info p {
+    font-size: 0.8rem;
+    color: #312F2C;
+    margin: 0 0 12px 0;
+    text-align: left;
+}
+
+
+.nav-btn {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    /* Perfectly centers vertically */
+    background-color: #312F2C;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: #d5d0cb;
+    transform: translateY(-50%) scale(1.05);
+    /* Slight grow effect */
+}
+
+
+.left-btn {
+    left: -50px;
+}
+
+.right-btn {
+    right: -40px;
+}
+
+
+/* This class is added/removed by JavaScript */
+.disabled {
+    background-color: rgb(138, 134, 134) !important;
+    color: #ccc !important; /* Makes the arrow look greyed out */
+    border: 1px solid #ddd;
+    cursor: not-allowed;    /* Shows the "stop" sign on mouse hover */
+    opacity: 0.6;           /* Optional: makes it look slightly faded */
+    pointer-events: none;   /* Physically stops the click from working */
+}
+
+
+
+/* The Image between the carrousel */
+
+.between-carouselss {
+    width: 100%;
+    background-color: #312F2C; /* Light cream/beige */
+    border-top: 1.5px solid #fefefe; /* Muted tan border */
+    border-bottom: 1.5px solid #ffffff; /* Muted tan border */
+    padding: 20px 0;
+    overflow: hidden;
+    display: flex;
+   
+}
+
+.Slogan-Images {
+    display: flex;
+    width: max-content;
+    /* Adjust '30s' to make it faster (20s) or slower (40s) */
+    animation: scroll-ticker 15s linear infinite;
+    will-change: transform; 
+}
+
+.ticker-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ticker-list li {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px; 
+    color: #FDF5E6;
+    padding: 0 60px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+
+.ticker-list li::after {
+    content: "★";
+    margin-left: 120px; /* Gap between text and star */
+    color: #A49F89;
+    font-size: 12px;
+}
+
+
+@keyframes scroll-ticker {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        /* This moves exactly one full UL width to the left, 
+           making the reset invisible. */
+        transform: translateX(-50%);
+    }
+}
+
+
+
+
+
+
+
+/* The Carousole itself */
+
+.carousel-background {
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #F0EDE5;
+    padding: 30px;
+    margin-top: 0px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.best-sellers h2 {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 30px;
+    color: #312F2C;
+    text-align: center;
+    margin-bottom: 5px;
+    margin-top: 30px;
+}
+
+.title-underline {
+    width: 180px;
+    height: 1px;
+    background-color: #333;
+    margin: 0 auto 20px auto;
+    /* Centers the div and adds bottom space */
+}
+
+.best-sellers p {
+
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    margin-bottom: 100px;
+    color: #312F2C;
+    text-align: center;
+
+
+}
+
+.Carousole {
+
+    display: flex;
+    border: 5px solid #4a432a;
+    border-radius: 15px;
+    overflow-x: hidden;
+    /* It completely disables right/left scrolling */
+    overflow-y: hidden;
+    /* It completely disables up/down scrolling */
+    margin: 70px auto;
+    width: 100%;
+    height: 300px;
+    gap: 2em;
+    border: transparent;
+   
+   mask-image: linear-gradient(90deg, 
+  transparent 0%, #F0EDE5 4%, 
+  #F0EDE5 98%, transparent 100%);
+    align-items: center;
+}
+
+.Carousole::-webkit-scrollbar {
+    display: none;
+}
+
+
+
+.group {
+    display: flex;
+    gap: 3em;
+    padding-right: 3em;
+    align-items: center;
+    justify-content: flex-start;
+    animation: spin 18s linear infinite;
+    width: max-content;
+    /* Forces the container to be as wide as all the duplicated books */
+}
+
+
+.group:hover {
+    cursor: grab;
+    animation-play-state: paused;/* 3shan to2of*/
+    
+}
+
+
+.Images-carousole {
+    flex: 0 0 5em;
+    padding: 2em;
+    font-size: 30px;
+    text-align: center;
+    align-content: center;
+    border-radius: o.2em;
+    align-items: center;
+    justify-content: center;
+    /* ADD THESE: Prevents the "ghost drag" but ALLOWS clicking */
+    -webkit-user-drag: none;
+    user-select: none;
+
+
+}
+
+.Images-carousole a {
+    text-decoration: none;
+}
+
+.book-info2 h3 {
+    font-size: 0.95rem;
+    color: #312F2C;
+    margin: 0 0 6px 0;
+    line-height: 1.2;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+
+}
+
+.book-info2 p {
+    font-size: 0.8rem;
+    color: #312F2C;
+    margin: 0 0 12px 0;
+}
+
+
+
+/* The Pill-shaped Genre Tags */
+.genre-tag {
+    display: inline-block;
+    background-color: #312F2C;
+    color: #edeaea;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    /* Creates the pill shape */
+    align-self: flex-start;
+    /* Prevents the tag from stretching to full width */
+}
+
+
+
+@keyframes spin {
+
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        /* Moves exactly one set of books, then flawlessly resets */
+        transform: translateX(-50%);
+    }
+
+
+
+}
+
+
+
+
+
+/* ABOUT US  */
+
+.about-us {
+
+    background-color: #312F2C;
+    /* The cream background moves here */
+    padding: 90px 10px;
+    /* Breathing room on the top/bottom and sides */
+    min-height: 800px;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+   
+
+}
+
+.about-us-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 800px;
+    margin-top:70px;
+    
+
+}
+
+
+.about-us-section h4 {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: #FDF5E6;
+    margin-bottom: -30px;
+    margin-top: -10px;
+}
+
+
+.about-us-section h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    /* Scales smoothly on mobile */
+    font-weight: 400;
+    color: #FDF5E6;
+    margin-bottom: 10px;
+}
+
+
+
+
+.about-us-section p {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #FDF5E6;
+    max-width: 850px;
+    margin-bottom: -15px;
+}
+
+
+
+.stats-card {
+    background-color: #FDF5E6;
+    /* Very light cream/white */
+    width: 100%;
+    max-width: 1100px;
+    margin-top: 4rem;
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(74, 60, 56, 0.05);
+    /* Soft shadow */
+    display: flex;
+    flex-wrap: wrap;
+    /* Allows items to push to a new line if the screen gets too small */
+    justify-content: space-between;
+    /* Spreads them evenly across the card */
+    align-items: center;
+    gap: 2rem;
+}
+
+
+.stats-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+    transition: all 0.5s ease-in-out;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    /* Tells each item to take up an equal share of the space */
+    flex: 1;
+
+    /* Prevents them from squishing into unreadable slivers on phones */
+    min-width: 180px;
+}
+
+.stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: #4A3C38;
+}
+
+.stat-label {
+    font-family: 'Lora', serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #312F2C;
+
+}
+
+
+
+/* FAVORITE AUTHOURS */
+
+.author-background {
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #FDF5E6;
+    padding: 30px;
+    margin-top: -40px;
+    width: 100%;
+    height: 83%;
+    box-sizing: border-box;
+
+}
+
+.Favorite-Authors h2 {
+
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    font-size: 30px;
+    color: #312F2C;
+    text-align: center;
+    margin-bottom: 5px;
+
+}
+
+
+.Favorite-Authors p {
+
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    margin-bottom: 100px;
+    color: #312F2C;
+    text-align: center;
+
+
+}
+
+.author-caroussel {
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 80%;
+    height: 100%;
+    justify-content: center;
+    margin-left: 150px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+}
+
+.author-section {
+
+    display: flex;
+    gap: 70px;
+    overflow-x: auto;
+    /* Enables horizontal scrolling */
+    padding-bottom: 20px;
+    scroll-snap-type: x mandatory;
+    /* Makes scrolling snap to the cards */
+    justify-content: flex-start;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+
+
+}
+
+.author-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    width: 150px;
+
+}
+
+.author-card a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.author-card img {
+
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;/* This makes it a circle */
+    overflow: hidden;
+    border: 2px solid #ddd;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+}
+
+.author-info h3 {
+
+    font-size: 0.95rem;
+    color: #312F2C;
+    margin: 0 0 6px 0;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;/* Add "..." if the name is too long for the box */
+}
+
+.author-info p {
+
+    font-size: 12px;
+    color: #312F2C;
+    margin: 0 auto;
+    width: 90%;
+    /* Slightly smaller than the name for better look */
+
+}
