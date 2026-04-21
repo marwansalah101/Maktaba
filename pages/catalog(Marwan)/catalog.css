@@ -1,0 +1,1129 @@
+/*--------------AUTHOR PAGE ---------- */
+
+
+
+.spotify-hero {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height:600px;
+    z-index: -1; /* This keeps it BEHIND the books when they slide up */
+    overflow: hidden;
+    background-color: #000;
+    
+}
+
+.authorPhoto-bg {
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url('../resources/Authors/nora-e1429382209389.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.1s linear; 
+}
+ 
+
+.authorPhoto-content {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    transition: opacity 0.3s ease;
+}
+
+
+.authorPhoto-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    margin-bottom: 5px;
+    letter-spacing: 4px;
+    font-weight: 400;
+}
+
+.authorPhoto-content p {
+    font-family: 'Georgia', serif;
+    font-size: 15px;
+    margin-top: 0;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+
+
+
+
+
+
+
+
+/* topRated-Books Section */
+
+.books-section {
+    background-color: #FDF5E6 !important; /* THE CREAM BACKGROUND */
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto 50px auto;
+}
+
+ .divider .line {
+    flex: 1;
+    height: 1px;
+    background-color: #d1cfcd;
+}
+
+ .divider .title {
+    padding: 0 20px;
+    
+    /* ADD THIS LINE */
+   font-family: 'Georgia', serif; 
+   font-weight: bold;
+    font-size: 25px;
+    color: #4a2c2a;
+    
+    /* AND THIS to remove the heavy boldness if needed */
+  
+   
+}
+
+/* THE FIX: Forcing books into one row and removing boxes */
+.books-row {
+    display: flex !important;
+    flex-direction: row !important; /* SIDE BY SIDE */
+    flex-wrap: nowrap !important;   /* NO STACKING */
+    justify-content: center;
+    align-items: flex-end;
+    gap: 75px;
+  
+    padding: 20px 0;
+   
+}
+
+.book-container {
+    flex: 0 0 170px; /* Fixed width for every book */
+    background: transparent !important; /* REMOVES THE WHITE BOX */
+    border: none !important;            /* REMOVES BORDERS */
+    padding: 0 !important;  
+    display: flex;
+    align-items: flex-end; /* Keeps them all sitting on the same 'floor' */
+    justify-content: center;            
+    
+}
+
+.book-img {
+    width: 250px;
+    height: auto;
+    display: block;
+    /* This shadow creates the 3D 'standing' effect */
+    filter: drop-shadow(-15px 10px 12px rgba(75, 28, 28, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.book-img:hover {
+    transform: translateY(-10px) scale(1.03);
+}
+
+
+
+
+
+ 
+/*........... about the author....*/
+
+
+
+
+.layered-section {
+    background-color: #312F2C;
+   height:450px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; /* Forces everything to the left */
+}
+
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    max-width: 1200px;
+    margin-top: 30px;
+    margin-left:30px;
+}
+
+/* 1. PHOTO ON THE LEFT */
+.photo-box {
+    position: relative;
+    z-index: 2;             /* Keeps photo on top layer */
+    flex: 0 0 400px;        /* Fixed width for the photo */
+}
+
+.photo-box img {
+   margin-left:40px;
+   margin-right:60px;
+    width: 100%;
+    height: auto;
+    display: block;
+    /* Shadow helps define the edge where it overlaps the text */
+   box-shadow: 20px 20px 60px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1); 
+}
+
+
+
+/* 2. TEXT BEHIND THE PHOTO */
+.text-box {
+    z-index: 1;             /* Lower layer than the photo */
+       /* THE MAGIC: Pulls text BEHIND the photo */
+    padding-left: 90px;    /* Offsets text so the words aren't fully hidden */
+    color: #F0EDE5;
+    max-width: 600px;
+}
+
+.text-box h2 {
+   font-family: 'serif'; /* Gives that classic library/book feel */
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #d4c4a8; /* Elegant gold/sand color for the title */
+    margin-bottom: 20px;
+}
+
+.text-box p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #F0EDE5;
+    margin-bottom: 20px;
+}
+
+.links {
+    color: #F0EDE5;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+
+
+/*------------------BOOK PAGE------------------*/
+
+
+
+/* --- Gallery Container --- */
+.gallery-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.divider #dividers{
+       display: flex;
+    align-items: center;
+    max-width: 1000px;
+    margin: 30px auto 45px auto;
+}
+
+.divider  #dividers .line {
+    flex: 1;
+    height: 1px;
+    background-color: #d1cfcd;
+}
+
+ .divider #dividers .title {
+  
+    padding: 0 20px;
+   font-family: 'Georgia', serif; 
+   font-weight: bold;
+    font-size: 25px;
+    color: #4a2c2a;
+
+  
+   
+}
+
+/* --- The Grid --- */
+.book-grid {
+  display: grid;
+  /* Adjusts the number of books per row automatically */
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 60px;
+}
+
+/* --- The Individual Card --- */
+.book-cardsss {
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.2s ease;
+}
+
+
+
+/* --- Image Section --- */
+
+.image-wrapper {
+  width: 100%;
+  /* This creates the vertical book shape (Portrait) */
+  aspect-ratio: 3 / 4.2; 
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  background-color: #eee; /* Placeholder color while images load */
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-wrapper img:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* --- Text / Info Section --- */
+.book-infosss {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.book-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #5f6368;
+}
+
+.star-icon {
+  font-size: 14px;
+  margin-right: 4px;
+  color: #000; /* Matching the black stars in your image */
+}
+
+.rating-num {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.review-count {
+  color: #70757a;
+}
+
+
+.footer-btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 60px;
+}
+
+
+.btn-outline {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 12px 30px;
+    border: 1px solid #644444;
+    color: #4a4a4a;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+
+}
+
+.btn-outline:hover {
+    background-color: #4a4a4a;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+.footer-link {
+    text-decoration: none;
+    color: #f5f5f5; /* Or your preferred text color */
+    transition: color 0.10s ease, padding-left 0.3s ease;
+    display: inline-block;
+}
+
+.footer-link:hover {
+    color: #d5d0cb; /* Matches your button hover color */
+    /* Subtle movement to show it's clickable */
+}
+
+
+
+
+/*--------------GENRE PAGE ---------- */
+
+.homepage-genre {
+    background-color: #FDF5E6;
+      background: radial-gradient(ellipse at center, #fdfaf5 0%, #F0EDE5 60%, #e0d8c8 100%);
+    margin-top:100px
+}
+
+.genres-container {
+   display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left;
+    position: relative;
+    padding: 50px 100px 50px 150px;
+    gap: 0;   
+}
+
+.genre-3d-img1 {
+    width: 10px;
+    height: 10px;
+    left: 15%;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.genre-page-title {
+     font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    color: #312F2C;
+    letter-spacing: 0.04em;
+    line-height: 0.9;
+    margin: 0;
+}
+.genre-page-title span {
+    -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.5px rgba(26,18,8,0.18);
+}
+.genre-page-subtitle {
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: #312F2C;
+    opacity: 0.5;
+    letter-spacing: 0.22em;  /* space between letters */
+    margin-bottom: 12px; 
+}
+.genre-categories {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 60px;
+    padding: 0 0 50px 0;
+}
+
+.genre-categories a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.genre-card-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(#bbbab9,#cac1b0);
+    width:380px;
+    padding: 0 20px 20px 20px;
+    border-top-left-radius: 10%;
+    border-top-right-radius: 10%;
+    border-bottom-left-radius: 5%;
+    border-bottom-right-radius: 5%;
+     transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.genre-card {
+    background-color: #EDE3D3;
+    border: transparent;
+
+    border-top-left-radius: 10%;
+    border-top-right-radius: 10%;
+    cursor: pointer;
+   
+
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    color: #312F2C;
+    text-align: center;
+    padding: 20px;
+    width: 320px;
+    height: 400px;
+
+    overflow: hidden;
+    /* IMPORTANT */
+}
+.genre-card h2 {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    z-index: 10;
+    ;
+}
+
+.genre-info {
+    color: #312F2C;
+    font-size: 14px;
+    text-align: center;
+    width: 400px;
+}
+
+.genre-title {
+    font-family: 'Lora', serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #312F2C;
+    font-style: italic;
+    transition: color 0.5s ease;
+}
+
+.genre-description {
+    font-style: italic;
+    color: #312f2cb0;
+    transition: color 0.5s ease;
+}
+.card-Horror {
+    background-image: url('../resources/img/Horror.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease-in-out;
+}
+
+.card-fantasy {
+    background-image: url('https://static01.nyt.com/images/2019/05/22/arts/21thrones-notebook1/21thrones-notebook1-videoSixteenByNineJumbo1600-v2.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease-in-out;
+}
+
+.card-Thriller {
+    background-image: url('../resources/img/Thriller.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease-in-out;
+}
+
+.card-Science-Fiction {
+    background-image: url('../resources/img/Scifi.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease-in-out;
+}
+
+.card-Adventure {
+    background-image: url('../resources/img/Adventure.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease-in-out;
+}
+
+.card-drama {
+    background-image: url('../resources/img/Drama.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    display: block;
+    transition: transform 0.5s ease-in-out;
+}
+
+.card-fantasy::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.card-Horror:hover {
+    background-image: url('https://i.pinimg.com/originals/06/24/4c/06244cf7abad2d00577d25bfe61bca59.gif');
+}
+
+.card-fantasy:hover {
+    background-image: url('https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXE5MWdpaWE3YWd1dWk3OXp2eWxkbjl4d21sZjRmcGVjc214bmllcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kC2f897i83EK3BKUA4/giphy.gif');
+    
+}
+.card-Thriller:hover {
+    background-image: url('https://media1.tenor.com/m/rX0X1fGqGasAAAAC/crime-scene-investigation.gif');
+    
+}
+
+.card-Science-Fiction:hover {
+    background-image: url('https://i.pinimg.com/originals/6f/83/fd/6f83fd773a3fe6ed314bf1163c81a077.gif');
+    
+}
+
+.card-Adventure:hover {
+    background-image: url('https://i.pinimg.com/originals/a5/b6/d7/a5b6d7a271a9d74cff9e7b2a33bba985.gif');
+    
+}
+
+.card-drama:hover {
+    background-image: url('https://i.pinimg.com/originals/34/05/e4/3405e487cb62a9a0d65e9acfec81f856.gif');
+    
+}
+
+.bg-ripple {
+    position: fixed;
+    border-radius: 50%;
+    width: 300vmax;
+    height: 300vmax;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1),
+        opacity 0.6s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bg-ripple.active {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.bg-ripple-reverse {
+    z-index: -1;
+}
+
+.homepage-genre {
+    position: relative;
+}
+
+.homepage-genre .genres-container,
+.homepage-genre .genre-categories {
+    position: relative;
+    z-index: 1;
+}
+
+.bg-ripple.active~.genre-categories,
+.bg-ripple.active~.genres-container {
+    color: white;
+    transition: color 0.5s ease;
+}
+
+.bg-ripple.active~.genre-categories .genre-info,
+.bg-ripple.active~.genre-categories .genre-title,
+.bg-ripple.active~.genre-categories .genre-description {
+    color: white;
+}
+
+.text-white,
+.text-white h1,
+.text-white p,
+.text-white a,
+.text-white .material-symbols-outlined {
+    color: white !important;
+    transition: color 0.5s ease;
+}
+
+.text-white ul li a:after {
+    background: white !important;
+}
+/*--------------COLLECTIONS PAGE ---------- */
+
+
+.hero-section {
+      background: radial-gradient(ellipse at 40% 50%, 
+  #ffffff 0%, 
+  #F0EDE5 30%, 
+  #ece8e0 60%, 
+  #e4dfd6 100%
+);
+}
+
+.hero-container {
+    display: flex;
+    flex-direction: row;
+    padding: 130px 0px 0px 25px;
+    gap:160px;
+}
+
+.hero-overlay {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 60px 0px;
+}
+
+.hero-img {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    color: #312F2C;
+    font-family: 'Lora', serif;
+    font-size: 72px;
+    font-weight: 400;
+    letter-spacing: 2px;
+}
+
+.hero-subtitle {
+    color: #312f2c96;
+    font-family: 'Jost', sans-serif;
+    margin-top: -25px;
+}
+
+.hero-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: #312f2c91;
+    max-width: 400px;
+    margin-top: 30px;
+    padding-left: 20px;
+    border-left: 2px solid #3f2513;
+    line-height: 1.6;
+}
+
+/* Search Section */
+.search-section-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    margin: 40px auto;
+
+}
+
+.search {
+    --padding: 14px;
+    display: flex;
+    text-align: left;
+    border-radius: 28px;
+    align-items: center;
+    padding: var(--padding);
+    width: min(560px, 100%);
+    background-color: transparent;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    flex: 1 1 560px;
+    min-width: 250px;
+}
+
+.search input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    color: #333333;
+    font-family: 'Jost', sans-serif;
+    margin-left: var(--padding);
+    flex: 1;
+
+}
+
+.search input::placeholder {
+    color: #999999;
+}
+
+.search:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    scale: 1.02;
+}
+
+.search-button {
+    padding: 14px 25px;
+    background: transparent;
+    border: 1px solid #312F2C;
+    color: #312F2C;
+    border-radius: 30px;
+    font-family: "Jost", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    z-index: 50;
+}
+
+.search-button:hover {
+    background-color: transparent;
+    border: none;
+    transition: all 0.4s ease-in-out;
+    transform: scale(1.1);
+}
+
+.search-filters {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.search-filters-button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    border-radius: 16px;
+    display: flex;
+    padding: 10px 8px;
+    text-decoration: none;
+    transition: all 0.4s ease-in-out;
+    position: relative;
+    z-index: 20;
+}
+
+.search-filters-button:hover {
+    background-color: rgba(235, 165, 161, 0.05);
+    transform: scale(1.05);
+    transition: all 0.4s ease-in-out;
+}
+
+.search-filters-content {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    width: min(700px, 100%);
+    transition: all 0.4s ease-in-out;
+    background-color: #ffffff;
+    gap: 12px;
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+.search-filters-content a {
+    background-color: #312F2C;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+}
+
+.search-filters-content a:hover {
+    background-color: #aeaaa7;
+    color: #FDF5E6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.search-filters-button:hover {
+    display: flex;
+    text-decoration: none;
+    background-color: rgba(235, 165, 161, 0.05);
+}
+
+.search-filters-content.open {
+    max-height: 300px;
+    opacity: 1;
+    padding: 25px;
+    margin-top: 20px;
+    border: 1px solid rgba(74, 44, 42, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    height: auto;
+    pointer-events: auto;
+}
+
+.expandable-box {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.5s ease;
+    background: white;
+    position: relative;
+
+}
+
+.expandable-box.open {
+    max-height: 300px;
+    opacity: 1;
+    padding: 25px;
+    margin-top: 20px;
+    border: 1px solid rgba(74, 44, 42, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    height: auto;
+    pointer-events: auto;
+}
+
+.search-row-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.line {
+    display: flex;
+    height: auto;
+    flex-wrap: wrap;
+    position: relative;
+    gap: 12px;
+}
+
+#Genres {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    opacity: 0.8;
+    color: #312F2C;
+    margin-bottom: 5px;
+}
+
+/* Book Listings */
+#books-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 250px));
+    gap: 80px;
+    justify-items: center;
+    padding: 0 80px 20px;
+}
+
+.book-listing {
+    width: 100%;
+    min-height: 350px;
+    background-color: #fefefe;
+    border: 1px solid #e8e0d4;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.144);
+    gap: 10px;
+    border-radius: 12px;
+    padding: 1.5rem 1.5rem 2rem 1.5rem;
+    cursor: pointer;
+    max-height: 410px;
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+    animation: fade-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.book-listing a, .book-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.book-listing:hover {
+    box-shadow: 0 8px 30px rgba(74, 44, 42, 0.1);
+}
+
+.book-cover {
+    display: block;
+    width: 190px;
+    height: 270px;
+    object-fit: cover;
+    margin: 0 auto auto auto;
+    transition: transform 0.5s ease;
+    background: none;
+    z-index: 1;
+}
+.book-details {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #8b7d6b;
+}
+
+.book-title {
+    font-family: 'Lora', serif;
+    font-size: 1.125rem;
+    color: #312F2C;
+    margin: 0.25rem 0;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.book-listing:hover .book-title {
+    color: #928e87;
+}
+
+.book-author {
+    font-family: 'Cinzel', sans-serif;
+    font-size: 0.875rem;
+    color: #8b7d6b;
+    margin: 0;
+}
+
+.book-action {
+    margin-top: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-family: 'Times New Roman', serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #6b4542;
+}
+
+.book-listing:hover .book-action {
+    opacity: 1;
+}
+
+.add-to-cart {
+    font-family: 'Times New Roman', serif;
+    background-color: #312F2C;
+    color: #ffffff;
+    visibility: hidden;
+}
+
+.book-listing:hover .add-to-cart {
+    visibility: visible;
+    padding: 10px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.8s ease, color 0.8s ease;
+    transition: opacity 0.3s ease;
+    animation: slide-up 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 100%;
+    z-index: 10;
+
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(0px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+@keyframes fade-up {
+    from {
+        transform: scale(0.8);
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.book-Details {
+    display: hidden;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+    animation: fade-up 0.5s ease-in-out;
+}
+
+.book-Details.show {
+    display: flex;
+}
+
+.book-Details-content {
+    background-color: #ffffff;
+    width: 80%;
+    height: 90%;
+    border-radius: 15px;
+    position: relative;
+    margin: 3% auto;
+    display: flex;
+    align-items: center;
+}
+
+#close-button {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.book-Details-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.book-Details-book-info {
+    display: flex;
+    position: relative;
+    background-color: #fdf5e6;
+    width: 50%;
+    height: 100%;
+    padding: 20px 70px;
+    box-sizing: border-box;
+}
+
+#favoriteIcon {
+    border-radius: 50%;
+    left: 2%;
+    top: 4%;
+    position: absolute;
+    opacity: 0.6;
+    padding: 8px;
+    align-self: flex-start;
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1;
+}
+
+#favoriteIcon:hover {
+    background-color: transparent;
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+}
+
+.book-Details-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: left;
+    align-items: flex-start;
+}
