@@ -107,3 +107,77 @@ if (searchBtn && searchInput) {
     });
 }
 const BookSearchBtn = document.getElementById('BookSearchBtn');
+
+
+
+window.addEventListener('scroll', function () {
+    const scrollPos = window.scrollY;
+    const heroContent = document.querySelector('.authorPhoto-content');
+    const heroBg = document.querySelector('.authorPhoto-bg');
+
+    // 1. Fade out the text ("Amr Diab") as you scroll
+    if (heroContent) {
+        let opacity = 1 - (scrollPos / 300);
+        heroContent.style.opacity = opacity >= 0 ? opacity : 0;
+    }
+
+    // 2. Subtle Zoom/Parallax effect on the photo
+    if (heroBg) {
+        heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
+    }
+});
+
+
+
+
+
+
+// Author page 
+window.addEventListener('load', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const authorId = urlParams.get('id');
+
+    if (authorId && authorData[authorId]) {
+        const data = authorData[authorId];
+
+        // 1. Update Banner & About Sections
+        document.getElementById('author-name-heading').textContent = data.name;
+        document.getElementById('author-stats-sub').textContent = data.stats;
+        document.getElementById('about-title').textContent = data.aboutTitle;
+        document.getElementById('about-description').textContent = data.aboutText;
+
+        const banner = document.getElementById('dynamic-banner');
+        if (banner) {
+            banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url('${data.bannerImg}')`;
+        }
+
+        const aboutImg = document.getElementById('about-img');
+        if (aboutImg) aboutImg.src = data.profileImg;
+
+        // 2. Update Books Row with your EXACT CSS Structure
+        const bookRow = document.getElementById('books-container');
+        if (bookRow) {
+            bookRow.innerHTML = ''; // Clears static placeholders
+
+            data.books.forEach(book => {
+                // We use backticks (`) to create the exact HTML structure from your CSS
+                const bookHTML = `
+            <div class="book-container">
+                <img src="${book.cover}" class="book-img" alt="${book.title}">
+                
+                <div class="book-infosss">
+                    <div class="book-name">${book.title}</div>
+                    
+                    <div class="rating-row">
+                        <span class="star-icon">★</span>
+                        <span class="rating-num">${book.rating}</span>
+                        <span class="review-count">· ${book.reviews} reviews</span>
+                    </div>
+                </div>
+            </div>
+        `;
+                bookRow.insertAdjacentHTML('beforeend', bookHTML);
+            });
+        }
+    }
+});

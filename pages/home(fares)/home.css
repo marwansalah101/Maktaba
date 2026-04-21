@@ -1,3 +1,23 @@
+
+
+/* 1. The initial state (Hidden and shifted down) */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out; /* Smooth timing */
+}
+
+/* 2. The active state (Visible and in place) */
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.book-card:nth-child(2) { transition-delay: 0.2s; }
+.book-card:nth-child(3) { transition-delay: 0.4s; }
+.book-card:nth-child(4) { transition-delay: 0.6s; }
+
+
 .book-bg {
     height: 100vh;
 
