@@ -1,3 +1,376 @@
+/*--------------AUTHOR PAGE ---------- */
+
+
+
+.spotify-hero {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height:600px;
+    z-index: -1; /* This keeps it BEHIND the books when they slide up */
+    overflow: hidden;
+    background-color: #000;
+    
+}
+
+.authorPhoto-bg {
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url('../resources/Authors/nora-e1429382209389.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.1s linear; 
+}
+ 
+
+.authorPhoto-content {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    transition: opacity 0.3s ease;
+}
+
+
+.authorPhoto-content h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    margin-bottom: 5px;
+    letter-spacing: 4px;
+    font-weight: 400;
+}
+
+.authorPhoto-content p {
+    font-family: 'Georgia', serif;
+    font-size: 15px;
+    margin-top: 0;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+
+
+
+
+
+
+
+
+/* topRated-Books Section */
+
+.books-section {
+    background-color: #FDF5E6 !important; /* THE CREAM BACKGROUND */
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto 50px auto;
+}
+
+ .divider .line {
+    flex: 1;
+    height: 1px;
+    background-color: #d1cfcd;
+}
+
+ .divider .title {
+    padding: 0 20px;
+    
+    /* ADD THIS LINE */
+   font-family: 'Georgia', serif; 
+   font-weight: bold;
+    font-size: 25px;
+    color: #4a2c2a;
+    
+    /* AND THIS to remove the heavy boldness if needed */
+  
+   
+}
+
+/* THE FIX: Forcing books into one row and removing boxes */
+.books-row {
+    display: flex !important;
+    flex-direction: row !important; /* SIDE BY SIDE */
+    flex-wrap: nowrap !important;   /* NO STACKING */
+    justify-content: center;
+    align-items: flex-end;
+    gap: 75px;
+  
+    padding: 20px 0;
+   
+}
+
+.book-container {
+    flex: 0 0 170px; /* Fixed width for every book */
+    background: transparent !important; /* REMOVES THE WHITE BOX */
+    border: none !important;            /* REMOVES BORDERS */
+    padding: 0 !important;  
+    display: flex;
+    align-items: flex-end; /* Keeps them all sitting on the same 'floor' */
+    justify-content: center;            
+    
+}
+
+.book-img {
+    width: 250px;
+    height: auto;
+    display: block;
+    /* This shadow creates the 3D 'standing' effect */
+    filter: drop-shadow(-15px 10px 12px rgba(75, 28, 28, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.book-img:hover {
+    transform: translateY(-10px) scale(1.03);
+}
+
+
+
+
+
+ 
+/*........... about the author....*/
+
+
+
+
+.layered-section {
+    background-color: #312F2C;
+   height:450px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; /* Forces everything to the left */
+}
+
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    max-width: 1200px;
+    margin-top: 30px;
+    margin-left:30px;
+}
+
+/* 1. PHOTO ON THE LEFT */
+.photo-box {
+    position: relative;
+    z-index: 2;             /* Keeps photo on top layer */
+    flex: 0 0 400px;        /* Fixed width for the photo */
+}
+
+.photo-box img {
+   margin-left:40px;
+   margin-right:60px;
+    width: 100%;
+    height: auto;
+    display: block;
+    /* Shadow helps define the edge where it overlaps the text */
+   box-shadow: 20px 20px 60px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1); 
+}
+
+
+
+/* 2. TEXT BEHIND THE PHOTO */
+.text-box {
+    z-index: 1;             /* Lower layer than the photo */
+       /* THE MAGIC: Pulls text BEHIND the photo */
+    padding-left: 90px;    /* Offsets text so the words aren't fully hidden */
+    color: #F0EDE5;
+    max-width: 600px;
+}
+
+.text-box h2 {
+   font-family: 'serif'; /* Gives that classic library/book feel */
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #d4c4a8; /* Elegant gold/sand color for the title */
+    margin-bottom: 20px;
+}
+
+.text-box p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #F0EDE5;
+    margin-bottom: 20px;
+}
+
+.links {
+    color: #F0EDE5;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+
+
+/*------------------BOOK PAGE------------------*/
+
+
+
+/* --- Gallery Container --- */
+.gallery-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.divider #dividers{
+       display: flex;
+    align-items: center;
+    max-width: 1000px;
+    margin: 30px auto 45px auto;
+}
+
+.divider  #dividers .line {
+    flex: 1;
+    height: 1px;
+    background-color: #d1cfcd;
+}
+
+ .divider #dividers .title {
+  
+    padding: 0 20px;
+   font-family: 'Georgia', serif; 
+   font-weight: bold;
+    font-size: 25px;
+    color: #4a2c2a;
+
+  
+   
+}
+
+/* --- The Grid --- */
+.book-grid {
+  display: grid;
+  /* Adjusts the number of books per row automatically */
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 60px;
+}
+
+/* --- The Individual Card --- */
+.book-cardsss {
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.2s ease;
+}
+
+
+
+/* --- Image Section --- */
+
+.image-wrapper {
+  width: 100%;
+  /* This creates the vertical book shape (Portrait) */
+  aspect-ratio: 3 / 4.2; 
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  background-color: #eee; /* Placeholder color while images load */
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-wrapper img:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* --- Text / Info Section --- */
+.book-infosss {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.book-name {
+  font-size: 18px;
+  font-weight: 500;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #5f6368;
+}
+
+.star-icon {
+  font-size: 14px;
+  margin-right: 4px;
+  color: #000; /* Matching the black stars in your image */
+}
+
+.rating-num {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.review-count {
+  color: #70757a;
+}
+
+
+.footer-btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 60px;
+}
+
+
+.btn-outline {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 12px 30px;
+    border: 1px solid #644444;
+    color: #4a4a4a;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+
+}
+
+.btn-outline:hover {
+    background-color: #4a4a4a;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+.footer-link {
+    text-decoration: none;
+    color: #f5f5f5; /* Or your preferred text color */
+    transition: color 0.10s ease, padding-left 0.3s ease;
+    display: inline-block;
+}
+
+.footer-link:hover {
+    color: #d5d0cb; /* Matches your button hover color */
+    /* Subtle movement to show it's clickable */
+}
+
+
+
+
 /*--------------GENRE PAGE ---------- */
 
 .homepage-genre {
