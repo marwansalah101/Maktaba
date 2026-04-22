@@ -9,7 +9,7 @@
   justify-content: center;
   min-height: 100vh;
   padding: 24px;
-  background: #b8855a url("../resources/img/homePagePicture.jpg")
+  background: #b8855a url('../../resources/img/homePagePicture.jpg')
 }
 
 .Sign-in::before {
@@ -307,7 +307,7 @@
   justify-content: center;
   min-height: 100vh;
   padding: 24px;
-  background: #b8855a url('../resources/img/homePagePicture.jpg') center/cover no-repeat;
+  background: #b8855a url('../../resources/img/homePagePicture.jpg') center/cover no-repeat;
 }
 
 .Sign-in::before {
