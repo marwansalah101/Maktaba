@@ -1,4 +1,4 @@
-/*order succes*/
+﻿/*order succes*/
 const orderData = {
     items: [
         {
@@ -38,11 +38,12 @@ function renderOrder() {
         const price = parseFloat(item.price);
         total += price * qty;
 
+        const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
         const itemCard = document.createElement("div");
         itemCard.className = "order-item";
 
         itemCard.innerHTML = `
-            <img src="${item.image}" alt="${item.title}">
+            <img src="${basePath}${item.image}" alt="${item.title}">
             <div class="order-item-info">
                 <h4>${item.title}</h4>
                 <p>QTY: ${qty}</p>
@@ -137,10 +138,11 @@ function renderCart() {
         const price = parseFloat(book.price);
         subtotal += price * qty;
 
+        const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
         const item = document.createElement('div');
         item.className = 'cart-item';
         item.innerHTML = `
-            <img class="cart-item-img" src="${book.image}" alt="${book.title}">
+            <img class="cart-item-img" src="${basePath}" alt="">
             <div class="cart-item-info">
                 <h3>${book.title}</h3>
                 <p>${book.author}</p>
@@ -166,7 +168,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function () {
-            window.location.href = 'Checkout.html';
+            const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
+            window.location.href = basePath + 'pages/checkout(Rojeh)/checkout.html';
         });
     }
 });
@@ -190,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (cart.length === 0) {
             list.innerHTML = '<p style="color:#aaa;font-size:13px;padding:10px 0;">Your cart is empty.</p>';
         } else {
+            const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
             list.innerHTML = cart.map(item => {
                 const qty = item.qty || 1;
                 const price = parseFloat(item.price);
@@ -197,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return `
                     <div class="checkout-order-item">
                         <img class="checkout-book-cover"
-                             src="${item.image || ''}"
+                             src="${basePath}"
                              alt="${item.title}"
                              onerror="this.style.background='#d4c4b0';this.removeAttribute('src')">
                         <div class="checkout-item-info">
@@ -256,7 +260,8 @@ document.addEventListener('DOMContentLoaded', function () {
             country: document.getElementById('co-country').value
         }));
 
-        window.location.href = 'ordersucces.html';
+        const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
+        window.location.href = basePath + 'pages/checkout(Rojeh)/order-success.html';
     });
 });
 window.addEventListener('scroll', handleNavbarColorInversion);
@@ -317,11 +322,12 @@ function renderOrder() {
         const price = parseFloat(item.price);
         total += price * qty;
 
+        const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
         const itemCard = document.createElement("div");
         itemCard.className = "order-item";
 
         itemCard.innerHTML = `
-            <img src="${item.image}" alt="${item.title}">
+            <img src="${basePath}${item.image}" alt="${item.title}">
             <div class="order-item-info">
                 <h4>${item.title}</h4>
                 <p>QTY: ${qty}</p>
@@ -376,3 +382,5 @@ function renderFavs() {
         </div>
     `).join('');
 }
+
+

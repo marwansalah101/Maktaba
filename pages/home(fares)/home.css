@@ -21,7 +21,7 @@
 .book-bg {
     height: 100vh;
 
-    background-image: url('resources/img/052987e722712b613a758d07a56b21fb.jpg');
+    background-image: url('../../resources/img/052987e722712b613a758d07a56b21fb.jpg');
     background-size: cover;
     background-position: center;
     display: grid;
