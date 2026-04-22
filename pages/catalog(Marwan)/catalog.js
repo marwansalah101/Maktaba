@@ -72,14 +72,15 @@ if (container) {
 
         // We encode the title so spaces and special characters don't break the URL
         const bookParam = encodeURIComponent(book.title);
+        const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
 
         card.innerHTML = `
-      <a href="Product.html?title=${bookParam}" class="book-link">
-        <img class="book-cover" src="${book.image}" alt="${book.title}">
+      <a href="${basePath}pages/product(Marwan)/product.html?title=${bookParam}" class="book-link">
+        <img class="book-cover" src="${basePath}${book.image}" alt="${book.title}">
       </a>
       <button class="add-to-cart" type="button">Add to cart</button>
       <p class="book-details">${book.genre} | ${book.year}</p>
-      <a href="Product.html?title=${bookParam}" class="book-link">
+      <a href="${basePath}pages/product(Marwan)/product.html?title=${bookParam}" class="book-link">
         <h3 class="book-title">${book.title}</h3>
       </a>
       <p class="book-author">${book.author}</p>

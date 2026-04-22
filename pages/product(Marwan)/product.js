@@ -11,7 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('main-price').innerText = `$${selectedBook.price}`;
             document.getElementById('main-description').innerText = selectedBook.description;
             document.getElementById('main-quote').innerText = `"${selectedBook.quote}"`;
-            document.getElementById('main-image').src = selectedBook.image;
+
+            const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
+            document.getElementById('main-image').src = basePath + selectedBook.image;
             document.getElementById('main-image').alt = selectedBook.title;
             document.getElementById('main-year').innerText = selectedBook.year;
             document.getElementById('main-pages').innerText = `${selectedBook.pages} pages`;

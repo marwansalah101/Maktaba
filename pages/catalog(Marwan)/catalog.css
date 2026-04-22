@@ -17,7 +17,7 @@
     width: 100%;
     height: 100%;
     background-image: 
-        url('../resources/Authors/nora-e1429382209389.jpg');
+        url('../../resources/Authors/nora-e1429382209389.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -500,7 +500,7 @@
     transition: color 0.5s ease;
 }
 .card-Horror {
-    background-image: url('../resources/img/Horror.png');
+    background-image: url('../../resources/img/Horror.png');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -523,7 +523,7 @@
 }
 
 .card-Thriller {
-    background-image: url('../resources/img/Thriller.png');
+    background-image: url('../../resources/img/Thriller.png');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -535,7 +535,7 @@
 }
 
 .card-Science-Fiction {
-    background-image: url('../resources/img/Scifi.png');
+    background-image: url('../../resources/img/Scifi.png');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -547,7 +547,7 @@
 }
 
 .card-Adventure {
-    background-image: url('../resources/img/Adventure.png');
+    background-image: url('../../resources/img/Adventure.png');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -559,7 +559,7 @@
 }
 
 .card-drama {
-    background-image: url('../resources/img/Drama.png');
+    background-image: url('../../resources/img/Drama.png');
     background-size: cover;
     background-position: center;
     position: relative;
