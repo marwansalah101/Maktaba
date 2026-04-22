@@ -110,6 +110,12 @@ const BookSearchBtn = document.getElementById('BookSearchBtn');
 
 
 
+
+
+
+
+
+// Author page scroll effects
 window.addEventListener('scroll', function () {
     const scrollPos = window.scrollY;
     const heroContent = document.querySelector('.authorPhoto-content');
