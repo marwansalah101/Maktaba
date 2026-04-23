@@ -199,6 +199,279 @@
 
 
 
+
+
+
+/* Book Cards Expanding Carousel Styles */
+
+.font-cards-section {
+    margin: 60px 0;
+    padding: 0 20px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.font-cards-container {
+    display: flex;
+    gap: 4px;
+    height: 400px;
+    background: transparent;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+    justify-content: center;
+}
+
+.font-card {
+    position: relative;
+    flex: 1;
+    background: transparent;
+    border:3px solid rgba(23, 22, 22, 0.1);
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px;
+    min-width: 80px;
+    border-radius: 15px;
+}
+
+/* Default state - all cards are narrow */
+.font-card:not(:hover) {
+    flex: 1;
+}
+
+/* Hover state - expanded card */
+.font-card:hover {
+    flex: 3;
+    background: #312F2C;
+    color: #f9f9f9;
+}
+
+.font-card:not(:hover) {
+    color: #312F2C;
+}
+
+/* Header section with number and availability */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: absolute;
+    top: 16px;
+    left: 12px;
+    right: 12px;
+    z-index: 2;
+}
+
+.card-number {
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.7;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.availability-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.availability-badge.available {
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+}
+
+.availability-badge.unavailable {
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+}
+
+/* Genre label */
+.genre-label {
+    position: absolute;
+    top: 50px;
+    right: 12px;
+    background: #312F2C;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    z-index: 2;
+}
+
+.font-card:hover .genre-label {
+    background: rgba(255, 255, 255, 0.9);
+    color: #312F2C;
+}
+
+/* Book cover image */
+.book-cover {
+    
+    height: 280px;
+    object-fit: cover;
+    margin-top: 50px;
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    border-radius: 4px;
+}
+
+.font-card:not(:hover) .book-cover {
+    height: 200px;
+    margin-top: 100px;
+}
+
+/* Title and author section */
+.card-title-section {
+    position: absolute;
+    bottom: 16px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    transition: all 0.1s ease;
+    margin-bottom: 4px;
+}
+
+.card-author {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: all 0.1s ease;
+}
+
+.font-card:not(:hover) .card-title {
+    font-size: 12px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 120px;
+}
+
+.font-card:not(:hover) .card-author {
+    font-size: 10px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 80px;
+}
+
+/* Price display */
+.card-price {
+    position: absolute;
+    bottom: 60px;
+    right: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    color: #312F2C;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.font-card:hover .card-price {
+    opacity: 1;
+}
+
+.font-card:hover .card-price::before {
+    content: '$';
+    font-size: 12px;
+}
+
+/* Remove unused styles */
+.card-arrow {
+    display: none;
+}
+
+/* Hover effects */
+.font-card:not(:hover):hover {
+    transform: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .font-cards-container {
+        height: 300px;
+        gap: 2px;
+    }
+    
+    .font-card {
+        padding: 12px 8px;
+        min-width: 50px;
+    }
+    
+    .book-cover {
+        height: 200px;
+        margin-top: 60px;
+    }
+    
+    .font-card:not(:hover) .book-cover {
+        height: 140px;
+        margin-top: 80px;
+    }
+    
+    .card-title {
+        font-size: 14px;
+    }
+    
+    .card-author {
+        font-size: 12px;
+    }
+    
+    .font-card:not(:hover) .card-title {
+        font-size: 10px;
+    }
+    
+    .font-card:not(:hover) .card-author {
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .font-cards-section {
+        padding: 0 10px;
+        margin: 40px 0;
+    }
+    
+    .font-cards-container {
+        height: 250px;
+    }
+    
+    .book-cover {
+        height: 160px;
+        margin-top: 50px;
+    }
+    
+    .font-card:not(:hover) .book-cover {
+        height: 100px;
+        margin-top: 60px;
+    }
+}
+
 /*------------------CAROUSEL(NEW RELEASE)------------------*/
 
 .carousel-wrapper {

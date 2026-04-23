@@ -243,6 +243,10 @@ window.addEventListener('scroll', function () {
 
 
 
+ 
+
+
+
 
 
 
@@ -295,3 +299,9 @@ window.addEventListener('load', function () {
         }
     }
 });
+
+
+
+
+
+
