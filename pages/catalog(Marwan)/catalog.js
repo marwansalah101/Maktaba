@@ -65,8 +65,19 @@ if (ripple) {
 /// COLLECTION PAGE
 const container = document.getElementById("books-container");
 
-if (container) {
-    Books.forEach(book => {
+// --- DYNAMIC RENDERING OF BOOKS ---
+// This function creates HTML elements for every book object in the provided array.
+// It maps the properties (cover image, title, author, etc.) to the respective card areas.
+function renderBooks(booksToRender) {
+    if (!container) return;
+    container.innerHTML = '';
+    
+    if (booksToRender.length === 0) {
+        container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; font-size: 1.2rem;">No books found.</p>';
+        return;
+    }
+
+    booksToRender.forEach(book => {
         const card = document.createElement("div");
         card.classList.add("book-listing");
 
@@ -83,12 +94,71 @@ if (container) {
       <a href="${basePath}pages/product(Marwan)/product.html?title=${bookParam}" class="book-link">
         <h3 class="book-title">${book.title}</h3>
       </a>
-      <p class="book-author">${book.author}</p>
+      <a href="#" class="book-author" style="text-decoration:none; cursor:pointer;">${book.author}</a>
     `;
+
+        // --- ADD TO CART & BAG ANIMATION LOGIC ---
+        // Attaches a click event listener to the "Add to cart" button for each book.
+        // Creates a floating "+1" tag animation over the navbar shopping bag icon
+        // and safely stores the user's selected book in the localStorage 'cart' array.
+        const addToCartBtn = card.querySelector('.add-to-cart');
+        addToCartBtn.addEventListener('click', (e) => {
+            // Cart animation logic
+            const bagIcon = document.querySelector('.navbar-icons .material-symbols-outlined');
+            if (bagIcon) {
+                const plusOne = document.createElement('div');
+                plusOne.textContent = '+1';
+                plusOne.style.position = 'absolute';
+                plusOne.style.color = '#fff';
+                plusOne.style.backgroundColor = '#d32f2f';
+                plusOne.style.borderRadius = '50%';
+                plusOne.style.padding = '2px 6px';
+                plusOne.style.fontSize = '12px';
+                plusOne.style.fontWeight = 'bold';
+                plusOne.style.zIndex = '1000';
+                plusOne.style.pointerEvents = 'none';
+                
+                // Get bag icon position
+                const rect = bagIcon.getBoundingClientRect();
+                plusOne.style.left = (rect.left + window.scrollX) + 'px';
+                plusOne.style.top = (rect.top + window.scrollY - 10) + 'px';
+                
+                document.body.appendChild(plusOne);
+                
+                // Animate
+                let start = null;
+                function animate(timestamp) {
+                    if (!start) start = timestamp;
+                    const progress = timestamp - start;
+                    const shiftY = Math.min(progress / 5, 40); // Move up to 40px
+                    plusOne.style.top = (rect.top + window.scrollY - 10 - shiftY) + 'px';
+                    plusOne.style.opacity = 1 - (progress / 1000); // Fade out over 1s
+                    
+                    if (progress < 1000) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        plusOne.remove();
+                    }
+                }
+                requestAnimationFrame(animate);
+                
+                // Actual add to cart logic would go here
+                let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                cart.push(book);
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+        });
 
         container.appendChild(card);
     });
 }
+
+if (container) {
+    renderBooks(Books);
+}
+
+// --- FILTER MENU TOGGLE ---
+// Opens and closes the expandable filter box where users can select genres.
 const btn = document.getElementById('toggleBtn');
 const box = document.getElementById('expandBox');
 
@@ -98,13 +168,50 @@ if (btn && box) {
         console.log("Filter menu toggled!");
     });
 }
-// Search button
+
+// --- GENRE FILTERING (CRITERIA) ---
+// Captures clicks on genres inside the filter box and filters the 'Books' array
+// based on the selected genre. Then it overrides rendering using only the matched books.
+const filterLinks = document.querySelectorAll('#expandBox .line a');
+if (filterLinks.length > 0) {
+    filterLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const genre = e.target.textContent.trim().toLowerCase();
+            const filteredBooks = Books.filter(book => book.genre.toLowerCase() === genre);
+            renderBooks(filteredBooks);
+        });
+    });
+}
+
+// --- DYNAMIC SEARCH FUNCTIONALITY ---
+// Enables users to query books instantly based on title, author, or genre criteria.
+// It watches both 'click' action on the designated search button and live 'input' typing events
+// upon the search box so updates fetch synchronously.
 const searchBtn = document.getElementById('searchBtn');
 const searchInput = document.querySelector('.search-input');
 
 if (searchBtn && searchInput) {
+    // Search on button click
     searchBtn.addEventListener('click', () => {
-        const query = searchInput.value.trim();
+        const query = searchInput.value.trim().toLowerCase();
+        const filteredBooks = Books.filter(book => 
+            book.title.toLowerCase().includes(query) || 
+            book.author.toLowerCase().includes(query) ||
+            book.genre.toLowerCase().includes(query)
+        );
+        renderBooks(filteredBooks);
+    });
+
+    // Also support typing
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        const filteredBooks = Books.filter(book => 
+            book.title.toLowerCase().includes(query) || 
+            book.author.toLowerCase().includes(query) ||
+            book.genre.toLowerCase().includes(query)
+        );
+        renderBooks(filteredBooks);
     });
 }
 const BookSearchBtn = document.getElementById('BookSearchBtn');
