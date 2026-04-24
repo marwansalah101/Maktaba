@@ -83,134 +83,8 @@ const BookSearchBtn = document.getElementById('BookSearchBtn');
 
 
 
-// Genre tab background
-const ripple = document.getElementById('bgRipple');
 
-if (ripple) {
-    const genreCards = document.querySelectorAll('.genre-card[data-color]');
-    const genresContainer = document.querySelector('.genres-container');
-    const navbar = document.querySelector('.navbar');
-    let currentCard = null;
 
-    genreCards.forEach(card => {
-        card.addEventListener('mouseenter', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-
-            ripple.classList.remove('active');
-            void ripple.offsetWidth;
-
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-            ripple.style.backgroundColor = card.dataset.color;
-
-            ripple.classList.add('active');
-
-            // Turn text white
-            if (genresContainer) genresContainer.classList.add('text-white');
-            if (navbar) navbar.classList.add('text-white');
-
-            currentCard = card;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            const rect = card.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-
-            // Remove the colored ripple
-            ripple.classList.remove('active');
-
-            // Revert text color
-            if (genresContainer) genresContainer.classList.remove('text-white');
-            if (navbar) navbar.classList.remove('text-white');
-
-            // Create a second ripple that spreads the original bg color
-            const reverseRipple = document.createElement('div');
-            reverseRipple.classList.add('bg-ripple', 'bg-ripple-reverse');
-            reverseRipple.style.left = x + 'px';
-            reverseRipple.style.top = y + 'px';
-            reverseRipple.style.backgroundColor = '#F0EDE5';
-            document.querySelector('.homepage-genre').appendChild(reverseRipple);
-
-            // Trigger the animation
-            void reverseRipple.offsetWidth;
-            reverseRipple.classList.add('active');
-
-            // Remove after animation completes
-            reverseRipple.addEventListener('transitionend', () => {
-                reverseRipple.remove();
-            });
-
-            currentCard = null;
-        });
-    });
-}
-const container = document.getElementById("books-container");
-
-if (container) {
-    Books.forEach(book => {
-        const card = document.createElement("div");
-        card.classList.add("book-listing");
-
-        // We encode the title so spaces and special characters don't break the URL
-        const bookParam = encodeURIComponent(book.title);
-        const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
-
-        card.innerHTML = `
-      <a href="${basePath}pages/product(Marwan)/product.html?title=${bookParam}" class="book-link">
-        <img class="book-cover" src="${basePath}${book.image}" alt="${book.title}">
-      </a>
-      <button class="add-to-cart" type="button">Add to cart</button>
-      <p class="book-details">${book.genre} | ${book.year}</p>
-      <a href="${basePath}pages/product(Marwan)/product.html?title=${bookParam}" class="book-link">
-        <h3 class="book-title">${book.title}</h3>
-      </a>
-      <p class="book-author">${book.author}</p>
-    `;
-
-        container.appendChild(card);
-    });
-}
-/*PRODUCT PAGE*/
-document.addEventListener("DOMContentLoaded", () => {
-    const params = new URLSearchParams(window.location.search);
-    const bookTitle = params.get('title');
-
-    if (bookTitle && typeof Books !== 'undefined') {
-        const selectedBook = Books.find(b => b.title === bookTitle);
-
-        if (selectedBook) {
-            document.getElementById('main-title').innerText = selectedBook.title;
-            document.getElementById('main-author').innerText = selectedBook.author;
-            document.getElementById('main-price').innerText = `$${selectedBook.price}`;
-            document.getElementById('main-description').innerText = selectedBook.description;
-            document.getElementById('main-quote').innerText = `"${selectedBook.quote}"`;
-
-            const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
-            document.getElementById('main-image').src = basePath + selectedBook.image;
-            document.getElementById('main-image').alt = selectedBook.title;
-            document.getElementById('main-year').innerText = selectedBook.year;
-            document.getElementById('main-pages').innerText = `${selectedBook.pages} pages`;
-            document.getElementById('main-language').innerText = selectedBook.language;
-            document.getElementById('main-ISBN').innerText = selectedBook.ISBN;
-
-            // --- Availability Logic ---
-            const availabilityEl = document.getElementById('main-availability');
-            if (selectedBook.available) {
-                availabilityEl.innerText = "In Stock";
-                availabilityEl.style.color = "#24d31e"; // Green
-            } else {
-                availabilityEl.innerText = "Out of Stock";
-                availabilityEl.style.color = "#d32424"; // Red
-            }
-
-        } else {
-            document.querySelector('.product-page').innerHTML = "<h1>Book not found</h1>";
-        }
-    }
-});
 
 /*order succes*/
 const orderData = {
@@ -315,25 +189,23 @@ function renderFavs() {
 }
 
 /* Make navbar items white over dark backgrounds globally */
+/* Dark sections that trigger white navbar: .book-bg (hero), .between-carouselss (ticker), .about-us, .site-footer */
 function handleNavbarColorInversion() {
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
 
-    // Add any dark sections you want the navbar to invert over here
-    const darkSections = document.querySelectorAll('.site-footer, .book-bg');
+    const darkSections = document.querySelectorAll('.book-bg, .between-carouselss, .about-us, .site-footer');
     const navRect = navbar.getBoundingClientRect();
 
     let isDark = false;
 
     darkSections.forEach(section => {
         const rect = section.getBoundingClientRect();
-        // Check if navbar vertically overlaps the dark section
         if (rect.top < navRect.bottom - 10 && rect.bottom > navRect.top + 10) {
             isDark = true;
         }
     });
 
-    // We shouldn't interfere if the user is hovering a specific genre card that relies on it manually
     const ripple = document.getElementById('bgRipple');
     const isRippleActive = ripple && ripple.classList.contains('active');
 
@@ -622,4 +494,31 @@ footerLinks.forEach(link => {
         }
     });
 });
+
+/* Active page indicator — highlights current page link in navbar */
+(function setActiveNavLink() {
+    function trySet() {
+        const navLinks = document.querySelectorAll('.navbar ul li a');
+        if (!navLinks.length) return false;
+
+        const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#')) return;
+
+            const linkPage = href.split('/').pop().toLowerCase();
+            const isHome = currentPage === '' || currentPage === 'home.html';
+
+            if (linkPage === currentPage || (isHome && linkPage === 'home.html')) {
+                link.classList.add('active-link');
+            }
+        });
+        return true;
+    }
+
+    if (!trySet()) {
+        document.addEventListener('DOMContentLoaded', trySet);
+    }
+})();
 
