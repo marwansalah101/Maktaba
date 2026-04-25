@@ -126,19 +126,18 @@ const authorData = {
         stats: "Nobel Prize in Literature Winner",
         aboutTitle: "ABOUT ERNEST HEMINGWAY",
         aboutText: "Ernest Hemingway was an American novelist, short-story writer, and journalist. His economical and understated style—which he termed the iceberg theory—had a strong influence on 20th-century fiction.",
-        // ENSURE THIS FILE EXISTS: ../resources/Authors/ernest-hemingway-banner.jpg
-        bannerImg: "../resources/Authors/ernest-hemingway-800-450.png", 
-        profileImg: "../resources/Authors/ernest-hemingway-800-450.png",
+        bannerImg: "../../resources/Authors/316be4d7f6292c317b66ec05778384b8.jpg",
+        profileImg: "../../resources/Authors/316be4d7f6292c317b66ec05778384b8.jpg",
         books: [
             { 
             title: "The Old Man ", 
-            cover: "../resources/Books/UglyLove.png",
+            cover: "../../resources/Books/UglyLove.png",
             rating: "4.8", 
             reviews: "4 m" 
         },
         { 
             title: "A Farewell to Arms", 
-            cover: "../resources/Books/UglyLove.png",
+            cover: "../../resources/Books/UglyLove.png",
             rating: "4.5", 
             reviews: "2 m" 
         }
@@ -151,11 +150,11 @@ const authorData = {
         stats: "21 Times RITA Awards Winner",
         aboutTitle: "ABOUT NORA ROBERTS",
         aboutText: "Nora Roberts is a Sunday Times and International best-selling author. Before writing fiction, Nora spent 11 years as a journalist.",
-        bannerImg: "../resources/Authors/nora-e1429382209389.jpg",
-        profileImg: "../resources/Authors/nora-e1429382209389.jpg",
+        bannerImg: "../../resources/Authors/433bdb5b8cded5ed38f147685934a840.jpg",
+        profileImg: "../../resources/Authors/433bdb5b8cded5ed38f147685934a840.jpg",
         books: [
-            { title: "The Shining", cover: "../resources/Books/TheShining.png" },
-            { title: "Journey to the Centre of the Earth", cover: "../resources/Books/JourneyToTheCentreOfTheEarth.png" }
+            { title: "The Shining", cover: "../../resources/Books/TheShining.png" },
+            { title: "Journey to the Centre of the Earth", cover: "../../resources/Books/JourneyToThe CentreOfTheEarth.png" }
         ]
     },
     "tolstoy": {
@@ -163,11 +162,11 @@ const authorData = {
         stats: "Russian author of War and Peace",
         aboutTitle: "ABOUT LEO TOLSTOY",
         aboutText: "Count Lev Nikolayevich Tolstoy was a Russian writer who is regarded as one of the greatest authors of all time.",
-        bannerImg: "../resources/Authors/9228c6e3-8ac3-459f-b9a7-d0e72a2d9311_1200x992.jpg",
-        profileImg: "../resources/Authors/9228c6e3-8ac3-459f-b9a7-d0e72a2d9311_1200x992.jpg",
+        bannerImg: "../../resources/Authors/e74a07ca003304accf7e73675621697e.jpg",
+        profileImg: "../../resources/Authors/e74a07ca003304accf7e73675621697e.jpg",
         books: [
-            { title: "War and Peace", cover: "../resources/Books/WarAndPeace.png" },
-            { title: "Anna Karenina", cover: "../resources/Books/AnnaKarenina.png" }
+            { title: "War and Peace", cover: "../../resources/Books/WarAndPeace.png" },
+            { title: "Anna Karenina", cover: "../../resources/Books/AnnaKarenina.png" }
         ]
     },
     "jeyamohan": {
@@ -175,10 +174,10 @@ const authorData = {
         stats: "Writer and Literary Critic",
         aboutTitle: "ABOUT B. JEYAMOHAN",
         aboutText: "B. Jeyamohan is an Indian Tamil and Malayalam language novelist and literary critic.",
-        bannerImg: "../resources/Authors/jeyamohan-banner.jpg",
-        profileImg: "../resources/Authors/jeyamohan-profile.jpg",
+        bannerImg: "../../resources/Authors/Tamil_writer_Jeyamohan.jpg",
+        profileImg: "../../resources/Authors/Tamil_writer_Jeyamohan.jpg",
         books: [
-            { title: "Vishnupuram", cover: "../resources/Books/Vishnupuram.png" }
+            { title: "Vishnupuram", cover: "../../resources/Books/Vishnupuram.png" }
         ]
     },
     "pratchett": {
@@ -186,36 +185,36 @@ const authorData = {
         stats: "English Fantasy Author",
         aboutTitle: "ABOUT TERRY PRATCHETT",
         aboutText: "Sir Terry Pratchett was an English humorist and author of fantasy novels, best known for his Discworld series.",
-        bannerImg: "../resources/Authors/pratchett-banner.jpg",
-        profileImg: "../resources/Authors/pratchett-profile.jpg",
+        bannerImg: "../../resources/Authors/Terry-Pratchett-2011.webp",
+        profileImg: "../../resources/Authors/Terry-Pratchett-2011.webp",
         books: [
-            { title: "The Color of Magic", cover: "../resources/Books/ColorOfMagic.png" }
+            { title: "The Color of Magic", cover: "../../resources/Books/ColorOfMagic.png" }
         ]
     },
 
-     "Astrid": {
-        name: "Terry Pratchett",
-        stats: "English Fantasy Author",
-        aboutTitle: "ABOUT TERRY PRATCHETT",
-        aboutText: "Sir Terry Pratchett was an English humorist and author of fantasy novels, best known for his Discworld series.",
-        bannerImg: "../resources/Authors/pratchett-banner.jpg",
-        profileImg: "../resources/Authors/pratchett-profile.jpg",
+     "astrid-lindgren": {
+        name: "Astrid Lindgren",
+        stats: "Swedish Children's Author",
+        aboutTitle: "ABOUT ASTRID LINDGREN",
+        aboutText: "Astrid Lindgren was a Swedish author best known for creating beloved children's characters including Pippi Longstocking.",
+        bannerImg: "../../resources/Authors/Astrid_Lindgren_(cropped).jpg",
+        profileImg: "../../resources/Authors/Astrid_Lindgren_(cropped).jpg",
         books: [
-            { title: "The Color of Magic", cover: "../resources/Books/ColorOfMagic.png" }
+            { title: "Pippi Longstocking", cover: "../../resources/Books/UglyLove.png" }
         ]
     },
 
 
 
-     "Indira": {
-        name: "Terry Pratchett",
-        stats: "English Fantasy Author",
-        aboutTitle: "ABOUT TERRY PRATCHETT",
-        aboutText: "Sir Terry Pratchett was an English humorist and author of fantasy novels, best known for his Discworld series.",
-        bannerImg: "../resources/Authors/pratchett-banner.jpg",
-        profileImg: "../resources/Authors/pratchett-profile.jpg",
+     "indira-parthasarathy": {
+        name: "Indira Parthasarathy",
+        stats: "Renowned Tamil Playwright and Novelist",
+        aboutTitle: "ABOUT INDIRA PARTHASARATHY",
+        aboutText: "Indira Parthasarathy is an acclaimed Tamil writer known for his influential novels, plays, and modern literary voice.",
+        bannerImg: "../../resources/Authors/Dr. Indira Parthasarathy.gif",
+        profileImg: "../../resources/Authors/Dr. Indira Parthasarathy.gif",
         books: [
-            { title: "The Color of Magic", cover: "../resources/Books/ColorOfMagic.png" }
+            { title: "Kurudhippunal", cover: "../../resources/Books/UglyLove.png" }
         ]
     }
 };

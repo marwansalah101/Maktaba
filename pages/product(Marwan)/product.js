@@ -2,6 +2,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const bookTitle = params.get('title');
 
+    function addBookToCart(book) {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existingItem = cart.find((item) => item.title === book.title);
+
+        if (existingItem) {
+            existingItem.qty = (existingItem.qty || 1) + 1;
+        } else {
+            cart.push({ ...book, qty: 1 });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
     if (bookTitle && typeof Books !== 'undefined') {
         const selectedBook = Books.find(b => b.title === bookTitle);
 
@@ -9,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById('main-title').innerText = selectedBook.title;
             document.getElementById('main-author').innerText = selectedBook.author;
             document.getElementById('main-price').innerText = `$${selectedBook.price}`;
+            document.getElementById('main-genre').innerText = selectedBook.genre;
             document.getElementById('main-description').innerText = selectedBook.description;
             document.getElementById('main-quote').innerText = `"${selectedBook.quote}"`;
 
@@ -28,6 +42,15 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 availabilityEl.innerText = "Out of Stock";
                 availabilityEl.style.color = "#d32424"; // Red
+            }
+
+            const addToCartBtn = document.querySelector('.add-to-cart-btn');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', () => {
+                    addBookToCart(selectedBook);
+                    const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
+                    window.location.href = `${basePath}pages/checkout(Rojeh)/add-to-cart.html`;
+                });
             }
 
         } else {
