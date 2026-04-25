@@ -1,5 +1,35 @@
 // HOME PAGE 
 
+function getProductUrlFromHome(title) {
+    return `./pages/product(Marwan)/product.html?title=${encodeURIComponent(title)}`;
+}
+
+function normalizeAssetToken(value) {
+    const fileName = String(value || '').split('/').pop().split('\\').pop();
+    return fileName.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function findBookByImageSrc(src) {
+    if (!Array.isArray(Books)) return null;
+    const token = normalizeAssetToken(src);
+    return Books.find((book) => normalizeAssetToken(book.image) === token) || null;
+}
+
+function updateHomeStaticBookLinks() {
+    if (!Array.isArray(Books)) return;
+    const carouselAnchors = document.querySelectorAll('.Images-carousole a');
+
+    carouselAnchors.forEach((anchor) => {
+        const image = anchor.querySelector('img');
+        if (!image) return;
+
+        const matchedBook = findBookByImageSrc(image.getAttribute('src'));
+        if (!matchedBook) return;
+
+        anchor.href = getProductUrlFromHome(matchedBook.title);
+    });
+}
+
 
 /*  THE BUTTON JS  */
 const track = document.getElementById('track');
@@ -133,7 +163,7 @@ class BookCardsSlider {
         
         // Create the link wrapper
         const link = document.createElement('a');
-        link.href = './pages/product(Marwan)/product.html';
+        link.href = getProductUrlFromHome(data.title);
         link.className = 'card-link';
         link.style.textDecoration = 'none';
         link.style.color = 'inherit';
@@ -169,6 +199,7 @@ class BookCardsSlider {
 
 // Initialize the book cards slider when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    updateHomeStaticBookLinks();
     // Wait a bit to ensure Books data is loaded
     setTimeout(() => {
         new BookCardsSlider();
