@@ -248,16 +248,129 @@ window.addEventListener('scroll', function () {
 
 
 
+/*  Recent book (author page) */ 
 
+function normalizeSlug(value) {
+    return String(value || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
 
-// Author page 
+function normalizeTitle(value) {
+    return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function resolveBookByTitle(title) {
+    if (!Array.isArray(Books)) return null;
+    const exact = Books.find((book) => book.title === title);
+    if (exact) return exact;
+
+    const token = normalizeTitle(title);
+    return Books.find((book) => normalizeTitle(book.title) === token) || null;
+}
+
+function getProductUrl(title) {
+    const productPath = window.location.pathname.includes('/pages/')
+        ? '../product(Marwan)/product.html'
+        : './pages/product(Marwan)/product.html';
+    return `${productPath}?title=${encodeURIComponent(title)}`;
+}
+
+function addBookToCart(book) {
+    if (!book) return;
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existingItem = cart.find((item) => item.title === book.title);
+
+    if (existingItem) {
+        existingItem.qty = (existingItem.qty || 1) + 1;
+    } else {
+        cart.push({ ...book, qty: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function getAuthorDataById(authorId) {
+    if (!authorId || typeof authorData !== 'object') return null;
+
+    if (authorData[authorId]) return authorData[authorId];
+
+    const aliasMap = {
+        'ernest-hemingway': 'hemingway',
+        'leo-tolstoy': 'tolstoy',
+        'terry-pratchett': 'pratchett',
+        'nora-roberts': 'nora-roberts'
+    };
+
+    const aliasedKey = aliasMap[authorId];
+    if (aliasedKey && authorData[aliasedKey]) return authorData[aliasedKey];
+
+    const target = normalizeSlug(authorId);
+    const matchedKey = Object.keys(authorData).find((key) => normalizeSlug(key) === target);
+    return matchedKey ? authorData[matchedKey] : null;
+}
+
+function getRecentBooksForAuthor(authorName) {
+    if (!Array.isArray(Books)) return [];
+
+    if (!authorName) {
+        return Books.slice(0, 9);
+    }
+
+    const authorLower = authorName.toLowerCase();
+    const authorBooks = Books.filter((book) => String(book.author || '').toLowerCase() === authorLower);
+    return (authorBooks.length > 0 ? authorBooks : Books).slice(0, 9);
+}
+
+function renderRecentBooks(authorName) {
+    const grid = document.getElementById('recent-books-grid');
+    if (!grid || !Array.isArray(Books)) return;
+
+    const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
+    const booksToRender = getRecentBooksForAuthor(authorName);
+
+    grid.innerHTML = booksToRender.map((book) => {
+        const price = Number(book.price);
+        const formattedPrice = Number.isFinite(price) ? `$${price.toFixed(2)}` : `$${book.price}`;
+        const subLine = `${book.genre} / ${book.year}`;
+        const productUrl = getProductUrl(book.title);
+        return `
+            <article class="recent-book-card">
+                <a class="recent-book-link" href="${productUrl}">
+                    <div class="recent-book-header">
+                        <h3 class="recent-book-title">${book.title}</h3>
+                    </div>
+                    <div class="recent-book-image-wrap">
+                        <img src="${basePath}${book.image}" alt="${book.title}">
+                    </div>
+                </a>
+                <p class="recent-book-subline">${subLine}</p>
+                <div class="recent-book-meta">
+                    <div>
+                        <p class="recent-book-price">${formattedPrice}</p>
+                    </div>
+                    <button class="recent-book-add" data-title="${book.title}" type="button" aria-label="Add ${book.title} to cart">+</button>
+                </div>
+            </article>
+        `;
+    }).join('');
+
+    grid.querySelectorAll('.recent-book-add').forEach((button) => {
+        button.addEventListener('click', () => {
+            const selectedBook = Books.find((book) => book.title === button.dataset.title);
+            addBookToCart(selectedBook);
+        });
+    });
+}
+
+// Author page
 window.addEventListener('load', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const authorId = urlParams.get('id');
+    const data = getAuthorDataById(authorId);
 
-    if (authorId && authorData[authorId]) {
-        const data = authorData[authorId];
-
+    if (data) {
         // 1. Update Banner & About Sections
         document.getElementById('author-name-heading').textContent = data.name;
         document.getElementById('author-stats-sub').textContent = data.stats;
@@ -272,24 +385,26 @@ window.addEventListener('load', function () {
         const aboutImg = document.getElementById('about-img');
         if (aboutImg) aboutImg.src = data.profileImg;
 
-        // 2. Update Books Row with your EXACT CSS Structure
+        // 2. Update top-rated books row
         const bookRow = document.getElementById('books-container');
-        if (bookRow) {
-            bookRow.innerHTML = ''; // Clears static placeholders
+        if (bookRow && Array.isArray(data.books)) {
+            bookRow.innerHTML = '';
 
             data.books.forEach(book => {
-                // We use backticks (`) to create the exact HTML structure from your CSS
+                const matchedBook = resolveBookByTitle(book.title);
+                const targetTitle = matchedBook ? matchedBook.title : book.title;
+                const productUrl = getProductUrl(targetTitle);
                 const bookHTML = `
             <div class="book-container">
-                <img src="${book.cover}" class="book-img" alt="${book.title}">
-                
+                <a href="${productUrl}" class="book-link">
+                    <img src="${book.cover}" class="book-img" alt="${book.title}">
+                </a>
                 <div class="book-infosss">
-                    <div class="book-name">${book.title}</div>
-                    
+                    <a href="${productUrl}" class="book-link"><div class="book-name">${book.title}</div></a>
                     <div class="rating-row">
                         <span class="star-icon">★</span>
-                        <span class="rating-num">${book.rating}</span>
-                        <span class="review-count">· ${book.reviews} reviews</span>
+                        <span class="rating-num">${book.rating || '4.5'}</span>
+                        <span class="review-count">· ${book.reviews || '1 m'} reviews</span>
                     </div>
                 </div>
             </div>
@@ -298,6 +413,8 @@ window.addEventListener('load', function () {
             });
         }
     }
+
+    renderRecentBooks(data ? data.name : null);
 });
 
 
