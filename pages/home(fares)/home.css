@@ -206,7 +206,7 @@
 
 .font-cards-section {
     margin: 60px 0;
-    padding: 0 20px;
+    padding: 0 40px;
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
@@ -221,31 +221,33 @@
     list-style: none;
     margin: 0;
     justify-content: center;
+    max-width: 100%;
 }
 
 .font-card {
     position: relative;
     flex: 1;
     background: transparent;
-    border:3px solid rgba(23, 22, 22, 0.1);
+    border: 3px solid rgba(23, 22, 22, 0.1);
     cursor: pointer;
     transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     padding: 16px 12px;
-    min-width: 80px;
+    width:600px;
     border-radius: 15px;
 }
 
 /* Default state - all cards are narrow */
 .font-card:not(:hover) {
     flex: 1;
+   
 }
 
 /* Hover state - expanded card */
 .font-card:hover {
-    flex: 3;
+    flex: 2.5;
     background: #312F2C;
     color: #f9f9f9;
 }
@@ -325,11 +327,23 @@
     margin-top: 50px;
     transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     border-radius: 4px;
+    
+    
 }
 
 .font-card:not(:hover) .book-cover {
     height: 200px;
     margin-top: 100px;
+}
+
+.font-card:hover .book-cover{
+ 
+width:200px;
+height:250px;
+margin-left:100px;
+
+
+    
 }
 
 /* Title and author section */
@@ -1017,7 +1031,7 @@
     padding: 30px;
     margin-top: -40px;
     width: 100%;
-    height: 83%;
+    height: 100%;
     box-sizing: border-box;
 
 }
@@ -1124,3 +1138,484 @@
     /* Slightly smaller than the name for better look */
 
 }
+
+
+/* Dark Author Cards Carousel - Like the uploaded image */
+
+
+.dark-author-header {
+    display: flex;
+    margin-bottom: 40px;
+    text-align: right;
+  
+}
+
+.all-authors-link {
+    color: #312F2C;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: 'Georgia', serif;
+    transition: color 0.3s ease;
+    width: 99%; 
+    font-weight: bold;
+}
+
+.all-authors-link:hover {
+    color: #fff;
+}
+
+.dark-author-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* lw 3amaltaha be flex hatbooz*/
+    gap: 30px;
+}
+
+.dark-author-card {
+    
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.dark-author-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.dark-author-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.author-image-container {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+}
+
+.author-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.dark-author-card:hover .author-image-container img {
+    transform: scale(1.05);
+}
+
+.author-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 30px 20px 20px;
+    color: white;
+}
+
+.book-count {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.count-line {
+    width: 30px;
+    height: 2px;
+    background: #d4af37;
+    margin-right: 10px;
+}
+
+.count-text {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #d4af37;
+    text-transform: uppercase;
+}
+
+.author-details h3.author-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: white;
+    font-family: 'Playfair Display', serif;
+}
+
+.author-details p.author-description {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
+    line-height: 1.4;
+    font-family: 'Georgia', serif;
+}
+
+/* Responsive design for dark carousel */
+@media (max-width: 768px) {
+    .dark-author-carousel {
+        padding: 20px;
+        margin: 20px 10px 40px 10px;
+    }
+    
+    .dark-author-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .dark-author-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .author-image-container {
+        height: 250px;
+    }
+    
+    .author-details h3.author-name {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-subtitle {
+        font-size: 12px;
+    }
+    
+    .author-image-container {
+        height: 200px;
+    }
+    
+    .author-overlay {
+        padding: 20px 15px 15px;
+    }
+    
+    .author-details h3.author-name {
+        font-size: 18px;
+    }
+    
+    .author-details p.author-description {
+        font-size: 12px;
+    }
+}
+
+/* Additional CSS improvements for dark author carousel */
+.dark-author-carousel {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-subtitle {
+    line-height: 1.5;
+}
+
+.all-authors-link {
+    white-space: nowrap;
+}
+
+.dark-author-card {
+    position: relative;
+}
+
+.dark-author-card:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+.dark-author-card a {
+    width: 100%;
+    height: 100%;
+}
+
+.author-image-container {
+    background: #333;
+}
+
+.author-image-container img {
+    object-position: center;
+    display: block;
+}
+
+.author-overlay {
+    z-index: 2;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+}
+
+.count-line {
+    display: block;
+}
+
+.count-text {
+    font-family: 'Arial', sans-serif;
+}
+
+.author-details {
+    margin: 0;
+}
+
+.author-details h3.author-name {
+    line-height: 1.2;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+    .dark-author-header {
+        text-align: left;
+    }
+    
+    .dark-author-cards {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .author-details p.author-description {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dark-author-carousel {
+        padding: 15px;
+        margin: 15px 5px 30px 5px;
+    }
+    
+    .all-authors-link {
+        font-size: 12px;
+    }
+    
+    .dark-author-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .count-line {
+        width: 25px;
+    }
+    
+    .count-text {
+        font-size: 10px;
+    }
+}
+/* New Author Cards Carousel - Matching uploaded image design */
+.new-author-carousel {
+    margin: 40px 0 60px 0;
+    padding: 0;
+}
+
+.new-author-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.new-author-card {
+    position: relative;
+    height: 350px;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.new-author-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.new-author-card a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.author-image-bg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.author-card-overlay {
+   
+   
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 25px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    position: absolute;    /* Ensures it sits correctly over the background image */
+    top: 0;
+    left: 0;
+}
+
+.author-card-content {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    top: auto;
+    right: auto;
+    transform: none;
+    padding: 20px; /* Keeps text from touching the literal edge */
+    text-align: left;
+    width:100%;
+    background: none !important;
+}
+
+.author-card-name {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    line-height: 1.2;
+    text-align: left;
+    
+}
+
+.author-card-desc {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
+    line-height: 1.4;
+    font-family: 'Georgia', serif;
+    max-width: 250px;
+    text-align: left;
+}
+
+/* All Authors Button */
+.carousel-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 40px;
+    padding: 0 20px;
+}
+
+.all-authors-link-top {
+    color: #312F2C;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Georgia', serif;
+    transition: all 0.3s ease;
+}
+
+.all-authors-link-top:hover {
+    color: #666;
+    transform: translateX(5px);
+}
+
+.all-authors-button {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.all-authors-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: transparent;
+    border: 2px solid #312F2C;
+    color: #312F2C;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-family: 'Georgia', serif;
+}
+
+.all-authors-btn:hover {
+    background: #312F2C;
+    color: #FDF5E6;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(49, 47, 44, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .new-author-cards {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        padding: 0 15px;
+    }
+    
+    .new-author-card {
+        height: 300px;
+    }
+    
+    .author-card-overlay {
+        padding: 15px;
+    }
+    
+    .author-card-name {
+        font-size: 24px;
+    }
+    
+    .author-card-desc {
+        font-size: 13px;
+    }
+    
+    .book-count-badge {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .new-author-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 0 10px;
+    }
+    
+    .new-author-card {
+        height: 280px;
+    }
+    
+    .author-card-overlay {
+        padding: 12px;
+    }
+    
+    .author-card-name {
+        font-size: 22px;
+    }
+    
+    .author-card-desc {
+        font-size: 12px;
+        max-width: 200px;
+    }
+    
+    .book-count-badge {
+        font-size: 9px;
+        padding: 4px 8px;
+    }
+    
+    .all-authors-btn {
+        padding: 10px 25px;
+        font-size: 12px;
+    }
+}
+
+
+
+
+
+
+
+
+
+/* before FOOTER*/
+
