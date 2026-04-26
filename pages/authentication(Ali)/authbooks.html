@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Books</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="auth.css"></head>
+<script src="auth.js"></script>
+
+
+<body class="book-body">
+
+
+
+
+
+
+
+
+
+<!-- Overlay -->
+<div class="overlay" onclick="toggleMenu()"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>Books</h1>
+      <p>6 titles in the collection</p>
+    </div>
+
+    <button class="add-btn">+ Add Book</button>
+  </div>
+
+  <!-- Search -->
+  <input type="text" placeholder="🔍 Search books or authors..." class="search">
+
+  <!-- Table -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Cover</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Genre</th>
+          <th>Year</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td><span class="color-box yellow"></span></td>
+          <td>Palace Walk</td>
+          <td>Naguib Mahfouz</td>
+          <td><span class="tag">Historical Fiction</span></td>
+          <td>1956</td>
+          <td class="price">$12.99</td>
+          <td>24</td>
+          <td>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="color-box red"></span></td>
+          <td>The Cairo Trilogy</td>
+          <td>Naguib Mahfouz</td>
+          <td><span class="tag">Literary Fiction</span></td>
+          <td>1957</td>
+          <td class="price">$29.99</td>
+          <td>10</td>
+          <td>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="color-box green"></span></td>
+          <td>The Prophet</td>
+          <td>Khalil Gibran</td>
+          <td><span class="tag">Poetry / Philosophy</span></td>
+          <td>1923</td>
+          <td class="price">$8.99</td>
+          <td>45</td>
+          <td>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="color-box brown"></span></td>
+          <td>Broken Wings</td>
+          <td>Khalil Gibran</td>
+          <td><span class="tag">Romantic Fiction</span></td>
+          <td>1912</td>
+          <td class="price">$7.99</td>
+          <td>18</td>
+          <td>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="color-box blue"></span></td>
+          <td>Season of Migration to the North</td>
+          <td>Tayeb Salih</td>
+          <td><span class="tag">Postcolonial</span></td>
+          <td>1966</td>
+          <td class="price">$11.99</td>
+          <td>7</td>
+          <td>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
+          </td>
+        </tr>
+
+        <tr>
+          <td><span class="color-box purple"></span></td>
+          <td>Midaq Alley</td>
+          <td>Naguib Mahfouz</td>
+          <td><span class="tag">Social Realism</span></td>
+          <td>1947</td>
+          <td class="price">$10.99</td>
+          <td>31</td>
+          <td>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

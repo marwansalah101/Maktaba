@@ -85,6 +85,19 @@
         });
     }
 
+
+
+
+
+
+
+
+
+
+
+
+    
+
     function initSignup() {
         const form = document.getElementById('signupForm');
         if (!form) return;
@@ -194,3 +207,336 @@
     });
 
 })();
+
+
+/*--------------dashboard----------*/
+
+function goToAuthors() {
+  window.location.href = "http://127.0.0.1:5501/pages/authentication(Ali)/totalauth.html";
+}
+
+function goToBooks(){
+
+    window.location.href ="http://127.0.0.1:5501/pages/authentication(Ali)/authbooks.html"
+}
+
+
+function toggleMenu() {
+  document.getElementById("sidebar").classList.toggle("active");
+
+}
+
+
+/*---graph---*/
+
+window.addEventListener('load', function () {
+  const labels = ['Jul 24','Aug','Sep','Oct','Nov','Dec 24','Jan','Feb','Mar','Apr','May','Jun 25'];
+  const revenue = [1800,2200,3500,5200,3800,4100,3200,3600,4400,5000,5800,6200];
+  const sold = [40,55,90,130,95,105,80,90,110,125,145,155];
+
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Book Revenue',
+          data: revenue,
+          borderColor: '#C8A96E',
+          backgroundColor: 'rgba(200,169,110,0.15)',
+          borderWidth: 2, fill: true, tension: 0.45, pointRadius: 0
+        },
+        {
+          label: 'Orders',
+          data: sold.map(v => v * 35),
+          borderColor: '#3B5E2F',
+          backgroundColor: 'rgba(59,94,47,0.12)',
+          borderWidth: 2, fill: true, tension: 0.45, pointRadius: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v } }
+      }
+    }
+  });
+});
+
+/*---gener breakdown--*/
+
+window.addEventListener('load', function () {
+
+  const genres = [
+    { label: 'Historical Fiction',  pct: 28, color: '#C0392B' },
+    { label: 'Literary Fiction',    pct: 22, color: '#2471A3' },
+    { label: 'Poetry / Philosophy', pct: 18, color: '#1E8449' },
+    { label: 'Social Realism',      pct: 15, color: '#D4AC0D' },
+    { label: 'Romantic Fiction',    pct: 10, color: '#6C3483' },
+    { label: 'Post-colonial',       pct: 7,  color: '#784212' },
+  ];
+
+  const legend = document.getElementById('genreLegend');
+  if (legend) {
+    genres.forEach(g => {
+      legend.innerHTML += `
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="width:9px; height:9px; border-radius:50%; background:${g.color}; flex-shrink:0;"></div>
+            <span style="font-size:12px; color:#888;">${g.label}</span>
+          </div>
+          <span style="font-size:12px; font-weight:500;">${g.pct}%</span>
+        </div>`;
+    });
+  }
+
+  const genreCtx = document.getElementById('genreChart').getContext('2d');
+  new Chart(genreCtx, {
+    type: 'doughnut',
+    data: {
+      labels: genres.map(g => g.label),
+      datasets: [{
+        data: genres.map(g => g.pct),
+        backgroundColor: genres.map(g => g.color),
+        borderWidth: 2,
+        borderColor: '#fff',
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: false,       
+      maintainAspectRatio: true,
+      cutout: '60%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ${ctx.parsed}%`
+          }
+        }
+      }
+    }
+  });
+
+});
+
+
+/*----weekly visitors----*/
+
+window.addEventListener('load', function () {
+
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const visits = [320, 410, 350, 510, 600, 890, 430];
+
+  const peak = visits.indexOf(Math.max(...visits));
+  document.getElementById('peakDay').textContent = `${days[peak]}: ${visits[peak]}`;
+
+  const ctx = document.getElementById('visitorsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: days,
+      datasets: [{
+        label: 'Visitors',
+        data: visits,
+        backgroundColor: visits.map((v, i) => i === peak ? '#1B2E4B' : '#2C4A72'),
+        borderRadius: 4,
+        borderSkipped: false,
+        barPercentage: 0.5,
+        categoryPercentage: 0.6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} visitors` } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#888' }, border: { display: false } },
+        y: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, color: '#888', maxTicksLimit: 5 }, border: { display: false } }
+      }
+    }
+  });
+
+});
+
+
+
+/*-----top selling----*/
+
+window.addEventListener('load', function () {
+
+  const books = ['The Prophet','Palace Walk','The Cairo Trilogy','Midday Alley','Broken Wings'];
+  const units = [520, 480, 610, 390, 310];
+  const revenue = [4800, 5600, 8200, 3600, 2800];
+
+  const ctx = document.getElementById('topBooksChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: books,
+      datasets: [
+        {
+          label: 'Units Sold',
+          data: units,
+          backgroundColor: '#C8A96E',
+          borderRadius: 3,
+          borderSkipped: false,
+          barPercentage: 0.5,
+          categoryPercentage: 0.7
+        },
+        {
+          label: 'Revenue ($)',
+          data: revenue,
+          backgroundColor: '#3B5E2F',
+          borderRadius: 3,
+          borderSkipped: false,
+          barPercentage: 0.5,
+          categoryPercentage: 0.7
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 12, boxHeight: 12, padding: 12, font: { size: 12 }, color: '#888' }
+        },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, color: '#888' }, border: { display: false } },
+        y: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#888' }, border: { display: false } }
+      }
+    }
+  });
+
+});
+
+
+
+/*----matrics ---*/
+
+
+window.addEventListener('load', function () {
+
+  const metrics = [
+    { label: 'Avg. Order Value',   value: '$52.00', pct: 72, color: '#C8A96E' },
+    { label: 'Conversion Rate',    value: '3.8%',   pct: 38, color: '#3B5E2F' },
+    { label: 'Repeat Customers',   value: '61%',    pct: 61, color: '#2471A3' },
+    { label: 'Return Rate',        value: '4.2%',   pct: 42, color: '#C0392B' },
+  ];
+
+  const card = document.getElementById('quickMetricsCard');
+
+  let rows = '';
+  metrics.forEach((m, i) => {
+    const isLast = i === metrics.length - 1;
+    rows += `
+      <div style="margin-bottom:${isLast ? '0' : '16px'};">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span style="font-size:12px; color:#888;">${m.label}</span>
+          <span style="font-size:12px; font-weight:500;">${m.value}</span>
+        </div>
+        <div style="width:100%; height:4px; background:#f0f0f0; border-radius:2px;">
+          <div style="width:${m.pct}%; height:4px; border-radius:2px; background:${m.color};"></div>
+        </div>
+      </div>`;
+  });
+
+  card.innerHTML = `
+    <p style="font-size:14px; font-weight:500; margin:0 0 2px;">Quick Metrics</p>
+    <p style="font-size:11px; color:#888; margin:0 0 1.25rem;">Key performance indicators</p>
+    ${rows}
+  `;
+
+});
+
+
+/*----recent activity----*/
+
+window.addEventListener('load', function () {
+
+  const activities = [
+    { icon: '🛒', text: 'Order #1064 placed',           time: '2m ago'  },
+    { icon: '📦', text: '"The Prophet" restocked',       time: '9m ago'  },
+    { icon: '✍️', text: 'New author profile added',      time: '15m ago' },
+    { icon: '🛒', text: 'Order #1063 placed',            time: '41m ago' },
+    { icon: '⭐', text: '"Cairo Trilogy" got a review',  time: '1h ago'  },
+    { icon: '📦', text: 'Stock updated for 3 titles',    time: '1h ago'  },
+    { icon: '🛒', text: 'Order #1062 placed',            time: '1h ago'  },
+  ];
+
+  const card = document.getElementById('recentActivityCard');
+
+  let rows = '';
+  activities.forEach((a, i) => {
+    const isLast = i === activities.length - 1;
+    rows += `
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; padding:10px 0; ${isLast ? '' : 'border-bottom:0.5px solid #eee;'}">
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <div style="width:28px; height:28px; border-radius:50%; background:#f5f5f5; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;">${a.icon}</div>
+          <span style="font-size:12px; color:#333; padding-top:5px;">${a.text}</span>
+        </div>
+        <span style="font-size:11px; color:#888; white-space:nowrap; padding-top:6px;">${a.time}</span>
+      </div>`;
+  });
+
+  card.innerHTML = `
+    <p style="font-size:14px; font-weight:500; margin:0 0 2px;">Recent Activity</p>
+    <p style="font-size:11px; color:#888; margin:0 0 0.5rem;">Latest store events</p>
+    ${rows}
+  `;
+
+});
+
+/*----low stock-----*/
+
+window.addEventListener('load', function () {
+
+  const books = [
+    { title: 'Season of Migrat...', author: 'Salih',  color: '#2C3E50', left: 7,  danger: true  },
+    { title: 'The Cairo Trilogy',  author: 'Mahfouz', color: '#922B21', left: 10, danger: false },
+    { title: 'Broken Wings',       author: 'Gibran',  color: '#4A4A4A', left: 18, danger: false },
+    { title: 'Palace Walk',        author: 'Mahfouz', color: '#B7950B', left: 24, danger: false },
+    { title: 'Midaq Alley',        author: 'Mahfouz', color: '#6C3483', left: 31, danger: false },
+  ];
+
+  const card = document.getElementById('lowStockCard');
+
+  let rows = '';
+  books.forEach((book, i) => {
+    const isLast = i === books.length - 1;
+    const badgeColor = book.danger ? '#C0392B' : '#B7770D';
+    rows += `
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; ${isLast ? '' : 'border-bottom:0.5px solid #eee;'}">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:28px; height:36px; border-radius:3px; background:${book.color}; flex-shrink:0;"></div>
+          <div>
+            <p style="font-size:13px; font-weight:500; margin:0 0 2px;">${book.title}</p>
+            <p style="font-size:11px; color:#888; margin:0;">${book.author}</p>
+          </div>
+        </div>
+        <span style="font-size:11px; font-weight:500; color:${badgeColor};">${book.left} left</span>
+      </div>`;
+  });
+
+  card.innerHTML = `
+    <p style="font-size:14px; font-weight:500; margin:0 0 2px;">⚠️ Low Stock</p>
+    <p style="font-size:11px; color:#888; margin:0 0 1rem;">Titles needing restock</p>
+    ${rows}
+  `;
+
+});
+
+
