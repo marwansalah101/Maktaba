@@ -522,3 +522,41 @@ footerLinks.forEach(link => {
     }
 })();
 
+
+
+// Newsletter Form Submission
+document.addEventListener('DOMContentLoaded', () => {
+    const newsletterForm = document.getElementById('newsletterForm');
+    
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const emailInput = document.getElementById('newsletterEmail');
+            const email = emailInput.value.trim();
+            
+            if (email) {
+                // Show success message
+                const btn = newsletterForm.querySelector('.newsletter-btn');
+                const originalText = btn.textContent;
+                
+                btn.textContent = 'Subscribed!';
+                btn.style.backgroundColor = '#4CAF50';
+                btn.style.color = '#ffffff';
+                
+                // Reset form
+                emailInput.value = '';
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
+                }, 3000);
+                
+                // Here you would typically send the email to your backend
+                console.log('Newsletter subscription:', email);
+            }
+        });
+    }
+});
