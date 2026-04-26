@@ -60,53 +60,59 @@
         </div>
     </nav>
 
-    <!-- El Banner -->
-    <section class="hero-section">
-        <div class="hero-container">
-            <div class="hero-overlay">
-                <h1 class="hero-title">Collections</h1>
-                <p class="hero-subtitle">
-                    Browse through centuries of literature — search by title, author, or explore by genre.
-                </p>
-            </div>
+    <div class="collection-page">
 
-            <span class="hero-img">
-                <img src="../../resources/img/CollectionsImg.png" alt="Books" style="height:auto; width: 500px ">
-            </span>
+        <!-- Page header — text left, image right -->
+        <div class="collection-header">
+            <div class="collection-header-text">
+                <p class="collection-subtitle">— Browse</p>
+                <h1 class="collection-heading">All Books</h1>
+            </div>
+            <img class="collection-header-img" src="../../resources/img/CollectionsImg.png" alt="Maktaba Collection">
         </div>
 
-        <!-- hetet l search -->
-        <div class="search-section-container">
-            <div class="search-row-flex">
-                <div class="search">
-                    <span class="material-symbols-outlined">search</span>
-                    <input class="search-input" type="search" placeholder="Search for books...">
-                </div>
-                <button id="searchBtn" class="search-button" type="button">Search</button>
-                <button id="toggleBtn" class="search-filters-button" type="button">
-                    <span class="material-symbols-outlined">filter_list</span>
+        <!-- Controls bar: count | filters | sort | search -->
+        <div class="collection-controls">
+            <span class="collection-count" id="book-count"></span>
+            <div class="collection-actions">
+                <button id="toggleBtn" class="ctrl-btn">
+                    <span class="material-symbols-outlined">tune</span>
+                    Filters
                 </button>
-            </div>
-            <div id="expandBox" class="search-filters-content">
-                <div id="Genres">Genre</div>
-                <div class="line">
-                    <a href="#">Fiction</a>
-                    <a href="#">Mystery &amp; Thriller</a>
-                    <a href="#">Sci fi</a>
-                    <a href="#">Fantasy</a>
-                    <a href="#">Romance</a>
-                    <a href="#">Non-fiction</a>
-                    <a href="#">Biographies</a>
-                    <a href="#">Self-help</a>
-                    <a href="#">Religious books</a>
+                <div class="sort-wrapper">
+                    <button class="ctrl-btn" id="sortBtn">Sort by ▾</button>
+                    <div class="sort-panel" id="sortPanel">
+                        <a href="#" data-sort="default">Default</a>
+                        <a href="#" data-sort="price-asc">Price: Low → High</a>
+                        <a href="#" data-sort="price-desc">Price: High → Low</a>
+                        <a href="#" data-sort="title">Title A–Z</a>
+                    </div>
+                </div>
+                <div class="collection-search-wrap">
+                    <span class="material-symbols-outlined">search</span>
+                    <input class="search-input" id="searchBtn" type="search" placeholder="Search by title, author or genre…">
                 </div>
             </div>
         </div>
-    
-    <!-- grid -->
-    <div id="books-container" class="bookshelf-mode"></div>
 
-    </section>
+        <!-- Genre filter panel (toggled by #toggleBtn) -->
+        <div id="expandBox" class="collection-filters">
+            <p class="filter-label">Genre</p>
+            <div class="line">
+                <a href="#" data-genre="all" class="filter-active">All</a>
+                <a href="#" data-genre="Fantasy">Fantasy</a>
+                <a href="#" data-genre="Horror">Horror</a>
+                <a href="#" data-genre="Thriller">Thriller</a>
+                <a href="#" data-genre="Science-Fiction">Science Fiction</a>
+                <a href="#" data-genre="Adventure">Adventure</a>
+                <a href="#" data-genre="Drama">Drama</a>
+            </div>
+        </div>
+
+        <!-- Book grid -->
+        <div id="books-container" class="collection-grid"></div>
+
+    </div>
     
 
 <script src="../../data.js"></script>
