@@ -901,6 +901,125 @@ margin-left:100px;
 
 
 
+
+/* Book of the season section */
+
+.season-book-section {
+    background: #312F2C;
+    color: #f0ede5;
+    padding: 70px 6%;
+    border-bottom: 2px solid #F0EDE5;
+   
+}
+
+.season-book-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(260px, 360px) 1fr;
+    align-items: center;
+    gap: 70px;
+}
+
+.season-book-cover {
+    display: flex;
+    justify-content: center;
+}
+
+.season-book-cover img {
+    width: min(100%, 280px);
+    object-fit: contain;
+    filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.6));
+}
+
+.bouncing-book {
+    animation: book-bounce 2.2s ease-in-out infinite;
+    transform-origin: center bottom;
+}
+
+@keyframes book-bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-16px);
+    }
+}
+
+.season-label {
+    margin: 0 0 18px;
+    letter-spacing: 0.28em;
+    font-size: 0.68rem;
+    color: rgba(222, 207, 172, 0.82);
+}
+
+.season-book-details h2 {
+    margin: 0;
+    font-size: clamp(2.3rem, 7vw, 4.4rem);
+    line-height: 0.95;
+    font-family: 'Playfair Display', serif;
+    color: #f8f4e8;
+}
+
+.season-meta {
+    margin: 22px 0 14px;
+    font-size: 0.95rem;
+    color: rgba(240, 237, 229, 0.72);
+}
+
+.season-quote {
+    margin: 0;
+    max-width: 430px;
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    color: rgba(240, 237, 229, 0.84);
+}
+
+.season-price {
+    margin: 28px 0 22px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #decfac;
+}
+
+.season-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 170px;
+    height: 44px;
+    border: 1px solid #decfac;
+    color: #191816;
+    background: #decfac;
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.season-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 900px) {
+    .season-book-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .season-quote {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+
+
 /* ABOUT US  */
 
 .about-us {
@@ -1150,7 +1269,7 @@ margin-left:100px;
     padding: 32px 28px 36px;
  
    
-    height: 100%;
+    height: 90%;
 }
 
 .featured-authors-wrap {
@@ -1789,3 +1908,287 @@ margin-left:100px;
 
 /* before FOOTER*/
 
+
+
+/* ==================== ALL AUTHORS PAGE ==================== */
+
+.all-authors-page {
+    background-color: #F0EDE5;
+    min-height: 100vh;
+    padding: 40px 20px 80px 20px; /* byzbot elpage kolaha 3shan mataresh azbot elmargin fe kol 7aga */
+}
+
+/* Page Header */
+.all-authors-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-top: 70px;
+}
+
+.all-authors-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 400;
+    color: #312F2C;
+    margin: 0 0 15px 0;
+    line-height: 1.1;
+}
+
+.all-authors-subtitle {
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    color: #312F2C;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Search Bar */
+.author-search-container {
+    max-width: 550px;
+    margin: 50px auto 60px 420px;
+    
+    
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 60px;
+    color: #312F2C;
+    font-size: 24px;
+    pointer-events: none;
+}
+
+.author-search-input {
+    width: 100%;
+    padding: 16px 20px 16px 30px;
+    font-size: 16px;
+    font-family: 'Georgia', serif;
+    border: 1px solid #312F2C;
+    border-radius: 30px;
+    background: #312F2C;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.author-search-input:focus {
+    border-color: #4A3C38;
+    box-shadow: 0 4px 12px rgba(49, 47, 44, 0.1);
+}
+
+.author-search-input::placeholder {
+    color: #F0EDE5;
+    font-style: italic;
+}
+
+/* Authors Grid */
+.all-authors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    transition: opacity 0.3s ease;
+}
+
+/* Author Card */
+.author-grid-card {
+    position: relative;
+    height: 350px;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Fade in animation for author cards */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Stagger animation delay for each card */
+.author-grid-card:nth-child(1) { animation-delay: 0.05s; }
+.author-grid-card:nth-child(2) { animation-delay: 0.1s; }
+.author-grid-card:nth-child(3) { animation-delay: 0.15s; }
+.author-grid-card:nth-child(4) { animation-delay: 0.2s; }
+.author-grid-card:nth-child(5) { animation-delay: 0.25s; }
+.author-grid-card:nth-child(6) { animation-delay: 0.3s; }
+.author-grid-card:nth-child(7) { animation-delay: 0.35s; }
+.author-grid-card:nth-child(8) { animation-delay: 0.4s; }
+.author-grid-card:nth-child(9) { animation-delay: 0.45s; }
+.author-grid-card:nth-child(10) { animation-delay: 0.5s; }
+.author-grid-card:nth-child(11) { animation-delay: 0.55s; }
+.author-grid-card:nth-child(12) { animation-delay: 0.6s; }
+
+.author-grid-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.author-grid-card a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.author-grid-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.author-grid-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, transparent 100%);
+    padding: 30px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.author-grid-stats {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.stats-line {
+    width: 30px;
+    height: 2px;
+    background: #F0EDE5;
+    margin-right: 10px;
+}
+
+.stats-text {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #F0EDE5;
+    text-transform: uppercase;
+    font-family: 'Arial', sans-serif;
+}
+
+.author-grid-info {
+    margin: 0;
+}
+
+.author-grid-name {
+    font-size: 28px;
+    font-weight: 700;
+    color: #F0EDE5;
+    margin: 0 0 8px 0;
+    font-family: 'Playfair Display', serif;
+    line-height: 1.2;
+}
+
+.author-grid-desc {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
+    line-height: 1.4;
+    font-family: 'Georgia', serif;
+}
+
+/* No Results Message */
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+.no-results p {
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .all-authors-page {
+        padding: 20px 10px 60px 10px;
+    }
+    
+    .all-authors-header {
+        margin-bottom: 30px;
+        padding-top: 20px;
+    }
+    
+    .all-authors-title {
+        font-size: 2rem;
+    }
+    
+    .all-authors-subtitle {
+        font-size: 14px;
+    }
+    
+    .author-search-container {
+        margin-bottom: 40px;
+    }
+    
+    .all-authors-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 0 10px;
+    }
+    
+    .author-grid-card {
+        height: 350px;
+    }
+    
+    .author-grid-name {
+        font-size: 24px;
+    }
+    
+    .author-grid-desc {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .all-authors-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .author-grid-card {
+        height: 320px;
+    }
+    
+    .author-search-input {
+        padding: 14px 18px 14px 55px;
+        font-size: 14px;
+    }
+    
+    .search-icon {
+        left: 18px;
+        font-size: 20px;
+    }
+}

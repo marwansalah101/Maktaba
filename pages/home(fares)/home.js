@@ -205,3 +205,161 @@ document.addEventListener('DOMContentLoaded', () => {
         new BookCardsSlider();
     }, 100);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// All Authors Page JavaScript
+
+class AllAuthorsPage {
+    constructor() {
+        this.authorsData = authorData;
+        this.authorsGrid = document.getElementById('authorsGrid');
+        this.searchInput = document.getElementById('authorSearchInput');
+        this.noResults = document.getElementById('noResults');
+        
+        this.init();
+    }
+
+    init() {
+        this.renderAuthors();
+        this.setupSearch();
+    }
+
+    // Render all authors to the grid
+    renderAuthors(filteredAuthors = null) {
+        const authors = filteredAuthors || this.authorsData;
+        
+        // Fade out current cards
+        this.authorsGrid.style.opacity = '0';
+        this.authorsGrid.style.transition = 'opacity 0.2s ease';
+        
+        setTimeout(() => {
+            this.authorsGrid.innerHTML = '';
+
+            const authorKeys = Object.keys(authors);
+            
+            if (authorKeys.length === 0) {
+                this.showNoResults();
+                return;
+            }
+
+            this.hideNoResults();
+
+            authorKeys.forEach(key => {
+                const author = authors[key];
+                const authorCard = this.createAuthorCard(key, author);
+                this.authorsGrid.appendChild(authorCard);
+            });
+            
+            // Fade in new cards
+            this.authorsGrid.style.opacity = '1';
+            
+            // Trigger reflow to restart animations
+            void this.authorsGrid.offsetWidth;
+        }, 200);
+    }
+
+    // Create individual author card
+    createAuthorCard(authorId, author) {
+        const card = document.createElement('div');
+        card.className = 'author-grid-card';
+        
+        // Determine the correct image path
+        let imagePath = author.profileImg;
+        
+        // If the path starts with ../../, it's already correct for the AllAuthors page
+        // If not, we need to adjust it
+        if (!imagePath.startsWith('../../')) {
+            imagePath = '../../' + imagePath;
+        }
+
+        card.innerHTML = `
+            <a href="../catalog(Marwan)/authors.html?id=${authorId}">
+                <div class="author-grid-image" style="background-image: url('${imagePath}');">
+                    <div class="author-grid-overlay">
+                        <div class="author-grid-stats">
+                            <div class="stats-line"></div>
+                            <span class="stats-text">${author.books.length} BOOK${author.books.length !== 1 ? 'S' : ''}</span>
+                        </div>
+                        <div class="author-grid-info">
+                            <h3 class="author-grid-name">${author.name}</h3>
+                            <p class="author-grid-desc">${author.stats}</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        `;
+
+        return card;
+    }
+
+    // Setup search functionality
+    setupSearch() {
+        let searchTimeout;
+        
+        this.searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            
+            // Clear previous timeout
+            clearTimeout(searchTimeout);
+            
+            // Add small delay for better UX
+            searchTimeout = setTimeout(() => {
+                if (searchTerm === '') {
+                    this.renderAuthors();
+                    return;
+                }
+
+                const filteredAuthors = this.filterAuthors(searchTerm);
+                this.renderAuthors(filteredAuthors);
+            }, 200);
+        });
+    }
+
+    // Filter authors based on search term
+    filterAuthors(searchTerm) {
+        const filtered = {};
+        
+        Object.keys(this.authorsData).forEach(key => {
+            const author = this.authorsData[key];
+            const authorName = author.name.toLowerCase();
+            const authorStats = author.stats.toLowerCase();
+            
+            if (authorName.includes(searchTerm) || authorStats.includes(searchTerm)) {
+                filtered[key] = author;
+            }
+        });
+
+        return filtered;
+    }
+
+    // Show no results message
+    showNoResults() {
+        this.noResults.style.display = 'block';
+        this.authorsGrid.style.opacity = '1';
+    }
+
+    // Hide no results message
+    hideNoResults() {
+        this.noResults.style.display = 'none';
+    }
+}
+
+// Initialize the page when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new AllAuthorsPage();
+});
+
