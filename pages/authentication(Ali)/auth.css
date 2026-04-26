@@ -325,7 +325,7 @@
   z-index: 0;
 }
 
-.card {
+.signup-card {
   position: relative;
   z-index: 1;
   background: #F0EDE5;
@@ -350,7 +350,7 @@
   }
 }
 
-.card-brand {
+.signup-card-brand {
   font-family: 'Times New Roman', Times, serif;
   font-weight: 700;
   font-size: 40px;
@@ -363,7 +363,7 @@
   padding-right: 0.42em;
 }
 
-.card-title {
+.signup-card-title {
   font-family: 'Lora', serif;
   font-weight: 400;
   font-size: 26px;
@@ -372,7 +372,7 @@
   margin-bottom: 6px;
 }
 
-.card-subtitle {
+.signup-card-subtitle {
   font-family: 'Jost', sans-serif;
   font-weight: 300;
   font-size: 13px;
