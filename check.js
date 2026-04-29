@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 
 function walk(dir) {
@@ -26,7 +26,7 @@ htmlFiles.forEach(f => {
   if (imgs) {
     imgs.forEach(img => {
       const src = img.match(/src=['"]([^'"]*)['"]/i)[1];
-      if(src.startsWith('http') || src.startsWith('data:') || src === '') return;
+      if(src.startsWith('http') || src.startsWith('data:') || src === '' || src.includes('$' + '{')) return;
       const targetPath = path.resolve(path.dirname(f), src);
       if (!fs.existsSync(targetPath)) {
         errs.push('Broken Image: ' + src + ' expected at ' + targetPath);
@@ -39,7 +39,7 @@ htmlFiles.forEach(f => {
   if (scripts) {
     scripts.forEach(s => {
       const src = s.match(/src=['"]([^'"]*)['"]/i)[1];
-      if(src.startsWith('http') || src.startsWith('data:') || src === '') return;
+      if(src.startsWith('http') || src.startsWith('data:') || src === '' || src.includes('$' + '{')) return;
       const targetPath = path.resolve(path.dirname(f), src);
       if (!fs.existsSync(targetPath)) {
         errs.push('Broken Script: ' + src + ' expected at ' + targetPath);
