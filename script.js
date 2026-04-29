@@ -280,82 +280,7 @@ window.addEventListener("DOMContentLoaded", () => {
     showToast();
 });
 
-/*favorites*/ 
-const favoritesData = [
-    { category: "FICTION", title: "The Silent Garden", author: "Eleanor Voss", price: "24.00", img: "HarryPotter.jpg" },
-    { category: "MYSTERY", title: "Midnight Letters", author: "James Hartley", price: "19.00", img: "GreatGasby.jpg" },
-    { category: "SCI-FI", title: "Echoes of Tomorrow", author: "Sana Mirza", price: "29.00", img: "Dune.jpg" }
-];
 
-function renderFavs() {
-    const list = document.getElementById('fav-list');
-    if (!list) return;
-    
-    list.innerHTML = favoritesData.map(item => `
-        <div class="fav-item">
-            <img src="${item.img}" class="fav-img">
-            <div class="fav-info">
-                <div class="fav-category">${item.category}</div>
-                <h3 class="fav-title">${item.title}</h3>
-                <p class="fav-author">${item.author}</p>
-            </div>
-            <div class="fav-price">€${item.price}</div>
-            <div class="actions">
-                <button class="cart-btn">🛒</button>
-                <button class="heart-btn active" onclick="toggleHeart(this)">❤</button>
-            </div>
-        </div>
-    `).join('');
-}
-
-/* Make navbar items white over dark backgrounds globally */
-function handleNavbarColorInversion() {
-    const navbar = document.querySelector('.navbar');
-    if (!navbar) return;
-
-    // Add any dark sections you want the navbar to invert over here
-    const darkSections = document.querySelectorAll('.site-footer, .book-bg');
-    const navRect = navbar.getBoundingClientRect();
-    
-    let isDark = false;
-    
-    darkSections.forEach(section => {
-        const rect = section.getBoundingClientRect();
-        // Check if navbar vertically overlaps the dark section
-        if (rect.top < navRect.bottom - 10 && rect.bottom > navRect.top + 10) {
-            isDark = true;
-        }
-    });
-
-    // We shouldn't interfere if the user is hovering a specific genre card that relies on it manually
-    const ripple = document.getElementById('bgRipple');
-    const isRippleActive = ripple && ripple.classList.contains('active');
-
-    if (isDark) {
-        navbar.classList.add('text-white');
-    } else if (!isRippleActive) {
-        navbar.classList.remove('text-white');
-    }
-}
-
-window.addEventListener('scroll', handleNavbarColorInversion);
-window.addEventListener('DOMContentLoaded', handleNavbarColorInversion);
-window.addEventListener('resize', handleNavbarColorInversion);
-
-function toggleHeart(btn) {
-    btn.classList.toggle('active');
-}
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const hearts = document.querySelectorAll(".favorite-heart-btn");
-
-    hearts.forEach(btn => {
-        btn.addEventListener("click", function () {
-            this.classList.toggle("active");
-        });
-    });
-});
 /*favorites*/
 document.addEventListener("DOMContentLoaded", function () {
     const bagBtns = document.querySelectorAll(".favorite-bag-btn");
@@ -390,8 +315,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-/*add to cart* /
-/* ===== ADD TO CART PAGE JS ===== */
+//add to cart 
+
 
 const CART_SHIPPING = 5;
 
