@@ -1,0 +1,28 @@
+{
+  "name": "mactaba",
+  "version": "1.0.0",
+  "description": "",
+  "main": "data.js",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marwansalah101/Mactaba.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/marwansalah101/Mactaba/issues"
+  },
+  "homepage": "https://github.com/marwansalah101/Mactaba#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "jsdom": "^29.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
