@@ -15,19 +15,30 @@
 
 .authorPhoto-bg {
     width: 100%;
-    height: 100%;
-    background-image: 
-        url('../../resources/Authors/nora-e1429382209389.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    transition: transform 0.1s linear; 
+    min-height: 650px;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    position: relative;
+}
+
+/* Add gradient overlay as a pseudo-element instead of overriding background */
+.authorPhoto-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
  
 
 .authorPhoto-content {
     position: absolute;
-    top: 75%;
+    top: 77%;
     left: 17%;
     transform: translate(-50%, -50%);
     color: white;
@@ -166,8 +177,9 @@
 .photo-box {
     position: relative;
     z-index: 2;             /* Keeps photo on top layer */
-    flex: 0 0 400px;        /* Fixed width for the photo */
-    height: 520px;
+    flex: 0 0 500px;        /* Fixed width for the photo */
+    height: 320px;
+    
     overflow: hidden;
 }
 
