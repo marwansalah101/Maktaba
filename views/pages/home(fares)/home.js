@@ -94,6 +94,49 @@ document.addEventListener("DOMContentLoaded", function () {
     // Select all elements with the 'reveal' class and start watching them
     const hiddenElements = document.querySelectorAll(".reveal");
     hiddenElements.forEach((el) => observer.observe(el));
+
+    // Handle "Book of the Season" add to cart button
+    const seasonAddBtn = document.getElementById('seasonAddToCart');
+    if (seasonAddBtn) {
+        seasonAddBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Get book data from button attributes
+            const book = {
+                title: this.getAttribute('data-title'),
+                author: this.getAttribute('data-author'),
+                price: this.getAttribute('data-price'),
+                image: this.getAttribute('data-image'),
+                qty: 1
+            };
+
+            // Add to cart in localStorage
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(item => item.title === book.title);
+            if (existing) {
+                existing.qty = (existing.qty || 1) + 1;
+            } else {
+                cart.push(book);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Trigger fly-to-cart animation from the book cover
+            const bookCover = document.querySelector('.season-book-cover img');
+            if (bookCover) {
+                flyToCart(bookCover);
+            }
+
+            // Show button feedback
+            const originalText = this.textContent;
+            this.textContent = 'Added ✓';
+            this.style.background = '#5a4232';
+            setTimeout(() => {
+                this.textContent = originalText;
+                this.style.background = '';
+            }, 1200);
+        });
+    }
 });
 
 
