@@ -900,6 +900,42 @@
     letter-spacing: 0.01em;
 }
 
+.collection-heading-highlight {
+    position: relative;
+    display: inline-block;
+    isolation: isolate;
+    padding: 0 0.08em;
+    font-style: italic;
+}
+
+.collection-heading-highlight::before,
+.collection-heading-highlight::after {
+    content: '';
+    position: absolute;
+    left: -0.16em;
+    right: -0.10em;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #c9ab74 0%, #dcc08a 50%, #b99257 100%);
+    z-index: -1;
+    transform-origin: center;
+    box-shadow: 0 0.14em 0 rgba(88, 66, 35, 0.10);
+}
+
+.collection-heading-highlight::before {
+    top: 0.34em;
+    height: 0.46em;
+    transform: rotate(-1.8deg);
+}
+
+.collection-heading-highlight::after {
+    top: 0.62em;
+    left: -0.06em;
+    right: -0.22em;
+    height: 0.24em;
+    transform: rotate(1.2deg);
+    opacity: 0.95;
+}
+
 /* Controls bar */
 .collection-controls {
     display: flex;
@@ -1065,6 +1101,49 @@
     background: #312F2C;
     color: #ffffff;
     border-color: #312F2C;
+}
+
+.collection-more-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 30px 20px 60px;
+    border-bottom: 1px solid #d9d0c4;
+    background: linear-gradient(180deg, rgba(240, 237, 229, 0.4) 0%, rgba(240, 237, 229, 0.95) 100%);
+}
+
+.collection-more-btn {
+    position: relative;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #312F2C;
+    background: transparent;
+    border: 1px solid #312F2C;
+    padding: 14px 14px 14px 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 10px 24px rgba(49, 47, 44, 0.08);
+}
+
+.collection-more-btn::after {
+    content: '→';
+    margin-left: 10px;
+}
+
+.collection-more-btn:hover {
+    transform: translateY(-2px);
+    background: #312F2C;
+    color: #ffffff;
+    box-shadow: 0 14px 30px rgba(49, 47, 44, 0.12);
+    transition: transform 0.4s ease, background 0.4s ease-in-out, box-shadow 0.2s ease;
+}
+
+.collection-more-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
 }
 
 /* ── THE GRID ── */

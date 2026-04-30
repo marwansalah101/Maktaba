@@ -117,10 +117,21 @@ function flyToCart(sourceEl) {
    call renderBooks(getFilteredBooks()) independently.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const container = document.getElementById("books-container");
+const seeMoreBtn = document.getElementById('seeMoreBtn');
 
 let activeGenre = 'all';
 let activeSort  = 'default';
 let searchQuery = '';
+let visibleBookCount = 4;
+
+const BOOKS_PAGE_SIZE = 4;
+
+/* Check URL for genre parameter (from genre browse page) */
+const urlParams = new URLSearchParams(window.location.search);
+const genreParam = urlParams.get('genre');
+if (genreParam) {
+    activeGenre = genreParam;
+}
 
 /* Returns a sorted copy of the books array */
 function sortBooks(books) {
@@ -151,12 +162,19 @@ function renderBooks(booksToRender) {
     if (!container) return;
     container.innerHTML = '';
 
+    const visibleBooks = booksToRender.slice(0, visibleBookCount);
+
     // Update the "N Books" count label
     const countEl = document.getElementById('book-count');
-    if (countEl) countEl.textContent =
-        booksToRender.length + (booksToRender.length === 1 ? ' Book' : ' Books');
+    if (countEl) {
+        const totalLabel = booksToRender.length + (booksToRender.length === 1 ? ' Book' : ' Books');
+        countEl.textContent = visibleBooks.length < booksToRender.length
+            ? `${visibleBooks.length} of ${totalLabel}`
+            : totalLabel;
+    }
 
     if (booksToRender.length === 0) {
+        if (seeMoreBtn) seeMoreBtn.style.display = 'none';
         container.innerHTML =
             '<p style="grid-column:1/-1;text-align:center;padding:60px 0;font-family:Jost,sans-serif;font-size:14px;color:#8C7B75;">No books found.</p>';
         return;
@@ -164,7 +182,7 @@ function renderBooks(booksToRender) {
 
     const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
 
-    booksToRender.forEach(book => {
+    visibleBooks.forEach(book => {
         const card        = document.createElement('div');
         card.classList.add('book-listing');
 
@@ -229,6 +247,12 @@ function renderBooks(booksToRender) {
 
         container.appendChild(card);
     });
+
+    if (seeMoreBtn) {
+        const hasMore = visibleBooks.length < booksToRender.length;
+        seeMoreBtn.style.display = hasMore ? 'inline-flex' : 'none';
+        seeMoreBtn.disabled = !hasMore;
+    }
 }
 
 /* Initial render on page load */
@@ -240,12 +264,23 @@ if (container && typeof Books !== 'undefined') {
 /* data-genre attribute on each <a> drives the activeGenre state */
 const filterLinks = document.querySelectorAll('#expandBox .line a');
 if (filterLinks.length > 0) {
+    // Update active filter chip to match activeGenre
+    filterLinks.forEach(link => {
+        const linkGenre = link.dataset.genre || 'all';
+        if (linkGenre === activeGenre) {
+            link.classList.add('filter-active');
+        } else {
+            link.classList.remove('filter-active');
+        }
+    });
+
     filterLinks.forEach(link => {
         link.addEventListener('click', e => {
             e.preventDefault();
             filterLinks.forEach(l => l.classList.remove('filter-active'));
             e.currentTarget.classList.add('filter-active');
             activeGenre = e.currentTarget.dataset.genre || 'all';
+            visibleBookCount = BOOKS_PAGE_SIZE;
             renderBooks(getFilteredBooks());
         });
     });
@@ -267,6 +302,7 @@ if (filterLinks.length > 0) {
             link.addEventListener('click', e => {
                 e.preventDefault();
                 activeSort = e.currentTarget.dataset.sort;
+                visibleBookCount = BOOKS_PAGE_SIZE;
                 sortPanel.classList.remove('open');
                 const labels = {
                     'default':    'Sort by ▾',
@@ -293,9 +329,17 @@ if (filterLinks.length > 0) {
     if (collectionSearch) {
         collectionSearch.addEventListener('input', () => {
             searchQuery = collectionSearch.value.trim().toLowerCase();
+            visibleBookCount = BOOKS_PAGE_SIZE;
             renderBooks(getFilteredBooks());
         });
     }
+}
+
+if (seeMoreBtn) {
+    seeMoreBtn.addEventListener('click', () => {
+        visibleBookCount += BOOKS_PAGE_SIZE;
+        renderBooks(getFilteredBooks());
+    });
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
