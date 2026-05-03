@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+﻿const mongoose = require("mongoose");
 
 const bookSchema = new mongoose.Schema(
   {
@@ -9,10 +9,9 @@ const bookSchema = new mongoose.Schema(
     },
 
     author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Author",
-      required: true
-    },
+    type: String,
+    required: true
+  },
 
     genre: {
       type: String,
@@ -66,7 +65,7 @@ const bookSchema = new mongoose.Schema(
       min: 0
     }
   },
-  { timestamps: true }
+  { timestamps: true, collection: 'Book' }
 );
 
 module.exports = mongoose.model("Book", bookSchema);
