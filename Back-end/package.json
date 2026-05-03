@@ -1,10 +1,10 @@
-{
+﻿{
   "name": "mactaba",
   "version": "1.0.0",
   "description": "",
-  "main": "data.js",
+  "main": "app.js",
   "scripts": {
-    "devStart": "nodemon server.js"
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/marwansalah101/Mactaba#readme",
   "dependencies": {
     "express": "^5.2.1",
+    "mongoose": "^8.18.0",
     "jsdom": "^29.0.2"
   },
   "devDependencies": {
