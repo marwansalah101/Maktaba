@@ -268,12 +268,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 class AllAuthorsPage {
     constructor() {
-        this.authorsData = authorData;
+        this.authorsData = {}; 
         this.authorsGrid = document.getElementById('authorsGrid');
         this.searchInput = document.getElementById('authorSearchInput');
         this.noResults = document.getElementById('noResults');
-        
-        this.init();
+
+        // Start the loading process
+        this.loadDataAndInit();
+    }
+
+    async loadDataAndInit() {
+        try {
+            // 1. Fetch data from your Express backend
+            const response = await fetch('http://localhost:3000/api/authors');
+            const data = await response.json();
+            
+            // 2. Store the data (Express returns an array, we'll keep it as is)
+            this.authorsData = data;
+            
+            // 3. Initialize the UI
+            this.init();
+        } catch (error) {
+            console.error("Error loading authors:", error);
+        }
     }
 
     init() {
@@ -374,19 +391,16 @@ class AllAuthorsPage {
 
     // Filter authors based on search term
     filterAuthors(searchTerm) {
-        const filtered = {};
         
-        Object.keys(this.authorsData).forEach(key => {
-            const author = this.authorsData[key];
-            const authorName = author.name.toLowerCase();
-            const authorStats = author.stats.toLowerCase();
-            
-            if (authorName.includes(searchTerm) || authorStats.includes(searchTerm)) {
-                filtered[key] = author;
-            }
-        });
+        
+      // If this.authorsData is an array from the backend:
+    return this.authorsData.filter(author => {
+        const name = author.name.toLowerCase();
+        const stats = (author.stats || "").toLowerCase();
+        return name.includes(searchTerm) || stats.includes(searchTerm);
+    });
 
-        return filtered;
+       
     }
 
     // Show no results message
