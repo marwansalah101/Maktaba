@@ -39,7 +39,9 @@ const authorSchema = new mongoose.Schema(
     profileImg: {
       type: String,
       default: ""
-    }
+    },
+
+    books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }]
   },
   { timestamps: true }
 );

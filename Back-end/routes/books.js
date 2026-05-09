@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Book = require("../models/Book");
+const Book = require("../models/Book");// means go up one folder 
 
 // GET all books
 router.get("/", async (req, res) => {
@@ -32,6 +32,7 @@ router.post("/", async (req, res) => {
         const newBook = new Book(req.body);
         const savedBook = await newBook.save();
         res.status(201).json(savedBook);
+        console.log("Book created:", newbook); // ← add this
 
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -69,3 +70,7 @@ res.status(500).json({ error: err.message });
 });
 
 module.exports = router;
+
+
+
+
