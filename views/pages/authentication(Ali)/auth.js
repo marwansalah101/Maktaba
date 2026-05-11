@@ -348,6 +348,33 @@ window.addEventListener('load', function () {
 
 /*---gener breakdown--*/
 
+/* Book Modal Functions */
+function openAddBookModal() {
+    const modal = document.getElementById('addBookModal');
+    if (modal) {
+        modal.classList.add('show');
+        const form = document.getElementById('addBookForm');
+        if (form) form.reset();
+    }
+}
+
+function closeAddBookModal() {
+    const modal = document.getElementById('addBookModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('addBookModal');
+        if (modal && event.target === modal) {
+            closeAddBookModal();
+        }
+    });
+});
+
 window.addEventListener('load', function () {
 
   const genres = [
@@ -616,5 +643,4 @@ window.addEventListener('load', function () {
   `;
 
 });
-
 

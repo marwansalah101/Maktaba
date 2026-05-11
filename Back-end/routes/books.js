@@ -2,10 +2,28 @@ const express = require("express");
 const router = express.Router();
 const Book = require("../models/Book");// means go up one folder 
 
-// GET all books
+// GET genres with book counts, sorted by count desc
+router.get("/genres", async (req, res) => {
+    try {
+        const result = await Book.aggregate([
+            { $group: { _id: "$genre", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $project: { _id: 0, name: "$_id", count: 1 } }
+        ]);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// GET all books — optional ?genre=Fantasy query filter
 router.get("/", async (req, res) => {
     try {
-        const books = await Book.find();
+        const filter = {};
+        if (req.query.genre) {
+            filter.genre = { $regex: new RegExp(`^${req.query.genre}$`, 'i') };
+        }
+        const books = await Book.find(filter);
         res.json(books);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -41,10 +59,13 @@ router.post("/", async (req, res) => {
 
 });
 //Update a  book
-router.put("/:id", async (req, res) => {
+router.put("/title/:title", async (req, res) => {
     try {
-        const updatedBook = await Book.findByIdAndUpdate(req.params.id,
-            req.body, { new: true });
+        const updatedBook = await Book.findOneAndUpdate(
+            { title: { $regex: new RegExp(`^${decodeURIComponent(req.params.title)}$`, "i") } },
+            req.body,
+            { new: true }
+        );
         if (!updatedBook) {
             return res.status(404).json({ message: "Book not found" });
         }
@@ -54,10 +75,12 @@ router.put("/:id", async (req, res) => {
     }
 });
 //Delete a book
-router.delete("/:id",async (req,res) => {
+router.delete("/title/:title",async (req,res) => {
 
 try {
- const deletedBook = await Book.findByIdAndDelete(req.params.id);
+ const deletedBook = await Book.findOneAndDelete(
+            { title: { $regex: new RegExp(`^${decodeURIComponent(req.params.title)}$`, "i") } }
+        );
 if(!deletedBook){
 res.status(404).json( {message: "Book not found" });
 }

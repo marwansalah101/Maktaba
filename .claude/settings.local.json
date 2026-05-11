@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"c:\\\\Users\\\\pc\\\\Documents\\\\GitHub\\\\Mactaba\\\\docs\")",
+      "PowerShell(New-Item -ItemType Directory -Path \"c:\\\\Users\\\\pc\\\\Documents\\\\GitHub\\\\Mactaba\\\\docs\" -Force)",
+      "Bash(git check-ignore *)",
+      "Bash(python3 \"C:\\\\Users\\\\pc\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"luxury bookstore literary editorial elegant\" --design-system -f markdown)",
+      "PowerShell(Get-Command python, py -ErrorAction SilentlyContinue)",
+      "PowerShell(py -3 --version 2>&1)",
+      "PowerShell(python --version 2>&1)",
+      "PowerShell(py -3 \"C:\\\\Users\\\\pc\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"luxury bookstore literary editorial elegant\" --design-system -f markdown 2>&1)",
+      "Read(//c/Users/pc/.claude/plugins/cache/ui-ux-pro-max-skill/**)",
+      "PowerShell(py -3 \"C:\\\\Users\\\\pc\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\cli\\\\assets\\\\scripts\\\\search.py\" \"luxury bookstore literary editorial elegant\" --design-system -f markdown 2>&1)",
+      "Bash(python scripts/search.py \"bookstore literary editorial luxury\" --design-system -p \"Maktaba\")",
+      "Bash(py \"C:\\\\Users\\\\pc\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"bookstore literary editorial luxury\" --design-system -p \"Maktaba\")",
+      "Bash(dir \"C:\\\\Users\\\\pc\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\" /s /b)",
+      "Bash(Get-ChildItem -Recurse \"C:\\\\Users\\\\pc\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\")",
+      "Bash(Select-Object FullName)",
+      "Bash(python scripts/search.py \"book catalog genre browse dark editorial literary\" --design-system -p \"Maktaba Genre Page\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\pc\\Documents\\GitHub\\Mactaba"
+    ]
+  }
+}

@@ -1,3 +1,6 @@
 node_modules/
 **/node_modules/
 Back-end/package-lock.json
+
+# Local review and documentation
+docs/
