@@ -5,69 +5,189 @@
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    SECTION 1 — GENRE PAGE
-   Handles the background ripple colour effect when
-   hovering genre cards. #bgRipple expands from the
-   card's centre and tints the whole page.
+   Renders the editorial genre grid from a static list,
+   then initialises the AI panel. The AI fetches the live
+   book catalogue from the DB so it can match any request
+   ("I want a book about love") to real titles in stock.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-const ripple = document.getElementById('bgRipple');
+(function initGenrePage() {
+    var genreGrid = document.getElementById('genreGrid');
+    if (!genreGrid) return;
 
-if (ripple) {
-    const genreCards      = document.querySelectorAll('.genre-card[data-color]');
-    const genresContainer = document.querySelector('.genres-container');
-    const navbar          = document.querySelector('.navbar');
-    let currentCard       = null;
+    /* Static genre definitions — order = editorial card position */
+    var GENRES = [
+        { name: 'Fantasy',          tag: 'Magical Worlds', img: 'https://static01.nyt.com/images/2019/05/22/arts/21thrones-notebook1/21thrones-notebook1-videoSixteenByNineJumbo1600-v2.jpg' },
+        { name: 'Horror',           tag: 'Dark Fiction',   img: '../../resources/img/Horror.png'    },
+        { name: 'Thriller',         tag: 'Suspense',       img: '../../resources/img/Thriller.png'  },
+        { name: 'Science Fiction',  tag: 'Future Worlds',  img: '../../resources/img/Scifi.png'     },
+        { name: 'Adventure',        tag: 'Journey',        img: '../../resources/img/Adventure.png' },
+        { name: 'Drama',            tag: 'Human Stories',  img: '../../resources/img/Drama.png'     },
+    ];
 
-    genreCards.forEach(card => {
-        card.addEventListener('mouseenter', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = rect.left + rect.width  / 2;
-            const y = rect.top  + rect.height / 2;
+    /* ── Render static genre grid ────────────────────────────── */
+    var arrowSvg =
+        '<svg width="22" height="9" viewBox="0 0 22 9" fill="none" aria-hidden="true">' +
+        '<path d="M0 4.5H20M16 1l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>';
 
-            // Re-trigger CSS transition by removing then re-adding .active
-            ripple.classList.remove('active');
-            void ripple.offsetWidth; // force reflow
+    genreGrid.innerHTML = '';
+    GENRES.forEach(function (genre, i) {
+        var num     = String(i + 1).padStart(2, '0');
+        var encoded = encodeURIComponent(genre.name);
+        var isLast  = i === 5;
 
-            ripple.style.left            = x + 'px';
-            ripple.style.top             = y + 'px';
-            ripple.style.backgroundColor = card.dataset.color;
-            ripple.classList.add('active');
+        var innerContent = isLast
+            ? '<div class="gc-info">' +
+                  '<span class="gc-tag">' + genre.tag + '</span>' +
+                  '<h2 class="gc-name">' + genre.name + '</h2>' +
+              '</div>' +
+              '<div class="gc-explore">' + arrowSvg + '<span>Explore</span></div>'
+            : '<span class="gc-tag">' + genre.tag + '</span>' +
+              '<h2 class="gc-name">' + genre.name + '</h2>' +
+              '<div class="gc-explore">' + arrowSvg + '<span>Explore</span></div>';
 
-            // Flip nav + genre text to white while colour fills the page
-            if (genresContainer) genresContainer.classList.add('text-white');
-            if (navbar)          navbar.classList.add('text-white');
+        var card = document.createElement('a');
+        card.className = 'genre-card';
+        card.href = './collection.html?genre=' + encoded;
+        card.setAttribute('aria-label', 'Browse ' + genre.name + ' books');
+        card.innerHTML =
+            '<div class="gc-img" style="background-image: url(\'' + genre.img + '\')"></div>' +
+            '<div class="gc-overlay"></div>' +
+            '<div class="gc-accent"></div>' +
+            '<span class="gc-num">' + num + '</span>' +
+            '<div class="gc-content">' + innerContent + '</div>';
 
-            currentCard = card;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            const rect = card.getBoundingClientRect();
-            const x = rect.left + rect.width  / 2;
-            const y = rect.top  + rect.height / 2;
-
-            ripple.classList.remove('active');
-            if (genresContainer) genresContainer.classList.remove('text-white');
-            if (navbar)          navbar.classList.remove('text-white');
-
-            // Reverse ripple: a second element expands the original bg colour
-            // back outward, masking the colour ripple underneath
-            const reverseRipple = document.createElement('div');
-            reverseRipple.classList.add('bg-ripple', 'bg-ripple-reverse');
-            reverseRipple.style.left            = x + 'px';
-            reverseRipple.style.top             = y + 'px';
-            reverseRipple.style.backgroundColor = '#F0EDE5';
-            document.querySelector('.homepage-genre').appendChild(reverseRipple);
-
-            void reverseRipple.offsetWidth; // force reflow before transition
-            reverseRipple.classList.add('active');
-
-            reverseRipple.addEventListener('transitionend', () => {
-                reverseRipple.remove();
-            });
-
-            currentCard = null;
-        });
+        genreGrid.appendChild(card);
     });
-}
+
+    var countEl = document.getElementById('glhCount');
+    if (countEl) countEl.textContent = String(GENRES.length).padStart(2, '0');
+
+    /* ── AI recommendation panel ─────────────────────────────── */
+    var API_KEY  = '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';
+    var MODEL    = 'openai/gpt-oss-120b';
+    var ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
+
+    var aiInput    = document.getElementById('aiInput');
+    var submitBtn  = document.getElementById('aiSubmitBtn');
+    var typingEl   = document.getElementById('aiTyping');
+    var wrapperEl  = document.getElementById('aiResponseWrapper');
+    var responseEl = document.getElementById('aiResponseText');
+
+    if (!aiInput || !submitBtn) return;
+
+    /* Fetch the live catalogue once so the AI can reference real titles */
+    var dbBooks = [];
+    fetch('http://localhost:3000/books')
+        .then(function (r) { return r.ok ? r.json() : []; })
+        .then(function (d) { dbBooks = Array.isArray(d) ? d : []; })
+        .catch(function () {});
+
+    function setLoading(on) { submitBtn.disabled = on; aiInput.disabled = on; }
+    function showTyping()   { typingEl.classList.add('visible'); wrapperEl.classList.remove('visible'); responseEl.innerHTML = ''; }
+    function hideTyping()   { typingEl.classList.remove('visible'); }
+    function revealResponse(){ wrapperEl.classList.add('visible'); }
+
+    function appendChunk(text) {
+        var cur = responseEl.querySelector('.ai-cursor');
+        if (cur) cur.remove();
+        responseEl.appendChild(document.createTextNode(text));
+        var c = document.createElement('span');
+        c.className = 'ai-cursor';
+        responseEl.appendChild(c);
+    }
+
+    function finishStream() {
+        var cur = responseEl.querySelector('.ai-cursor');
+        if (cur) cur.remove();
+    }
+
+    function buildSystemPrompt() {
+        var base =
+            'You are a book recommendation assistant for Maktaba, an online bookstore. ' +
+            'When the user describes what they want — a theme, mood, feeling, or topic (e.g. "a book about love", "something dark and scary", "an inspiring journey") — ' +
+            'find the books from our catalogue that best match that description and recommend 3 to 5 of them. ' +
+            'Use your knowledge of each book\'s themes, tone, and story to judge the fit, not just the genre label. ' +
+            'For each recommendation give the title in quotes, the author, and one sentence explaining why it matches what the user asked for. ' +
+            'Write in plain, warm prose. No bullet points, no markdown headers, no numbered lists.';
+
+        if (dbBooks.length > 0) {
+            var list = dbBooks
+                .map(function (b) { return '"' + b.title + '" by ' + b.author + ' (' + b.genre + ')'; })
+                .join(', ');
+            base += ' Our full catalogue (only recommend from this list): ' + list + '.';
+        }
+
+        return base;
+    }
+
+    async function streamRecommendations(msg) {
+        var res = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + API_KEY,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': window.location.href,
+                'X-Title': 'Maktaba'
+            },
+            body: JSON.stringify({
+                model: MODEL, stream: true, max_tokens: 600,
+                messages: [
+                    { role: 'system', content: buildSystemPrompt() },
+                    { role: 'user',   content: msg }
+                ]
+            })
+        });
+
+        if (!res.ok) throw new Error(res.status + ': ' + await res.text());
+
+        var reader  = res.body.getReader();
+        var decoder = new TextDecoder();
+        var buffer  = '';
+        var first   = true;
+
+        while (true) {
+            var chunk = await reader.read();
+            if (chunk.done) break;
+            buffer += decoder.decode(chunk.value, { stream: true });
+            var lines = buffer.split('\n');
+            buffer = lines.pop();
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                if (!line.startsWith('data: ')) continue;
+                var raw = line.slice(6).trim();
+                if (raw === '[DONE]') { finishStream(); return; }
+                var parsed; try { parsed = JSON.parse(raw); } catch (e) { continue; }
+                var content = parsed && parsed.choices && parsed.choices[0] &&
+                              parsed.choices[0].delta && parsed.choices[0].delta.content;
+                if (!content) continue;
+                if (first) { hideTyping(); revealResponse(); first = false; }
+                appendChunk(content);
+            }
+        }
+        finishStream();
+    }
+
+    async function handleSubmit() {
+        var msg = aiInput.value.trim();
+        if (!msg) { aiInput.focus(); return; }
+        showTyping(); setLoading(true);
+        try {
+            await streamRecommendations(msg);
+        } catch (err) {
+            hideTyping(); revealResponse();
+            responseEl.innerHTML = '<span class="ai-error-msg">Something went wrong. Please try again.</span>';
+            console.error('[Narrator]', err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    submitBtn.addEventListener('click', handleSubmit);
+    aiInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); handleSubmit(); }
+    });
+})();
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    SECTION 2 — FLY-TO-CART ANIMATION (shared)
@@ -123,6 +243,7 @@ let activeGenre = 'all';
 let activeSort  = 'default';
 let searchQuery = '';
 let visibleBookCount = 4;
+let _backendBooks = null; /* populated by initCollectionPage() */
 
 const BOOKS_PAGE_SIZE = 4;
 
@@ -144,8 +265,12 @@ function sortBooks(books) {
 
 /* Applies active genre filter + live search, then sorts */
 function getFilteredBooks() {
-    let books = typeof Books !== 'undefined' ? [...Books] : [];
-    if (activeGenre !== 'all') books = books.filter(b => b.genre === activeGenre);
+    let books = _backendBooks ? [..._backendBooks]
+              : (typeof Books !== 'undefined' ? [...Books] : []);
+    if (activeGenre !== 'all') {
+        const norm = s => s.toLowerCase().replace(/-/g, ' ').trim();
+        books = books.filter(b => b.genre && norm(b.genre) === norm(activeGenre));
+    }
     if (searchQuery) {
         const q = searchQuery.toLowerCase();
         books = books.filter(b =>
@@ -255,8 +380,22 @@ function renderBooks(booksToRender) {
     }
 }
 
-/* Initial render on page load */
-if (container && typeof Books !== 'undefined') {
+/* Initial render — collection page fetches from backend; author page uses data.js */
+async function initCollectionPage() {
+    try {
+        const res = await fetch('http://localhost:3000/books');
+        if (res.ok) {
+            _backendBooks = await res.json();
+        }
+    } catch (_) {
+        /* backend offline — fall back to data.js Books */
+    }
+    renderBooks(getFilteredBooks());
+}
+
+if (container && document.querySelector('.collection-page')) {
+    initCollectionPage();
+} else if (container && typeof Books !== 'undefined') {
     renderBooks(getFilteredBooks());
 }
 
