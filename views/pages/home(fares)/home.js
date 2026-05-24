@@ -392,7 +392,6 @@ class AllAuthorsPage {
     // Filter authors based on search term
     filterAuthors(searchTerm) {
         
-        
       // If this.authorsData is an array from the backend:
     return this.authorsData.filter(author => {
         const name = author.name.toLowerCase();
