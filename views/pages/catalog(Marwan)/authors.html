@@ -367,5 +367,26 @@
 
 
 
+
+    <script>
+  // Get slug from URL e.g. authors.html?slug=naguib-mahfouz
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
+
+  if (slug) {
+    fetch(`http://localhost:3000/api/authors/slug/${slug}`)
+      .then(res => res.json())
+      .then(author => {
+        document.getElementById('author-name-heading').textContent = author.name;
+        document.getElementById('author-stats-sub').textContent = author.stats;
+        document.getElementById('about-title').textContent = author.aboutTitle;
+        document.getElementById('about-description').textContent = author.aboutText;
+        document.getElementById('dynamic-banner').style.backgroundImage = `url(${author.bannerImg})`;
+        document.getElementById('about-img').src = author.profileImg;
+      })
+      .catch(err => console.log('Error:', err));
+  }
+</script>
+
     
     </body></html>
