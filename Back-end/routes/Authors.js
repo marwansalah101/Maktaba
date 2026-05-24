@@ -12,6 +12,21 @@ router.get("/", async (req, res) => {
     }
 });
 
+
+
+
+// 3. GET by slug ← ADD THIS NEW ONE
+router.get('/slug/:slug', async (req, res) => {
+  try {
+    const author = await Author.findOne({ slug: req.params.slug }).populate('books');
+    if (!author) return res.status(404).json({ message: 'Author not found' });
+    res.json(author);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 // 2. GET a specific author by ID (For the "Author Details" page)
 // Uses req.params
 router.get("/:id", async (req, res) => {
@@ -37,6 +52,21 @@ router.post("/", async (req, res) => {
 });
 
 
+
+// PUT - Update an author
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedAuthor = await Author.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedAuthor) return res.status(404).json({ message: 'Author not found' });
+    res.json(updatedAuthor);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // DELETE an author by ID
 router.delete("/:id", async (req, res) => {
     try {
