@@ -2,33 +2,28 @@ const express = require('express');
 const router = express.Router();
 const Author = require('../models/Author');
 
-// 1. GET all authors (To show on your Authors list page)
+// GET all authors
 router.get("/", async (req, res) => {
     try {
         const authors = await Author.find();
-        res.json(authors);// This sends the data to your frontend
+        res.json(authors);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-
-
-
-// 3. GET by slug ← ADD THIS NEW ONE
+// GET author by slug
 router.get('/slug/:slug', async (req, res) => {
-  try {
-    const author = await Author.findOne({ slug: req.params.slug }).populate('books');
-    if (!author) return res.status(404).json({ message: 'Author not found' });
-    res.json(author);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const author = await Author.findOne({ slug: req.params.slug }).populate('books');
+        if (!author) return res.status(404).json({ message: 'Author not found' });
+        res.json(author);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-
-// 2. GET a specific author by ID (For the "Author Details" page)
-// Uses req.params
+// GET author by ID
 router.get("/:id", async (req, res) => {
     try {
         const author = await Author.findById(req.params.id).populate('books');
@@ -39,11 +34,12 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// 3. POST a new author (For your admin panel/adding data)
-// Uses req.body
+// POST — create a new author
 router.post("/", async (req, res) => {
-   try {
-    const newAuthor = new Author(req.body); // Takes data from frontend form
+    try {
+        // Destructure known fields — never pass raw req.body to the model constructor
+        const { name, slug, stats, aboutTitle, aboutText, bannerImg, profileImg, books } = req.body;
+        const newAuthor = new Author({ name, slug, stats, aboutTitle, aboutText, bannerImg, profileImg, books });
         const savedAuthor = await newAuthor.save();
         res.status(201).json(savedAuthor);
     } catch (err) {
@@ -51,37 +47,35 @@ router.post("/", async (req, res) => {
     }
 });
 
-
-
-// PUT - Update an author
+// PUT — update an author by ID
 router.put('/:id', async (req, res) => {
-  try {
-    const updatedAuthor = await Author.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!updatedAuthor) return res.status(404).json({ message: 'Author not found' });
-    res.json(updatedAuthor);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        // Destructure and strip undefined so partial updates work correctly
+        const { name, slug, stats, aboutTitle, aboutText, bannerImg, profileImg, books } = req.body;
+        const update = { name, slug, stats, aboutTitle, aboutText, bannerImg, profileImg, books };
+        Object.keys(update).forEach(k => update[k] === undefined && delete update[k]);
+
+        const updatedAuthor = await Author.findByIdAndUpdate(
+            req.params.id,
+            update,
+            { new: true }
+        );
+        if (!updatedAuthor) return res.status(404).json({ message: 'Author not found' });
+        res.json(updatedAuthor);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
-// DELETE an author by ID
+
+// DELETE — remove an author by ID
 router.delete("/:id", async (req, res) => {
     try {
-        // Find the author by the ID in the URL and remove them
         const deletedAuthor = await Author.findByIdAndDelete(req.params.id);
-
-        // If no author was found with that ID
         if (!deletedAuthor) {
-            return res.status(404).json({ message: "Author not found" });
+            return res.status(404).json({ message: "Author not found" }); // return prevents double-response
         }
-
-        // Send back the deleted author data or a success message
         res.json({ message: "Author deleted successfully", author: deletedAuthor });
     } catch (err) {
-        // Handle potential errors (like a malformed ID)
         res.status(500).json({ error: err.message });
     }
 });

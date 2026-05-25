@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const Book = require("../models/Book");// means go up one folder 
+const Book = require("../models/Book");
+
+/* Escapes regex special characters so user input is treated as a literal string.
+   Prevents ReDoS attacks via catastrophic backtracking. */
+function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 // GET genres with book counts, sorted by count desc
 router.get("/genres", async (req, res) => {
@@ -21,7 +27,8 @@ router.get("/", async (req, res) => {
     try {
         const filter = {};
         if (req.query.genre) {
-            filter.genre = { $regex: new RegExp(`^${req.query.genre}$`, 'i') };
+            const escaped = escapeRegex(req.query.genre);
+            filter.genre = { $regex: new RegExp(`^${escaped}$`, 'i') };
         }
         const books = await Book.find(filter);
         res.json(books);
@@ -29,14 +36,14 @@ router.get("/", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-//get book by title
+
+// GET book by title
 router.get("/title/:title", async (req, res) => {
     try {
-            console.log("HIT title route:", req.params.title); // ← add this
-
-        const title = decodeURIComponent(req.params.title); // decode %20 spaces etc.
-        const book = await Book.findOne({ 
-            title: { $regex: new RegExp(`^${title}$`, "i") } // case-insensitive match
+        const title = decodeURIComponent(req.params.title);
+        const escaped = escapeRegex(title);
+        const book = await Book.findOne({
+            title: { $regex: new RegExp(`^${escaped}$`, "i") }
         });
         if (!book) return res.status(404).json({ error: "Book not found" });
         res.json(book);
@@ -44,26 +51,33 @@ router.get("/title/:title", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-// Create a new book
+
+// POST — create a new book
 router.post("/", async (req, res) => {
     try {
-        const newBook = new Book(req.body);
+        // Destructure known fields — never pass raw req.body to the model constructor
+        const { title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock } = req.body;
+        const newBook = new Book({ title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock });
         const savedBook = await newBook.save();
         res.status(201).json(savedBook);
-        console.log("Book created:", newbook); // ← add this
-
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-
-
 });
-//Update a  book
+
+// PUT — update a book by title
 router.put("/title/:title", async (req, res) => {
     try {
+        const title = decodeURIComponent(req.params.title);
+        const escaped = escapeRegex(title);
+        // Destructure and strip undefined so partial updates work correctly
+        const { title: newTitle, author, genre, year, image, pages, description, quote, price, language, ISBN, stock } = req.body;
+        const update = { title: newTitle, author, genre, year, image, pages, description, quote, price, language, ISBN, stock };
+        Object.keys(update).forEach(k => update[k] === undefined && delete update[k]);
+
         const updatedBook = await Book.findOneAndUpdate(
-            { title: { $regex: new RegExp(`^${decodeURIComponent(req.params.title)}$`, "i") } },
-            req.body,
+            { title: { $regex: new RegExp(`^${escaped}$`, "i") } },
+            update,
             { new: true }
         );
         if (!updatedBook) {
@@ -74,26 +88,22 @@ router.put("/title/:title", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-//Delete a book
-router.delete("/title/:title",async (req,res) => {
 
-try {
- const deletedBook = await Book.findOneAndDelete(
-            { title: { $regex: new RegExp(`^${decodeURIComponent(req.params.title)}$`, "i") } }
+// DELETE — remove a book by title
+router.delete("/title/:title", async (req, res) => {
+    try {
+        const title = decodeURIComponent(req.params.title);
+        const escaped = escapeRegex(title);
+        const deletedBook = await Book.findOneAndDelete(
+            { title: { $regex: new RegExp(`^${escaped}$`, "i") } }
         );
-if(!deletedBook){
-res.status(404).json( {message: "Book not found" });
-}
-
-res.json({ message: "Book deleted successfully"});
-}
-catch(err){
-res.status(500).json({ error: err.message });
-}
+        if (!deletedBook) {
+            return res.status(404).json({ message: "Book not found" }); // return prevents double-response
+        }
+        res.json({ message: "Book deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 module.exports = router;
-
-
-
-
