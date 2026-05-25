@@ -1,9 +1,7 @@
 ﻿(() => {
-
-    const ADMIN_CREDENTIALS = {
-        email: 'marwan@gmail.com',
-        password: 'marwan123'
-    };
+    /* Admin credentials have been moved to .env on the server.
+       Sign-in now calls POST /api/auth/login instead of checking a
+       hardcoded object — credentials are never shipped to the browser. */
 
 
     const rules = {
@@ -43,11 +41,6 @@
         inputEl.classList.remove('error', 'valid');
         const err = document.getElementById(inputEl.id + '-error');
         if (err) { err.textContent = ''; err.classList.remove('show'); }
-    }
-
-    function isAdminLogin(email, password) {
-        return email.trim().toLowerCase() === ADMIN_CREDENTIALS.email
-            && password === ADMIN_CREDENTIALS.password;
     }
 
     function getPasswordStrength(pw) {
@@ -197,7 +190,7 @@
                 : showError(passwordEl, rules.password_signin.message);
         });
 
-        form.addEventListener('submit', e => {
+        form.addEventListener('submit', async e => {
             e.preventDefault();
             let valid = true;
 
@@ -209,21 +202,33 @@
             }
 
             if (valid) {
-                if (!isAdminLogin(emailEl.value, passwordEl.value)) {
-                    showError(passwordEl, 'Incorrect admin email or password.');
-                    return;
-                }
-
                 const btn = form.querySelector('.btn-primary');
                 btn.textContent = 'Signing in...';
                 btn.disabled = true;
-                localStorage.setItem('maktabaUserRole', 'admin');
-                localStorage.setItem('maktabaUserEmail', ADMIN_CREDENTIALS.email);
-                setTimeout(() => {
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: emailEl.value.trim(),
+                            password: passwordEl.value
+                        })
+                    });
+                    const data = await response.json();
+                    if (!response.ok) {
+                        showError(passwordEl, data.error || 'Incorrect email or password.');
+                        btn.textContent = 'Sign In';
+                        btn.disabled = false;
+                        return;
+                    }
+                    localStorage.setItem('maktabaUserRole',  data.role);
+                    localStorage.setItem('maktabaUserEmail', data.email);
+                    window.location.href = './dashboard.html';
+                } catch (_) {
+                    showError(passwordEl, 'Connection error — make sure the server is running.');
                     btn.textContent = 'Sign In';
                     btn.disabled = false;
-                    window.location.href = './dashboard.html';
-                }, 2000);
+                }
             }
         });
     }
@@ -272,19 +277,11 @@ function submitForgotPw(e) {
         return;
     }
 
-    const isAdmin = email.toLowerCase() === 'marwan@gmail.com';
-    const users = JSON.parse(localStorage.getItem('maktabaUsers') || '[]');
-    const isUser = users.some(u => u.email.toLowerCase() === email.toLowerCase());
-
-    if (isAdmin || isUser) {
-        document.getElementById('fp-form-wrap').style.display = 'none';
-        document.getElementById('fp-sent-email').textContent = email;
-        document.getElementById('fp-success').style.display = 'block';
-    } else {
-        emailEl.classList.add('error');
-        errEl.textContent = 'No account found with this email address.';
-        errEl.classList.add('show');
-    }
+    /* Always show the success message — never reveal whether an account exists.
+       (Actual email delivery is not yet implemented.) */
+    document.getElementById('fp-form-wrap').style.display = 'none';
+    document.getElementById('fp-sent-email').textContent = email;
+    document.getElementById('fp-success').style.display = 'block';
 }
 
 /*--------------dashboard----------*/

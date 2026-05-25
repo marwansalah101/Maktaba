@@ -2,5 +2,10 @@ node_modules/
 **/node_modules/
 Back-end/package-lock.json
 
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.*.local
+
 # Local review and documentation
 docs/

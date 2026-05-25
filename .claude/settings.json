@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check app.js)",
+      "Bash(node --check \"views/pages/catalog\\(Marwan\\)/catalog.js\")",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

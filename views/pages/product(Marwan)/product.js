@@ -78,8 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('main-genre').innerText        = selectedBook.genre;
 
     /* ── Availability badge ────────────────────────────────────── */
+    /* Use stock count (from DB) or fall back to the legacy available flag */
     const availabilityEl = document.getElementById('main-availability');
-    if (selectedBook.available) {
+    const isInStock = typeof selectedBook.stock === 'number'
+        ? selectedBook.stock > 0
+        : Boolean(selectedBook.available);
+    if (isInStock) {
         availabilityEl.innerHTML =
             '<span class="availability-badge availability-in-stock">In Stock</span>';
     } else {

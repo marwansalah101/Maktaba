@@ -172,7 +172,7 @@ class BookCardsSlider {
                 year: book.year,
                 image: book.image,
                 price: book.price,
-                available: book.available,
+                available: typeof book.stock === 'number' ? book.stock > 0 : Boolean(book.available),
                 number: `${String(index + 1).padStart(2, '0')}.`
             }));
         } else {
@@ -280,7 +280,7 @@ class AllAuthorsPage {
     async loadDataAndInit() {
         try {
             // 1. Fetch data from your Express backend
-            const response = await fetch('http://localhost:3000/api/authors');
+            const response = await fetch('/api/authors');
             const data = await response.json();
             
             // 2. Store the data (Express returns an array, we'll keep it as is)
