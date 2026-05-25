@@ -3,191 +3,420 @@
    Depends on: data.js (Books, authorData), catalog.css
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
+
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SECTION 1 — GENRE PAGE
-   Renders the editorial genre grid from a static list,
-   then initialises the AI panel. The AI fetches the live
-   book catalogue from the DB so it can match any request
-   ("I want a book about love") to real titles in stock.
+   SECTION 1 — GENRE PAGE  (G3)
+   Renders the accordion genre strips from a static list,
+   fetches the live book catalogue from the DB so per-genre
+   counts are accurate, then initialises the AI chat panel
+   which streams recommendations via /api/recommend (SSE).
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 (function initGenrePage() {
-    var genreGrid = document.getElementById('genreGrid');
-    if (!genreGrid) return;
 
-    /* Static genre definitions — order = editorial card position */
-    var GENRES = [
-        { name: 'Fantasy',          tag: 'Magical Worlds', img: 'https://static01.nyt.com/images/2019/05/22/arts/21thrones-notebook1/21thrones-notebook1-videoSixteenByNineJumbo1600-v2.jpg' },
-        { name: 'Horror',           tag: 'Dark Fiction',   img: '../../resources/img/Horror.png'    },
-        { name: 'Thriller',         tag: 'Suspense',       img: '../../resources/img/Thriller.png'  },
-        { name: 'Science Fiction',  tag: 'Future Worlds',  img: '../../resources/img/Scifi.png'     },
-        { name: 'Adventure',        tag: 'Journey',        img: '../../resources/img/Adventure.png' },
-        { name: 'Drama',            tag: 'Human Stories',  img: '../../resources/img/Drama.png'     },
+    const stripsWrap = document.getElementById('g3Strips');
+    if (!stripsWrap) return; // not on the G3 genre page
+
+    /* ── Genre definitions ──────────────────────────────────── */
+    const GENRES = [
+        {
+            num: '01', name: 'Fantasy',
+            tag: 'Worlds beyond',     clr: '#8B5CF6', dark: '#1e1030',
+            img: '../../resources/img/Dragon.jpg',
+            desc: 'Vast kingdoms, ancient magic, and heroes forged in impossible choices. Fantasy transports you to worlds where anything can happen — and usually does.',
+            slug: 'Fantasy',
+        },
+        {
+            num: '02', name: 'Horror',
+            tag: 'Face your fears',   clr: '#EF4444', dark: '#1a0505',
+            img: '../../resources/img/Horror.png',
+            desc: 'Stories that crawl beneath your skin and linger long after the last page. Horror dares you to face the darkness — in the world, and in yourself.',
+            slug: 'Horror',
+        },
+        {
+            num: '03', name: 'Thriller',
+            tag: 'Edge of your seat', clr: '#3B82F6', dark: '#050c1a',
+            img: '../../resources/img/Thriller.png',
+            desc: 'Racing hearts, hidden motives, and twists that rewrite everything. Thrillers keep you reading at 2 a.m. — sleep can wait.',
+            slug: 'Thriller',
+        },
+        {
+            num: '04', name: 'Science Fiction',
+            tag: 'The future now',    clr: '#10B981', dark: '#011a10',
+            img: '../../resources/img/Scifi.png',
+            desc: 'What if technology changed everything? Science fiction explores the ideas that will shape tomorrow — before tomorrow arrives.',
+            slug: 'Science Fiction',
+        },
+        {
+            num: '05', name: 'Adventure',
+            tag: 'Beyond the horizon', clr: '#F59E0B', dark: '#1a1000',
+            img: '../../resources/img/Adventure.png',
+            desc: 'Open roads, uncharted territories, and the raw thrill of discovery. Adventure books remind you the world is bigger than you imagined.',
+            slug: 'Adventure',
+        },
+        {
+            num: '06', name: 'Drama',
+            tag: 'Deeply human',      clr: '#EC4899', dark: '#1a0514',
+            img: '../../resources/img/Drama.png',
+            desc: 'Stories of love, loss, ambition, and redemption. Drama reveals what it means to be human — messy, beautiful, and relentlessly alive.',
+            slug: 'Drama',
+        },
     ];
 
-    /* ── Render static genre grid ────────────────────────────── */
-    var arrowSvg =
-        '<svg width="22" height="9" viewBox="0 0 22 9" fill="none" aria-hidden="true">' +
-        '<path d="M0 4.5H20M16 1l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '</svg>';
+    /* ── Render strips ──────────────────────────────────────── */
+    stripsWrap.innerHTML = GENRES.map(function(g) {
+        var metaId = 'g3Meta_' + g.slug.replace(/\s/g, '_');
+        var ctaHref = './authors.html?genre=' + encodeURIComponent(g.slug);
+        return (
+            '<div class="g3-strip"' +
+                ' role="listitem"' +
+                ' tabindex="0"' +
+                ' aria-label="' + g.name + ' genre"' +
+                ' style="--g-clr:' + g.clr + '; --g-dark:' + g.dark + ';"' +
+                ' data-genre="' + g.slug + '">' +
 
-    genreGrid.innerHTML = '';
-    GENRES.forEach(function (genre, i) {
-        var num     = String(i + 1).padStart(2, '0');
-        var encoded = encodeURIComponent(genre.name);
-        var isLast  = i === 5;
+                '<div class="g3-strip-bg"' +
+                    ' style="background-image:url(\'' + g.img + '\');"' +
+                    ' aria-hidden="true"></div>' +
 
-        var innerContent = isLast
-            ? '<div class="gc-info">' +
-                  '<span class="gc-tag">' + genre.tag + '</span>' +
-                  '<h2 class="gc-name">' + genre.name + '</h2>' +
-              '</div>' +
-              '<div class="gc-explore">' + arrowSvg + '<span>Explore</span></div>'
-            : '<span class="gc-tag">' + genre.tag + '</span>' +
-              '<h2 class="gc-name">' + genre.name + '</h2>' +
-              '<div class="gc-explore">' + arrowSvg + '<span>Explore</span></div>';
+                '<div class="g3-strip-tint" aria-hidden="true"></div>' +
 
-        var card = document.createElement('a');
-        card.className = 'genre-card';
-        card.href = './collection.html?genre=' + encoded;
-        card.setAttribute('aria-label', 'Browse ' + genre.name + ' books');
-        card.innerHTML =
-            '<div class="gc-img" style="background-image: url(\'' + genre.img + '\')"></div>' +
-            '<div class="gc-overlay"></div>' +
-            '<div class="gc-accent"></div>' +
-            '<span class="gc-num">' + num + '</span>' +
-            '<div class="gc-content">' + innerContent + '</div>';
+                '<div class="g3-strip-inner">' +
+                    '<div class="g3-strip-expand">' +
+                        '<p class="g3-strip-desc">' + g.desc + '</p>' +
+                        '<a class="g3-strip-cta"' +
+                           ' href="' + ctaHref + '"' +
+                           ' tabindex="-1">Browse ' + g.name + ' →</a>' +
+                    '</div>' +
+                    '<div class="g3-strip-row">' +
+                        '<span class="g3-strip-num" aria-hidden="true">' + g.num + '</span>' +
+                        '<span class="g3-strip-name">' + g.name + '</span>' +
+                        '<span class="g3-strip-meta" id="' + metaId + '">— books</span>' +
+                        '<span class="g3-strip-tag">' + g.tag + '</span>' +
+                        '<span class="g3-strip-arrow" aria-hidden="true">↗</span>' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+        );
+    }).join('');
 
-        genreGrid.appendChild(card);
+    /* ── Staggered scroll-reveal ────────────────────────────── */
+    var allStrips = stripsWrap.querySelectorAll('.g3-strip');
+
+    var revealObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (!entry.isIntersecting) return;
+            var strip = entry.target;
+            var idx = Array.prototype.indexOf.call(allStrips, strip);
+            setTimeout(function() { strip.classList.add('g3-strip--visible'); }, idx * 80);
+            revealObs.unobserve(strip);
+        });
+    }, { threshold: 0.04 });
+
+    allStrips.forEach(function(s) { revealObs.observe(s); });
+
+    /* ── Accordion expand/collapse ──────────────────────────── */
+    var leaveTimer  = null;
+    var activeStrip = null;
+
+    function expandStrip(strip) {
+        if (activeStrip === strip) return;
+        if (activeStrip) {
+            activeStrip.classList.remove('g3-strip--active');
+            var prevCta = activeStrip.querySelector('.g3-strip-cta');
+            if (prevCta) prevCta.setAttribute('tabindex', '-1');
+        }
+        activeStrip = strip;
+        strip.classList.add('g3-strip--active');
+        var cta = strip.querySelector('.g3-strip-cta');
+        if (cta) cta.removeAttribute('tabindex');
+    }
+
+    function collapseActive() {
+        if (!activeStrip) return;
+        activeStrip.classList.remove('g3-strip--active');
+        var cta = activeStrip.querySelector('.g3-strip-cta');
+        if (cta) cta.setAttribute('tabindex', '-1');
+        activeStrip = null;
+    }
+
+    allStrips.forEach(function(strip) {
+        strip.addEventListener('mouseenter', function() {
+            clearTimeout(leaveTimer);
+            expandStrip(strip);
+        });
+        strip.addEventListener('focus', function() {
+            clearTimeout(leaveTimer);
+            expandStrip(strip);
+        });
+        strip.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                var cta = strip.querySelector('.g3-strip-cta');
+                if (cta) { e.preventDefault(); cta.click(); }
+            }
+        });
     });
 
-    var countEl = document.getElementById('glhCount');
-    if (countEl) countEl.textContent = String(GENRES.length).padStart(2, '0');
+    stripsWrap.addEventListener('mouseleave', function() {
+        clearTimeout(leaveTimer);
+        leaveTimer = setTimeout(collapseActive, 350);
+    });
 
-    /* ── AI recommendation panel ─────────────────────────────── */
-    var API_KEY  = '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';
-    var MODEL    = 'openai/gpt-oss-120b';
-    var ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
-
-    var aiInput    = document.getElementById('aiInput');
-    var submitBtn  = document.getElementById('aiSubmitBtn');
-    var typingEl   = document.getElementById('aiTyping');
-    var wrapperEl  = document.getElementById('aiResponseWrapper');
-    var responseEl = document.getElementById('aiResponseText');
-
-    if (!aiInput || !submitBtn) return;
-
-    /* Fetch the live catalogue once so the AI can reference real titles */
-    var dbBooks = [];
-    fetch('http://localhost:3000/books')
-        .then(function (r) { return r.ok ? r.json() : []; })
-        .then(function (d) { dbBooks = Array.isArray(d) ? d : []; })
-        .catch(function () {});
-
-    function setLoading(on) { submitBtn.disabled = on; aiInput.disabled = on; }
-    function showTyping()   { typingEl.classList.add('visible'); wrapperEl.classList.remove('visible'); responseEl.innerHTML = ''; }
-    function hideTyping()   { typingEl.classList.remove('visible'); }
-    function revealResponse(){ wrapperEl.classList.add('visible'); }
-
-    function appendChunk(text) {
-        var cur = responseEl.querySelector('.ai-cursor');
-        if (cur) cur.remove();
-        responseEl.appendChild(document.createTextNode(text));
-        var c = document.createElement('span');
-        c.className = 'ai-cursor';
-        responseEl.appendChild(c);
-    }
-
-    function finishStream() {
-        var cur = responseEl.querySelector('.ai-cursor');
-        if (cur) cur.remove();
-    }
-
-    function buildSystemPrompt() {
-        var base =
-            'You are a book recommendation assistant for Maktaba, an online bookstore. ' +
-            'When the user describes what they want — a theme, mood, feeling, or topic (e.g. "a book about love", "something dark and scary", "an inspiring journey") — ' +
-            'find the books from our catalogue that best match that description and recommend 3 to 5 of them. ' +
-            'Use your knowledge of each book\'s themes, tone, and story to judge the fit, not just the genre label. ' +
-            'For each recommendation give the title in quotes, the author, and one sentence explaining why it matches what the user asked for. ' +
-            'Write in plain, warm prose. No bullet points, no markdown headers, no numbered lists.';
-
-        if (dbBooks.length > 0) {
-            var list = dbBooks
-                .map(function (b) { return '"' + b.title + '" by ' + b.author + ' (' + b.genre + ')'; })
-                .join(', ');
-            base += ' Our full catalogue (only recommend from this list): ' + list + '.';
+    stripsWrap.addEventListener('focusout', function(e) {
+        if (!stripsWrap.contains(e.relatedTarget)) {
+            clearTimeout(leaveTimer);
+            leaveTimer = setTimeout(collapseActive, 350);
         }
+    });
 
-        return base;
-    }
+    /* ── Fetch books from DB ────────────────────────────────── */
+    var dbBooks = [];
+    var bookCountEl = document.getElementById('g3BookCount');
 
-    async function streamRecommendations(msg) {
-        var res = await fetch(ENDPOINT, {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + API_KEY,
-                'Content-Type': 'application/json',
-                'HTTP-Referer': window.location.href,
-                'X-Title': 'Maktaba'
-            },
-            body: JSON.stringify({
-                model: MODEL, stream: true, max_tokens: 600,
-                messages: [
-                    { role: 'system', content: buildSystemPrompt() },
-                    { role: 'user',   content: msg }
-                ]
-            })
+    fetch('/books')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            var books = Array.isArray(data) ? data : (data.books || []);
+            dbBooks = books;
+
+            /* Count-up animation */
+            if (bookCountEl) {
+                var target  = books.length;
+                var current = 0;
+                var step    = Math.max(1, Math.ceil(target / 40));
+                var timer   = setInterval(function() {
+                    current = Math.min(current + step, target);
+                    bookCountEl.textContent = current;
+                    if (current >= target) clearInterval(timer);
+                }, 40);
+            }
+
+            /* Per-genre book counts */
+            GENRES.forEach(function(g) {
+                var count = books.filter(function(b) {
+                    return (b.genre || '').toLowerCase() === g.slug.toLowerCase();
+                }).length;
+                var el = document.getElementById('g3Meta_' + g.slug.replace(/\s/g, '_'));
+                if (el) el.textContent = count + ' book' + (count !== 1 ? 's' : '');
+            });
+
+            initAIChat(dbBooks);
+        })
+        .catch(function() {
+            if (bookCountEl) bookCountEl.textContent = '—';
+            initAIChat([]);
         });
 
-        if (!res.ok) throw new Error(res.status + ': ' + await res.text());
+    /* ── Genre name rotator ─────────────────────────────────── */
+    var rotator = document.getElementById('g3Rotator');
+    if (rotator) {
+        var rotItems = rotator.querySelectorAll('.g3-ri');
+        var rotIdx   = 0;
+        setInterval(function() {
+            rotItems[rotIdx].removeAttribute('data-active');
+            rotIdx = (rotIdx + 1) % rotItems.length;
+            rotItems[rotIdx].setAttribute('data-active', 'true');
+        }, 2000);
+    }
 
-        var reader  = res.body.getReader();
-        var decoder = new TextDecoder();
-        var buffer  = '';
-        var first   = true;
+    /* ════════════════════════════════════════════════════════
+       AI CHAT — streaming via /api/recommend (SSE)
+    ════════════════════════════════════════════════════════ */
+    function initAIChat(books) {
+        var fab      = document.getElementById('g3AiFab');
+        var panel    = document.getElementById('g3ChatPanel');
+        var closeBtn = document.getElementById('g3ChatClose');
+        var messages = document.getElementById('g3Messages');
+        var typingEl = document.getElementById('g3Typing');
+        var textarea = document.getElementById('g3Input');
+        var sendBtn  = document.getElementById('g3Send');
+        var chips    = document.querySelectorAll('.g3-chip');
 
-        while (true) {
-            var chunk = await reader.read();
-            if (chunk.done) break;
-            buffer += decoder.decode(chunk.value, { stream: true });
-            var lines = buffer.split('\n');
-            buffer = lines.pop();
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i];
-                if (!line.startsWith('data: ')) continue;
-                var raw = line.slice(6).trim();
-                if (raw === '[DONE]') { finishStream(); return; }
-                var parsed; try { parsed = JSON.parse(raw); } catch (e) { continue; }
-                var content = parsed && parsed.choices && parsed.choices[0] &&
-                              parsed.choices[0].delta && parsed.choices[0].delta.content;
-                if (!content) continue;
-                if (first) { hideTyping(); revealResponse(); first = false; }
-                appendChunk(content);
+        if (!fab || !panel) return;
+
+        /* ── Open / close ─────────────────────────────────── */
+        function openPanel() {
+            panel.classList.add('g3-chat-panel--open');
+            panel.setAttribute('aria-hidden', 'false');
+            fab.classList.add('g3-ai-fab--hide');
+            fab.setAttribute('aria-expanded', 'true');
+            setTimeout(function() { if (textarea) textarea.focus(); }, 350);
+        }
+
+        function closePanel() {
+            panel.classList.remove('g3-chat-panel--open');
+            panel.setAttribute('aria-hidden', 'true');
+            fab.classList.remove('g3-ai-fab--hide');
+            fab.setAttribute('aria-expanded', 'false');
+        }
+
+        fab.addEventListener('click', openPanel);
+        if (closeBtn) closeBtn.addEventListener('click', closePanel);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && panel.classList.contains('g3-chat-panel--open')) {
+                closePanel();
             }
-        }
-        finishStream();
-    }
+        });
 
-    async function handleSubmit() {
-        var msg = aiInput.value.trim();
-        if (!msg) { aiInput.focus(); return; }
-        showTyping(); setLoading(true);
-        try {
-            await streamRecommendations(msg);
-        } catch (err) {
-            hideTyping(); revealResponse();
-            responseEl.innerHTML = '<span class="ai-error-msg">Something went wrong. Please try again.</span>';
-            console.error('[Narrator]', err);
-        } finally {
-            setLoading(false);
-        }
-    }
+        /* ── Mood chip shortcut ───────────────────────────── */
+        chips.forEach(function(chip) {
+            chip.addEventListener('click', function() {
+                if (!panel.classList.contains('g3-chat-panel--open')) openPanel();
+                var mood = chip.dataset.mood;
+                if (textarea) {
+                    textarea.value = mood;
+                    textarea.dispatchEvent(new Event('input'));
+                }
+                sendMessage(mood);
+            });
+        });
 
-    submitBtn.addEventListener('click', handleSubmit);
-    aiInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); handleSubmit(); }
-    });
-})();
+        /* ── Auto-grow textarea ───────────────────────────── */
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
+            });
+            textarea.addEventListener('keydown', function(e) {
+                var isDesktop = window.innerWidth > 768;
+                if (e.key === 'Enter' && (e.ctrlKey || (isDesktop && !e.shiftKey))) {
+                    e.preventDefault();
+                    var val = textarea.value.trim();
+                    if (val) sendMessage(val);
+                }
+            });
+        }
+
+        if (sendBtn) {
+            sendBtn.addEventListener('click', function() {
+                var val = textarea ? textarea.value.trim() : '';
+                if (val) sendMessage(val);
+            });
+        }
+
+        /* ── Send ─────────────────────────────────────────── */
+        var isBusy = false;
+
+        function sendMessage(text) {
+            if (isBusy || !text.trim()) return;
+            isBusy = true;
+            addBubble('user', text);
+            if (textarea) { textarea.value = ''; textarea.style.height = 'auto'; }
+            showTyping(true);
+            streamRecommendation(text, books)
+                .catch(function(err) {
+                    showTyping(false);
+                    addBubble('ai', 'Sorry, something went wrong. (' + err.message + ')');
+                })
+                .finally(function() { isBusy = false; });
+        }
+
+        /* ── Add message bubble ───────────────────────────── */
+        function nowTime() {
+            var d = new Date();
+            return d.getHours().toString().padStart(2, '0') + ':' +
+                   d.getMinutes().toString().padStart(2, '0');
+        }
+
+        function addBubble(role, text) {
+            var div = document.createElement('div');
+            div.className = 'g3-msg g3-msg--' + role;
+            div.innerHTML =
+                '<div class="g3-bubble"></div>' +
+                '<time class="g3-msg-time">' + nowTime() + '</time>';
+            div.querySelector('.g3-bubble').textContent = text;
+            messages.appendChild(div);
+            requestAnimationFrame(function() { div.classList.add('g3-msg--visible'); });
+            messages.scrollTop = messages.scrollHeight;
+            return div;
+        }
+
+        function addStreamingBubble() {
+            var div = document.createElement('div');
+            div.className = 'g3-msg g3-msg--ai';
+            div.innerHTML =
+                '<div class="g3-bubble"><span class="g3-cursor"></span></div>' +
+                '<time class="g3-msg-time">' + nowTime() + '</time>';
+            messages.appendChild(div);
+            requestAnimationFrame(function() { div.classList.add('g3-msg--visible'); });
+            messages.scrollTop = messages.scrollHeight;
+            return div;
+        }
+
+        /* ── Typing indicator ─────────────────────────────── */
+        function showTyping(show) {
+            if (typingEl) typingEl.classList.toggle('g3-typing--visible', show);
+            if (show && messages) messages.scrollTop = messages.scrollHeight;
+        }
+
+        /* ── Stream from /api/recommend ───────────────────── */
+        async function streamRecommendation(userMsg, bookList) {
+            var response = await fetch('/api/recommend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMsg, books: bookList }),
+            });
+
+            if (!response.ok) {
+                var errText = await response.text();
+                throw new Error(errText || 'API error ' + response.status);
+            }
+
+            /* Switch to streaming bubble */
+            showTyping(false);
+            var msgDiv = addStreamingBubble();
+            var bubble = msgDiv.querySelector('.g3-bubble');
+            var cursor = bubble.querySelector('.g3-cursor');
+
+            var reader   = response.body.getReader();
+            var decoder  = new TextDecoder();
+            var fullText = '';
+
+            while (true) {
+                var _a     = await reader.read();
+                var done   = _a.done;
+                var value  = _a.value;
+                if (done) break;
+
+                var chunk = decoder.decode(value, { stream: true });
+                var lines = chunk.split('\n');
+
+                for (var li = 0; li < lines.length; li++) {
+                    var line = lines[li];
+                    if (!line.startsWith('data:')) continue;
+                    var raw = line.slice(5).trim();
+                    if (raw === '[DONE]') continue;
+                    try {
+                        var parsed = JSON.parse(raw);
+                        var delta  = (parsed.choices &&
+                                      parsed.choices[0] &&
+                                      parsed.choices[0].delta &&
+                                      parsed.choices[0].delta.content) || '';
+                        if (delta) {
+                            fullText += delta;
+                            bubble.textContent = fullText;
+                            if (cursor && cursor.parentNode !== bubble) {
+                                bubble.appendChild(cursor);
+                            } else if (!cursor) {
+                                /* cursor already removed — just update text */
+                            } else {
+                                bubble.textContent = fullText;
+                                bubble.appendChild(cursor);
+                            }
+                            messages.scrollTop = messages.scrollHeight;
+                        }
+                    } catch (e) { /* skip malformed SSE chunks */ }
+                }
+            }
+
+            /* Finalise — remove cursor, set clean text */
+            if (cursor && cursor.parentNode === bubble) bubble.removeChild(cursor);
+            bubble.textContent = fullText;
+            messages.scrollTop = messages.scrollHeight;
+        }
+    } /* end initAIChat */
+
+})(); /* end initGenrePage */
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    SECTION 2 — FLY-TO-CART ANIMATION (shared)
@@ -383,7 +612,7 @@ function renderBooks(booksToRender) {
 /* Initial render — collection page fetches from backend; author page uses data.js */
 async function initCollectionPage() {
     try {
-        const res = await fetch('http://localhost:3000/books');
+        const res = await fetch('/books');
         if (res.ok) {
             _backendBooks = await res.json();
         }

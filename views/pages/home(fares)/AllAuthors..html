@@ -193,7 +193,7 @@
 <script src="../../script.js"></script>
 
 <script>
-  fetch('http://localhost:3000/api/authors')
+  fetch('/api/authors')
     .then(res => res.json())
     .then(authors => {
       const grid = document.getElementById('authorsGrid');
