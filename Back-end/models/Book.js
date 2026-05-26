@@ -9,9 +9,14 @@ const bookSchema = new mongoose.Schema(
     },
 
     author: {
-    type: String,
-    required: true
-  },
+      type: String,
+      required: true
+    },
+
+    authorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Author'
+    },
 
     genre: {
       type: String,
@@ -58,6 +63,7 @@ const bookSchema = new mongoose.Schema(
       required: true,
       unique: true
     },
+    
     stock: {
       type: Number,
       required: true,
