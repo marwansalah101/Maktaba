@@ -230,7 +230,10 @@
   const slug = params.get('slug');
 
   if (slug) {
-    fetch(`/api/authors/slug/${slug}`)
+    // Build API base: if page opened via file://, fall back to localhost server
+    const apiBase = (window.location.protocol === 'file:') ? 'http://localhost:3000' : window.location.origin;
+    
+    fetch(`${apiBase}/api/authors/slug/${slug}`)
       .then(res => {
         if (!res.ok) throw new Error('Author fetch failed');
         return res.json();
@@ -238,24 +241,39 @@
       .then(author => {
         // Fill author details
         document.getElementById('author-name-heading').textContent = author.name;
-        document.getElementById('author-stats-sub').textContent = author.stats;
+        document.getElementById('author-stats-sub').textContent = author.stats || 'Author';
         document.getElementById('about-title').textContent = author.aboutTitle || `ABOUT ${author.name.toUpperCase()}`;
-        document.getElementById('about-description').textContent = author.aboutText || '';
-        if (author.bannerImg) document.getElementById('dynamic-banner').style.backgroundImage = `url(${author.bannerImg})`;
-        if (author.profileImg) document.getElementById('about-img').src = author.profileImg;
+        document.getElementById('about-description').textContent = author.aboutText || 'No biography available.';
+        
+        // Handle banner image
+        if (author.bannerImg) {
+          const bannerPath = author.bannerImg.startsWith('http') ? author.bannerImg : `../../${author.bannerImg}`;
+          document.getElementById('dynamic-banner').style.backgroundImage = `url(${bannerPath})`;
+        }
+        
+        // Handle profile image
+        if (author.profileImg) {
+          const profilePath = author.profileImg.startsWith('http') ? author.profileImg : `../../${author.profileImg}`;
+          document.getElementById('about-img').src = profilePath;
+        }
 
-        // If the author document has populated `books`, use it. Otherwise fall back to name lookup.
+        // Display books - the author object should have populated books
         if (Array.isArray(author.books) && author.books.length > 0) {
           displayBooks(author.books);
         } else {
-          // fallback: query books by author name
-          fetch(`/books?author=${encodeURIComponent(author.name)}`)
-            .then(r => r.ok ? r.json() : [])
-            .then(books => displayBooks(books))
-            .catch(() => displayBooks([]));
+          displayBooks([]);
         }
       })
-      .catch(err => console.log('Error:', err));
+      .catch(err => {
+        console.error('Error fetching author:', err);
+        document.getElementById('author-name-heading').textContent = 'Author Not Found';
+        document.getElementById('author-stats-sub').textContent = 'Please check the URL and try again.';
+        displayBooks([]);
+      });
+  } else {
+    document.getElementById('author-name-heading').textContent = 'No Author Selected';
+    document.getElementById('author-stats-sub').textContent = 'Please select an author to view their details.';
+    displayBooks([]);
   }
 
   function displayBooks(books) {
@@ -263,15 +281,15 @@
     grid.innerHTML = '';
 
     if (!books || books.length === 0) {
-      grid.innerHTML = '<p style="color:#888;padding:20px">No books found for this author.</p>';
+      grid.innerHTML = '<p style="color:#888;padding:20px;text-align:center;">No books found for this author.</p>';
       return;
     }
 
     books.forEach(book => {
-      const image = book.image || '../../resources/Books/default.png';
-      const title = book.title || book.name || 'Untitled';
+      const image = book.image ? (book.image.startsWith('http') ? book.image : `../../${book.image}`) : '../../resources/Books/default.png';
+      const title = book.title || 'Untitled';
       const year = book.year || '';
-      const price = book.price ? `${book.price} EGP` : '';
+      const price = book.price ? `$${book.price}` : '';
 
       grid.innerHTML += `
         <div class="book-cardsss">
