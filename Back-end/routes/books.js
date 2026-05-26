@@ -30,6 +30,11 @@ router.get("/", async (req, res) => {
             const escaped = escapeRegex(req.query.genre);
             filter.genre = { $regex: new RegExp(`^${escaped}$`, 'i') };
         }
+        // optional ?author=Author+Name — match case-insensitively on the author field
+        if (req.query.author) {
+            const escapedAuthor = escapeRegex(req.query.author);
+            filter.author = { $regex: new RegExp(`^${escapedAuthor}$`, 'i') };
+        }
         const books = await Book.find(filter);
         res.json(books);
     } catch (err) {
@@ -51,6 +56,22 @@ router.get("/title/:title", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+
+
+// GET books by author name
+router.get("/author", async (req, res) => {
+  try {
+    const filter = {};
+    if (req.query.author) filter.author = req.query.author;
+    const books = await Book.find(filter);
+    res.json(books);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 
 // POST — create a new book
 router.post("/", async (req, res) => {

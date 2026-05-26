@@ -153,150 +153,7 @@
   
   <div class="book-grid recent-books-grid" id="recent-books-grid">
 
-    <div class="book-cardsss">
-      <div class="image-wrapper">
-        <img id="cover" src="../../resources/Books/GreatGasby.png" alt="Huckleberry Finn">
-      </div>
-      <div class="book-infosss">
-        <div class="book-name">Great Gasby</div>
-        <div class="rating-row">
-          <span class="star-icon">★</span>
-          <span class="rating-num">4.8</span>
-          <span class="review-count">· 4 m reviews</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="book-cardsss">
-      <div class="image-wrapper">
-        <img src="../../resources/Books/UglyLove.png" alt="Prince and Pauper">
-      </div>
-      <div class="book-infosss">
-        <div class="book-name">Ugly Love</div>
-        <div class="rating-row">
-          <span class="star-icon">★</span>
-          <span class="rating-num">4.2</span>
-          <span class="review-count">· 360 k reviews</span>
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-      <div class="book-cardsss">
-      <div class="image-wrapper">
-        <img src="../../resources/Books/ASongOfIceAndFire.png" alt="Huckleberry Finn">
-      </div>
-      <div class="book-infosss">
-        <div class="book-name">A Song Of Ice And Fire</div>
-        <div class="rating-row">
-          <span class="star-icon">★</span>
-          <span class="rating-num">4.8</span>
-          <span class="review-count">· 4 m reviews</span>
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-
-
-    <div class="book-cardsss">
-      <div class="image-wrapper">
-        <img src="../../resources/Books/UglyLove.png" alt="Prince and Pauper">
-      </div>
-      <div class="book-infosss">
-        <div class="book-name">Prince and Pauper</div>
-        <div class="rating-row">
-          <span class="star-icon">★</span>
-          <span class="rating-num">4.2</span>
-          <span class="review-count">· 360 k reviews</span>
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <div class="book-cardsss">
-      <div class="image-wrapper">
-        <img src="../../resources/Books/UglyLove.png" alt="Prince and Pauper">
-      </div>
-      <div class="book-infosss">
-        <div class="book-name">Prince and Pauper</div>
-        <div class="rating-row">
-          <span class="star-icon">★</span>
-          <span class="rating-num">4.2</span>
-          <span class="review-count">· 360 k reviews</span>
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-
-
-    <div class="book-cardsss">
-      <div class="image-wrapper">
-        <img src="../../resources/Books/UglyLove.png" alt="Prince and Pauper">
-      </div>
-      <div class="book-infosss">
-        <div class="book-name">Prince and Pauper</div>
-        <div class="rating-row">
-          <span class="star-icon">★</span>
-          <span class="rating-num">4.2</span>
-          <span class="review-count">· 360 k reviews</span>
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="book-cardsss">
-      <div class="image-wrapper">
-        <img src="../../resources/Books/UglyLove.png" alt="Prince and Pauper">
-      </div>
-      <div class="book-infosss">
-        <div class="book-name">Prince and Pauper</div>
-        <div class="rating-row">
-          <span class="star-icon">★</span>
-          <span class="rating-num">4.2</span>
-          <span class="review-count">· 360 k reviews</span>
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-     <div class="book-cardsss">
-      <div class="image-wrapper">
-        <img src="../../resources/Books/UglyLove.png" alt="Prince and Pauper">
-      </div>
-      <div class="book-infosss">
-        <div class="book-name" id="title">Prince and Pauper</div>
-        <div class="rating-row">
-          <span class="star-icon">★</span>
-          <span class="rating-num">4.2</span>
-          <span class="review-count">· 360 k reviews</span>
-        </div>
-      </div>
+    
     </div>
 
 
@@ -369,23 +226,71 @@
 
 
     <script>
-  // Get slug from URL e.g. authors.html?slug=naguib-mahfouz
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('slug');
 
   if (slug) {
     fetch(`/api/authors/slug/${slug}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Author fetch failed');
+        return res.json();
+      })
       .then(author => {
+        // Fill author details
         document.getElementById('author-name-heading').textContent = author.name;
         document.getElementById('author-stats-sub').textContent = author.stats;
-        document.getElementById('about-title').textContent = author.aboutTitle;
-        document.getElementById('about-description').textContent = author.aboutText;
-        document.getElementById('dynamic-banner').style.backgroundImage = `url(${author.bannerImg})`;
-        document.getElementById('about-img').src = author.profileImg;
+        document.getElementById('about-title').textContent = author.aboutTitle || `ABOUT ${author.name.toUpperCase()}`;
+        document.getElementById('about-description').textContent = author.aboutText || '';
+        if (author.bannerImg) document.getElementById('dynamic-banner').style.backgroundImage = `url(${author.bannerImg})`;
+        if (author.profileImg) document.getElementById('about-img').src = author.profileImg;
+
+        // If the author document has populated `books`, use it. Otherwise fall back to name lookup.
+        if (Array.isArray(author.books) && author.books.length > 0) {
+          displayBooks(author.books);
+        } else {
+          // fallback: query books by author name
+          fetch(`/books?author=${encodeURIComponent(author.name)}`)
+            .then(r => r.ok ? r.json() : [])
+            .then(books => displayBooks(books))
+            .catch(() => displayBooks([]));
+        }
       })
       .catch(err => console.log('Error:', err));
   }
+
+  function displayBooks(books) {
+    const grid = document.getElementById('recent-books-grid');
+    grid.innerHTML = '';
+
+    if (!books || books.length === 0) {
+      grid.innerHTML = '<p style="color:#888;padding:20px">No books found for this author.</p>';
+      return;
+    }
+
+    books.forEach(book => {
+      const image = book.image || '../../resources/Books/default.png';
+      const title = book.title || book.name || 'Untitled';
+      const year = book.year || '';
+      const price = book.price ? `${book.price} EGP` : '';
+
+      grid.innerHTML += `
+        <div class="book-cardsss">
+          <div class="image-wrapper">
+            <img src="${image}" alt="${title}" class="book-img">
+          </div>
+          <div class="book-infosss">
+            <div class="book-name">${title}</div>
+            <div class="rating-row">
+              <span class="star-icon">★</span>
+              <span class="rating-num">${price}</span>
+              <span class="review-count">· ${year}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
 </script>
 
     
