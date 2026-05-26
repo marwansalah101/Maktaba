@@ -193,30 +193,37 @@
 <script src="../../script.js"></script>
 
 <script>
-  fetch('/api/authors')
-    .then(res => res.json())
-    .then(authors => {
-      const grid = document.getElementById('authorsGrid');
-      grid.innerHTML = '';
+    // Build API base: if page opened via file://, fall back to localhost server
+    const apiBase = (window.location.protocol === 'file:') ? 'http://localhost:3000' : window.location.origin;
 
-      authors.forEach(author => {
-        grid.innerHTML += `
-          <div class="author-card" onclick="window.location.href='./authors.html?slug=${author.slug}'">
-            <div class="author-card-img">
-              <img src="${author.profileImg || '../../resources/Authors/default.jpg'}" alt="${author.name}">
-            </div>
-            <div class="author-card-info">
-              <h3>${author.name}</h3>
-              <p>${author.stats}</p>
-            </div>
-          </div>
-        `;
-      });
-    })
-    .catch(err => {
-      console.log('Error:', err);
-      document.getElementById('authorsGrid').innerHTML = '<p>Failed to load authors.</p>';
-    });
+    fetch(`${apiBase}/api/authors`)
+        .then(res => {
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json();
+        })
+        .then(authors => {
+            const grid = document.getElementById('authorsGrid');
+            grid.innerHTML = '';
+
+            authors.forEach(author => {
+                grid.innerHTML += `
+                    <div class="author-card" onclick="window.location.href='./authors.html?slug=${author.slug}'">
+                        <div class="author-card-img">
+                            <img src="${author.profileImg || '../../resources/Authors/default.jpg'}" alt="${author.name}">
+                        </div>
+                        <div class="author-card-info">
+                            <h3>${author.name}</h3>
+                            <p>${author.stats}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        })
+        .catch(err => {
+            console.error('Error fetching authors:', err);
+            const grid = document.getElementById('authorsGrid');
+            grid.innerHTML = `<p>Failed to load authors: ${err.message}</p>`;
+        });
 
   // Search functionality
   document.getElementById('authorSearchInput').addEventListener('input', function() {
