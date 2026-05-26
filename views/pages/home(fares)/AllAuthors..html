@@ -188,10 +188,6 @@
     <script src="./home.js"></script>
     <script src="../../script.js"></script>
 
-    <script src="../../data.js"></script>
-<script src="./home.js"></script>
-<script src="../../script.js"></script>
-
 <script>
     // Build API base: if page opened via file://, fall back to localhost server
     const apiBase = (window.location.protocol === 'file:') ? 'http://localhost:3000' : window.location.origin;
@@ -206,15 +202,25 @@
             grid.innerHTML = '';
 
             authors.forEach(author => {
+                // Use proper path to authors page
+                const authorUrl = `../catalog(Marwan)/authors.html?slug=${author.slug}`;
+                
                 grid.innerHTML += `
-                    <div class="author-card" onclick="window.location.href='./authors.html?slug=${author.slug}'">
-                        <div class="author-card-img">
-                            <img src="${author.profileImg || '../../resources/Authors/default.jpg'}" alt="${author.name}">
-                        </div>
-                        <div class="author-card-info">
-                            <h3>${author.name}</h3>
-                            <p>${author.stats}</p>
-                        </div>
+                    <div class="author-grid-card">
+                        <a href="${authorUrl}">
+                            <div class="author-grid-image" style="background-image: url('../../${author.profileImg || 'resources/Authors/default-author.jpg'}');">
+                                <div class="author-grid-overlay">
+                                    <div class="author-grid-stats">
+                                        <div class="stats-line"></div>
+                                        <span class="stats-text">${author.books ? author.books.length : 0} BOOK${(author.books && author.books.length !== 1) ? 'S' : ''}</span>
+                                    </div>
+                                    <div class="author-grid-info">
+                                        <h3 class="author-grid-name">${author.name}</h3>
+                                        <p class="author-grid-desc">${author.stats || 'Author'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 `;
             });
@@ -222,18 +228,20 @@
         .catch(err => {
             console.error('Error fetching authors:', err);
             const grid = document.getElementById('authorsGrid');
-            grid.innerHTML = `<p>Failed to load authors: ${err.message}</p>`;
+            grid.innerHTML = `<div class="error-message">Failed to load authors: ${err.message}</div>`;
         });
 
   // Search functionality
   document.getElementById('authorSearchInput').addEventListener('input', function() {
     const query = this.value.toLowerCase();
-    const cards = document.querySelectorAll('.author-card');
+    const cards = document.querySelectorAll('.author-grid-card');
     let found = 0;
 
     cards.forEach(card => {
-      const name = card.querySelector('h3').textContent.toLowerCase();
-      if (name.includes(query)) {
+      const name = card.querySelector('.author-grid-name').textContent.toLowerCase();
+      const stats = card.querySelector('.author-grid-desc').textContent.toLowerCase();
+      
+      if (name.includes(query) || stats.includes(query)) {
         card.style.display = 'block';
         found++;
       } else {

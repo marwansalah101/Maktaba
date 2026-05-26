@@ -23,6 +23,17 @@ router.get('/slug/:slug', async (req, res) => {
     }
 });
 
+// GET books by author slug
+router.get('/slug/:slug/books', async (req, res) => {
+    try {
+        const author = await Author.findOne({ slug: req.params.slug }).populate('books');
+        if (!author) return res.status(404).json({ message: 'Author not found' });
+        res.json(author.books);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // GET author by ID
 router.get("/:id", async (req, res) => {
     try {

@@ -266,31 +266,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // All Authors Page JavaScript
 
+// ==================== ALL AUTHORS PAGE ====================
+
 class AllAuthorsPage {
     constructor() {
-        this.authorsData = {}; 
+        this.authorsData = [];
         this.authorsGrid = document.getElementById('authorsGrid');
         this.searchInput = document.getElementById('authorSearchInput');
         this.noResults = document.getElementById('noResults');
-
-        // Start the loading process
-        this.loadDataAndInit();
+        
+        if (this.authorsGrid) {
+            this.loadAuthorsFromAPI();
+        }
     }
 
-    async loadDataAndInit() {
+    async loadAuthorsFromAPI() {
         try {
-            // 1. Fetch data from your Express backend
+            // Show loading state
+            this.showLoading();
+            
+            // Fetch authors from backend API
             const response = await fetch('/api/authors');
-            const data = await response.json();
             
-            // 2. Store the data (Express returns an array, we'll keep it as is)
-            this.authorsData = data;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
-            // 3. Initialize the UI
+            const authors = await response.json();
+            this.authorsData = authors;
+            
+            // Initialize the page
             this.init();
+            
         } catch (error) {
-            console.error("Error loading authors:", error);
+            console.error('Failed to load authors:', error);
+            this.showError('Failed to load authors: ' + error.message);
         }
+    }
+
+    showLoading() {
+        this.authorsGrid.innerHTML = '<div class="loading-message">Loading authors...</div>';
+    }
+
+    showError(message) {
+        this.authorsGrid.innerHTML = `<div class="error-message">${message}</div>`;
     }
 
     init() {
@@ -302,61 +321,62 @@ class AllAuthorsPage {
     renderAuthors(filteredAuthors = null) {
         const authors = filteredAuthors || this.authorsData;
         
-        // Fade out current cards
+        // Quick fade out
         this.authorsGrid.style.opacity = '0';
-        this.authorsGrid.style.transition = 'opacity 0.2s ease';
         
         setTimeout(() => {
             this.authorsGrid.innerHTML = '';
 
-            const authorKeys = Object.keys(authors);
-            
-            if (authorKeys.length === 0) {
+            if (!Array.isArray(authors) || authors.length === 0) {
                 this.showNoResults();
                 return;
             }
 
             this.hideNoResults();
 
-            authorKeys.forEach(key => {
-                const author = authors[key];
-                const authorCard = this.createAuthorCard(key, author);
+            authors.forEach((author, index) => {
+                const authorCard = this.createAuthorCard(author, index);
                 this.authorsGrid.appendChild(authorCard);
             });
             
-            // Fade in new cards
+            // Quick fade in
             this.authorsGrid.style.opacity = '1';
             
             // Trigger reflow to restart animations
             void this.authorsGrid.offsetWidth;
-        }, 200);
+        }, 150);
     }
 
     // Create individual author card
-    createAuthorCard(authorId, author) {
+    createAuthorCard(author, index) {
         const card = document.createElement('div');
         card.className = 'author-grid-card';
         
-        // Determine the correct image path
-        let imagePath = author.profileImg;
+        // Use author slug or ID for navigation
+        const authorIdentifier = author.slug || author._id;
         
-        // If the path starts with ../../, it's already correct for the AllAuthors page
-        // If not, we need to adjust it
-        if (!imagePath.startsWith('../../')) {
-            imagePath = '../../' + imagePath;
+        // Handle image path - use profileImg from database or fallback
+        let imagePath = author.profileImg || '../../resources/Authors/default-author.jpg';
+        
+        // Ensure proper path for the AllAuthors page
+        if (!imagePath.startsWith('http') && !imagePath.startsWith('../../')) {
+            imagePath = '../../' + imagePath.replace(/^\.\//, '');
         }
 
+        // Get book count from populated books or default to 0
+        const bookCount = author.books ? author.books.length : 0;
+
         card.innerHTML = `
-            <a href="../catalog(Marwan)/authors.html?id=${authorId}">
+            <a href="../catalog(Marwan)/authors.html?slug=${authorIdentifier}">
                 <div class="author-grid-image" style="background-image: url('${imagePath}');">
                     <div class="author-grid-overlay">
                         <div class="author-grid-stats">
                             <div class="stats-line"></div>
-                            <span class="stats-text">${author.books.length} BOOK${author.books.length !== 1 ? 'S' : ''}</span>
+                            <span class="stats-text">${bookCount} BOOK${bookCount !== 1 ? 'S' : ''}</span>
                         </div>
                         <div class="author-grid-info">
                             <h3 class="author-grid-name">${author.name}</h3>
-                            <p class="author-grid-desc">${author.stats}</p>
+                            <p class="author-grid-desc">${author.stats || 'Author'}</p>
                         </div>
                     </div>
                 </div>
@@ -368,6 +388,8 @@ class AllAuthorsPage {
 
     // Setup search functionality
     setupSearch() {
+        if (!this.searchInput) return;
+        
         let searchTimeout;
         
         this.searchInput.addEventListener('input', (e) => {
@@ -376,7 +398,7 @@ class AllAuthorsPage {
             // Clear previous timeout
             clearTimeout(searchTimeout);
             
-            // Add small delay for better UX
+            // Faster debounce for snappier response
             searchTimeout = setTimeout(() => {
                 if (searchTerm === '') {
                     this.renderAuthors();
@@ -391,15 +413,15 @@ class AllAuthorsPage {
 
     // Filter authors based on search term
     filterAuthors(searchTerm) {
-        
-      // If this.authorsData is an array from the backend:
-    return this.authorsData.filter(author => {
-        const name = author.name.toLowerCase();
-        const stats = (author.stats || "").toLowerCase();
-        return name.includes(searchTerm) || stats.includes(searchTerm);
-    });
-
-       
+        return this.authorsData.filter(author => {
+            const authorName = (author.name || '').toLowerCase();
+            const authorStats = (author.stats || '').toLowerCase();
+            const aboutText = (author.aboutText || '').toLowerCase();
+            
+            return authorName.includes(searchTerm) || 
+                   authorStats.includes(searchTerm) || 
+                   aboutText.includes(searchTerm);
+        });
     }
 
     // Show no results message
