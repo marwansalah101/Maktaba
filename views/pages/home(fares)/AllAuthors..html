@@ -208,7 +208,7 @@
                 grid.innerHTML += `
                     <div class="author-grid-card">
                         <a href="${authorUrl}">
-                            <div class="author-grid-image" style="background-image: url('../../${author.profileImg || 'resources/Authors/default-author.jpg'}');">
+                            <div class="author-grid-image" style="background-image: url('${author.profileImg ? author.profileImg.replace(/\\/g, '/') : 'resources/Authors/default-author.jpg'}');">
                                 <div class="author-grid-overlay">
                                     <div class="author-grid-stats">
                                         <div class="stats-line"></div>
