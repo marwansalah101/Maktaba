@@ -1723,44 +1723,68 @@
 .collection-more-wrap {
     display: flex;
     justify-content: center;
-    padding: 30px 20px 60px;
+    padding: 40px 20px 64px;
     border-bottom: 1px solid #d9d0c4;
     background: linear-gradient(180deg, rgba(240, 237, 229, 0.4) 0%, rgba(240, 237, 229, 0.95) 100%);
 }
 
-.collection-more-btn {
-    position: relative;
+/* ── Pagination ── */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.page-btn {
     font-family: 'Jost', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: #312F2C;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #d9d0c4;
     background: transparent;
-    border: 1px solid #312F2C;
-    padding: 14px 14px 14px 24px;
+    color: #312F2C;
     cursor: pointer;
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 10px 24px rgba(49, 47, 44, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.collection-more-btn::after {
-    content: '→';
-    margin-left: 10px;
-}
-
-.collection-more-btn:hover {
-    transform: translateY(-2px);
+.page-btn:hover:not([disabled]) {
     background: #312F2C;
-    color: #ffffff;
-    box-shadow: 0 14px 30px rgba(49, 47, 44, 0.12);
-    transition: transform 0.4s ease, background 0.4s ease-in-out, box-shadow 0.2s ease;
+    color: #fff;
+    border-color: #312F2C;
 }
 
-.collection-more-btn:disabled {
-    opacity: 0.45;
+.page-btn.page-active {
+    background: #312F2C;
+    color: #fff;
+    border-color: #312F2C;
+    font-weight: 500;
+}
+
+.page-btn[disabled] {
+    opacity: 0.28;
     cursor: default;
-    transform: none;
-    box-shadow: none;
+}
+
+.page-btn.page-prev,
+.page-btn.page-next {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.page-ellipsis {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: #8C7B75;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    user-select: none;
 }
 
 /* ── THE GRID ── */
@@ -1786,7 +1810,7 @@
     gap: 0;
     cursor: pointer;
     transition: background 0.22s ease;
-    animation: fade-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: fade-up 0.45s cubic-bezier(0.23, 1, 0.32, 1) both;
     min-height: 400px;
 }
 .book-listing:hover {
@@ -1819,21 +1843,56 @@
 .book-cover-wrap {
     flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     margin-bottom: 18px;
-    min-height: 220px;
+    min-height: 240px;
+    overflow: visible;
+}
+.book-cover-stage {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+}
+.book-cover-glow {
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0.72) scaleY(0.22);
+    transform-origin: bottom center;
+    width: 100%;
+    height: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    filter: blur(20px) saturate(2.2) brightness(0.72);
+    opacity: 0.42;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.42s cubic-bezier(0.23, 1, 0.32, 1),
+                transform 0.42s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.book-listing:hover .book-cover-glow {
+    opacity: 0.62;
+    transform: translateX(-50%) scaleX(0.82) scaleY(0.32) translateY(6px);
 }
 .book-cover {
+    position: relative;
+    z-index: 1;
     display: block;
     width: auto;
     max-width: 100%;
     height: 220px;
     object-fit: contain;
-    transition: transform 0.35s ease;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.12));
+    transition: transform 0.42s cubic-bezier(0.23, 1, 0.32, 1),
+                filter  0.42s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .book-listing:hover .book-cover {
-    transform: translateY(-5px) scale(1.02);
+    transform: translateY(-10px) scale(1.03);
+    filter: drop-shadow(0 14px 24px rgba(0,0,0,0.18));
 }
 
 .book-meta {
@@ -1907,7 +1966,8 @@
     transform: translateY(0);
     visibility: visible;
 }
-.add-to-cart:hover { background-color: #646362; }
+.add-to-cart:hover  { background-color: #646362; }
+.add-to-cart:active { transform: scale(0.97); }
 
 @keyframes fade-up {
     from { transform: translateY(18px); opacity: 0; }

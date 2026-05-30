@@ -46,16 +46,43 @@ function flyToCart(sourceEl) {
    Everything runs inside DOMContentLoaded so the DOM is ready
    and the Books array from data.js is available.
 ──────────────────────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-    /* ── Resolve book from URL parameter ── */
+    /* ── Slug helper (mirrors catalog.js normalizeSlug) ── */
+    function toSlug(s) {
+        return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    }
+
+    /* ── Resolve book — supports clean /book/:slug and legacy ?title= ── */
+    const pathMatch = window.location.pathname.match(/\/book\/([^/]+)$/);
+    const slug      = pathMatch ? pathMatch[1] : null;
     const params    = new URLSearchParams(window.location.search);
     const bookTitle = decodeURIComponent(params.get('title') || '');
-    const basePath  = window.location.pathname.includes('/pages/') ? '../../' : './';
 
-    if (!bookTitle || typeof Books === 'undefined') return;
+    /* Images are always served from the root regardless of URL shape */
+    const basePath = '/';
 
-    const selectedBook = Books.find(b => b.title === bookTitle);
+    let selectedBook = null;
+
+    if (slug) {
+        try {
+            const res = await fetch(`/books/slug/${encodeURIComponent(slug)}`);
+            if (res.ok) selectedBook = await res.json();
+        } catch (_) {}
+        if (!selectedBook && typeof Books !== 'undefined') {
+            selectedBook = Books.find(b => toSlug(b.title) === slug) || null;
+        }
+    } else if (bookTitle) {
+        if (typeof Books !== 'undefined') {
+            selectedBook = Books.find(b => b.title === bookTitle) || null;
+        }
+        if (!selectedBook) {
+            try {
+                const res = await fetch(`/books/title/${encodeURIComponent(bookTitle)}`);
+                if (res.ok) selectedBook = await res.json();
+            } catch (_) {}
+        }
+    }
 
     if (!selectedBook) {
         document.querySelector('.product-page').innerHTML =
@@ -69,8 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('main-price').innerText        = `€${selectedBook.price}`;
     document.getElementById('main-description').innerText  = selectedBook.description;
     document.getElementById('main-quote').innerText        = `"${selectedBook.quote}"`;
-    document.getElementById('main-image').src              = basePath + selectedBook.image;
-    document.getElementById('main-image').alt              = selectedBook.title;
+    const imgEl  = document.getElementById('main-image');
+    imgEl.src    = selectedBook.image.startsWith('http') ? selectedBook.image : basePath + selectedBook.image;
+    imgEl.alt    = selectedBook.title;
     document.getElementById('main-year').innerText         = selectedBook.year;
     document.getElementById('main-pages').innerText        = `${selectedBook.pages} pages`;
     document.getElementById('main-language').innerText     = selectedBook.language;
@@ -176,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ── Buy Now button ────────────────────────────────────────── */
     document.querySelector('.buy-now-btn').addEventListener('click', () => {
         addBookToCart();
-        window.location.href = basePath + 'pages/checkout(Rojeh)/checkout.html';
+        window.location.href = '/pages/checkout(Rojeh)/checkout.html';
     });
 
     /* ── Share button ──────────────────────────────────────────────
@@ -247,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 '<p style="font-family:Jost,sans-serif;font-size:12px;color:#8C7B75;">No similar books found.</p>';
         } else {
             suggestedBooksContainer.innerHTML = pool.slice(0, 8).map(book => `
-                <a href="product.html?title=${encodeURIComponent(book.title)}" class="suggested-book">
+                <a href="/book/${toSlug(book.title)}" class="suggested-book">
                     <img src="${basePath}${book.image}" alt="${book.title}">
                     <div class="suggested-book-title">${book.title}</div>
                 </a>
