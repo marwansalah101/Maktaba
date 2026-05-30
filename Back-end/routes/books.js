@@ -8,6 +8,10 @@ function escapeRegex(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function toSlug(s) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 // GET genres with book counts, sorted by count desc
 router.get("/genres", async (req, res) => {
     try {
@@ -72,6 +76,19 @@ router.get("/author", async (req, res) => {
 });
 
 
+
+// GET book by URL slug (e.g. "a-song-of-ice-and-fire")
+router.get("/slug/:slug", async (req, res) => {
+    try {
+        const slug  = req.params.slug;
+        const books = await Book.find({});
+        const book  = books.find(b => toSlug(b.title) === slug);
+        if (!book) return res.status(404).json({ error: "Book not found" });
+        res.json(book);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 // POST — create a new book
 router.post("/", async (req, res) => {
