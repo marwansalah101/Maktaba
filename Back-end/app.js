@@ -119,6 +119,13 @@ app.post('/api/recommend', async (req, res) => {
     }
 });
 
+/* ── Clean page URLs ────────────────────────────────────────────── */
+const productHtmlPath    = path.join(__dirname, '..', 'views', 'pages', 'product(Marwan)', 'product.html');
+const collectionHtmlPath = path.join(__dirname, '..', 'views', 'pages', 'catalog(Marwan)', 'collection.html');
+
+app.get('/book/:slug',  (req, res) => res.sendFile(productHtmlPath));
+app.get('/collection',  (req, res) => res.sendFile(collectionHtmlPath));
+
 /* ── API routes — rate limiter applied here, after static files ────
    routes.js mounts:  /books         → books.js
                       /api/authors   → Authors.js              */

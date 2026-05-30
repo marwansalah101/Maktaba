@@ -466,15 +466,14 @@ function flyToCart(sourceEl) {
    call renderBooks(getFilteredBooks()) independently.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 const container = document.getElementById("books-container");
-const seeMoreBtn = document.getElementById('seeMoreBtn');
 
 let activeGenre = 'all';
 let activeSort  = 'default';
 let searchQuery = '';
-let visibleBookCount = 4;
+let currentPage = 1;
 let _backendBooks = null; /* populated by initCollectionPage() */
 
-const BOOKS_PAGE_SIZE = 4;
+const PAGE_SIZE = 20;
 
 /* Check URL for genre parameter (from genre browse page) */
 const urlParams = new URLSearchParams(window.location.search);
@@ -494,7 +493,7 @@ function sortBooks(books) {
 
 /* Applies active genre filter + live search, then sorts */
 function getFilteredBooks() {
-    let books = _backendBooks ? [..._backendBooks]
+    let books = (_backendBooks && _backendBooks.length > 0) ? [..._backendBooks]
               : (typeof Books !== 'undefined' ? [...Books] : []);
     if (activeGenre !== 'all') {
         const norm = s => s.toLowerCase().replace(/-/g, ' ').trim();
@@ -516,36 +515,38 @@ function renderBooks(booksToRender) {
     if (!container) return;
     container.innerHTML = '';
 
-    const visibleBooks = booksToRender.slice(0, visibleBookCount);
+    const totalPages  = Math.ceil(booksToRender.length / PAGE_SIZE);
+    if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+
+    const startIdx   = (currentPage - 1) * PAGE_SIZE;
+    const visibleBooks = booksToRender.slice(startIdx, startIdx + PAGE_SIZE);
 
     // Update the "N Books" count label
     const countEl = document.getElementById('book-count');
     if (countEl) {
-        const totalLabel = booksToRender.length + (booksToRender.length === 1 ? ' Book' : ' Books');
-        countEl.textContent = visibleBooks.length < booksToRender.length
-            ? `${visibleBooks.length} of ${totalLabel}`
-            : totalLabel;
+        countEl.textContent = booksToRender.length + (booksToRender.length === 1 ? ' Book' : ' Books');
     }
 
     if (booksToRender.length === 0) {
-        if (seeMoreBtn) seeMoreBtn.style.display = 'none';
         container.innerHTML =
             '<p style="grid-column:1/-1;text-align:center;padding:60px 0;font-family:Jost,sans-serif;font-size:14px;color:#8C7B75;">No books found.</p>';
+        renderPagination(0);
         return;
     }
 
     const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
 
-    visibleBooks.forEach(book => {
+    visibleBooks.forEach((book, index) => {
         const card        = document.createElement('div');
         card.classList.add('book-listing');
+        card.style.animationDelay = `${index * 55}ms`;
 
-        const bookParam  = encodeURIComponent(book.title);
-        const productUrl = `${basePath}pages/product(Marwan)/product.html?title=${bookParam}`;
+        const productUrl  = `/book/${normalizeSlug(book.title)}`;
+        const imgSrc      = book.image.startsWith('http') ? book.image : `${basePath}${book.image}`;
 
         /* Card structure:
            - .book-rating-row  — star rating at the top
-           - .book-cover-wrap  — linked book cover image
+           - .book-cover-wrap  — linked book cover image with glow bloom
            - .book-meta        — genre tag, title link, author, price
            - .add-to-cart      — hidden until hover (CSS opacity trick)
         */
@@ -555,7 +556,10 @@ function renderBooks(booksToRender) {
             <span class="book-stars-count">(5)</span>
           </div>
           <a href="${productUrl}" class="book-cover-wrap book-link">
-            <img class="book-cover" src="${basePath}${book.image}" alt="${book.title}">
+            <div class="book-cover-stage">
+              <img class="book-cover-glow" src="${imgSrc}" aria-hidden="true" draggable="false">
+              <img class="book-cover" src="${imgSrc}" alt="${book.title}">
+            </div>
           </a>
           <div class="book-meta">
             <p class="book-genre-tag">${book.genre}</p>
@@ -602,11 +606,45 @@ function renderBooks(booksToRender) {
         container.appendChild(card);
     });
 
-    if (seeMoreBtn) {
-        const hasMore = visibleBooks.length < booksToRender.length;
-        seeMoreBtn.style.display = hasMore ? 'inline-flex' : 'none';
-        seeMoreBtn.disabled = !hasMore;
-    }
+    renderPagination(totalPages);
+}
+
+/* Builds a page-number array with ellipsis, e.g. [1,'...',4,5,6,'...',12] */
+function getPageNumbers(current, total) {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages = [1];
+    if (current - 2 > 2) pages.push('...');
+    for (let i = Math.max(2, current - 2); i <= Math.min(total - 1, current + 2); i++) pages.push(i);
+    if (current + 2 < total - 1) pages.push('...');
+    pages.push(total);
+    return pages;
+}
+
+/* Renders pagination controls into .collection-more-wrap */
+function renderPagination(totalPages) {
+    const wrap = document.querySelector('.collection-more-wrap');
+    if (!wrap) return;
+    if (totalPages <= 1) { wrap.innerHTML = ''; return; }
+
+    const pages = getPageNumbers(currentPage, totalPages);
+    wrap.innerHTML = `
+        <nav class="pagination" aria-label="Books pagination">
+            <button class="page-btn page-prev" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}" aria-label="Previous page">&#8249;</button>
+            ${pages.map(p => p === '...'
+                ? '<span class="page-ellipsis">…</span>'
+                : `<button class="page-btn${p === currentPage ? ' page-active' : ''}" data-page="${p}" aria-label="Page ${p}">${p}</button>`
+            ).join('')}
+            <button class="page-btn page-next" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}" aria-label="Next page">&#8250;</button>
+        </nav>
+    `;
+
+    wrap.querySelectorAll('.page-btn:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentPage = parseInt(btn.dataset.page);
+            renderBooks(getFilteredBooks());
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
 }
 
 /* Initial render — collection page fetches from backend; author page uses data.js */
@@ -648,7 +686,7 @@ if (filterLinks.length > 0) {
             filterLinks.forEach(l => l.classList.remove('filter-active'));
             e.currentTarget.classList.add('filter-active');
             activeGenre = e.currentTarget.dataset.genre || 'all';
-            visibleBookCount = BOOKS_PAGE_SIZE;
+            currentPage = 1;
             renderBooks(getFilteredBooks());
         });
     });
@@ -670,7 +708,7 @@ if (filterLinks.length > 0) {
             link.addEventListener('click', e => {
                 e.preventDefault();
                 activeSort = e.currentTarget.dataset.sort;
-                visibleBookCount = BOOKS_PAGE_SIZE;
+                currentPage = 1;
                 sortPanel.classList.remove('open');
                 const labels = {
                     'default':    'Sort by ▾',
@@ -697,18 +735,12 @@ if (filterLinks.length > 0) {
     if (collectionSearch) {
         collectionSearch.addEventListener('input', () => {
             searchQuery = collectionSearch.value.trim().toLowerCase();
-            visibleBookCount = BOOKS_PAGE_SIZE;
+            currentPage = 1;
             renderBooks(getFilteredBooks());
         });
     }
 }
 
-if (seeMoreBtn) {
-    seeMoreBtn.addEventListener('click', () => {
-        visibleBookCount += BOOKS_PAGE_SIZE;
-        renderBooks(getFilteredBooks());
-    });
-}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    SECTION 4 — AUTHOR PAGE: scroll effects
@@ -762,10 +794,7 @@ function resolveBookByTitle(title) {
 
 /* Builds the product page URL for a given title */
 function getProductUrl(title) {
-    const productPath = window.location.pathname.includes('/pages/')
-        ? '../product(Marwan)/product.html'
-        : './pages/product(Marwan)/product.html';
-    return `${productPath}?title=${encodeURIComponent(title)}`;
+    return `/book/${normalizeSlug(title)}`;
 }
 
 /* Adds a book to the cart localStorage array (increments qty if already present) */
@@ -825,6 +854,7 @@ function renderRecentBooks(authorName) {
         const formattedPrice = Number.isFinite(price) ? `$${price.toFixed(2)}` : `$${book.price}`;
         const subLine        = `${book.genre} / ${book.year}`;
         const productUrl     = getProductUrl(book.title);
+        const imgSrc         = book.image.startsWith('http') ? book.image : `${basePath}${book.image}`;
         return `
             <article class="recent-book-card">
                 <a class="recent-book-link" href="${productUrl}">
@@ -832,7 +862,7 @@ function renderRecentBooks(authorName) {
                         <h3 class="recent-book-title">${book.title}</h3>
                     </div>
                     <div class="recent-book-image-wrap">
-                        <img src="${basePath}${book.image}" alt="${book.title}">
+                        <img src="${imgSrc}" alt="${book.title}">
                     </div>
                 </a>
                 <p class="recent-book-subline">${subLine}</p>

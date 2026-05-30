@@ -1,0 +1,698 @@
+/* ═══════════════════════════════════════════════════════════════
+   MAKTABA — BROWSE PAGE
+   Design language: Khufu editorial aesthetic × Maktaba palette
+   Tokens: cream #F0EDE5 · ink #312F2C · muted #8C7B75
+           gold #C8975A · border #d9d0c4 · warm #4A2C2A
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+    --bg:      #F0EDE5;
+    --ink:     #312F2C;
+    --muted:   #8C7B75;
+    --gold:    #C8975A;
+    --border:  #d9d0c4;
+    --warm:    #4A2C2A;
+    --white:   #FAFAF8;
+}
+
+/* ─── Base ──────────────────────────────────────────────────── */
+
+.browse-body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Screen-reader only */
+.bw-sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+}
+
+/* ─── Shared typography — Khufu mixed-weight technique ──────── */
+
+/* Thin, wide capitals (the "AT THE EDGE" part) */
+.bht-thin {
+    display: block;
+    font-family: 'Lora', serif;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: 0.10em;
+    line-height: 1.0;
+}
+
+/* Bold italic (the "DINING" / hero word) */
+.bht-bold {
+    display: block;
+    font-family: 'Lora', serif;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+}
+
+/* Eyebrow label — tiny caps, wide tracking */
+.bw-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 20px;
+    text-align: center;
+}
+.bw-eyebrow--left { text-align: left; }
+
+/* Section title */
+.bw-section-title {
+    font-size: clamp(40px, 6vw, 72px);
+    margin: 0 0 12px;
+}
+
+/* Script subtitle — Dancing Script for Khufu-style handwriting */
+.bw-section-script {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(18px, 2.2vw, 26px);
+    font-weight: 500;
+    color: var(--muted);
+    margin: 0;
+    letter-spacing: 0.01em;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 1 — HERO
+═══════════════════════════════════════════════════════════════ */
+
+.bw-hero {
+    position: relative;
+    min-height: 100vh;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: 80px;
+}
+
+/* Subtle background grid of hairlines — like Khufu's textured panels */
+.bw-hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(200, 151, 90, 0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200, 151, 90, 0.10) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none;
+}
+
+/* Hero content */
+.bw-hero-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 0 48px;
+    max-width: 1000px;
+}
+
+.bw-hero-title {
+    font-size: clamp(52px, 9vw, 116px);
+    margin: 0 0 24px;
+    line-height: 1.0;
+}
+
+.bw-hero-script {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(20px, 2.8vw, 32px);
+    font-weight: 500;
+    color: var(--muted);
+    margin: 0 0 48px;
+}
+
+/* CTA — underline only, no button box (Khufu technique) */
+.bw-hero-cta {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+}
+.bw-hero-cta:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+}
+
+/* ─── Scrolling marquee ────────────────────────────────── */
+
+.bw-marquee {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    padding: 14px 0;
+    background: rgba(240, 237, 229, 0.85);
+    backdrop-filter: blur(6px);
+}
+
+.bw-marquee-track {
+    display: flex;
+    gap: 32px;
+    width: max-content;
+    animation: bw-scroll 28s linear infinite;
+    font-family: 'Lora', serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+}
+.bw-marquee-track:hover { animation-play-state: paused; }
+
+.bw-mdot { color: var(--gold); font-size: 10px; }
+
+@keyframes bw-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 2 — GENRES GRID
+   3 × 2 grid, dark / cream / gold alternation
+═══════════════════════════════════════════════════════════════ */
+
+.bw-genres {
+    background: var(--bg);
+    padding: 80px 0 0;
+}
+
+.bw-section-header {
+    padding: 0 64px 56px;
+}
+
+/* ─── 3-column grid, each card equal height ────────────── */
+.bw-genres-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    background: var(--border);
+}
+
+/* ─── Individual genre card ─────────────────────────────── */
+.bw-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 400px;
+    padding: 36px 40px;
+    text-decoration: none;
+    overflow: hidden;
+    /* Scroll-reveal: starts invisible, translates up */
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+        opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bw-card--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Ghost section number — large, bottom-right, faint */
+.bw-card-num {
+    position: absolute;
+    bottom: -20px;
+    right: 24px;
+    font-family: 'Lora', serif;
+    font-size: 160px;
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.55s ease;
+}
+
+.bw-card-body {
+    position: relative;
+    z-index: 1;
+}
+
+.bw-card-tag {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    transition: color 0.3s;
+}
+
+.bw-card-name {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 3.2vw, 46px);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+    margin: 0 0 16px;
+    transition: color 0.3s;
+}
+
+/* Description + CTA: hidden by default, revealed on hover */
+.bw-card-desc {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0 0 20px;
+    max-width: 320px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+        max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity    0.35s ease;
+}
+
+.bw-card-cta {
+    display: inline-block;
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+        opacity   0.35s ease 0.05s,
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
+}
+
+.bw-card:hover .bw-card-desc {
+    max-height: 200px;
+    opacity: 1;
+}
+.bw-card:hover .bw-card-cta {
+    opacity: 1;
+    transform: translateY(0);
+}
+.bw-card:hover .bw-card-num {
+    transform: translateY(-12px);
+    opacity: 0.6;
+}
+
+/* ─── Card colour variants ──────────────────────────────── */
+
+/* Cream — warm background, ink text */
+.bw-card--cream {
+    background: var(--bg);
+    color: var(--ink);
+}
+.bw-card--cream .bw-card-num { color: var(--gold); opacity: 0.14; }
+.bw-card--cream .bw-card-tag { color: var(--muted); }
+.bw-card--cream .bw-card-name { color: var(--ink); }
+.bw-card--cream .bw-card-desc { color: var(--warm); }
+.bw-card--cream .bw-card-cta { color: var(--ink); }
+.bw-card--cream::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,151,90,0.06) 0%, transparent 60%);
+    transition: opacity 0.4s;
+    opacity: 0;
+}
+.bw-card--cream:hover::before { opacity: 1; }
+
+/* Dark — near-black background, cream text */
+.bw-card--dark {
+    background: #252220;
+    color: #EDE9E2;
+}
+.bw-card--dark .bw-card-num { color: rgba(237,233,226,0.06); opacity: 1; }
+.bw-card--dark .bw-card-tag { color: rgba(237,233,226,0.45); }
+.bw-card--dark .bw-card-name { color: #EDE9E2; }
+.bw-card--dark .bw-card-desc { color: rgba(237,233,226,0.72); }
+.bw-card--dark .bw-card-cta { color: #EDE9E2; }
+.bw-card--dark:hover { background: #2e2b28; }
+
+/* Warm dark — deep warm brown, cream text */
+.bw-card--warm-dark {
+    background: #3a3028;
+    color: #EDE9E2;
+}
+.bw-card--warm-dark .bw-card-num { color: rgba(200,151,90,0.10); opacity: 1; }
+.bw-card--warm-dark .bw-card-tag { color: rgba(200,151,90,0.65); }
+.bw-card--warm-dark .bw-card-name { color: #EDE9E2; }
+.bw-card--warm-dark .bw-card-desc { color: rgba(237,233,226,0.72); }
+.bw-card--warm-dark .bw-card-cta { color: var(--gold); }
+.bw-card--warm-dark:hover { background: #42382e; }
+
+/* Gold — the vivid accent card, like Khufu's olive/brown panel */
+.bw-card--gold {
+    background: var(--gold);
+    color: #1e1410;
+}
+.bw-card--gold .bw-card-num { color: rgba(30,20,16,0.10); opacity: 1; }
+.bw-card--gold .bw-card-tag { color: rgba(30,20,16,0.55); }
+.bw-card--gold .bw-card-name { color: #1e1410; }
+.bw-card--gold .bw-card-desc { color: rgba(30,20,16,0.75); }
+.bw-card--gold .bw-card-cta { color: #1e1410; }
+.bw-card--gold:hover { background: #bf8e4e; }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DIVIDER
+═══════════════════════════════════════════════════════════════ */
+
+.bw-rule {
+    height: 1px;
+    background: var(--border);
+    margin: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION 3 — AI RECOMMENDATION
+   Left: editorial header | Right: chat interface
+═══════════════════════════════════════════════════════════════ */
+
+.bw-ai {
+    background: var(--white);
+    padding: 0;
+}
+
+.bw-ai-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 680px;
+}
+
+/* ─── Left column: editorial intro ─────────────────────── */
+
+.bw-ai-left {
+    padding: 80px 72px 80px 64px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bw-ai-title {
+    font-size: clamp(36px, 5vw, 64px);
+    margin: 0 0 14px;
+    line-height: 1.0;
+}
+
+.bw-ai-script {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(18px, 2.2vw, 26px);
+    font-weight: 500;
+    color: var(--muted);
+    margin: 0 0 28px;
+}
+
+.bw-ai-desc {
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    line-height: 1.82;
+    color: var(--warm);
+    max-width: 52ch;
+    margin: 0 0 36px;
+}
+
+/* Mood chips — no button borders, just underlined text labels */
+.bw-moods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+}
+
+.bw-mood-chip {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 6px 0;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: color 0.2s, border-color 0.2s;
+}
+.bw-mood-chip:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+}
+
+/* ─── Right column: chat interface ─────────────────────── */
+
+.bw-ai-right {
+    padding: 56px 64px 56px 72px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(200,151,90,0.04) 0%, transparent 50%);
+}
+
+.bw-chat {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    height: 540px;
+}
+
+/* Chat header */
+.bw-chat-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.bw-chat-identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bw-chat-avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    flex-shrink: 0;
+}
+
+.bw-chat-name {
+    font-family: 'Lora', serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 0 0 2px;
+}
+
+.bw-chat-status {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bw-status-dot {
+    width: 5px;
+    height: 5px;
+    background: #2d9e5e;
+    border-radius: 50%;
+    display: inline-block;
+    animation: bw-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes bw-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
+}
+
+/* Messages feed */
+.bw-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+}
+
+.bw-chat-messages::-webkit-scrollbar { width: 2px; }
+.bw-chat-messages::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* Message rows */
+.bw-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.bw-msg--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Bubbles */
+.bw-bubble {
+    font-family: 'Jost', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.72;
+    padding: 12px 16px;
+    max-width: 88%;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* AI bubble — left-aligned, cream tinted */
+.bw-msg--ai { align-items: flex-start; }
+.bw-msg--ai .bw-bubble {
+    background: rgba(240, 237, 229, 0.85);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--gold);
+}
+
+/* User bubble — right-aligned, dark */
+.bw-msg--user { align-items: flex-end; }
+.bw-msg--user .bw-bubble {
+    background: var(--ink);
+    color: #F0EDE5;
+    border: 1px solid var(--ink);
+}
+
+.bw-msg-time {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0 4px;
+}
+
+/* Streaming cursor */
+.bw-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 13px;
+    background: var(--gold);
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: bw-blink 0.9s step-end infinite;
+}
+@keyframes bw-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+/* Typing indicator */
+.bw-typing {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 20px;
+    height: 0;
+    overflow: hidden;
+    transition: height 0.2s ease;
+    flex-shrink: 0;
+}
+.bw-typing--on {
+    height: 36px;
+}
+.bw-typing span {
+    width: 5px;
+    height: 5px;
+    background: var(--muted);
+    border-radius: 50%;
+    animation: bw-dot 1.2s ease-in-out infinite;
+}
+.bw-typing span:nth-child(2) { animation-delay: 0.2s; }
+.bw-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bw-dot {
+    0%, 80%, 100% { transform: scale(1); opacity: 0.4; }
+    40%           { transform: scale(1.4); opacity: 1; }
+}
+
+/* Input row */
+.bw-chat-input-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.bw-chat-textarea {
+    flex: 1;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 14px 16px;
+    line-height: 1.5;
+    max-height: 120px;
+    overflow-y: auto;
+}
+.bw-chat-textarea::placeholder { color: var(--muted); font-size: 12px; }
+
+.bw-chat-send {
+    width: 48px;
+    height: 48px;
+    background: var(--ink);
+    border: none;
+    color: var(--bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.25s ease;
+    align-self: flex-end;
+}
+.bw-chat-send:hover { background: var(--gold); }
+
+.bw-chat-hint {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 16px;
+    border-top: 1px solid rgba(217,208,196,0.5);
+    margin: 0;
+    flex-shrink: 0;
+}

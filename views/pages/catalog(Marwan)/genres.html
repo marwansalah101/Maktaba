@@ -3,309 +3,487 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maktaba — Browse Genres</title>
-    <link rel="stylesheet" href="../../styles.css">
-    <link rel="stylesheet" href="./catalog.css">
+    <title>Maktaba — Browse</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/pages/catalog(Marwan)/genres.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,300..700;1,300..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-    <link rel="icon" type="image/svg+xml" sizes="64x64" href="../../resources/asset/Logo.svg">
+    <link rel="icon" type="image/svg+xml" sizes="64x64" href="/resources/asset/Logo.svg">
 </head>
 
-<body class="g3-body">
+<body class="browse-body">
 
-    <!-- ════════ NAVBAR ════════ -->
     <nav class="navbar">
         <div id="Maktaba">
-            <a href="#Maktaba"><h1>Maktaba</h1></a>
+            <a href="/home.html"><h1>Maktaba</h1></a>
         </div>
         <ul class="navrbar-text">
-            <li><a href="../../home.html">Home</a></li>
-            <li><a href="./genres.html" class="active-link">Browse</a></li>
-            <li><a href="./collection.html">Collection</a></li>
-            <li><a href="../account(Mikha)/favorites.html">Favourites</a></li>
+            <li><a href="/home.html">Home</a></li>
+            <li><a href="/pages/catalog(Marwan)/genres.html" class="active-link">Browse</a></li>
+            <li><a href="/pages/catalog(Marwan)/collection.html">Collection</a></li>
+            <li><a href="/pages/account(Mikha)/favorites.html">Favourites</a></li>
         </ul>
         <div class="navbar-icons">
-            <a href="../checkout(Rojeh)/add-to-cart.html">
+            <a href="/pages/checkout(Rojeh)/add-to-cart.html">
                 <span class="material-symbols-outlined">shopping_bag</span>
             </a>
             <div class="menu-dropdown-wrapper" id="menuWrapper">
                 <span class="material-symbols-outlined" id="menuBtn">menu</span>
             </div>
             <div class="menu-dropdown" id="menuDropdown">
-                <a href="../home(fares)/AllAuthors..html">Authors</a>
-                <a href="../authentication(Ali)/signup.html">Profile</a>
-                <a href="../account(Mikha)/settings.html">Settings</a>
-                <a href="../account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
+                <a href="/pages/home(fares)/AllAuthors.html">Authors</a>
+                <a href="/pages/authentication(Ali)/signup.html">Profile</a>
+                <a href="/pages/account(Mikha)/settings.html">Settings</a>
+                <a href="/pages/account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
             </div>
         </div>
     </nav>
 
 
-    <!-- ═══════════════════════════════════════════════
-         HERO — Split editorial, dark cinematic opening
-    ═══════════════════════════════════════════════ -->
-    <section class="g3-hero" aria-label="Hero">
+    <!-- ═══════════════════════════════════════════════════════
+         HERO — editorial, Khufu-style mixed-weight title
+    ═══════════════════════════════════════════════════════ -->
+    <section class="bw-hero">
+        <div class="bw-hero-grid" aria-hidden="true"></div>
 
-        <!-- Noise texture -->
-        <div class="g3-grain" aria-hidden="true"></div>
+        <div class="bw-hero-inner">
+            <p class="bw-eyebrow">— MAKTABA · BROWSE</p>
 
-        <!-- Main two-column layout -->
-        <div class="g3-hero-inner">
+            <h1 class="bw-hero-title">
+                <span class="bht-thin">EXPLORE</span>
+                <em class="bht-bold">THE ARCHIVE</em>
+                <span class="bht-thin">OF STORIES</span>
+            </h1>
 
-            <!-- Left: Big editorial title -->
-            <div class="g3-hero-left">
-                <p class="g3-hero-label">
-                    <span class="g3-label-dot" aria-hidden="true"></span>
-                    Maktaba · Browse Collection
-                </p>
-                <h1 class="g3-hero-title" aria-label="Browse the Archive">
-                    <span class="g3-tl g3-tl--solid"   style="--i:0">Browse</span>
-                    <span class="g3-tl g3-tl--outline"  style="--i:1">the</span>
-                    <span class="g3-tl g3-tl--solid"   style="--i:2">Archive.</span>
-                </h1>
-                <p class="g3-hero-sub">Six genres. One library. Your next favourite read.</p>
-            </div>
+            <p class="bw-hero-script">Six worlds. One library.</p>
 
-            <!-- Right: Genre rotator + live stats -->
-            <div class="g3-hero-right">
-
-                <!-- Genre name rotator (cycles through genre names in their colour) -->
-                <div class="g3-rotator" aria-hidden="true" id="g3Rotator">
-                    <span class="g3-ri" style="--rc:#8B5CF6" data-active="true">Fantasy</span>
-                    <span class="g3-ri" style="--rc:#EF4444">Horror</span>
-                    <span class="g3-ri" style="--rc:#3B82F6">Thriller</span>
-                    <span class="g3-ri" style="--rc:#10B981">Science Fiction</span>
-                    <span class="g3-ri" style="--rc:#F59E0B">Adventure</span>
-                    <span class="g3-ri" style="--rc:#EC4899">Drama</span>
-                </div>
-
-                <!-- Live stats pulled from DB -->
-                <div class="g3-hero-stats" aria-label="Collection statistics">
-                    <div class="g3-hero-stat">
-                        <span class="g3-stat-n" id="g3BookCount">—</span>
-                        <span class="g3-stat-l">Books in<br>our collection</span>
-                    </div>
-                    <div class="g3-stat-rule" aria-hidden="true"></div>
-                    <div class="g3-hero-stat">
-                        <span class="g3-stat-n">6</span>
-                        <span class="g3-stat-l">Hand-curated<br>genres</span>
-                    </div>
-                </div>
-            </div>
+            <a href="#bw-genres" class="bw-hero-cta">Discover the Collection</a>
         </div>
 
-        <!-- Infinite scrolling genre marquee at the hero base -->
-        <div class="g3-marquee" aria-hidden="true">
-            <div class="g3-mtrack">
-                <span>Fantasy</span><span class="g3-mdot">·</span>
-                <span>Horror</span><span class="g3-mdot">·</span>
-                <span>Thriller</span><span class="g3-mdot">·</span>
-                <span>Science Fiction</span><span class="g3-mdot">·</span>
-                <span>Adventure</span><span class="g3-mdot">·</span>
-                <span>Drama</span><span class="g3-mdot">·</span>
-                <span>Fantasy</span><span class="g3-mdot">·</span>
-                <span>Horror</span><span class="g3-mdot">·</span>
-                <span>Thriller</span><span class="g3-mdot">·</span>
-                <span>Science Fiction</span><span class="g3-mdot">·</span>
-                <span>Adventure</span><span class="g3-mdot">·</span>
-                <span>Drama</span><span class="g3-mdot">·</span>
+        <!-- Scrolling genre marquee -->
+        <div class="bw-marquee" aria-hidden="true">
+            <div class="bw-marquee-track">
+                <span>Fantasy</span><span class="bw-mdot">·</span>
+                <span>Horror</span><span class="bw-mdot">·</span>
+                <span>Thriller</span><span class="bw-mdot">·</span>
+                <span>Science Fiction</span><span class="bw-mdot">·</span>
+                <span>Adventure</span><span class="bw-mdot">·</span>
+                <span>Drama</span><span class="bw-mdot">·</span>
+                <span>Fantasy</span><span class="bw-mdot">·</span>
+                <span>Horror</span><span class="bw-mdot">·</span>
+                <span>Thriller</span><span class="bw-mdot">·</span>
+                <span>Science Fiction</span><span class="bw-mdot">·</span>
+                <span>Adventure</span><span class="bw-mdot">·</span>
+                <span>Drama</span><span class="bw-mdot">·</span>
             </div>
         </div>
     </section>
 
 
-    <!-- ═══════════════════════════════════════════════
-         GENRE STRIPS — Accordion expand on hover
-    ═══════════════════════════════════════════════ -->
-    <section class="g3-strips-section" aria-label="Browse by Genre">
+    <!-- ═══════════════════════════════════════════════════════
+         GENRES GRID — 6 cards, 3×2, dark/light alternation
+    ═══════════════════════════════════════════════════════ -->
+    <section class="bw-genres" id="bw-genres">
 
-        <!-- Section header -->
-        <div class="g3-strips-header">
-            <span class="g3-sh-eyebrow">— Our Collection</span>
-            <h2 class="g3-sh-title">Browse by Genre</h2>
-            <span class="g3-sh-count" aria-hidden="true">06</span>
+        <div class="bw-section-header">
+            <p class="bw-eyebrow bw-eyebrow--left">01 — OUR COLLECTION</p>
+            <h2 class="bw-section-title">
+                <span class="bht-thin">CHOOSE YOUR</span>
+                <em class="bht-bold">WORLD</em>
+            </h2>
+            <p class="bw-section-script">Each genre, a different world to inhabit.</p>
         </div>
 
-        <!-- Strip list — populated by catalog.js -->
-        <div class="g3-strips-wrap" id="g3Strips" role="list" aria-label="Genre list">
-            <div class="g3-strips-loading" aria-live="polite">Loading genres…</div>
+        <div class="bw-genres-grid">
+
+            <!-- 01 Fantasy — cream -->
+            <a class="bw-card bw-card--cream" href="/pages/catalog(Marwan)/collection.html?genre=Fantasy" aria-label="Browse Fantasy books">
+                <span class="bw-card-num" aria-hidden="true">01</span>
+                <div class="bw-card-body">
+                    <p class="bw-card-tag">Worlds Beyond</p>
+                    <h3 class="bw-card-name">Fantasy</h3>
+                    <p class="bw-card-desc">Vast kingdoms, ancient magic, and heroes forged in impossible choices. Fantasy transports you to worlds where anything can happen.</p>
+                    <span class="bw-card-cta">Explore Fantasy</span>
+                </div>
+            </a>
+
+            <!-- 02 Horror — dark -->
+            <a class="bw-card bw-card--dark" href="/pages/catalog(Marwan)/collection.html?genre=Horror" aria-label="Browse Horror books">
+                <span class="bw-card-num" aria-hidden="true">02</span>
+                <div class="bw-card-body">
+                    <p class="bw-card-tag">Face Your Fears</p>
+                    <h3 class="bw-card-name">Horror</h3>
+                    <p class="bw-card-desc">Stories that crawl beneath your skin and linger long after the last page. Horror dares you to face the darkness.</p>
+                    <span class="bw-card-cta">Explore Horror</span>
+                </div>
+            </a>
+
+            <!-- 03 Thriller — warm dark -->
+            <a class="bw-card bw-card--warm-dark" href="/pages/catalog(Marwan)/collection.html?genre=Thriller" aria-label="Browse Thriller books">
+                <span class="bw-card-num" aria-hidden="true">03</span>
+                <div class="bw-card-body">
+                    <p class="bw-card-tag">Edge of Your Seat</p>
+                    <h3 class="bw-card-name">Thriller</h3>
+                    <p class="bw-card-desc">Racing hearts, hidden motives, and twists that rewrite everything. Thrillers keep you reading at 2 a.m.</p>
+                    <span class="bw-card-cta">Explore Thriller</span>
+                </div>
+            </a>
+
+            <!-- 04 Science Fiction — dark -->
+            <a class="bw-card bw-card--dark" href="/pages/catalog(Marwan)/collection.html?genre=Science-Fiction" aria-label="Browse Science Fiction books">
+                <span class="bw-card-num" aria-hidden="true">04</span>
+                <div class="bw-card-body">
+                    <p class="bw-card-tag">The Future Now</p>
+                    <h3 class="bw-card-name">Science<br>Fiction</h3>
+                    <p class="bw-card-desc">What if technology changed everything? Science fiction explores the ideas that will shape tomorrow.</p>
+                    <span class="bw-card-cta">Explore Sci-Fi</span>
+                </div>
+            </a>
+
+            <!-- 05 Adventure — gold (the vivid accent card) -->
+            <a class="bw-card bw-card--gold" href="/pages/catalog(Marwan)/collection.html?genre=Adventure" aria-label="Browse Adventure books">
+                <span class="bw-card-num" aria-hidden="true">05</span>
+                <div class="bw-card-body">
+                    <p class="bw-card-tag">Beyond the Horizon</p>
+                    <h3 class="bw-card-name">Adventure</h3>
+                    <p class="bw-card-desc">Open roads, uncharted territories, and the raw thrill of discovery. Adventure reminds you the world is bigger than you imagined.</p>
+                    <span class="bw-card-cta">Explore Adventure</span>
+                </div>
+            </a>
+
+            <!-- 06 Drama — cream -->
+            <a class="bw-card bw-card--cream" href="/pages/catalog(Marwan)/collection.html?genre=Drama" aria-label="Browse Drama books">
+                <span class="bw-card-num" aria-hidden="true">06</span>
+                <div class="bw-card-body">
+                    <p class="bw-card-tag">Deeply Human</p>
+                    <h3 class="bw-card-name">Drama</h3>
+                    <p class="bw-card-desc">Love, loss, ambition, and redemption. Drama reveals what it means to be human — messy, beautiful, and relentlessly alive.</p>
+                    <span class="bw-card-cta">Explore Drama</span>
+                </div>
+            </a>
+
         </div>
     </section>
 
 
-    <!-- ═══════════════════════════════════════════════
-         FLOATING AI BUTTON — fixed bottom-right
-    ═══════════════════════════════════════════════ -->
-    <button
-        class="g3-ai-fab"
-        id="g3AiFab"
-        type="button"
-        aria-label="Open AI book recommender"
-        aria-expanded="false"
-        aria-controls="g3ChatPanel"
-    >
-        <svg width="18" height="18" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
-            <path d="M6 0.5L7.4 4.3H11.5L8.2 6.7L9.6 10.5L6 8.1L2.4 10.5L3.8 6.7L0.5 4.3H4.6Z"/>
-        </svg>
-        <span class="g3-fab-label">Ask AI</span>
-        <span class="g3-fab-ring" aria-hidden="true"></span>
-    </button>
+    <!-- ═══════════════════════════════════════════════════════
+         DIVIDER — thin rule between sections
+    ═══════════════════════════════════════════════════════ -->
+    <div class="bw-rule" aria-hidden="true"></div>
 
 
-    <!-- ═══════════════════════════════════════════════
-         AI CHAT PANEL — slides up from bottom-right
-    ═══════════════════════════════════════════════ -->
-    <aside
-        class="g3-chat-panel"
-        id="g3ChatPanel"
-        aria-hidden="true"
-        role="dialog"
-        aria-label="Maktaba AI Book Recommender"
-        aria-modal="true"
-    >
-        <!-- Panel header -->
-        <div class="g3-cp-head">
-            <div class="g3-cp-identity">
-                <div class="g3-cp-avatar" aria-hidden="true">
-                    <svg width="17" height="17" viewBox="0 0 12 12" fill="currentColor">
-                        <path d="M6 0.5L7.4 4.3H11.5L8.2 6.7L9.6 10.5L6 8.1L2.4 10.5L3.8 6.7L0.5 4.3H4.6Z"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="g3-cp-name">Maktaba AI</p>
-                    <p class="g3-cp-status">
-                        <span class="g3-status-dot" aria-hidden="true"></span>
-                        Online · Ready to recommend
-                    </p>
+    <!-- ═══════════════════════════════════════════════════════
+         AI RECOMMENDATION — two-column: editorial intro | chat
+    ═══════════════════════════════════════════════════════ -->
+    <section class="bw-ai">
+        <div class="bw-ai-inner">
+
+            <!-- Left: editorial header + mood chips -->
+            <div class="bw-ai-left">
+                <p class="bw-eyebrow bw-eyebrow--left">02 — AI RECOMMENDATIONS</p>
+
+                <h2 class="bw-ai-title">
+                    <span class="bht-thin">YOUR NEXT</span>
+                    <em class="bht-bold">PERFECT</em>
+                    <span class="bht-thin">READ</span>
+                </h2>
+
+                <p class="bw-ai-script">Tell us your mood. We'll find the book.</p>
+
+                <p class="bw-ai-desc">Describe what you're feeling — a theme, a book you already love, or simply a mood — and Maktaba AI will match you with your next story from our entire collection.</p>
+
+                <div class="bw-moods">
+                    <button class="bw-mood-chip" type="button" data-mood="something like The Alchemist but darker and more mysterious">Like The Alchemist</button>
+                    <button class="bw-mood-chip" type="button" data-mood="a short suspenseful thriller perfect for a weekend read">Quick thriller</button>
+                    <button class="bw-mood-chip" type="button" data-mood="something deeply emotional and heartbreaking">Deeply emotional</button>
+                    <button class="bw-mood-chip" type="button" data-mood="an epic fantasy with incredible world-building and magic">Epic fantasy</button>
+                    <button class="bw-mood-chip" type="button" data-mood="mind-bending science fiction about consciousness and the future">Mind-bending</button>
                 </div>
             </div>
-            <button class="g3-cp-close" id="g3ChatClose" type="button" aria-label="Close AI recommender">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                    <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </button>
-        </div>
 
-        <!-- Quick mood chips -->
-        <div class="g3-cp-moods" role="group" aria-label="Quick prompts">
-            <button class="g3-chip" type="button" data-mood="something like The Alchemist but darker and more mysterious">Like The Alchemist</button>
-            <button class="g3-chip" type="button" data-mood="a short suspenseful thriller for a weekend read">Quick thriller</button>
-            <button class="g3-chip" type="button" data-mood="something deeply emotional and heartbreaking">Deeply emotional</button>
-            <button class="g3-chip" type="button" data-mood="an epic fantasy with incredible world-building">Fantasy epic</button>
-            <button class="g3-chip" type="button" data-mood="mind-bending science fiction about consciousness and the future">Mind-bending sci-fi</button>
-        </div>
+            <!-- Right: chat interface -->
+            <div class="bw-ai-right">
+                <div class="bw-chat" id="bwChat">
 
-        <!-- Message feed -->
-        <div
-            class="g3-cp-messages"
-            id="g3Messages"
-            aria-live="polite"
-            role="log"
-            aria-label="Chat messages"
-        >
-            <div class="g3-msg g3-msg--ai g3-msg--init">
-                <div class="g3-bubble">
-                    Hello! ✦ Tell me what kind of story you want — a mood, a book you already love,
-                    or a theme — and I'll find your next perfect read from our catalogue.
-                </div>
-                <time class="g3-msg-time">Just now</time>
-            </div>
-        </div>
-
-        <!-- Typing indicator -->
-        <div class="g3-typing" id="g3Typing" aria-hidden="true" aria-label="AI is thinking">
-            <div class="g3-typing-dots">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-
-        <!-- Input row -->
-        <div class="g3-cp-input">
-            <label for="g3Input" class="g3-sr-only">Ask for a book recommendation</label>
-            <div class="g3-input-row" id="g3InputRow">
-                <textarea
-                    id="g3Input"
-                    class="g3-textarea"
-                    placeholder="Describe the book you want…"
-                    rows="1"
-                    aria-label="Ask Maktaba AI for book recommendations"
-                    aria-describedby="g3InputHint"
-                ></textarea>
-                <button id="g3Send" class="g3-send-btn" type="button" aria-label="Send message">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M14 8L2 2l2 6-2 6 12-6z" fill="currentColor"/>
-                    </svg>
-                </button>
-            </div>
-            <p class="g3-input-hint" id="g3InputHint">Ctrl + Enter · Powered by AI</p>
-        </div>
-    </aside>
-
-
-    <!-- ════════ FOOTER ════════ -->
-    <div style="z-index: 1; position: relative; border:none;">
-        <footer class="site-footer">
-            <div class="footer-container">
-                <div class="newsletter-section">
-                    <div class="newsletter-content">
-                        <div class="newsletter-text">
-                            <h3>Subscribe to our newsletter</h3>
-                            <p>Be the first to receive updates, tips, and more.</p>
-                        </div>
-                        <div class="newsletter-form">
-                            <form id="newsletterForm" class="newsletter-form-wrapper">
-                                <input type="email" id="newsletterEmail" placeholder="Enter your email..." required class="newsletter-input">
-                                <button type="submit" class="newsletter-btn">Subscribe</button>
-                            </form>
-                            <p class="newsletter-privacy">By subscribing you agree to our Privacy Policy</p>
+                    <div class="bw-chat-head">
+                        <div class="bw-chat-identity">
+                            <div class="bw-chat-avatar" aria-hidden="true">
+                                <svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 0.5L7.4 4.3H11.5L8.2 6.7L9.6 10.5L6 8.1L2.4 10.5L3.8 6.7L0.5 4.3H4.6Z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="bw-chat-name">Maktaba AI</p>
+                                <p class="bw-chat-status">
+                                    <span class="bw-status-dot" aria-hidden="true"></span>
+                                    Online · Ready to recommend
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="footer-col-brand-col">
-                    <h3>MAKTABA</h3>
-                    <p>Connecting readers with the stories they love. Discover, read, and share your favorite books with our growing community.</p>
-                    <div class="social-icons">
-                        <a href="#"><img src="../../resources/img/Facebook.png"  alt="Facebook"  style="height:30px;width:30px;background-color:#ffffff;border-radius:50%;"></a>
-                        <a href="#"><img src="../../resources/img/Instagram.png" alt="Instagram" style="height:30px;width:30px;background-color:#ffffff;border-radius:50%;"></a>
-                        <a href="#"><img src="../../resources/img/Twitter.png"   alt="Twitter"   style="height:30px;width:30px;background-color:#ffffff;border-radius:50%;"></a>
+
+                    <div class="bw-chat-messages" id="bwMessages" role="log" aria-live="polite">
+                        <div class="bw-msg bw-msg--ai bw-msg--visible">
+                            <div class="bw-bubble">
+                                Hello ✦ Tell me what kind of story you're looking for — a mood, a book you already love, or a theme — and I'll find your next perfect read from our catalogue.
+                            </div>
+                            <time class="bw-msg-time">Just now</time>
+                        </div>
                     </div>
-                </div>
-                <div class="footer-col">
-                    <h4>About</h4>
-                    <ul>
-                        <li><a href="../../home.html">About Us</a></li>
-                        <li><a href="../home(fares)/AllAuthors..html">Our Authors</a></li>
-                        <li><a href="../account(Mikha)/contact-us.html">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="../checkout(Rojeh)/checkout.html">Shipping &amp; Delivery</a></li>
-                        <li><a href="../legal(fares)/returns-policy.html">Returns</a></li>
-                        <li><a href="../checkout(Rojeh)/payment.html">Payment Methods</a></li>
-                        <li><a href="../checkout(Rojeh)/order-success.html">Track Order</a></li>
-                        <li><a href="../account(Mikha)/contact-us.html">FAQ</a></li>
-                    </ul>
+
+                    <div class="bw-typing" id="bwTyping" aria-hidden="true" aria-label="AI is thinking">
+                        <span></span><span></span><span></span>
+                    </div>
+
+                    <div class="bw-chat-input-row">
+                        <label for="bwInput" class="bw-sr-only">Ask for a book recommendation</label>
+                        <textarea id="bwInput" class="bw-chat-textarea" rows="1" placeholder="Describe the book you want…" aria-label="Ask Maktaba AI for book recommendations"></textarea>
+                        <button id="bwSend" class="bw-chat-send" type="button" aria-label="Send message">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M14 8L2 2l2 6-2 6 12-6z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="bw-chat-hint">Press Enter to send · Powered by OpenRouter AI</p>
+
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>© 2026 Maktaba. All rights reserved.</p>
-                <ul class="footer-bottom-links">
-                    <li><a href="../legal(fares)/privacy-policy.html">Privacy Policy</a></li>
-                    <li><a href="../legal(fares)/terms-of-use.html">Terms of Service</a></li>
-                    <li><a href="../legal(fares)/returns-policy.html">Cookie Policy</a></li>
+
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════════════════════ -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="newsletter-section">
+                <div class="newsletter-content">
+                    <div class="newsletter-text">
+                        <h3>Subscribe to our newsletter</h3>
+                        <p>Be the first to receive updates, tips, and more.</p>
+                    </div>
+                    <div class="newsletter-form">
+                        <form id="newsletterForm" class="newsletter-form-wrapper">
+                            <input type="email" id="newsletterEmail" placeholder="Enter your email..." required class="newsletter-input">
+                            <button type="submit" class="newsletter-btn">Subscribe</button>
+                        </form>
+                        <p class="newsletter-privacy">By subscribing you agree to our Privacy Policy</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-col-brand-col">
+                <h3>MAKTABA</h3>
+                <p>Connecting readers with the stories they love. Discover, read, and share your favorite books with our growing community.</p>
+                <div class="social-icons">
+                    <a href="#"><img src="/resources/img/Facebook.png"  alt="Facebook"  style="height:30px;width:30px;background:#fff;border-radius:50%;"></a>
+                    <a href="#"><img src="/resources/img/Instagram.png" alt="Instagram" style="height:30px;width:30px;background:#fff;border-radius:50%;"></a>
+                    <a href="#"><img src="/resources/img/Twitter.png"   alt="Twitter"   style="height:30px;width:30px;background:#fff;border-radius:50%;"></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="/home.html">About Us</a></li>
+                    <li><a href="/pages/home(fares)/AllAuthors.html">Our Authors</a></li>
+                    <li><a href="/pages/account(Mikha)/contact-us.html">Contact Us</a></li>
                 </ul>
             </div>
-        </footer>
-    </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="/pages/checkout(Rojeh)/checkout.html">Shipping &amp; Delivery</a></li>
+                    <li><a href="/pages/legal(fares)/returns-policy.html">Returns</a></li>
+                    <li><a href="/pages/checkout(Rojeh)/payment.html">Payment Methods</a></li>
+                    <li><a href="/pages/checkout(Rojeh)/order-success.html">Track Order</a></li>
+                    <li><a href="/pages/account(Mikha)/contact-us.html">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Maktaba. All rights reserved.</p>
+            <ul class="footer-bottom-links">
+                <li><a href="/pages/legal(fares)/privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="/pages/legal(fares)/terms-of-use.html">Terms of Service</a></li>
+                <li><a href="/pages/legal(fares)/returns-policy.html">Cookie Policy</a></li>
+            </ul>
+        </div>
+    </footer>
 
-    <script src="../../data.js"></script>
-    <script src="./catalog.js"></script>
-    <script src="../../script.js"></script>
+
+    <script src="/data.js"></script>
+
+    <script>
+    /* ─── Browse page: genre scroll-reveal + AI chatbot ─── */
+    (function () {
+
+        /* ── Scroll reveal for genre cards ──────────────────── */
+        var cards = document.querySelectorAll('.bw-card');
+        if ('IntersectionObserver' in window) {
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry, i) {
+                    if (!entry.isIntersecting) return;
+                    setTimeout(function () {
+                        entry.target.classList.add('bw-card--visible');
+                    }, 0);
+                    obs.unobserve(entry.target);
+                });
+            }, { threshold: 0.06 });
+
+            cards.forEach(function (c, i) {
+                c.style.transitionDelay = (i * 70) + 'ms';
+                obs.observe(c);
+            });
+        } else {
+            cards.forEach(function (c) { c.classList.add('bw-card--visible'); });
+        }
+
+        /* ── AI Chat ─────────────────────────────────────────── */
+        var messages  = document.getElementById('bwMessages');
+        var typingEl  = document.getElementById('bwTyping');
+        var textarea  = document.getElementById('bwInput');
+        var sendBtn   = document.getElementById('bwSend');
+        var moodChips = document.querySelectorAll('.bw-mood-chip');
+        var isBusy    = false;
+
+        function nowTime() {
+            var d = new Date();
+            return d.getHours().toString().padStart(2, '0') + ':' +
+                   d.getMinutes().toString().padStart(2, '0');
+        }
+
+        function addBubble(role, text) {
+            var div = document.createElement('div');
+            div.className = 'bw-msg bw-msg--' + role;
+            div.innerHTML  =
+                '<div class="bw-bubble"></div>' +
+                '<time class="bw-msg-time">' + nowTime() + '</time>';
+            div.querySelector('.bw-bubble').textContent = text;
+            messages.appendChild(div);
+            requestAnimationFrame(function () { div.classList.add('bw-msg--visible'); });
+            messages.scrollTop = messages.scrollHeight;
+            return div;
+        }
+
+        function addStreamBubble() {
+            var div = document.createElement('div');
+            div.className = 'bw-msg bw-msg--ai';
+            div.innerHTML  =
+                '<div class="bw-bubble"><span class="bw-cursor"></span></div>' +
+                '<time class="bw-msg-time">' + nowTime() + '</time>';
+            messages.appendChild(div);
+            requestAnimationFrame(function () { div.classList.add('bw-msg--visible'); });
+            messages.scrollTop = messages.scrollHeight;
+            return div;
+        }
+
+        function showTyping(show) {
+            if (typingEl) typingEl.classList.toggle('bw-typing--on', show);
+            if (show && messages) messages.scrollTop = messages.scrollHeight;
+        }
+
+        async function streamRecommendation(userMsg) {
+            var books    = (typeof Books !== 'undefined') ? Books : [];
+            var response = await fetch('/api/recommend', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ message: userMsg, books: books }),
+            });
+
+            if (!response.ok) {
+                var errText = await response.text();
+                throw new Error(errText || 'API error ' + response.status);
+            }
+
+            showTyping(false);
+            var msgDiv  = addStreamBubble();
+            var bubble  = msgDiv.querySelector('.bw-bubble');
+            var cursor  = bubble.querySelector('.bw-cursor');
+            var reader  = response.body.getReader();
+            var decoder = new TextDecoder();
+            var full    = '';
+
+            while (true) {
+                var result = await reader.read();
+                if (result.done) break;
+                var chunk = decoder.decode(result.value, { stream: true });
+                chunk.split('\n').forEach(function (line) {
+                    if (!line.startsWith('data:')) return;
+                    var raw = line.slice(5).trim();
+                    if (raw === '[DONE]') return;
+                    try {
+                        var parsed = JSON.parse(raw);
+                        var delta  = (parsed.choices &&
+                                      parsed.choices[0] &&
+                                      parsed.choices[0].delta &&
+                                      parsed.choices[0].delta.content) || '';
+                        if (delta) {
+                            full += delta;
+                            bubble.textContent = full;
+                            if (cursor) bubble.appendChild(cursor);
+                            messages.scrollTop = messages.scrollHeight;
+                        }
+                    } catch (e) { /* skip malformed SSE */ }
+                });
+            }
+
+            if (cursor && cursor.parentNode === bubble) bubble.removeChild(cursor);
+            bubble.textContent = full;
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function sendMessage(text) {
+            if (isBusy || !text.trim()) return;
+            isBusy = true;
+            addBubble('user', text);
+            if (textarea) { textarea.value = ''; textarea.style.height = 'auto'; }
+            showTyping(true);
+            streamRecommendation(text)
+                .catch(function (err) {
+                    showTyping(false);
+                    addBubble('ai', 'Sorry, something went wrong. (' + err.message + ')');
+                })
+                .finally(function () { isBusy = false; });
+        }
+
+        /* Auto-grow textarea */
+        if (textarea) {
+            textarea.addEventListener('input', function () {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 160) + 'px';
+            });
+            textarea.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    var val = textarea.value.trim();
+                    if (val) sendMessage(val);
+                }
+            });
+        }
+
+        if (sendBtn) {
+            sendBtn.addEventListener('click', function () {
+                var val = textarea ? textarea.value.trim() : '';
+                if (val) sendMessage(val);
+            });
+        }
+
+        /* Mood chips */
+        moodChips.forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                sendMessage(chip.dataset.mood);
+                /* Scroll to chat if not in view */
+                var chat = document.getElementById('bwChat');
+                if (chat) chat.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+
+    })();
+    </script>
+
+    <script src="/script.js"></script>
 </body>
 </html>
