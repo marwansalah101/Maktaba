@@ -1916,3 +1916,30 @@ body.admin-dashboard-page {
 .btn-submit:active {
   transform: scale(0.98);
 }
+
+/* ── Toast notification — bottom-right, auto-dismiss ────────── */
+.mkt-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 99999;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  color: #F0EDE5;
+  max-width: 340px;
+  min-width: 220px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+  transform: translateX(calc(100% + 36px));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.mkt-toast--show   { transform: translateX(0); }
+.mkt-toast--success { background: #2D6A4F; }
+.mkt-toast--error   { background: #8B2020; }
+.mkt-toast--info    { background: #312F2C; }

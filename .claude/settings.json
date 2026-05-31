@@ -45,7 +45,21 @@
       "Bash(curl -s -o /dev/null -w \"Favourites:  %{http_code}\\\\n\" \"http://localhost:3000/pages/account\\(Mikha\\)/favorites.html\")",
       "Bash(curl -s -o /dev/null -w \"Cart:        %{http_code}\\\\n\" \"http://localhost:3000/pages/checkout\\(Rojeh\\)/add-to-cart.html\")",
       "Bash(curl -s -o /dev/null -w \"Product page: %{http_code}\\\\n\" \"http://localhost:3000/pages/product\\(Marwan\\)/product.html?title=A%20Song%20Of%20Ice%20And%20Fire\")",
-      "WebFetch(domain:khufus.com)"
+      "WebFetch(domain:khufus.com)",
+      "Bash(npm install *)",
+      "Bash(node -e \"require\\('./app.js'\\)\")",
+      "Bash(Start-Sleep -Seconds 3)",
+      "Bash(Get-Content \"C:\\\\Users\\\\pc\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-pc-Documents-GitHub-Mactaba\\\\6208d487-0400-4197-8dfd-31b67663168c\\\\tasks\\\\b11txluuq.output\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Start-Process -FilePath \"node\" -ArgumentList \"app.js\" -WorkingDirectory \"c:\\\\Users\\\\pc\\\\Documents\\\\GitHub\\\\Mactaba\\\\Back-end\" -PassThru)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000/pages/catalog\\(Marwan\\)/collection.html\" -UseBasicParsing)",
+      "PowerShell(Start-Sleep -Seconds 3; $r = Invoke-WebRequest -Uri \"http://localhost:3000/pages/catalog\\(Marwan\\)/collection.html\" -UseBasicParsing; $r.StatusCode)",
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000/pages/catalog\\(Marwan\\)/collection.html\" -UseBasicParsing; $content = $r.Content; if \\($content -match \"mkt-pl-rule\"\\) { \"RULE: found\" } else { \"RULE: MISSING\" }; if \\($content -match \"mkt-pl-wordmark\"\\) { \"WORDMARK: found\" } else { \"WORDMARK: MISSING\" }; if \\($content -match \"mkt-pl-dots\"\\) { \"DOTS: found\" } else { \"DOTS: MISSING\" }; if \\($content -match \"mkt-bg-ring|mkt-spin-arc|mkt-tick\"\\) { \"OLD CIRCLE ELEMENTS: still present!\" } else { \"OLD CIRCLE: removed\" })",
+      "PowerShell($pages = @\\(\"http://localhost:3000/pages/catalog\\(Marwan\\)/collection.html\", \"http://localhost:3000/pages/product\\(Marwan\\)/product.html\", \"http://localhost:3000/pages/catalog\\(Marwan\\)/genres.html\"\\); foreach \\($url in $pages\\) { $r = Invoke-WebRequest -Uri $url -UseBasicParsing; $c = $r.Content; $name = \\($url -split \"/\"\\)[-1]; $status = $r.StatusCode; $rule = if \\($c -match \"mkt-pl-rule\"\\) {\"Y\"} else {\"N\"}; $dots = if \\($c -match \"mkt-pl-dots\"\\) {\"Y\"} else {\"N\"}; $old = if \\($c -match \"mkt-bg-ring|mkt-spin-arc\"\\) {\"YES - BAD\"} else {\"clean\"}; $black = if \\($c -match '#0d0d0d'\\) {\"Y\"} else {\"N\"}; Write-Output \"$name | $status | rule=$rule dots=$dots old-ring=$old black-logo=$black\" })",
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000/preloader.css\" -UseBasicParsing; $c = $r.Content; $status = $r.StatusCode; if \\($c -match \"mkt-pl-rule\"\\) {\"CSS rule: Y\"} else {\"CSS rule: MISSING\"}; if \\($c -match \"mkt-dot-beat\"\\) {\"CSS dot-beat: Y\"} else {\"CSS dot-beat: MISSING\"}; if \\($c -match \"mkt-word-in\"\\) {\"CSS wordmark: Y\"} else {\"CSS wordmark: MISSING\"}; if \\($c -match \"mkt-spin|mkt-bg-ring|mkt-tick\"\\) {\"OLD CSS still there: BAD\"} else {\"OLD CSS: removed\"}; \"Status: $status\")",
+      "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(48\\).toString\\('hex'\\)\\)\")",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force)",
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"testuser@maktaba.com\",\"password\":\"securePass123\"}' -UseBasicParsing; $d = $r.Content | ConvertFrom-Json; Write-Output \"DB id: $\\($d.user.id\\)\"; Write-Output \"name: $\\($d.user.name\\)\"; Write-Output \"email: $\\($d.user.email\\)\")"
     ]
   }
 }

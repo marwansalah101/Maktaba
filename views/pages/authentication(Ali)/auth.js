@@ -53,6 +53,9 @@ function googleSignIn() {
 // ═══════════════════════════════════════════════════════════════
 (() => {
 
+    // Always points to Express — works on both Live Server and port 3000
+    const API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
+
     // ─── Validation Rules ───────────────────────────────────────────
     const rules = {
         fullname: {
@@ -92,6 +95,26 @@ function googleSignIn() {
         inputEl.classList.remove('error', 'valid');
         const err = document.getElementById(inputEl.id + '-error');
         if (err) { err.textContent = ''; err.classList.remove('show'); }
+    }
+
+    // ─── Toast ──────────────────────────────────────────────────────
+    function showToast(message, type, duration) {
+        type     = type     || 'success';
+        duration = duration || 3500;
+        var existing = document.getElementById('mkt-toast');
+        if (existing) existing.remove();
+        var t = document.createElement('div');
+        t.id = 'mkt-toast';
+        t.className = 'mkt-toast mkt-toast--' + type;
+        t.textContent = message;
+        document.body.appendChild(t);
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () { t.classList.add('mkt-toast--show'); });
+        });
+        setTimeout(function () {
+            t.classList.remove('mkt-toast--show');
+            setTimeout(function () { if (t.parentNode) t.remove(); }, 420);
+        }, duration);
     }
 
     // ─── Password Strength ──────────────────────────────────────────
@@ -199,31 +222,36 @@ function googleSignIn() {
             btn.textContent = 'Creating account…';
             btn.disabled = true;
 
-            const users = JSON.parse(localStorage.getItem('maktabaUsers') || '[]');
-            const exists = users.some(
-                u => u.email.toLowerCase() === emailEl.value.trim().toLowerCase()
-            );
-            if (exists) {
-                showError(emailEl, 'An account with this email already exists.');
-                btn.textContent = 'Sign Up';
-                btn.disabled = false;
-                return;
-            }
-
-            const newUser = {
-                fullname: fullnameEl.value.trim(),
-                email:    emailEl.value.trim().toLowerCase(),
-                password: passwordEl.value
-            };
-
-            users.push(newUser);
-            localStorage.setItem('maktabaUsers', JSON.stringify(users));
-
-            setTimeout(() => {
-                btn.textContent = 'Sign Up';
-                btn.disabled = false;
+            fetch(API_BASE + '/api/auth/signup', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({
+                    name:     fullnameEl.value.trim(),
+                    email:    emailEl.value.trim().toLowerCase(),
+                    password: passwordEl.value
+                })
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (data.error) {
+                    var msg = (data.error.toLowerCase().includes('email') || data.error.toLowerCase().includes('registered'))
+                        ? data.error : 'Sign up failed — please try again.';
+                    showError(emailEl, msg);
+                    btn.textContent = 'Sign Up';
+                    btn.disabled = false;
+                    return;
+                }
+                sessionStorage.setItem('mktbToast', JSON.stringify({
+                    msg:  'Account created! Please sign in.',
+                    type: 'success'
+                }));
                 window.location.href = './signin.html';
-            }, 1000);
+            })
+            .catch(function () {
+                showError(emailEl, 'Cannot reach server — make sure the app is running on port 3000.');
+                btn.textContent = 'Sign Up';
+                btn.disabled = false;
+            });
         });
     }
 
@@ -291,39 +319,46 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.textContent = 'Signing in...';
             btn.disabled = true;
 
-            const users = JSON.parse(localStorage.getItem('maktabaUsers') || '[]');
-            const user = users.find(
-                u => u.email === emailEl.value.trim().toLowerCase()
-            );
-
-            if (!user) {
-                showError(emailEl, 'No account found with this email.');
+            fetch(API_BASE + '/api/auth/login', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({
+                    email:    emailEl.value.trim().toLowerCase(),
+                    password: passwordEl.value
+                })
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (data.error) {
+                    showError(passwordEl, data.error);
+                    btn.textContent = 'Sign In';
+                    btn.disabled = false;
+                    return;
+                }
+                if (data.token) localStorage.setItem('maktabaToken', data.token);
+                var role = data.role || 'user';
+                if (data.user) {
+                    localStorage.setItem('maktabaUserName',     data.user.name);
+                    localStorage.setItem('maktabaUserEmail',    data.user.email);
+                    localStorage.setItem('maktabaUserRole',     role);
+                    localStorage.setItem('maktabaLoggedInUser', JSON.stringify(data.user));
+                } else {
+                    localStorage.setItem('maktabaUserEmail', data.email || '');
+                    localStorage.setItem('maktabaUserRole',  role);
+                }
                 btn.textContent = 'Sign In';
                 btn.disabled = false;
-                return;
-            }
-
-            if (user.password !== passwordEl.value) {
-                showError(passwordEl, 'Incorrect password.');
+                if (role === 'admin') {
+                    window.location.href = './dashboard.html';
+                } else {
+                    window.location.href = '../../home.html';
+                }
+            })
+            .catch(function () {
+                showError(passwordEl, 'Cannot reach server — make sure the app is running on port 3000.');
                 btn.textContent = 'Sign In';
                 btn.disabled = false;
-                return;
-            }
-
-            localStorage.setItem('maktabaLoggedInUser', JSON.stringify({
-                fullname: user.fullname,
-                email:    user.email,
-                role:     'user'
-            }));
-            localStorage.setItem('maktabaUserRole',  'user');
-            localStorage.setItem('maktabaUserEmail', user.email);
-            localStorage.setItem('maktabaUserName',  user.fullname);
-
-            setTimeout(() => {
-                btn.textContent = 'Sign In';
-                btn.disabled = false;
-                window.location.href = 'http://127.0.0.1:5501/views/pages/home(fares)/home.html';
-            }, 1000);
+            });
         });
     }
 
@@ -347,7 +382,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ─── Init ────────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function () {
+        var pending = sessionStorage.getItem('mktbToast');
+        if (pending) {
+            try {
+                var p = JSON.parse(pending);
+                sessionStorage.removeItem('mktbToast');
+                setTimeout(function () { showToast(p.msg, p.type); }, 300);
+            } catch (e) {}
+        }
         setupTogglePassword();
         initSignup();
         initSignin();
