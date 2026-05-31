@@ -316,86 +316,113 @@
   </div>
 
   <script>
-    const SHIPPING = 5;
+   const SHIPPING = 5;
 
-    function getCart() {
-      return JSON.parse(localStorage.getItem('cart')) || [];
-    }
+// جيب الـ sessionId من localStorage أو اعمل واحد جديد
+function getSessionId() {
+  let sid = localStorage.getItem('cartSessionId');
+  if (!sid) {
+    sid = crypto.randomUUID();
+    localStorage.setItem('cartSessionId', sid);
+  }
+  return sid;
+}
 
-    function saveCart(cart) {
-      localStorage.setItem('cart', JSON.stringify(cart));
-    }
+async function getCart() {
+  const res = await fetch('/api/cart', {
+    headers: { 'x-session-id': getSessionId() }
+  });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.items || [];
+}
 
-    function renderCart() {
-      const cart = getCart();
-      const container = document.getElementById('cart-items-container');
-      const emptyMsg = document.getElementById('cart-empty-msg');
-      const checkoutBtn = document.getElementById('checkout-btn');
+async function renderCart() {
+  const cart = await getCart();
+  const container   = document.getElementById('cart-items-container');
+  const emptyMsg    = document.getElementById('cart-empty-msg');
+  const checkoutBtn = document.getElementById('checkout-btn');
 
-      container.innerHTML = '';
+  container.innerHTML = '';
 
-      if (cart.length === 0) {
-        emptyMsg.style.display = 'block';
-        checkoutBtn.disabled = true;
-        updateSummary(0);
-        return;
-      }
+  if (cart.length === 0) {
+    emptyMsg.style.display = 'block';
+    checkoutBtn.disabled   = true;
+    updateSummary(0, []);
+    return;
+  }
 
-      emptyMsg.style.display = 'none';
-      checkoutBtn.disabled = false;
+  emptyMsg.style.display = 'none';
+  checkoutBtn.disabled   = false;
 
-      let subtotal = 0;
+  let subtotal = 0;
+  cart.forEach(item => {
+    const price = parseFloat(item.price);
+    subtotal += price * item.qty;
 
-      cart.forEach((book, index) => {
-        const qty = book.qty || 1;
-        const price = parseFloat(book.price);
-        subtotal += price * qty;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <img class="cart-item-img" src="${item.image}" alt="${item.title}">
+      <div class="cart-item-info">
+        <h3>${item.title}</h3>
+        <p>${item.author}</p>
+        <div class="qty-row">
+          <button class="qty-btn" onclick="changeQty('${item.bookId}', ${item.qty - 1})">−</button>
+          <span class="qty-value">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.bookId}', ${item.qty + 1})">+</button>
+        </div>
+      </div>
+      <div class="cart-item-price">€${(price * item.qty).toFixed(2)}</div>
+      <button class="cart-remove-btn" onclick="removeItem('${item.bookId}')">✕</button>
+    `;
+    container.appendChild(div);
+  });
 
-        const item = document.createElement('div');
-        item.className = 'cart-item';
-        item.innerHTML = `
-          <img class="cart-item-img" src="${book.image}" alt="${book.title}">
-          <div class="cart-item-info">
-            <h3>${book.title}</h3>
-            <p>${book.author}</p>
-            <div class="qty-row">
-              <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
-              <span class="qty-value">${qty}</span>
-              <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-            </div>
-          </div>
-          <div class="cart-item-price">€${(price * qty).toFixed(2)}</div>
-          <button class="cart-remove-btn" onclick="removeItem(${index})">✕</button>
-        `;
-        container.appendChild(item);
-      });
+  updateSummary(subtotal, cart);
+}
 
-      updateSummary(subtotal);
-    }
+function updateSummary(subtotal, cart) {
+  const shipping = cart.length > 0 ? SHIPPING : 0;
+  document.getElementById('summary-subtotal').textContent = `€${subtotal.toFixed(2)}`;
+  document.getElementById('summary-shipping').textContent = `€${shipping.toFixed(2)}`;
+  document.getElementById('summary-total').textContent    = `€${(subtotal + shipping).toFixed(2)}`;
+}
 
-    function updateSummary(subtotal) {
-      const cart = getCart();
-      const shipping = cart.length > 0 ? SHIPPING : 0;
-      document.getElementById('summary-subtotal').textContent = `€${subtotal.toFixed(2)}`;
-      document.getElementById('summary-shipping').textContent = `€${shipping.toFixed(2)}`;
-      document.getElementById('summary-total').textContent = `€${(subtotal + shipping).toFixed(2)}`;
-    }
+async function changeQty(bookId, newQty) {
+  await fetch(`/api/cart/update/${bookId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-session-id': getSessionId()
+    },
+    body: JSON.stringify({ qty: newQty })
+  });
+  renderCart();
+}
 
-    function changeQty(index, delta) {
-      const cart = getCart();
-      cart[index].qty = Math.max(1, (cart[index].qty || 1) + delta);
-      saveCart(cart);
-      renderCart();
-    }
+async function removeItem(bookId) {
+  await fetch(`/api/cart/remove/${bookId}`, {
+    method: 'DELETE',
+    headers: { 'x-session-id': getSessionId() }
+  });
+  renderCart();
+}
 
-    function removeItem(index) {
-      const cart = getCart();
-      cart.splice(index, 1);
-      saveCart(cart);
-      renderCart();
-    }
+// دي الفنكشن اللي بتتبعت من صفحة الكتاب
+async function addToCart(bookId, title, author, image, price) {
+  await fetch('/api/cart/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-session-id': getSessionId()
+    },
+    body: JSON.stringify({ bookId, title, author, image, price })
+  });
+  renderCart();
+}
 
-    renderCart();
+renderCart();
   </script>
 
 </body>
