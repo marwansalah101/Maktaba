@@ -1,0 +1,173 @@
+/* ═══════════════════════════════════════════════════════════════
+   MAKTABA — SHARED ANIMATION SYSTEM
+   Import on every page that uses data-reveal / data-s / data-enter.
+   All animations run on transform + opacity only (GPU composited).
+   will-change is managed by JS — never hardcoded here.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Respect reduced-motion preference ──────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    [data-reveal],
+    [data-s],
+    .a-line-inner,
+    .a-page-enter { transition: none !important; animation: none !important; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SCROLL REVEAL  (data-reveal="variant")
+   JS adds .a-revealed when element enters viewport.
+───────────────────────────────────────────────────────────────*/
+
+/* Base transition — shared by all variants */
+[data-reveal] {
+    transition:
+        transform 0.80s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity   0.72s ease;
+}
+
+/* Fade up */
+[data-reveal="fade-up"] {
+    opacity: 0;
+    transform: translateY(48px);
+}
+[data-reveal="fade-up"].a-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Fade from left */
+[data-reveal="fade-left"] {
+    opacity: 0;
+    transform: translateX(-52px);
+}
+[data-reveal="fade-left"].a-revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Fade from right */
+[data-reveal="fade-right"] {
+    opacity: 0;
+    transform: translateX(52px);
+}
+[data-reveal="fade-right"].a-revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Scale reveal */
+[data-reveal="scale"] {
+    opacity: 0;
+    transform: scale(0.90);
+}
+[data-reveal="scale"].a-revealed {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Fade only */
+[data-reveal="fade"] {
+    opacity: 0;
+}
+[data-reveal="fade"].a-revealed {
+    opacity: 1;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   STAGGER CHILDREN  (data-stagger on parent, data-s on children)
+───────────────────────────────────────────────────────────────*/
+
+[data-s] {
+    opacity: 0;
+    transform: translateY(36px);
+    transition:
+        transform 0.70s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity   0.65s ease;
+}
+[data-s].a-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PAGE ENTER  (data-enter="delay-ms")
+   Applied immediately on DOMContentLoaded, no IntersectionObserver.
+───────────────────────────────────────────────────────────────*/
+
+.a-page-enter {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        transform 0.80s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity   0.75s ease;
+}
+.a-page-enter--on {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TEXT LINE REVEAL  (data-text-reveal on heading)
+   JS wraps each child in overflow:hidden + adds .a-line-inner.
+───────────────────────────────────────────────────────────────*/
+
+.a-line-wrap {
+    display: block;
+    overflow: hidden;
+    line-height: inherit;
+}
+.a-line-inner {
+    display: block;
+    transform: translateY(108%);
+    transition: transform 0.92s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.a-line-inner--on {
+    transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SCROLL PROGRESS BAR  (injected by JS)
+───────────────────────────────────────────────────────────────*/
+
+#anim-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #C8975A;
+    z-index: 9999;
+    transform: scaleX(0);
+    transform-origin: left center;
+    pointer-events: none;
+    /* No CSS transition — updated every rAF for smoothness */
+}
+
+/* ─────────────────────────────────────────────────────────────
+   HOVER LIFTS — product sections
+───────────────────────────────────────────────────────────────*/
+
+/* Suggested books in sidebar already have their own hover */
+/* Review cards get a subtle lift */
+.review-card {
+    transition: background 0.22s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.review-card:hover {
+    transform: translateY(-3px);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   COVER ENTRANCE — product page
+───────────────────────────────────────────────────────────────*/
+
+.cover-enter {
+    opacity: 0;
+    transform: translateY(32px) scale(0.94);
+    transition:
+        transform 0.90s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity   0.75s ease;
+}
+.cover-enter--on {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
