@@ -109,9 +109,9 @@
 
 .favorite-price {
     font-size: 30px;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Times New Roman', serif;
     color: #312F2C;
-    font-weight: 700;
+    font-weight: 400;
     min-width: 100px;
     text-align: right;
 }
