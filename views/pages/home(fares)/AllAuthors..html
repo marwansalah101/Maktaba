@@ -212,7 +212,7 @@
                                 <div class="author-grid-overlay">
                                     <div class="author-grid-stats">
                                         <div class="stats-line"></div>
-                                        <span class="stats-text">${author.books ? author.books.length : 0} BOOK${(author.books && author.books.length !== 1) ? 'S' : ''}</span>
+                                        <span class="stats-text">${author.books ? author.books.length : 0} BOOK${author.books && author.books.length !== 1 ? 'S' : ''}</span>
                                     </div>
                                     <div class="author-grid-info">
                                         <h3 class="author-grid-name">${author.name}</h3>
@@ -223,6 +223,17 @@
                         </a>
                     </div>
                 `;
+                 // Fetch real book count
+                fetch(`http://localhost:3000/books?author=${encodeURIComponent(author.name)}`)
+                  .then(res => res.json())
+                  .then(books => {
+                    const countEl = document.getElementById(`book-count-${author.slug}`);
+                    if (countEl) {
+                      const count = books.length;
+                      countEl.textContent = `${count} BOOK${count !== 1 ? 'S' : ''}`;
+                    }
+                  })
+                  .catch(() => {});
             });
         })
         .catch(err => {
