@@ -30,7 +30,7 @@
           <p>3 registered authors</p>
         </div>
 
-        <button class="add-btn">+ Add Author</button>
+        <button class="add-btn" onclick="openAddAuthorModal()">+ Add Author</button>
       </div>
 
       <input type="text" placeholder="Search authors..." class="search">
@@ -89,6 +89,66 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Add Author Modal -->
+    <div id="addAuthorModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add New Author</h2>
+          <button class="modal-close" onclick="closeAddAuthorModal()">&times;</button>
+        </div>
+        <form id="addAuthorForm" class="modal-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="authorName">Name *</label>
+              <input type="text" id="authorName" required>
+            </div>
+            <div class="form-group">
+              <label for="authorSlug">Slug *</label>
+              <input type="text" id="authorSlug" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="authorStats">Stats</label>
+              <input type="text" id="authorStats" placeholder="63 Novels · 350M Copies Sold">
+            </div>
+            <div class="form-group">
+              <label for="authorAboutTitle">About Title</label>
+              <input type="text" id="authorAboutTitle" placeholder="Master of Horror">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="authorAboutText">About Text</label>
+            <textarea id="authorAboutText" rows="4" placeholder="Stephen King is an American author of horror and supernatural fiction.…"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="authorBannerImg">Banner Image URL *</label>
+              <input type="text" id="authorBannerImg" placeholder="resources/Authors/stephen-king.jpg" required>
+            </div>
+            <div class="form-group">
+              <label for="authorProfileImgFile">Profile Image *</label>
+              <input type="file" id="authorProfileImgFile" accept="image/*" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="authorBooks">Books</label>
+            <input type="text" id="authorBooks" placeholder="Comma-separated Book IDs">
+            <small>Use book document IDs to populate references, or leave blank.</small>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeAddAuthorModal()">Cancel</button>
+            <button type="submit" class="btn-submit">Add Author</button>
+          </div>
+        </form>
       </div>
     </div>
   </main>

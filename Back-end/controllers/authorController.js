@@ -46,8 +46,31 @@ exports.createAuthor = async (req, res, next) => {
             return res.status(422).json({ error: `Missing required fields: ${missing.join(', ')}` });
         }
 
-        const { name, slug, stats, aboutTitle, aboutText, bannerImg, profileImg, books } = req.body;
-        const saved = await new Author({ name, slug, stats, aboutTitle, aboutText, bannerImg, profileImg, books }).save();
+        const { name, slug, stats, aboutTitle, aboutText, bannerImg, books } = req.body;
+        let profileImg = req.body.profileImg;
+        if (req.file) {
+            profileImg = `/uploads/authors/${req.file.filename}`;
+        }
+
+        let parsedBooks = books;
+        if (typeof books === 'string') {
+            try {
+                parsedBooks = JSON.parse(books);
+            } catch (e) {
+                // leave as-is if not JSON
+            }
+        }
+
+        const saved = await new Author({
+            name,
+            slug,
+            stats,
+            aboutTitle,
+            aboutText,
+            bannerImg,
+            profileImg,
+            books: parsedBooks,
+        }).save();
         res.status(201).json(saved);
     } catch (err) {
         next(err);
