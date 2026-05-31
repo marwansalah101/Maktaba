@@ -14,7 +14,6 @@
       <a id="Maktaba" href="../../home.html">Maktaba</a>
       <span>Admin Console</span>
     </div>
-
     <nav class="admin-nav" aria-label="Admin navigation">
       <a class="active" href="./dashboard.html"><span>D</span>Dashboard</a>
       <a href="./authbooks.html"><span>B</span>Books</a>
@@ -31,18 +30,19 @@
     </header>
 
     <section class="dashboard stat-grid" aria-label="Store summary">
+
       <article class="auth-card stat-card" onclick="goToBooks()">
         <span class="stat-icon">*</span>
-        <strong>32</strong>
+        <strong id="stat-total-books">—</strong>
         <span>Total Books</span>
-        <small>+2 this month</small>
+        <small id="stat-new-books">loading…</small>
       </article>
 
       <article class="auth-card stat-card" onclick="goToAuthors()">
         <span class="stat-icon">*</span>
-        <strong>9</strong>
+        <strong id="stat-total-authors">—</strong>
         <span>Total Authors</span>
-        <small>+1 this month</small>
+        <small id="stat-new-authors">loading…</small>
       </article>
 
       <article class="auth-card stat-card">
@@ -61,10 +61,11 @@
 
       <article class="auth-card stat-card">
         <span class="stat-icon">*</span>
-        <strong>135</strong>
+        <strong id="stat-total-stock">—</strong>
         <span>Units In Stock</span>
-        <small>7 low-stock items</small>
+        <small id="stat-low-stock-count">loading…</small>
       </article>
+
     </section>
 
     <section class="analytics-grid">
@@ -114,9 +115,168 @@
       <div class="lsection" id="recentActivityCard"></div>
     </section>
   </main>
+
+  <!-- ── Dashboard stats loader ──────────────────────────────────── -->
+  <script>
+    const API_BASE = 'http://localhost:3000';
+
+    async function loadDashboardStats() {
+      const token = localStorage.getItem('maktabaToken');
+
+      // ── Debug helper — remove after confirming it works ──────────
+      if (!token) {
+        console.warn('[Dashboard] No maktabaToken found in localStorage. ' +
+          'Make sure you are logged in via the admin login page.');
+        // Show a visible error on the stat cards instead of silently staying "—"
+        ['stat-new-books', 'stat-new-authors', 'stat-low-stock-count']
+          .forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = 'not logged in';
+          });
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/dashboard/stats`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        // ── Surface server errors clearly ─────────────────────────
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          console.error('[Dashboard] API error:', res.status, body);
+          ['stat-new-books', 'stat-new-authors', 'stat-low-stock-count']
+            .forEach(id => {
+              const el = document.getElementById(id);
+              if (el) el.textContent = `error ${res.status}`;
+            });
+          return;
+        }
+
+        const { stats } = await res.json();
+
+        // ── Stat cards ────────────────────────────────────────────
+        document.getElementById('stat-total-books').textContent = stats.totalBooks;
+        document.getElementById('stat-new-books').textContent =
+          stats.newBooksThisMonth > 0
+            ? `+${stats.newBooksThisMonth} this month`
+            : 'no new books this month';
+
+        document.getElementById('stat-total-authors').textContent = stats.totalAuthors;
+        document.getElementById('stat-new-authors').textContent =
+          stats.authorsAddedThisMonth > 0
+            ? `+${stats.authorsAddedThisMonth} this month`
+            : 'no new authors this month';
+
+        document.getElementById('stat-total-stock').textContent = stats.totalStock;
+        document.getElementById('stat-low-stock-count').textContent =
+          `${stats.lowStockBooks.length} low-stock item${stats.lowStockBooks.length !== 1 ? 's' : ''}`;
+
+        if (Array.isArray(stats.genreBreakdown) && stats.genreBreakdown.length > 0) {
+          renderGenreBreakdownChart(stats.genreBreakdown);
+        }
+
+        // ── Low Stock widget ──────────────────────────────────────
+        if (stats.lowStockBooks.length > 0) {
+          const card = document.getElementById('lowStockCard');
+          if (!card) return;
+
+          const spineColors = ['#2C3E50','#922B21','#4A4A4A','#B7950B','#6C3483'];
+          let rows = '';
+          stats.lowStockBooks.forEach((book, i) => {
+            const isLast     = i === stats.lowStockBooks.length - 1;
+            const spineColor = book.coverColor || spineColors[i % spineColors.length];
+            const badgeColor = book.stock <= 7 ? '#C0392B' : '#B7770D';
+            rows += `
+              <div style="display:flex;align-items:center;justify-content:space-between;
+                          padding:10px 0;${isLast ? '' : 'border-bottom:0.5px solid #eee;'}">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:28px;height:36px;border-radius:3px;
+                              background:${spineColor};flex-shrink:0;"></div>
+                  <div>
+                    <p style="font-size:13px;font-weight:500;margin:0 0 2px;">
+                      ${book.title.length > 18 ? book.title.slice(0,17) + '…' : book.title}
+                    </p>
+                    <p style="font-size:11px;color:#888;margin:0;">${book.author}</p>
+                  </div>
+                </div>
+                <span style="font-size:11px;font-weight:500;color:${badgeColor};">
+                  ${book.stock} left
+                </span>
+              </div>`;
+          });
+
+          card.innerHTML = `
+            <p style="font-size:14px;font-weight:500;margin:0 0 2px;">⚠️ Low Stock</p>
+            <p style="font-size:11px;color:#888;margin:0 0 1rem;">Titles needing restock</p>
+            ${rows}`;
+        }
+
+      } catch (err) {
+        console.error('[Dashboard] Fetch failed:', err);
+        ['stat-new-books', 'stat-new-authors', 'stat-low-stock-count']
+          .forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = 'fetch failed';
+          });
+      }
+    }
+
+    function renderGenreBreakdownChart(genreBreakdown) {
+      const chartEl = document.getElementById('genreChart');
+      const legendEl = document.getElementById('genreLegend');
+      if (!chartEl || !legendEl || !Array.isArray(genreBreakdown)) return;
+
+      const colors = ['#C0392B', '#2471A3', '#1E8449', '#D4AC0D', '#6C3483', '#784212', '#117A65', '#7D3C98'];
+      const data = genreBreakdown.slice(0, 6).map((item, index) => ({
+        label: item.genre,
+        pct: Math.round((item.pct || 0) * 10) / 10,
+        color: colors[index % colors.length],
+      }));
+
+      legendEl.innerHTML = data.map(item => `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:9px;height:9px;border-radius:50%;background:${item.color};flex-shrink:0;"></div>
+            <span style="font-size:12px;color:#888;">${item.label}</span>
+          </div>
+          <span style="font-size:12px;font-weight:500;">${item.pct}%</span>
+        </div>`).join('');
+
+      if (window.genreChartInstance) {
+        try { window.genreChartInstance.destroy(); } catch (e) { }
+      }
+
+      const ctx = chartEl.getContext('2d');
+      window.genreChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: data.map(item => item.label),
+          datasets: [{
+            data: data.map(item => item.pct),
+            backgroundColor: data.map(item => item.color),
+            borderWidth: 2,
+            borderColor: '#fff',
+            hoverOffset: 4,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '60%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` ${ctx.label}: ${ctx.parsed}%`,
+              },
+            },
+          },
+        },
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadDashboardStats);
+  </script>
 </body>
 </html>
-
-
-
-
