@@ -3,7 +3,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 function getEmail() {
-    return localStorage.getItem("userEmail") || localStorage.getItem("email") || "";
+    // ✅ FIX: added maktabaUserEmail as primary key (set at login)
+    return localStorage.getItem("maktabaUserEmail")
+        || localStorage.getItem("userEmail")
+        || localStorage.getItem("email")
+        || "";
 }
 
 function authHeaders() {
@@ -20,6 +24,7 @@ function showTab(name, btn) {
     if (name === "orders")  loadOrderHistory();
     if (name === "address") loadSavedAddress();
     if (name === "payment") loadSavedPayment();
+    if (name === "account") loadAccountSettings(); // ✅ FIX: load account data when tab opens
 }
 
 /* ── TOAST ───────────────────────────────────────────────────────────────── */
@@ -44,6 +49,85 @@ function previewAvatar(e) {
 
 function removeAvatar() {
     document.getElementById("avatarEl").innerHTML = "WA";
+}
+
+/* ── ACCOUNT SETTINGS — load / save ─────────────────────────────────────── */
+
+// ✅ NEW: load name + email from backend into the form fields
+async function loadAccountSettings() {
+    const email = getEmail();
+    if (!email) return;
+
+    try {
+        const res  = await fetch("/api/auth/profile", { headers: authHeaders() });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        const nameEl  = document.getElementById("acc-name");
+        const emailEl = document.getElementById("acc-email");
+
+        if (nameEl  && data.name)  nameEl.value  = data.name;
+        if (emailEl && data.email) emailEl.value = data.email;
+    } catch (err) {
+        console.error("Could not load account settings:", err);
+    }
+}
+
+// ✅ NEW: send updated name / email / password to backend
+async function saveAccountSettings() {
+    const nameEl     = document.getElementById("acc-name");
+    const emailEl    = document.getElementById("acc-email");
+    const passwordEl = document.getElementById("acc-password");
+
+    const payload = {};
+    if (nameEl?.value.trim())     payload.name     = nameEl.value.trim();
+    if (emailEl?.value.trim())    payload.email    = emailEl.value.trim();
+    if (passwordEl?.value.trim()) payload.password = passwordEl.value.trim();
+
+    if (Object.keys(payload).length === 0) {
+        showToast("Nothing to save.");
+        return;
+    }
+
+    try {
+        const res  = await fetch("/api/auth/update", {
+            method:  "PUT",
+            headers: authHeaders(),
+            body:    JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            showToast(err.message || "Could not save. Please try again.");
+            return;
+        }
+
+        const data = await res.json();
+
+        // ✅ Keep localStorage in sync with the new email if it changed
+        if (data.email) {
+            localStorage.setItem("maktabaUserEmail", data.email);
+            localStorage.setItem("userEmail",        data.email);
+        }
+
+        // ✅ Update avatar initials if name changed
+        if (data.name) {
+            const initials = data.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+            const avatarEl = document.getElementById("avatarEl");
+            if (avatarEl && !avatarEl.querySelector("img")) {
+                avatarEl.textContent = initials;
+            }
+        }
+
+        // ✅ Clear password field after successful save
+        if (passwordEl) passwordEl.value = "";
+
+        showToast("Changes saved!");
+
+    } catch (err) {
+        console.error("saveAccountSettings error:", err);
+        showToast("Network error. Please try again.");
+    }
 }
 
 /* ── ADDRESS — save / load ───────────────────────────────────────────────── */
@@ -175,5 +259,8 @@ function closeTracking() {
 
 /* ── AUTO-INIT ───────────────────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", () => {
+    // ✅ FIX: load account settings on page load (account tab is default)
+    loadAccountSettings();
+
     if (document.getElementById("tab-orders")?.classList.contains("active")) loadOrderHistory();
 });

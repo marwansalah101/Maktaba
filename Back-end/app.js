@@ -43,6 +43,8 @@ const authController = require('./controllers/authController');
    Admin password should be bcrypt-hashed before production use.   */
 app.post('/api/auth/login',  authController.login);
 app.post('/api/auth/signup', authController.signup);
+app.get('/api/auth/me',authController.getUser);
+app.put('/api/auth/update-profile', authController.updateProfile);
 
 /* ── AI Recommendation proxy ───────────────────────────────────────
    The OpenRouter API key stays server-side and is never sent to
