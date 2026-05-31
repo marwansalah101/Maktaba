@@ -1,506 +1,347 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Settings</title>
 
 <link rel="stylesheet" href="../../styles.css">
 <link rel="stylesheet" href="./account.css">
- <link rel="icon" type="image/svg + xml" sizes="64x64" href="../../resources/asset/Logo.svg">
-
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=DM+Sans&amp;family=Playfair+Display:wght@400;700&amp;display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" sizes="64x64" href="../../resources/asset/Logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:'DM Sans',sans-serif;
-}
-
-/* PAGE LAYOUT */
+*{ box-sizing:border-box; margin:0; padding:0; font-family:'DM Sans',sans-serif; }
 
 .settings-page{
-max-width:960px;
-margin:auto;
-padding:60px 24px;
-display:grid;
-grid-template-columns:220px 1fr;
-gap:60px;
+  max-width:100%; margin:0; padding:60px 0 60px 40px;
+  display:grid; grid-template-columns:220px 1fr; gap:60px;
 }
-
-.settings-main{
-border-left:.5px solid #e0ddd8;
-padding-left:48px;
-}
-
+.settings-main{ border-left:.5px solid #e0ddd8; padding-left:48px; }
 .nav-item{
-display:block;
-padding:10px;
-border:none;
-background:none;
-cursor:pointer;
+  display:block; padding:10px 14px; border:none; background:none;
+  cursor:pointer; width:100%; text-align:left; font-size:14px;
+  font-family:'DM Sans',sans-serif; transition:background .15s;
 }
+.nav-item.active{ background:#312F2C; color:white; }
+.tab-panel{ display:none; }
+.tab-panel.active{ display:block; }
+.page-title{ font-family:'Playfair Display',serif; font-size:36px; margin-bottom:40px; }
 
-.nav-item.active{
-background:#312F2C;
-color:white;
-}
-
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-
-.page-title{
-font-family:'Playfair Display',serif;
-font-size:36px;
-margin-bottom:40px;
-}
-
-/* ACCOUNT */
-
+/* FIELDS */
 .field-row{
-display:flex;
-align-items:center;
-padding:16px 0;
-border-bottom:.5px solid #e0ddd8;
-gap:16px;
+  display:flex; align-items:center; padding:16px 0;
+  border-bottom:.5px solid #e0ddd8; gap:16px;
 }
-
-.field-label{
-width:140px;
-font-size:12px;
-color:#aaa;
+.field-label{ width:160px; font-size:12px; color:#aaa; flex-shrink:0; }
+.field-value{ flex:1; }
+.field-value input, .field-value select{
+  border:none; background:none; font-size:14px; width:100%; outline:none;
+  font-family:'DM Sans',sans-serif;
 }
-
-.field-value input,
-.field-value select{
-border:none;
-background:none;
-font-size:14px;
-width:100%;
-outline:none;
-}
+.field-value input:focus{ border-bottom:1px solid #312F2C; }
 
 .save-btn{
-margin-top:30px;
-background:#312F2C;
-color:white;
-border:none;
-padding:12px 40px;
-cursor:pointer;
+  margin-top:30px; background:#312F2C; color:white; border:none;
+  padding:12px 40px; cursor:pointer; font-family:'DM Sans',sans-serif;
+  font-size:14px; transition:background .2s;
 }
+.save-btn:hover{ background:#555; }
 
 /* AVATAR */
-
 .avatar-row{
-display:flex;
-gap:20px;
-padding:20px 0;
-border-bottom:.5px solid #e0ddd8;
+  display:flex; gap:20px; padding:20px 0;
+  border-bottom:.5px solid #e0ddd8; align-items:center;
 }
-
 .avatar-circle{
-width:64px;
-height:64px;
-border-radius:50%;
-background:#e0ddd8;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
+  width:64px; height:64px; border-radius:50%; background:#e0ddd8;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden; font-size:16px; font-weight:600; color:#605c55;
 }
+.avatar-circle img{ width:100%; height:100%; object-fit:cover; }
 
-.avatar-circle img{
-width:100%;
-height:100%;
-object-fit:cover;
+/* PAYMENT PILLS */
+.pay-method-group{ display:flex; gap:12px; margin:20px 0 8px; flex-wrap:wrap; }
+.pay-pill{
+  padding:9px 22px; border:.5px solid #e0ddd8; background:none;
+  cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif;
+  transition:all .2s;
 }
+.pay-pill.selected{ background:#312F2C; color:white; border-color:#312F2C; }
 
-/* PRIVACY STYLES */
+/* CARD NUMBER */
+.card-number-wrapper{ display:flex; align-items:center; gap:10px; }
+.card-number-wrapper input{ flex:1; }
+#card-logo{ font-size:26px; flex-shrink:0; min-width:32px; text-align:center; transition:all .2s; }
 
-.privacy-card{
-border:.5px solid #e0ddd8;
-padding:24px;
-margin-bottom:28px;
+/* EXPIRY PICKER */
+.expiry-picker{
+  position:absolute; top:calc(100% + 8px); left:0; z-index:200;
+  background:#fff; border:.5px solid #e0ddd8;
+  box-shadow:0 8px 24px rgba(0,0,0,.1);
+  padding:16px; width:260px;
 }
-
-.privacy-card-title{
-font-family:'Playfair Display',serif;
-font-size:20px;
-margin-bottom:6px;
+.expiry-header{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px;
 }
-
-.privacy-card-sub{
-font-size:13px;
-color:#777;
-margin-bottom:20px;
+.expiry-header button{
+  background:none; border:none; font-size:20px; cursor:pointer;
+  color:#312F2C; padding:0 8px; line-height:1;
 }
+.expiry-header span{ font-family:'Playfair Display',serif; font-size:16px; }
+.expiry-months{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:6px;
+}
+.month-btn{
+  padding:8px 4px; border:.5px solid #e0ddd8; background:none;
+  cursor:pointer; font-size:12px; font-family:'DM Sans',sans-serif;
+  transition:all .2s; color:#312F2C;
+}
+.month-btn:hover{ background:#f0ece3; }
+.month-btn.past{ opacity:.3; cursor:not-allowed; }
+.month-btn.selected{ background:#312F2C; color:white; border-color:#312F2C; }
 
+/* PRIVACY */
+.privacy-card{ border:.5px solid #e0ddd8; padding:24px; margin-bottom:28px; }
+.privacy-card-title{ font-family:'Playfair Display',serif; font-size:20px; margin-bottom:6px; }
+.privacy-card-sub{ font-size:13px; color:#777; margin-bottom:20px; }
 .privacy-row{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:16px 0;
-border-bottom:.5px solid #e0ddd8;
-gap:20px;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 0; border-bottom:.5px solid #e0ddd8; gap:20px;
 }
+.privacy-row-info{ display:flex; flex-direction:column; gap:4px; }
+.privacy-btn{ background:#312F2C; color:white; border:none; padding:8px 18px; cursor:pointer; }
+.privacy-btn.danger{ background:#c0392b; }
+.verified-badge{ color:green; font-size:12px; }
+.privacy-input{ border:1px solid #ddd; padding:8px; width:220px; }
 
-.border-none{border-bottom:none;}
-
-.privacy-row-info{
-display:flex;
-flex-direction:column;
-gap:4px;
-}
-
-.privacy-btn{
-background:#312F2C;
-color:white;
-border:none;
-padding:8px 18px;
-cursor:pointer;
-}
-
-.privacy-btn.danger{
-background:#c0392b;
-}
-
-.verified-badge{
-color:green;
-font-size:12px;
-}
-
-.privacy-input{
-border:1px solid #ddd;
-padding:8px;
-width:220px;
-}
-
-#toast{
-position:fixed;
-bottom:30px;
-right:30px;
-background:#312F2C;
-color:white;
-padding:14px 26px;
-opacity:0;
-transition:.3s;
-}
-
-#toast.show{opacity:1;}
-
-/* ORDER HISTORY */
-.orders-empty{
-text-align:center;
-padding:60px 20px;
-color:#aaa;
-font-size:14px;
-}
-
-.orders-empty p:last-child{
-font-size:12px;
-margin-top:6px;
-}
-
-.order-card-item{
-border:.5px solid #e0ddd8;
-padding:20px;
-margin-bottom:14px;
-}
-
-.order-card-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:4px;
-}
-
-.order-card-id{
-font-family:'Playfair Display',serif;
-font-size:15px;
-color:#312F2C;
-}
-
-.order-card-date{
-font-size:12px;
-color:#aaa;
-margin-bottom:10px;
-}
-
-.order-status-badge{
-font-size:11px;
-padding:3px 10px;
-border-radius:100px;
-font-weight:500;
-letter-spacing:.02em;
-}
-
-.order-status-confirmed{background:#e8f5e9;color:#2e7d32;}
-.order-status-processing{background:#e3f2fd;color:#1565c0;}
-.order-status-shipped{background:#fff3e0;color:#e65100;}
-.order-status-delivered{background:#f3e5f5;color:#6a1b9a;}
-
-.order-items-preview{
-display:flex;
-gap:6px;
-flex-wrap:wrap;
-margin-bottom:14px;
-}
-
-.order-item-pill{
-font-size:11px;
-color:#605c55;
-background:#f0ece3;
-padding:3px 9px;
-border-radius:3px;
-}
-
-.order-card-footer{
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.order-total-label{font-size:13px;color:#605c55;}
-.order-total-amount{color:#312F2C;}
-
+/* ORDERS */
+.orders-empty{ text-align:center; padding:60px 20px; color:#aaa; font-size:14px; }
+.orders-empty p:last-child{ font-size:12px; margin-top:6px; }
+.order-card-item{ border:.5px solid #e0ddd8; padding:20px; margin-bottom:14px; }
+.order-card-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+.order-card-id{ font-family:'Playfair Display',serif; font-size:15px; color:#312F2C; }
+.order-card-date{ font-size:12px; color:#aaa; margin-bottom:10px; }
+.order-status-badge{ font-size:11px; padding:3px 10px; border-radius:100px; font-weight:500; }
+.order-status-processing{ background:#e3f2fd; color:#1565c0; }
+.order-status-shipped{ background:#fff3e0; color:#e65100; }
+.order-status-delivered{ background:#f3e5f5; color:#6a1b9a; }
+.order-status-cancelled{ background:#fce4ec; color:#c62828; }
+.order-items-preview{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+.order-item-pill{ font-size:11px; color:#605c55; background:#f0ece3; padding:3px 9px; border-radius:3px; }
+.order-card-footer{ display:flex; justify-content:space-between; align-items:center; }
+.order-total-label{ font-size:13px; color:#605c55; }
+.order-total-amount{ color:#312F2C; }
 .track-btn{
-background:none;
-border:.5px solid #312F2C;
-padding:6px 18px;
-font-size:12px;
-cursor:pointer;
-color:#312F2C;
-font-family:'DM Sans',sans-serif;
-transition:background .2s,color .2s;
+  background:none; border:.5px solid #312F2C; padding:6px 18px;
+  font-size:12px; cursor:pointer; color:#312F2C;
+  font-family:'DM Sans',sans-serif; transition:background .2s,color .2s;
 }
-
-.track-btn:hover{background:#312F2C;color:white;}
+.track-btn:hover{ background:#312F2C; color:white; }
 
 /* TRACKING MODAL */
 .tracking-modal-overlay{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(30,12,4,0.65);
-z-index:300;
-align-items:center;
-justify-content:center;
-padding:24px;
+  display:none; position:fixed; inset:0;
+  background:rgba(30,12,4,0.65); z-index:300;
+  align-items:center; justify-content:center; padding:24px;
 }
-
-.tracking-modal-overlay.open{display:flex;}
-
+.tracking-modal-overlay.open{ display:flex; }
 .tracking-modal-box{
-background:#F0EDE5;
-border-radius:12px;
-padding:40px;
-width:100%;
-max-width:480px;
-position:relative;
+  background:#F0EDE5; border-radius:12px; padding:40px;
+  width:100%; max-width:480px; position:relative;
 }
-
 .tracking-modal-close{
-position:absolute;
-top:16px;
-right:20px;
-background:none;
-border:none;
-font-size:22px;
-cursor:pointer;
-color:rgba(44,24,16,0.35);
-line-height:1;
-transition:color .2s;
+  position:absolute; top:16px; right:20px; background:none;
+  border:none; font-size:22px; cursor:pointer; color:rgba(44,24,16,.35);
 }
-
-.tracking-modal-close:hover{color:#312F2C;}
-
-.tracking-modal-title{
-font-family:'Playfair Display',serif;
-font-size:22px;
-color:#312F2C;
-margin-bottom:4px;
-}
-
-.tracking-order-ref{
-font-size:12px;
-color:#aaa;
-margin-bottom:28px;
-}
-
-.track-step{
-display:flex;
-gap:16px;
-padding-bottom:22px;
-position:relative;
-}
-
+.tracking-modal-close:hover{ color:#312F2C; }
+.tracking-modal-title{ font-family:'Playfair Display',serif; font-size:22px; color:#312F2C; margin-bottom:4px; }
+.tracking-order-ref{ font-size:12px; color:#aaa; margin-bottom:28px; }
+.track-step{ display:flex; gap:16px; padding-bottom:22px; position:relative; }
 .track-step:not(:last-child)::before{
-content:'';
-position:absolute;
-left:12px;
-top:26px;
-bottom:0;
-width:1px;
-background:#e0ddd8;
+  content:''; position:absolute; left:12px; top:26px; bottom:0; width:1px; background:#e0ddd8;
 }
-
-.track-step.done:not(:last-child)::before{background:#312F2C;}
-.track-step.active:not(:last-child)::before{background:#e0ddd8;}
-
+.track-step.done:not(:last-child)::before{ background:#312F2C; }
 .track-icon{
-width:25px;
-height:25px;
-border-radius:50%;
-background:#e0ddd8;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:11px;
-flex-shrink:0;
-margin-top:1px;
-color:#aaa;
-font-weight:600;
+  width:25px; height:25px; border-radius:50%; background:#e0ddd8;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; flex-shrink:0; margin-top:1px; color:#aaa; font-weight:600;
 }
+.track-step.done .track-icon{ background:#312F2C; color:#F0EDE5; }
+.track-step.active .track-icon{ background:#C8975A; color:#F0EDE5; }
+.track-info h4{ font-size:14px; margin:0 0 3px; color:#312F2C; }
+.track-info p{ font-size:12px; color:#aaa; margin:0; }
 
-.track-step.done .track-icon{background:#312F2C;color:#F0EDE5;}
-.track-step.active .track-icon{background:#C8975A;color:#F0EDE5;}
-
-.track-info h4{font-size:14px;margin:0 0 3px;color:#312F2C;}
-.track-info p{font-size:12px;color:#aaa;margin:0;}
-.track-step.active .track-info h4{font-weight:600;}
-
+/* TOAST */
+#toast{
+  position:fixed; bottom:30px; right:30px; background:#312F2C;
+  color:white; padding:14px 26px; opacity:0; transition:.3s; z-index:999;
+}
+#toast.show{ opacity:1; }
 </style>
 </head>
 
 <body>
-
 <div class="settings-page">
 
-<!-- SIDEBAR -->
-<aside>
-<h2>Settings</h2>
+  <!-- SIDEBAR -->
+  <aside>
+    <h2 style="margin-bottom:20px">Settings</h2>
+    <button class="nav-item active" onclick="showTab('account',this)">Account</button>
+    <button class="nav-item"        onclick="showTab('privacy',this)">Privacy</button>
+    <button class="nav-item"        onclick="showTab('address',this)">Address</button>
+    <button class="nav-item"        onclick="showTab('payment',this)">Payment</button>
+    <button class="nav-item"        onclick="showTab('orders',this)">Orders</button>
+  </aside>
 
-<button class="nav-item active" onclick="showTab('account',this)">Account</button>
-<button class="nav-item" onclick="showTab('privacy',this)">Privacy</button>
-<button class="nav-item" onclick="showTab('orders',this)">Orders</button>
+  <!-- MAIN -->
+  <main class="settings-main">
 
-</aside>
+    <!-- ── ACCOUNT ──────────────────────────────────────────────────── -->
+    <div id="tab-account" class="tab-panel active">
+      <h1 class="page-title">Account Settings</h1>
 
-<!-- MAIN -->
-<main class="settings-main">
+      <div class="avatar-row">
+        <div class="avatar-circle" id="avatarEl">WA</div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button onclick="avatarInput.click()">Upload</button>
+          <button onclick="removeAvatar()">Remove</button>
+          <input type="file" id="avatarInput" hidden accept="image/*" onchange="previewAvatar(event)">
+        </div>
+      </div>
 
-<!-- ACCOUNT TAB -->
-<div id="tab-account" class="tab-panel active">
+      <div class="field-row">
+        <span class="field-label">Name</span>
+        <div class="field-value"><input type="text" id="acc-name" value="Wade Armstrong"></div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Email</span>
+        <div class="field-value"><input type="email" id="acc-email" value="wade@email.com"></div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Password</span>
+        <div class="field-value"><input type="password" id="acc-password" value="password123"></div>
+      </div>
 
-<h1 class="page-title">Account Settings</h1>
+      <button class="save-btn" onclick="showToast('Changes Saved')">Save Changes</button>
+    </div>
 
-<div class="avatar-row">
-<div class="avatar-circle" id="avatarEl">WA</div>
+    <!-- ── PRIVACY ───────────────────────────────────────────────────── -->
+    <div id="tab-privacy" class="tab-panel">
+      <h1 class="page-title">Privacy</h1>
+      <div class="privacy-card">
+        <h2 class="privacy-card-title">Account Details</h2>
+        <p class="privacy-card-sub">Manage your account security settings</p>
+        <div class="privacy-row">
+          <div class="privacy-row-info"><span>Verify Email Address</span><span style="font-size:12px;color:#aaa">Confirm your credentials</span></div>
+          <span class="verified-badge">Verified</span>
+        </div>
+        <div class="privacy-row">
+          <div class="privacy-row-info"><span>Update Password</span><span style="font-size:12px;color:#aaa">Protect your account</span></div>
+          <button class="privacy-btn">Change Password</button>
+        </div>
+      </div>
+      <div class="privacy-card">
+        <h2 class="privacy-card-title">Recovery Settings</h2>
+        <div class="privacy-row">
+          <div class="privacy-row-info"><span>Recovery Email</span></div>
+          <input class="privacy-input" placeholder="your@email.com">
+        </div>
+        <div class="privacy-row">
+          <div class="privacy-row-info"><span>Recovery Phone</span></div>
+          <button class="privacy-btn">Setup</button>
+        </div>
+        <div class="privacy-row">
+          <div class="privacy-row-info"><span>Deactivate Account</span></div>
+          <button class="privacy-btn danger">Deactivate</button>
+        </div>
+      </div>
+    </div>
 
-<div>
-<button onclick="avatarInput.click()">Upload</button>
-<button onclick="removeAvatar()">Remove</button>
-<input type="file" id="avatarInput" hidden="" accept="image/*" onchange="previewAvatar(event)">
+    <!-- ── ADDRESS ───────────────────────────────────────────────────── -->
+    <div id="tab-address" class="tab-panel">
+      <h1 class="page-title">Shipping Address</h1>
+
+      <div class="field-row">
+        <span class="field-label">Full Name</span>
+        <div class="field-value"><input type="text" id="addr-name" placeholder="Your full name"></div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Street Address</span>
+        <div class="field-value"><input type="text" id="addr-street" placeholder="123 Main Street"></div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">City</span>
+        <div class="field-value"><input type="text" id="addr-city" placeholder="Cairo"></div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Phone</span>
+        <div class="field-value"><input type="tel" id="addr-phone" placeholder="+20 xxx xxx xxxx"></div>
+      </div>
+
+      <button class="save-btn" onclick="saveAddress()">Save Address</button>
+    </div>
+
+    <!-- ── PAYMENT ───────────────────────────────────────────────────── -->
+    <div id="tab-payment" class="tab-panel">
+      <h1 class="page-title">Payment Method</h1>
+
+      <div class="pay-method-group">
+        <button class="pay-pill selected" onclick="selectPayMethod('credit_debit',this)">Credit / Debit Card</button>
+      </div>
+      <input type="hidden" id="pay-method" value="credit_debit">
+
+      <div id="card-fields">
+
+        <!-- Card Number with logo -->
+        <div class="field-row">
+          <span class="field-label">Card Number</span>
+          <div class="field-value card-number-wrapper">
+            <input type="text" id="pay-card" placeholder="1234 5678 9012 3456" maxlength="19" oninput="detectCard(this)" autocomplete="cc-number">
+            <span id="card-logo"></span>
+          </div>
+        </div>
+
+        <!-- Expiry with custom month/year picker -->
+        <div class="field-row">
+          <span class="field-label">Expiry Date</span>
+          <div class="field-value" style="position:relative">
+            <input type="text" id="pay-expiry" placeholder="MM / YY" maxlength="7" readonly onclick="toggleExpiry()" style="cursor:pointer">
+            <div id="expiry-picker" class="expiry-picker" style="display:none">
+              <div class="expiry-header">
+                <button onclick="changeYear(-1)">&#8249;</button>
+                <span id="picker-year"></span>
+                <button onclick="changeYear(1)">&#8250;</button>
+              </div>
+              <div class="expiry-months" id="expiry-months"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <span class="field-label">CVV</span>
+          <div class="field-value"><input type="password" id="pay-cvv" placeholder="•••" maxlength="4" autocomplete="cc-csc"></div>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Name on Card</span>
+          <div class="field-value"><input type="text" id="pay-card-name" placeholder="Wade Armstrong" autocomplete="cc-name"></div>
+        </div>
+      </div>
+
+      <button class="save-btn" onclick="savePayment()">Save Payment</button>
+    </div>
+
+    <!-- ── ORDERS ────────────────────────────────────────────────────── -->
+    <div id="tab-orders" class="tab-panel">
+      <h1 class="page-title">Order History</h1>
+      <div id="orders-list"></div>
+    </div>
+
+  </main>
 </div>
-</div>
 
-<div class="field-row">
-<span class="field-label">Name</span>
-<div class="field-value">
-<input type="text" value="Wade Armstrong">
-</div>
-</div>
-
-<div class="field-row">
-<span class="field-label">Email</span>
-<div class="field-value">
-<input type="email" value="wade@email.com">
-</div>
-</div>
-
-<div class="field-row">
-<span class="field-label">Password</span>
-<div class="field-value">
-<input type="password" value="password123">
-</div>
-</div>
-
-<button class="save-btn" onclick="showToast()">Save Changes</button>
-
-</div>
-
-<!-- PRIVACY TAB -->
-<div id="tab-privacy" class="tab-panel">
-
-<h1 class="page-title">Privacy</h1>
-
-<div class="privacy-card">
-
-<h2 class="privacy-card-title">Account Details</h2>
-<p class="privacy-card-sub">
-Manage your account security settings
-</p>
-
-<div class="privacy-row">
-<div class="privacy-row-info">
-<span>Verify Email Address</span>
-<span>Confirm your credentials</span>
-</div>
-<span class="verified-badge">Verified</span>
-</div>
-
-<div class="privacy-row">
-<div class="privacy-row-info">
-<span>Update Password</span>
-<span>Protect your account</span>
-</div>
-<button class="privacy-btn">Change Password</button>
-</div>
-
-</div>
-
-<div class="privacy-card">
-
-<h2 class="privacy-card-title">Recovery Settings</h2>
-
-<div class="privacy-row">
-<div class="privacy-row-info">
-<span>Recovery Email</span>
-</div>
-<input class="privacy-input" placeholder="your@email.com">
-</div>
-
-<div class="privacy-row">
-<div class="privacy-row-info">
-<span>Recovery Phone</span>
-</div>
-<button class="privacy-btn">Setup</button>
-</div>
-
-<div class="privacy-row">
-<div class="privacy-row-info">
-<span>Deactivate Account</span>
-</div>
-<button class="privacy-btn danger">Deactivate</button>
-</div>
-
-</div>
-
-</div>
-
-<!-- ORDERS TAB -->
-<div id="tab-orders" class="tab-panel">
-
-<h1 class="page-title">Order History</h1>
-<div id="orders-list"></div>
-
-</div>
-
-</main>
-</div>
-
-<!-- Shipment Tracking Modal -->
+<!-- Tracking Modal -->
 <div id="tracking-modal-overlay" class="tracking-modal-overlay" onclick="if(event.target===this)closeTracking()">
   <div class="tracking-modal-box">
     <button class="tracking-modal-close" onclick="closeTracking()">&times;</button>
@@ -513,136 +354,107 @@ Manage your account security settings
 <div id="toast">Changes Saved</div>
 
 <script>
-
-function showTab(name,btn){
-document.querySelectorAll('.tab-panel')
-.forEach(p=>p.classList.remove('active'));
-
-document.getElementById('tab-'+name)
-.classList.add('active');
-
-document.querySelectorAll('.nav-item')
-.forEach(b=>b.classList.remove('active'));
-
-btn.classList.add('active');
-
-if(name==='orders') renderOrders();
+/* ── PAYMENT METHOD ── */
+function selectPayMethod(value, btn) {
+    document.getElementById("pay-method").value = value;
+    document.querySelectorAll(".pay-pill").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
 }
 
-/* ---- ORDER HISTORY ---- */
-function getOrderStatus(dateStr){
-const placed=new Date(dateStr);
-const days=Math.floor((Date.now()-placed)/(1000*60*60*24));
-if(days>=7) return{key:'delivered',label:'Delivered'};
-if(days>=3) return{key:'shipped',label:'Shipped'};
-if(days>=1) return{key:'processing',label:'Processing'};
-return{key:'confirmed',label:'Confirmed'};
+/* ── CARD DETECTION ── */
+function detectCard(input) {
+    // format with spaces every 4 digits
+    let v = input.value.replace(/\D/g, "").substring(0, 16);
+    input.value = v.replace(/(.{4})/g, "$1 ").trim();
+
+    const logo = document.getElementById("card-logo");
+    const first2 = parseInt(v.substring(0, 2));
+    const first4 = parseInt(v.substring(0, 4));
+
+    // Visa: starts with 4
+    if (v[0] === "4") {
+        logo.textContent = "💳";
+        logo.title = "Visa";
+        logo.style.color = "#1a1f71";
+    }
+    // Mastercard: starts with 51–55
+    else if (first2 >= 51 && first2 <= 55) {
+        logo.textContent = "💳";
+        logo.title = "Mastercard";
+        logo.style.color = "#eb001b";
+    }
+    // Amex: starts with 34 or 37
+    else if (first2 === 34 || first2 === 37) {
+        logo.textContent = "💳";
+        logo.title = "Amex";
+        logo.style.color = "#007bc1";
+    }
+    else {
+        logo.textContent = v.length > 0 ? "💳" : "";
+        logo.style.color = "#aaa";
+        logo.title = "";
+    }
 }
 
-function renderOrders(){
-const list=document.getElementById('orders-list');
-if(!list) return;
-const history=JSON.parse(localStorage.getItem('orderHistory')||'[]');
+/* ── EXPIRY PICKER ── */
+let pickerYear = new Date().getFullYear();
+let selectedMonth = null;
+let selectedYear  = null;
 
-if(!history.length){
-list.innerHTML='<div class="orders-empty"><p>No orders yet.</p><p>Your completed orders will appear here.</p></div>';
-return;
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+function toggleExpiry() {
+    const picker = document.getElementById("expiry-picker");
+    const isOpen = picker.style.display === "block";
+    picker.style.display = isOpen ? "none" : "block";
+    if (!isOpen) {
+        pickerYear = selectedYear || new Date().getFullYear();
+        renderPicker();
+    }
 }
 
-list.innerHTML=history.map((order,i)=>{
-const date=new Date(order.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-const status=getOrderStatus(order.date);
-const items=(order.items||[]).slice(0,3).map(it=>`<span class="order-item-pill">${it.title}</span>`).join('');
-const more=(order.items||[]).length>3?`<span class="order-item-pill">+${(order.items.length-3)} more</span>`:'';
-const total=(order.total||0).toFixed(2);
-return`<div class="order-card-item">
-<div class="order-card-header">
-<span class="order-card-id">${order.id||'#MKTBA'}</span>
-<span class="order-status-badge order-status-${status.key}">${status.label}</span>
-</div>
-<div class="order-card-date">${date}</div>
-<div class="order-items-preview">${items}${more}</div>
-<div class="order-card-footer">
-<span class="order-total-label">Total: <strong class="order-total-amount">&euro;${total}</strong></span>
-<button class="track-btn" onclick="openTracking(${i})">Track Order</button>
-</div>
-</div>`;
-}).join('');
+function changeYear(delta) {
+    const now = new Date();
+    const newYear = pickerYear + delta;
+    // don't go before current year, don't go more than 10 years ahead
+    if (newYear < now.getFullYear() || newYear > now.getFullYear() + 10) return;
+    pickerYear = newYear;
+    renderPicker();
 }
 
-/* ---- TRACKING MODAL ---- */
-function openTracking(idx){
-const history=JSON.parse(localStorage.getItem('orderHistory')||'[]');
-const order=history[idx];
-if(!order) return;
-
-const status=getOrderStatus(order.date);
-const placed=new Date(order.date);
-const delivery=new Date(placed);
-delivery.setDate(placed.getDate()+7);
-const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-
-const steps=[
-{key:'confirmed',label:'Order Confirmed',detail:fmt(placed)},
-{key:'processing',label:'Processing',detail:'Preparing your books'},
-{key:'shipped',label:'Shipped',detail:'On the way to you'},
-{key:'delivered',label:'Delivered',detail:'Estimated: '+fmt(delivery)}
-];
-
-const statusOrder=['confirmed','processing','shipped','delivered'];
-const currentIdx=statusOrder.indexOf(status.key);
-
-document.getElementById('tracking-order-ref').textContent=order.id||'#MKTBA';
-document.getElementById('tracking-timeline').innerHTML=steps.map((step,i)=>{
-const isDone=i<currentIdx;
-const isActive=i===currentIdx;
-const cls=isDone?'done':isActive?'active':'';
-const iconText=isDone?'&#10003;':isActive?'&#9679;':'&#9675;';
-const detail=(isDone||isActive)?step.detail:'&mdash;';
-return`<div class="track-step ${cls}">
-<div class="track-icon">${iconText}</div>
-<div class="track-info"><h4>${step.label}</h4><p>${detail}</p></div>
-</div>`;
-}).join('');
-
-document.getElementById('tracking-modal-overlay').classList.add('open');
+function renderPicker() {
+    const now  = new Date();
+    document.getElementById("picker-year").textContent = pickerYear;
+    document.getElementById("expiry-months").innerHTML = MONTHS.map((m, i) => {
+        const monthNum  = i + 1;
+        const isPast    = pickerYear === now.getFullYear() && monthNum < now.getMonth() + 1;
+        const isSelected = selectedMonth === monthNum && selectedYear === pickerYear;
+        return `<button class="month-btn ${isPast ? "past" : ""} ${isSelected ? "selected" : ""}"
+                        onclick="${isPast ? "" : `pickMonth(${monthNum})`}">${m}</button>`;
+    }).join("");
 }
 
-function closeTracking(){
-document.getElementById('tracking-modal-overlay').classList.remove('open');
+function pickMonth(month) {
+    selectedMonth = month;
+    selectedYear  = pickerYear;
+    const mm = String(month).padStart(2, "0");
+    const yy = String(pickerYear).slice(-2);
+    document.getElementById("pay-expiry").value = `${mm} / ${yy}`;
+    document.getElementById("expiry-picker").style.display = "none";
 }
 
-function previewAvatar(e){
-const file=e.target.files[0];
-if(!file)return;
-
-const reader=new FileReader();
-reader.onload=ev=>{
-avatarEl.innerHTML=
-'<img src="'+ev.target.result+'">';
-};
-reader.readAsDataURL(file);
-}
-
-function removeAvatar(){
-avatarEl.innerHTML="WA";
-}
-
-function showToast(){
-const t=document.getElementById('toast');
-t.classList.add('show');
-setTimeout(()=>t.classList.remove('show'),2000);
-}
-
+// Close picker when clicking outside
+document.addEventListener("click", function(e) {
+    const picker = document.getElementById("expiry-picker");
+    const input  = document.getElementById("pay-expiry");
+    if (picker && !picker.contains(e.target) && e.target !== input) {
+        picker.style.display = "none";
+    }
+});
 </script>
 
-
-
-
-
- <script src="../../data.js"></script>
-    <script src="./account.js"></script>
-    <script src="../../script.js"></script>
-
-
-</body></html>
+<script src="../../data.js"></script>
+<script src="./account.js"></script>
+<script src="../../script.js"></script>
+</body>
+</html>

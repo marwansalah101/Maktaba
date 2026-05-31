@@ -318,7 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //add to cart 
 
 
-const CART_SHIPPING = 5;
+const CART_SHIPPING = 60;
 
 function getCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
