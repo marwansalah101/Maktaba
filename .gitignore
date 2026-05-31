@@ -1,7 +1,5 @@
 node_modules/
 **/node_modules/
-Back-end/package-lock.json
-package.json
 
 # Environment variables — NEVER commit these
 .env
@@ -10,8 +8,3 @@ package.json
 
 # Local review and documentation
 docs/
-Back-end/package.json
-<<<<<<< Updated upstream
-Back-end/package.json
-=======
->>>>>>> Stashed changes
