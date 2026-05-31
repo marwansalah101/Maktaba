@@ -1,46 +1,274 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maktaba</title>
+    <title>Maktaba — Contact Us</title>
     <link rel="stylesheet" href="../../styles.css">
-        <link rel="stylesheet" href="./account.css">
+    <link rel="stylesheet" href="./account.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap" rel="stylesheet">
-     <link rel="icon" type="image/svg + xml" sizes="64x64" href="../../resources/asset/Logo.svg">
-    </head>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" sizes="64x64" href="../../resources/asset/Logo.svg">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        .contact-main {
+            background: #F0EDE5;
+            min-height: 100vh;
+            padding: 120px 40px 80px;
+            font-family: 'Times New Roman', serif;
+            color: #312F2C;
+        }
+
+        .contact-container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 0 70px;
+        }
+
+        .contact-heading {
+            font-family: 'Times New Roman', serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: #312F2C;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            margin: 0 0 10px;
+        }
+
+        .contact-subtitle {
+            color: #605c55b5;
+            font-size: 18px;
+            font-family: 'Times New Roman', serif;
+            margin: 0 0 40px;
+        }
+
+        .contact-content {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .contact-form {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            background: #fff;
+            padding: 48px 40px;
+            border-radius: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: #605c55b5;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 14px 18px !important;
+            border: 1px solid #d9d0c4 !important;
+            border-radius: 8px !important;
+            font-size: 15px !important;
+            font-family: 'Times New Roman', serif !important;
+            color: #312F2C !important;
+            background: #F0EDE5 !important;
+            transition: border-color 0.25s ease !important;
+            width: 100% !important;
+            margin-left: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        .contact-form textarea {
+            resize: vertical !important;
+            min-height: 120px !important;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none !important;
+            border-color: #312F2C !important;
+            background: #fff !important;
+        }
+
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: #605c55b5 !important;
+        }
+
+        .submit-btn {
+            padding: 14px 36px;
+            background: #312F2C;
+            color: #F0EDE5;
+            border: none;
+            border-radius: 50px;
+            font-size: 15px;
+            font-family: 'Times New Roman', serif;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.25s ease, transform 0.2s ease;
+            align-self: flex-start;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: #4a4745;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #formStatus {
+            font-size: 14px;
+            font-family: 'Times New Roman', serif;
+            min-height: 20px;
+        }
+
+        .contact-info-card {
+            width: 320px;
+            flex-shrink: 0;
+            background: #312F2C;
+            color: #F0EDE5;
+            border-radius: 16px;
+            padding: 40px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #F0EDE5;
+            opacity: 0.4;
+            flex-shrink: 0;
+        }
+
+        .header-text h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #F0EDE5;
+            margin-bottom: 4px;
+        }
+
+        .header-text p {
+            font-size: 13px;
+            color: #B8AEA0;
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            color: #F0EDE5;
+            font-family: 'Times New Roman', serif;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .contact-method:hover {
+            opacity: 0.8;
+        }
+
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(240, 237, 229, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .icon-circle .material-symbols-outlined {
+            font-size: 18px;
+            color: #F0EDE5;
+        }
+
+        .icon-circle img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+
+        .card-footer-dots {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-footer-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #F0EDE5;
+            opacity: 0.25;
+        }
+
+        @media (max-width: 900px) {
+            .contact-content { flex-direction: column; }
+            .contact-info-card { width: 100%; }
+            .contact-heading { font-size: 46px; }
+        }
+
+        @media (max-width: 768px) {
+            .contact-heading { font-size: 46px; }
+        }
+
+        @media (max-width: 480px) {
+            .contact-main { padding: 100px 20px 60px; }
+            .contact-form { padding: 32px 24px; }
+            .contact-heading { font-size: 32px; }
+        }
+    </style>
+</head>
 
 <body>
-    <nav class="navbar ">
+    <nav class="navbar">
         <div id="Maktaba">
-            <a href="#Maktaba">
-                <h1>Maktaba</h1>
-            </a>
+            <a href="../../home.html"><h1>Maktaba</h1></a>
         </div>
         <ul class="navrbar-text">
-            <li>
-                <a href="../../home.html">
-                    Home
-                </a>
-            </li>
-            <li>
-                <a href="../catalog(Marwan)/genres.html">
-                    Browse
-                </a>
-            </li>
-            <li>
-                <a href="../catalog(Marwan)/collection.html">
-                    Collection
-                </a>
-            </li>
-            <li>
-                <a href="./favorites.html">
-                    Favourites
-                </a>
-            </li>
+            <li><a href="../../home.html">Home</a></li>
+            <li><a href="../catalog(Marwan)/genres.html">Browse</a></li>
+            <li><a href="../catalog(Marwan)/collection.html">Collection</a></li>
+            <li><a href="./favorites.html">Favourites</a></li>
         </ul>
         <div class="navbar-icons">
             <a href="../checkout(Rojeh)/add-to-cart.html">
-                <span class="material-symbols-outlined">shopping_bag</span>     
+                <span class="material-symbols-outlined">shopping_bag</span>
             </a>
             <div class="menu-dropdown-wrapper" id="menuWrapper">
                 <span class="material-symbols-outlined" id="menuBtn">menu</span>
@@ -57,108 +285,97 @@
     <main class="contact-main">
         <div class="contact-container">
             <h1 class="contact-heading">Contact us</h1>
+            <p class="contact-subtitle">We'd love to hear from you.</p>
             <div class="contact-content">
-                <form class="contact-form">
+
+                <form class="contact-form" id="contactForm">
                     <div class="input-group">
                         <label for="fullName">Full name</label>
-                        <input type="text" id="fullName" name="fullName">
+                        <input type="text" id="fullName" placeholder="John Doe" required>
                     </div>
                     <div class="input-group">
                         <label for="email">Email address</label>
-                        <input type="email" id="email" name="email">
+                        <input type="email" id="email" placeholder="john@example.com" required>
                     </div>
                     <div class="input-group">
-                        <label for="message">Messages</label>
-                        <input type="text" id="message" name="message">
+                        <label for="message">Message</label>
+                        <textarea id="message" placeholder="Write your message here..." required></textarea>
                     </div>
-                    <button type="submit" class="submit-btn" style="background-color: #312F2C; color: #F0EDE5;">Submit</button>
+                    <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+                    <p id="formStatus"></p>
                 </form>
 
-                <div class="contact-info-card" style="background-color: #312F2C; color: #F0EDE5;">
+                <div class="contact-info-card">
                     <div class="card-header">
                         <span class="dot"></span>
                         <div class="header-text">
                             <h3>Get in touch with us!</h3>
-                            <p>Lets talk!</p>
+                            <p>We'd love to hear from you.</p>
                         </div>
-                        <span class="dot right-dot"></span>
                     </div>
                     <div class="contact-methods">
-                        <div class="contact-method">
-                            <div class="icon-circle" style="background-color: #F0EDE5; color: #312F2C;">
-                                <span class="material-symbols-outlined" style="color: #312F2C; font-size: 18px;">mail</span>
+                        <a href="https://mail.google.com/mail/?view=cm&to=mactaba26@gmail.com" target="_blank" class="contact-method">
+                            <div class="icon-circle">
+                                <span class="material-symbols-outlined">mail</span>
                             </div>
-                            <span>info@maktaba.com</span>
-                        </div>
-                        <div class="contact-method">
-                            <div class="icon-circle" style="background-color: #F0EDE5; color: #F0EDE5; border: 1.5px solid #F0EDE5;">
-                                <span class="material-symbols-outlined" style="color: #312F2C; font-size: 18px;">call</span>
+                            <span>mactaba26@gmail.com</span>
+                        </a>
+                        <a href="https://wa.me/201061389286" target="_blank" class="contact-method">
+                            <div class="icon-circle">
+                                <span class="material-symbols-outlined">call</span>
                             </div>
-                            <span>+1 234 567 890</span>
-                        </div>
-                        <div class="contact-method">
-                            <div class="icon-circle" style="background-color: #F0EDE5; color: #F0EDE5; border: 1.5px solid #F0EDE5;">
-                                <span class="material-symbols-outlined" style="color: #F0EDE5; font-size: 18px;"><img src="../../resources/img/Facebook.png" style="width:30px; height:30px;" alt="Maktaba Logo"></span>
-                            </div>
-                            <span>@maktaba</span>
-                        </div>
-                        <div class="contact-method">
-                            <div class="icon-circle" style="background-color: #F0EDE5; color: #F0EDE5; border: 1.5px solid #F0EDE5;">
-                                <span class="material-symbols-outlined" style="color: #F0EDE5; font-size: 18px;"><img src="../../resources/img/Instagram.png" style="width:30px; height:30px;" alt="Maktaba Logo"></span>
+                            <span>+20 106 138 9286</span>
+                        </a>
+                        <a href="https://facebook.com/maktaba" target="_blank" class="contact-method">
+                            <div class="icon-circle">
+                                <img src="../../resources/img/Facebook.png" alt="Facebook">
                             </div>
                             <span>@maktaba</span>
-                        </div>
+                        </a>
+                        <a href="https://instagram.com/maktaba" target="_blank" class="contact-method">
+                            <div class="icon-circle">
+                                <img src="../../resources/img/Instagram.png" alt="Instagram">
+                            </div>
+                            <span>@maktaba</span>
+                        </a>
                     </div>
                     <div class="card-footer-dots">
                         <span class="dot"></span>
-                        <span class="dot right-dot"></span>
+                        <span class="dot"></span>
                     </div>
                 </div>
+
             </div>
         </div>
     </main>
 
     <footer class="site-footer">
         <div class="footer-container">
-
-              <!-- Newsletter Subscription Box -->
-          <div class="newsletter-section">
-              <div class="newsletter-content">
-                  <div class="newsletter-text">
-                      <h3>Subscribe to our newsletter</h3>
-                      <p>Be the first to receive updates, tips, and more.</p>
-                  </div>
-                  <div class="newsletter-form">
-                      <form id="newsletterForm" class="newsletter-form-wrapper">
-                          <input 
-                              type="email" 
-                              id="newsletterEmail" 
-                              placeholder="Enter your email..." 
-                              required
-                              class="newsletter-input"
-                          >
-                          <button type="submit" class="newsletter-btn">Subscribe</button>
-                      </form>
-                      <p class="newsletter-privacy">By subscribing you agree to our Privacy Policy</p>
-                  </div>
-              </div>
-          </div>
-
-            <div class="footer-col-brand-col">
-                <h3>MAKTABA</h3>
-                <p>Connecting readers with the stories they love. Discover, read, and share your favorite books with our
-                    growing community.</p>
-                <div class="social-icons">
-
-                    <a href="#"><img src="../../resources/img/WhatsApp.svg.png" alt="WhatsApp logo" style="height:30px;width:30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../../resources/img/WhatsApp Image 2026-04-05 at 2.54.24 PM.png.jpeg" alt="Instagram logo" style="height:30px;width:30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../../resources/img/WhatsApp Image 2026-04-05 at 2.52.10 PM.png.jpeg" alt="Twitter logo" style="height:30px;width: 30px;border-radius:50%;"></a>
-                    <a href="#"><img src="../../resources/img/images.png" alt="Facebook logo" style="height:30px;width:30px; border-radius:50%;"></a>
+            <div class="newsletter-section">
+                <div class="newsletter-content">
+                    <div class="newsletter-text">
+                        <h3>Subscribe to our newsletter</h3>
+                        <p>Be the first to receive updates, tips, and more.</p>
+                    </div>
+                    <div class="newsletter-form">
+                        <form id="newsletterForm" class="newsletter-form-wrapper">
+                            <input type="email" id="newsletterEmail" placeholder="Enter your email..." required class="newsletter-input">
+                            <button type="submit" class="newsletter-btn">Subscribe</button>
+                        </form>
+                        <p class="newsletter-privacy">By subscribing you agree to our Privacy Policy</p>
+                    </div>
                 </div>
             </div>
-
-
-
+            <div class="footer-col-brand-col">
+                <h3>MAKTABA</h3>
+                <p>Connecting readers with the stories they love. Discover, read, and share your favorite books with our growing community.</p>
+                <div class="social-icons">
+                    <a href="#"><img src="../../resources/img/WhatsApp.svg.png" alt="WhatsApp" style="height:30px;width:30px;border-radius:50%;"></a>
+                    <a href="#"><img src="../../resources/img/WhatsApp Image 2026-04-05 at 2.54.24 PM.png.jpeg" alt="Instagram" style="height:30px;width:30px;border-radius:50%;"></a>
+                    <a href="#"><img src="../../resources/img/WhatsApp Image 2026-04-05 at 2.52.10 PM.png.jpeg" alt="Twitter" style="height:30px;width:30px;border-radius:50%;"></a>
+                    <a href="#"><img src="../../resources/img/images.png" alt="Facebook" style="height:30px;width:30px;border-radius:50%;"></a>
+                </div>
+            </div>
             <div class="footer-col">
                 <h4>About</h4>
                 <ul>
@@ -167,26 +384,19 @@
                     <li><a href="./contact-us.html">Contact Us</a></li>
                 </ul>
             </div>
-
-
             <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="../checkout(Rojeh)/checkout.html">Shipping &amp; Delivery</a></li>
+                    <li><a href="../checkout(Rojeh)/checkout.html">Shipping & Delivery</a></li>
                     <li><a href="../legal(fares)/returns-policy.html">Returns</a></li>
                     <li><a href="../checkout(Rojeh)/payment.html">Payment Methods</a></li>
                     <li><a href="../checkout(Rojeh)/order-success.html">Track Order</a></li>
                     <li><a href="./contact-us.html">FAQ</a></li>
                 </ul>
             </div>
-
-
-
         </div>
-
         <div class="footer-bottom">
             <p>© 2026 Maktaba. All rights reserved.</p>
-
             <ul class="footer-bottom-links">
                 <li><a href="../legal(fares)/privacy-policy.html">Privacy Policy</a></li>
                 <li><a href="../legal(fares)/terms-of-use.html">Terms of Service</a></li>
@@ -198,6 +408,23 @@
     <script src="../../data.js"></script>
     <script src="./account.js"></script>
     <script src="../../script.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
+            const name    = document.getElementById('fullName').value;
+            const email   = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
 
-</body></html>
+            const subject = encodeURIComponent('New message from ' + name);
+            const body    = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message);
+
+            window.open('https://mail.google.com/mail/?view=cm&to=mactaba26@gmail.com&su=' + subject + '&body=' + body, '_blank');
+
+            document.getElementById('formStatus').style.color = 'green';
+            document.getElementById('formStatus').textContent = '✓ Message sent successfully!';
+            document.getElementById('contactForm').reset();
+        });
+    </script>
+</body>
+</html>
