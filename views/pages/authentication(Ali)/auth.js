@@ -1,3 +1,56 @@
+// ═══════════════════════════════════════════════════════════════
+//  GOOGLE SIGN IN  (must be outside the IIFE so onclick can reach it)
+// ═══════════════════════════════════════════════════════════════
+
+function initGoogleSignIn() {
+    if (typeof google === 'undefined') return;
+    google.accounts.id.initialize({
+        client_id: '359427593568-fp7894cehclcd6e1fnke49ca2norscai.apps.googleusercontent.com',
+        callback: handleGoogleResponse
+    });
+}
+
+function handleGoogleResponse(response) {
+    const base64  = response.credential.split('.')[1];
+    const decoded = JSON.parse(atob(base64));
+
+    const googleUser = {
+        fullname: decoded.name,
+        email:    decoded.email,
+        picture:  decoded.picture,
+        provider: 'google'
+    };
+
+    const users = JSON.parse(localStorage.getItem('maktabaUsers') || '[]');
+    const existingUser = users.find(u => u.email === googleUser.email);
+    if (!existingUser) {
+        users.push(googleUser);
+        localStorage.setItem('maktabaUsers', JSON.stringify(users));
+    }
+
+    localStorage.setItem('maktabaLoggedInUser', JSON.stringify({
+        fullname: googleUser.fullname,
+        email:    googleUser.email,
+        picture:  googleUser.picture
+    }));
+    localStorage.setItem('maktabaUserName',  googleUser.fullname);
+    localStorage.setItem('maktabaUserEmail', googleUser.email);
+
+    window.location.href = 'http://127.0.0.1:5501/views/pages/home(fares)/home.html';
+}
+
+function googleSignIn() {
+    if (typeof google === 'undefined') {
+        alert('Google Sign-In is not loaded yet. Please wait a moment and try again.');
+        return;
+    }
+    google.accounts.id.prompt();
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+//  MAIN AUTH MODULE
+// ═══════════════════════════════════════════════════════════════
 (() => {
 
     // ─── Validation Rules ───────────────────────────────────────────
@@ -101,7 +154,6 @@
         const emailEl    = document.getElementById('email');
         const passwordEl = document.getElementById('password');
 
-        // Live validation on blur
         fullnameEl && fullnameEl.addEventListener('blur', () => {
             if (!fullnameEl.value.trim()) { clearState(fullnameEl); return; }
             rules.fullname.validate(fullnameEl.value)
@@ -127,12 +179,10 @@
             }
         });
 
-        // Form submit
         form.addEventListener('submit', e => {
             e.preventDefault();
             let valid = true;
 
-            // Validate all fields
             if (!fullnameEl.value.trim() || !rules.fullname.validate(fullnameEl.value)) {
                 showError(fullnameEl, rules.fullname.message); valid = false;
             }
@@ -149,10 +199,7 @@
             btn.textContent = 'Creating account…';
             btn.disabled = true;
 
-            // STEP 1: Read existing users from localStorage as JSON array
             const users = JSON.parse(localStorage.getItem('maktabaUsers') || '[]');
-
-            // STEP 2: Check if email already registered
             const exists = users.some(
                 u => u.email.toLowerCase() === emailEl.value.trim().toLowerCase()
             );
@@ -163,18 +210,15 @@
                 return;
             }
 
-            // STEP 3: Build new user object
             const newUser = {
                 fullname: fullnameEl.value.trim(),
                 email:    emailEl.value.trim().toLowerCase(),
                 password: passwordEl.value
             };
 
-            // STEP 4: Add to array and save back as JSON
             users.push(newUser);
             localStorage.setItem('maktabaUsers', JSON.stringify(users));
 
-            // STEP 5: Redirect to sign in
             setTimeout(() => {
                 btn.textContent = 'Sign Up';
                 btn.disabled = false;
@@ -184,6 +228,29 @@
     }
 
 
+
+
+function toggleDarkMode() {
+  const card = document.querySelector('.signup-card');
+  const icon = document.getElementById('dark-icon');
+  card.classList.toggle('dark');
+
+  if (card.classList.contains('dark')) {
+    icon.innerHTML = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+  } else {
+    icon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+  }
+
+  localStorage.setItem('maktabaDarkMode', card.classList.contains('dark'));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('maktabaDarkMode') === 'true') {
+    toggleDarkMode();
+  }
+});
+
+    
     // ═══════════════════════════════════════════════════════════════
     //  SIGN IN
     // ═══════════════════════════════════════════════════════════════
@@ -194,7 +261,6 @@
         const emailEl    = document.getElementById('email');
         const passwordEl = document.getElementById('password');
 
-        // Live validation on blur
         emailEl && emailEl.addEventListener('blur', () => {
             if (!emailEl.value.trim()) { clearState(emailEl); return; }
             rules.email.validate(emailEl.value)
@@ -208,12 +274,10 @@
                 : showError(passwordEl, rules.password_signin.message);
         });
 
-        // Form submit
         form.addEventListener('submit', e => {
             e.preventDefault();
             let valid = true;
 
-            // Validate fields
             if (!emailEl.value.trim() || !rules.email.validate(emailEl.value)) {
                 showError(emailEl, rules.email.message); valid = false;
             }
@@ -227,15 +291,11 @@
             btn.textContent = 'Signing in...';
             btn.disabled = true;
 
-            // STEP 1: Read all users from localStorage
             const users = JSON.parse(localStorage.getItem('maktabaUsers') || '[]');
-
-            // STEP 2: Find user by email
             const user = users.find(
                 u => u.email === emailEl.value.trim().toLowerCase()
             );
 
-            // STEP 3: Check if email exists
             if (!user) {
                 showError(emailEl, 'No account found with this email.');
                 btn.textContent = 'Sign In';
@@ -243,7 +303,6 @@
                 return;
             }
 
-            // STEP 4: Check password
             if (user.password !== passwordEl.value) {
                 showError(passwordEl, 'Incorrect password.');
                 btn.textContent = 'Sign In';
@@ -251,7 +310,6 @@
                 return;
             }
 
-            // STEP 5: Save logged-in user to localStorage
             localStorage.setItem('maktabaLoggedInUser', JSON.stringify({
                 fullname: user.fullname,
                 email:    user.email,
@@ -261,7 +319,6 @@
             localStorage.setItem('maktabaUserEmail', user.email);
             localStorage.setItem('maktabaUserName',  user.fullname);
 
-            // STEP 6: Redirect to home
             setTimeout(() => {
                 btn.textContent = 'Sign In';
                 btn.disabled = false;
@@ -271,11 +328,10 @@
     }
 
 
-    // ─── Welcome Overlay (shown after login) ────────────────────────
+    // ─── Welcome Overlay ────────────────────────────────────────────
     window.addEventListener('DOMContentLoaded', () => {
         const justLoggedIn = sessionStorage.getItem('justLoggedIn');
         const name = localStorage.getItem('maktabaUserName');
-
         if (justLoggedIn && name) {
             const overlay = document.getElementById('welcomeOverlay');
             const welcomeText = document.getElementById('welcomeText');
@@ -290,22 +346,12 @@
         }
     });
 
-
-    // ─── Protect pages that require login ───────────────────────────
-    function requireLogin() {
-        const currentUser = JSON.parse(localStorage.getItem('maktabaLoggedInUser'));
-        if (!currentUser) {
-            window.location.href = './signin.html';
-        }
-        return currentUser;
-    }
-
-
     // ─── Init ────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
         setupTogglePassword();
         initSignup();
         initSignin();
+        initGoogleSignIn();
     });
 
 })();
@@ -357,17 +403,9 @@ function submitForgotPw(e) {
 /* ══════════════════════════════════════════════════════════════════
    DASHBOARD NAVIGATION
 ══════════════════════════════════════════════════════════════════ */
-function goToAuthors() {
-    window.location.href = './totalauth.html';
-}
-
-function goToBooks() {
-    window.location.href = './authbooks.html';
-}
-
-function toggleMenu() {
-    document.getElementById('sidebar').classList.toggle('active');
-}
+function goToAuthors() { window.location.href = './totalauth.html'; }
+function goToBooks()   { window.location.href = './authbooks.html'; }
+function toggleMenu()  { document.getElementById('sidebar').classList.toggle('active'); }
 
 
 /* ══════════════════════════════════════════════════════════════════
@@ -375,18 +413,12 @@ function toggleMenu() {
 ══════════════════════════════════════════════════════════════════ */
 function openAddBookModal() {
     const modal = document.getElementById('addBookModal');
-    if (modal) {
-        modal.classList.add('show');
-        const form = document.getElementById('addBookForm');
-        if (form) form.reset();
-    }
+    if (modal) { modal.classList.add('show'); const form = document.getElementById('addBookForm'); if (form) form.reset(); }
 }
-
 function closeAddBookModal() {
     const modal = document.getElementById('addBookModal');
     if (modal) modal.classList.remove('show');
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (event) => {
         const modal = document.getElementById('addBookModal');
@@ -404,133 +436,50 @@ window.addEventListener('load', function () {
     const labels  = ['Jul 24','Aug','Sep','Oct','Nov','Dec 24','Jan','Feb','Mar','Apr','May','Jun 25'];
     const revenue = [1800,2200,3500,5200,3800,4100,3200,3600,4400,5000,5800,6200];
     const sold    = [40,55,90,130,95,105,80,90,110,125,145,155];
-
     const ctx = document.getElementById('revenueChart');
     if (!ctx) return;
     new Chart(ctx.getContext('2d'), {
         type: 'line',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: 'Book Revenue',
-                    data: revenue,
-                    borderColor: '#C8A96E',
-                    backgroundColor: 'rgba(200,169,110,0.15)',
-                    borderWidth: 2, fill: true, tension: 0.45, pointRadius: 0
-                },
-                {
-                    label: 'Orders',
-                    data: sold.map(v => v * 35),
-                    borderColor: '#3B5E2F',
-                    backgroundColor: 'rgba(59,94,47,0.12)',
-                    borderWidth: 2, fill: true, tension: 0.45, pointRadius: 0
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } },
-            scales: {
-                x: { grid: { display: false } },
-                y: { ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v } }
-            }
-        }
+        data: { labels, datasets: [
+            { label: 'Book Revenue', data: revenue, borderColor: '#C8A96E', backgroundColor: 'rgba(200,169,110,0.15)', borderWidth: 2, fill: true, tension: 0.45, pointRadius: 0 },
+            { label: 'Orders', data: sold.map(v => v * 35), borderColor: '#3B5E2F', backgroundColor: 'rgba(59,94,47,0.12)', borderWidth: 2, fill: true, tension: 0.45, pointRadius: 0 }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v } } } }
     });
 });
 
-
 /*---- Weekly Visitors ----*/
 window.addEventListener('load', function () {
-    const days   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const visits = [320, 410, 350, 510, 600, 890, 430];
-    const peak   = visits.indexOf(Math.max(...visits));
-
+    const peak = visits.indexOf(Math.max(...visits));
     const peakEl = document.getElementById('peakDay');
     if (peakEl) peakEl.textContent = `${days[peak]}: ${visits[peak]}`;
-
     const ctx = document.getElementById('visitorsChart');
     if (!ctx) return;
     new Chart(ctx.getContext('2d'), {
         type: 'bar',
-        data: {
-            labels: days,
-            datasets: [{
-                label: 'Visitors',
-                data: visits,
-                backgroundColor: visits.map((v, i) => i === peak ? '#1B2E4B' : '#2C4A72'),
-                borderRadius: 4,
-                borderSkipped: false,
-                barPercentage: 0.5,
-                categoryPercentage: 0.6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} visitors` } }
-            },
-            scales: {
-                x: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#888' }, border: { display: false } },
-                y: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, color: '#888', maxTicksLimit: 5 }, border: { display: false } }
-            }
-        }
+        data: { labels: days, datasets: [{ label: 'Visitors', data: visits, backgroundColor: visits.map((v, i) => i === peak ? '#1B2E4B' : '#2C4A72'), borderRadius: 4, borderSkipped: false, barPercentage: 0.5, categoryPercentage: 0.6 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} visitors` } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#888' }, border: { display: false } }, y: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, color: '#888', maxTicksLimit: 5 }, border: { display: false } } } }
     });
 });
 
-
 /*---- Top Selling Books ----*/
 window.addEventListener('load', function () {
-    const books   = ['The Prophet','Palace Walk','The Cairo Trilogy','Midday Alley','Broken Wings'];
-    const units   = [520, 480, 610, 390, 310];
+    const books = ['The Prophet','Palace Walk','The Cairo Trilogy','Midday Alley','Broken Wings'];
+    const units = [520, 480, 610, 390, 310];
     const revenue = [4800, 5600, 8200, 3600, 2800];
-
     const ctx = document.getElementById('topBooksChart');
     if (!ctx) return;
     new Chart(ctx.getContext('2d'), {
         type: 'bar',
-        data: {
-            labels: books,
-            datasets: [
-                {
-                    label: 'Units Sold',
-                    data: units,
-                    backgroundColor: '#C8A96E',
-                    borderRadius: 3,
-                    borderSkipped: false,
-                    barPercentage: 0.5,
-                    categoryPercentage: 0.7
-                },
-                {
-                    label: 'Revenue ($)',
-                    data: revenue,
-                    backgroundColor: '#3B5E2F',
-                    borderRadius: 3,
-                    borderSkipped: false,
-                    barPercentage: 0.5,
-                    categoryPercentage: 0.7
-                }
-            ]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 12, font: { size: 12 }, color: '#888' } },
-                tooltip: { mode: 'index', intersect: false }
-            },
-            scales: {
-                x: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, color: '#888' }, border: { display: false } },
-                y: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#888' }, border: { display: false } }
-            }
-        }
+        data: { labels: books, datasets: [
+            { label: 'Units Sold', data: units, backgroundColor: '#C8A96E', borderRadius: 3, borderSkipped: false, barPercentage: 0.5, categoryPercentage: 0.7 },
+            { label: 'Revenue ($)', data: revenue, backgroundColor: '#3B5E2F', borderRadius: 3, borderSkipped: false, barPercentage: 0.5, categoryPercentage: 0.7 }
+        ]},
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 12, font: { size: 12 }, color: '#888' } }, tooltip: { mode: 'index', intersect: false } }, scales: { x: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, color: '#888' }, border: { display: false } }, y: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#888' }, border: { display: false } } } }
     });
 });
-
 
 /*---- Genre Breakdown ----*/
 window.addEventListener('load', function () {
@@ -542,47 +491,12 @@ window.addEventListener('load', function () {
         { label: 'Romantic Fiction',    pct: 10, color: '#6C3483' },
         { label: 'Post-colonial',       pct: 7,  color: '#784212' },
     ];
-
     const legend = document.getElementById('genreLegend');
-    if (legend) {
-        genres.forEach(g => {
-            legend.innerHTML += `
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <div style="width:9px; height:9px; border-radius:50%; background:${g.color}; flex-shrink:0;"></div>
-                        <span style="font-size:12px; color:#888;">${g.label}</span>
-                    </div>
-                    <span style="font-size:12px; font-weight:500;">${g.pct}%</span>
-                </div>`;
-        });
-    }
-
+    if (legend) { genres.forEach(g => { legend.innerHTML += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><div style="display:flex;align-items:center;gap:6px;"><div style="width:9px;height:9px;border-radius:50%;background:${g.color};flex-shrink:0;"></div><span style="font-size:12px;color:#888;">${g.label}</span></div><span style="font-size:12px;font-weight:500;">${g.pct}%</span></div>`; }); }
     const ctx = document.getElementById('genreChart');
     if (!ctx) return;
-    new Chart(ctx.getContext('2d'), {
-        type: 'doughnut',
-        data: {
-            labels: genres.map(g => g.label),
-            datasets: [{
-                data: genres.map(g => g.pct),
-                backgroundColor: genres.map(g => g.color),
-                borderWidth: 2,
-                borderColor: '#fff',
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            responsive: false,
-            maintainAspectRatio: true,
-            cutout: '60%',
-            plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } }
-            }
-        }
-    });
+    new Chart(ctx.getContext('2d'), { type: 'doughnut', data: { labels: genres.map(g => g.label), datasets: [{ data: genres.map(g => g.pct), backgroundColor: genres.map(g => g.color), borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }] }, options: { responsive: false, maintainAspectRatio: true, cutout: '60%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } } } } });
 });
-
 
 /*---- Quick Metrics ----*/
 window.addEventListener('load', function () {
@@ -592,31 +506,12 @@ window.addEventListener('load', function () {
         { label: 'Repeat Customers', value: '61%',    pct: 61, color: '#2471A3' },
         { label: 'Return Rate',      value: '4.2%',   pct: 42, color: '#C0392B' },
     ];
-
     const card = document.getElementById('quickMetricsCard');
     if (!card) return;
-
     let rows = '';
-    metrics.forEach((m, i) => {
-        const isLast = i === metrics.length - 1;
-        rows += `
-            <div style="margin-bottom:${isLast ? '0' : '16px'};">
-                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                    <span style="font-size:12px; color:#888;">${m.label}</span>
-                    <span style="font-size:12px; font-weight:500;">${m.value}</span>
-                </div>
-                <div style="width:100%; height:4px; background:#f0f0f0; border-radius:2px;">
-                    <div style="width:${m.pct}%; height:4px; border-radius:2px; background:${m.color};"></div>
-                </div>
-            </div>`;
-    });
-
-    card.innerHTML = `
-        <p style="font-size:14px; font-weight:500; margin:0 0 2px;">Quick Metrics</p>
-        <p style="font-size:11px; color:#888; margin:0 0 1.25rem;">Key performance indicators</p>
-        ${rows}`;
+    metrics.forEach((m, i) => { const isLast = i === metrics.length - 1; rows += `<div style="margin-bottom:${isLast?'0':'16px'};"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;color:#888;">${m.label}</span><span style="font-size:12px;font-weight:500;">${m.value}</span></div><div style="width:100%;height:4px;background:#f0f0f0;border-radius:2px;"><div style="width:${m.pct}%;height:4px;border-radius:2px;background:${m.color};"></div></div></div>`; });
+    card.innerHTML = `<p style="font-size:14px;font-weight:500;margin:0 0 2px;">Quick Metrics</p><p style="font-size:11px;color:#888;margin:0 0 1.25rem;">Key performance indicators</p>${rows}`;
 });
-
 
 /*---- Recent Activity ----*/
 window.addEventListener('load', function () {
@@ -629,29 +524,12 @@ window.addEventListener('load', function () {
         { icon: '📦', text: 'Stock updated for 3 titles',   time: '1h ago'  },
         { icon: '🛒', text: 'Order #1062 placed',           time: '1h ago'  },
     ];
-
     const card = document.getElementById('recentActivityCard');
     if (!card) return;
-
     let rows = '';
-    activities.forEach((a, i) => {
-        const isLast = i === activities.length - 1;
-        rows += `
-            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; padding:10px 0; ${isLast ? '' : 'border-bottom:0.5px solid #eee;'}">
-                <div style="display:flex; align-items:flex-start; gap:8px;">
-                    <div style="width:28px; height:28px; border-radius:50%; background:#f5f5f5; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;">${a.icon}</div>
-                    <span style="font-size:12px; color:#333; padding-top:5px;">${a.text}</span>
-                </div>
-                <span style="font-size:11px; color:#888; white-space:nowrap; padding-top:6px;">${a.time}</span>
-            </div>`;
-    });
-
-    card.innerHTML = `
-        <p style="font-size:14px; font-weight:500; margin:0 0 2px;">Recent Activity</p>
-        <p style="font-size:11px; color:#888; margin:0 0 0.5rem;">Latest store events</p>
-        ${rows}`;
+    activities.forEach((a, i) => { const isLast = i === activities.length - 1; rows += `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:10px 0;${isLast?'':'border-bottom:0.5px solid #eee;'}"><div style="display:flex;align-items:flex-start;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">${a.icon}</div><span style="font-size:12px;color:#333;padding-top:5px;">${a.text}</span></div><span style="font-size:11px;color:#888;white-space:nowrap;padding-top:6px;">${a.time}</span></div>`; });
+    card.innerHTML = `<p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Activity</p><p style="font-size:11px;color:#888;margin:0 0 0.5rem;">Latest store events</p>${rows}`;
 });
-
 
 /*---- Low Stock ----*/
 window.addEventListener('load', function () {
@@ -662,29 +540,9 @@ window.addEventListener('load', function () {
         { title: 'Palace Walk',         author: 'Mahfouz', color: '#B7950B', left: 24, danger: false },
         { title: 'Midaq Alley',         author: 'Mahfouz', color: '#6C3483', left: 31, danger: false },
     ];
-
     const card = document.getElementById('lowStockCard');
     if (!card) return;
-
     let rows = '';
-    books.forEach((book, i) => {
-        const isLast     = i === books.length - 1;
-        const badgeColor = book.danger ? '#C0392B' : '#B7770D';
-        rows += `
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; ${isLast ? '' : 'border-bottom:0.5px solid #eee;'}">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <div style="width:28px; height:36px; border-radius:3px; background:${book.color}; flex-shrink:0;"></div>
-                    <div>
-                        <p style="font-size:13px; font-weight:500; margin:0 0 2px;">${book.title}</p>
-                        <p style="font-size:11px; color:#888; margin:0;">${book.author}</p>
-                    </div>
-                </div>
-                <span style="font-size:11px; font-weight:500; color:${badgeColor};">${book.left} left</span>
-            </div>`;
-    });
-
-    card.innerHTML = `
-        <p style="font-size:14px; font-weight:500; margin:0 0 2px;">⚠️ Low Stock</p>
-        <p style="font-size:11px; color:#888; margin:0 0 1rem;">Titles needing restock</p>
-        ${rows}`;
+    books.forEach((book, i) => { const isLast = i === books.length - 1; const badgeColor = book.danger ? '#C0392B' : '#B7770D'; rows += `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;${isLast?'':'border-bottom:0.5px solid #eee;'}"><div style="display:flex;align-items:center;gap:12px;"><div style="width:28px;height:36px;border-radius:3px;background:${book.color};flex-shrink:0;"></div><div><p style="font-size:13px;font-weight:500;margin:0 0 2px;">${book.title}</p><p style="font-size:11px;color:#888;margin:0;">${book.author}</p></div></div><span style="font-size:11px;font-weight:500;color:${badgeColor};">${book.left} left</span></div>`; });
+    card.innerHTML = `<p style="font-size:14px;font-weight:500;margin:0 0 2px;">⚠️ Low Stock</p><p style="font-size:11px;color:#888;margin:0 0 1rem;">Titles needing restock</p>${rows}`;
 });
