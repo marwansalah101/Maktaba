@@ -361,9 +361,11 @@
   z-index: 1;
   background: #F0EDE5;
   border-radius: 20px;
-  padding: 48px 52px 40px;
+  padding: 28px 40px 24px;
   width: 100%;
-  max-width: 600px;
+  max-width: 480px;
+  max-height: 95vh;
+  overflow-y: auto;
   box-shadow: 0 24px 80px rgba(10, 4, 0, 0.45), 0 2px 8px rgba(10, 4, 0, 0.15);
   animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -383,14 +385,14 @@
 .signup-card-brand {
   font-family: 'Times New Roman', Times, serif;
   font-weight: 700;
-  font-size: 40px;
   letter-spacing: 0.04em;
   color: #312F2C;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
-  margin-bottom: 28px;
   padding-right: 0.42em;
+   font-size: 34px;
+  margin-bottom: 16px;
 }
 
 .signup-card-title {
@@ -408,14 +410,14 @@
   font-size: 13px;
   color: rgba(44, 24, 16, 0.45);
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 20px;
 }
 
 .divider-ornament {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 32px;
+   margin-bottom: 20px;
 }
 
 .divider-ornament .line {
@@ -433,7 +435,7 @@
 }
 
 .form-group {
-  margin-bottom: 24px;
+   margin-bottom: 16px;
   position: relative;
 }
 
@@ -460,6 +462,106 @@
   outline: none;
   transition: border-color 0.25s ease;
 }
+
+
+
+.signup-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.signup-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.signup-card::-webkit-scrollbar-thumb {
+  background: #6b4e2e;
+  border-radius: 50px;
+  height: 3px;
+}
+
+
+
+
+/* Dark mode button */
+.dark-mode-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: 1px solid rgba(180, 160, 130, 0.35);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #312F2C;
+  transition: all 0.2s ease;
+}
+
+.dark-mode-btn:hover {
+  background: rgba(0,0,0,0.08);
+}
+
+/* Dark mode styles */
+.signup-card.dark {
+  background: #1a1814;
+  color: #F0EDE5;
+}
+
+.signup-card.dark .signup-card-brand,
+.signup-card.dark .signup-card-title,
+.signup-card.dark .form-label,
+.signup-card.dark .form-input,
+.signup-card.dark .card-footer {
+  color: #F0EDE5;
+}
+
+.signup-card.dark .form-input {
+  border-bottom-color: rgba(240, 237, 229, 0.25);
+}
+
+.signup-card.dark .form-input::placeholder {
+  color: rgba(240, 237, 229, 0.3);
+}
+
+.signup-card.dark .btn-primary {
+  background: #F0EDE5;
+  color: #1a1814;
+}
+
+.signup-card.dark .btn-primary:hover {
+  background: #d4d0c8;
+}
+
+.signup-card.dark .or-divider {
+  color: rgba(240, 237, 229, 0.45);
+}
+
+.signup-card.dark .btn-social {
+  background: rgba(255,255,255,0.08);
+}
+
+.signup-card.dark .btn-social:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.signup-card.dark .card-footer a {
+  color: #F0EDE5;
+}
+
+.signup-card.dark .dark-mode-btn {
+  color: #F0EDE5;
+  border-color: rgba(240, 237, 229, 0.35);
+}
+
+
+
+
+
+
+
 
 .form-input::placeholder {
   color: rgba(44, 24, 16, 0.3);
