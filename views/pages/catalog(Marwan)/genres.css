@@ -223,9 +223,14 @@
     /* Scroll-reveal: starts invisible, translates up */
     opacity: 0;
     transform: translateY(32px);
+    will-change: transform, opacity;
     transition:
         opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
         transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Release will-change once revealed (JS sets it back to auto) */
+.bw-card--visible {
+    will-change: auto;
 }
 
 .bw-card--visible {

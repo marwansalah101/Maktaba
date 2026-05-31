@@ -1,0 +1,155 @@
+/* ═══════════════════════════════════════════════════════════════
+   MAKTABA — LUXURY PRELOADER
+   Covers all three pages. z-index: 99999.
+   Exits via clip-path curtain-rise (bottom → top).
+   No layout impact: position:fixed, pointer-events removed on exit.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Overlay ────────────────────────────────────────────────── */
+#mkt-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #F0EDE5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: inset(0 0 0% 0);
+    will-change: clip-path;
+}
+
+/* Exit: curtain rises upward — visible area clips from bottom to top */
+#mkt-preloader.mkt--done {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.78s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+/* ── Stage: the centered ring + logo composition ─────────────── */
+.mkt-pl-stage {
+    position: relative;
+    width: 186px;
+    height: 186px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: mkt-stage-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes mkt-stage-in {
+    from {
+        opacity: 0;
+        transform: scale(0.80);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ── Arc SVG ─────────────────────────────────────────────────── */
+.mkt-pl-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Faint full-circle track — always static */
+.mkt-bg-ring {
+    fill: none;
+    stroke: #d9d0c4;
+    stroke-width: 0.6;
+}
+
+/* Gold spinning arc — 270° (¾ of circle), rounds at both tips */
+/* r = 85 → circumference = 2π × 85 = 534  →  ¾ = 400, gap = 134 */
+.mkt-spin-arc {
+    fill: none;
+    stroke: #C8975A;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-dasharray: 400 134;
+    transform-origin: 93px 93px;
+    animation: mkt-spin 2.4s linear infinite;
+    will-change: transform;
+}
+
+@keyframes mkt-spin {
+    from { transform: rotate(-90deg); }
+    to   { transform: rotate(270deg); }
+}
+
+/* ── Four tick marks — like luxury watch indices ─────────────── */
+/* Drawn at 12, 3, 6, 9 o'clock positions on the outer edge.
+   They fade in after the stage enters, adding editorial detail. */
+.mkt-tick {
+    stroke: #8C7B75;
+    stroke-width: 0.7;
+    stroke-linecap: round;
+    opacity: 0;
+    animation: mkt-tick-in 0.4s ease forwards;
+}
+.mkt-tick:nth-child(3) { animation-delay: 0.85s; }
+.mkt-tick:nth-child(4) { animation-delay: 0.95s; }
+.mkt-tick:nth-child(5) { animation-delay: 1.05s; }
+.mkt-tick:nth-child(6) { animation-delay: 1.15s; }
+
+@keyframes mkt-tick-in {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Logo ────────────────────────────────────────────────────── */
+.mkt-pl-logo {
+    position: relative;
+    z-index: 1;
+    width: 64px;
+    height: 64px;
+    /* Slight delay so logo appears after the arc begins to spin */
+    opacity: 0;
+    animation:
+        mkt-logo-in   0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards,
+        mkt-breathe   3.4s ease-in-out                    0.9s infinite;
+}
+
+.mkt-pl-logo svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+@keyframes mkt-logo-in {
+    from { opacity: 0; transform: scale(0.78); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* Very gentle inhale-exhale — scale + opacity pulse */
+@keyframes mkt-breathe {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.07);
+        opacity: 0.68;
+    }
+}
+
+/* ── Prefers-reduced-motion: instant show + hide ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .mkt-pl-stage,
+    .mkt-spin-arc,
+    .mkt-pl-logo,
+    .mkt-tick {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    #mkt-preloader.mkt--done {
+        transition: opacity 0.3s ease !important;
+        clip-path: none !important;
+        opacity: 0 !important;
+    }
+}
