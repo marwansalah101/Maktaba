@@ -213,18 +213,19 @@
 
       <div class="field-row">
         <span class="field-label">Name</span>
-        <div class="field-value"><input type="text" id="acc-name" value="Wade Armstrong"></div>
+        <div class="field-value"><input type="text" id="acc-name" placeholder="Your name"></div>
       </div>
       <div class="field-row">
         <span class="field-label">Email</span>
-        <div class="field-value"><input type="email" id="acc-email" value="wade@email.com"></div>
+        <div class="field-value"><input type="email" id="acc-email" placeholder="your@email.com"></div>
       </div>
       <div class="field-row">
         <span class="field-label">Password</span>
-        <div class="field-value"><input type="password" id="acc-password" value="password123"></div>
+        <div class="field-value"><input type="password" id="acc-password" placeholder="New password (leave blank to keep current)"></div>
       </div>
 
-      <button class="save-btn" onclick="showToast('Changes Saved')">Save Changes</button>
+      <!-- ✅ FIX: استبدلنا showToast('Changes Saved') بـ saveAccountSettings() -->
+      <button class="save-btn" onclick="saveAccountSettings()">Save Changes</button>
     </div>
 
     <!-- ── PRIVACY ───────────────────────────────────────────────────── -->
@@ -363,36 +364,20 @@ function selectPayMethod(value, btn) {
 
 /* ── CARD DETECTION ── */
 function detectCard(input) {
-    // format with spaces every 4 digits
     let v = input.value.replace(/\D/g, "").substring(0, 16);
     input.value = v.replace(/(.{4})/g, "$1 ").trim();
 
     const logo = document.getElementById("card-logo");
     const first2 = parseInt(v.substring(0, 2));
-    const first4 = parseInt(v.substring(0, 4));
 
-    // Visa: starts with 4
     if (v[0] === "4") {
-        logo.textContent = "💳";
-        logo.title = "Visa";
-        logo.style.color = "#1a1f71";
-    }
-    // Mastercard: starts with 51–55
-    else if (first2 >= 51 && first2 <= 55) {
-        logo.textContent = "💳";
-        logo.title = "Mastercard";
-        logo.style.color = "#eb001b";
-    }
-    // Amex: starts with 34 or 37
-    else if (first2 === 34 || first2 === 37) {
-        logo.textContent = "💳";
-        logo.title = "Amex";
-        logo.style.color = "#007bc1";
-    }
-    else {
-        logo.textContent = v.length > 0 ? "💳" : "";
-        logo.style.color = "#aaa";
-        logo.title = "";
+        logo.textContent = "💳"; logo.title = "Visa"; logo.style.color = "#1a1f71";
+    } else if (first2 >= 51 && first2 <= 55) {
+        logo.textContent = "💳"; logo.title = "Mastercard"; logo.style.color = "#eb001b";
+    } else if (first2 === 34 || first2 === 37) {
+        logo.textContent = "💳"; logo.title = "Amex"; logo.style.color = "#007bc1";
+    } else {
+        logo.textContent = v.length > 0 ? "💳" : ""; logo.style.color = "#aaa"; logo.title = "";
     }
 }
 
@@ -407,23 +392,19 @@ function toggleExpiry() {
     const picker = document.getElementById("expiry-picker");
     const isOpen = picker.style.display === "block";
     picker.style.display = isOpen ? "none" : "block";
-    if (!isOpen) {
-        pickerYear = selectedYear || new Date().getFullYear();
-        renderPicker();
-    }
+    if (!isOpen) { pickerYear = selectedYear || new Date().getFullYear(); renderPicker(); }
 }
 
 function changeYear(delta) {
     const now = new Date();
     const newYear = pickerYear + delta;
-    // don't go before current year, don't go more than 10 years ahead
     if (newYear < now.getFullYear() || newYear > now.getFullYear() + 10) return;
     pickerYear = newYear;
     renderPicker();
 }
 
 function renderPicker() {
-    const now  = new Date();
+    const now = new Date();
     document.getElementById("picker-year").textContent = pickerYear;
     document.getElementById("expiry-months").innerHTML = MONTHS.map((m, i) => {
         const monthNum  = i + 1;
@@ -443,7 +424,6 @@ function pickMonth(month) {
     document.getElementById("expiry-picker").style.display = "none";
 }
 
-// Close picker when clicking outside
 document.addEventListener("click", function(e) {
     const picker = document.getElementById("expiry-picker");
     const input  = document.getElementById("pay-expiry");
@@ -456,5 +436,6 @@ document.addEventListener("click", function(e) {
 <script src="../../data.js"></script>
 <script src="./account.js"></script>
 <script src="../../script.js"></script>
+
 </body>
 </html>

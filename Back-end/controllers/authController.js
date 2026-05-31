@@ -1,5 +1,24 @@
 const User = require('../models/User');
 const jwt  = require('jsonwebtoken');
+// Update profile
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const { email, name, phone } = req.body || {};
+    if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+    const user = await User.findOneAndUpdate(
+      { email: email.trim().toLowerCase() },
+      { name, phone },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    res.json({ success: true, user: { name: user.name, email: user.email } });
+  } catch (err) {
+    next(err);
+  }
+};
 
 // ── Helper: sign JWT and send response ───────────────────────────────────────
 const sendToken = (user, statusCode, res) => {
