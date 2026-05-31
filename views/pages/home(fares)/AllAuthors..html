@@ -189,8 +189,12 @@
     <script src="../../script.js"></script>
 
 <script>
-    // Build API base: if page opened via file://, fall back to localhost server
     const apiBase = (window.location.protocol === 'file:') ? 'http://localhost:3000' : window.location.origin;
+
+    const AUTHORS_PER_PAGE = 16;
+    let currentPage = 1;
+    let allAuthors = [];
+    let filteredAuthors = [];
 
     fetch(`${apiBase}/api/authors`)
         .then(res => {
@@ -198,71 +202,164 @@
             return res.json();
         })
         .then(authors => {
-            const grid = document.getElementById('authorsGrid');
-            grid.innerHTML = '';
-
-            authors.forEach(author => {
-                // Use proper path to authors page
-                const authorUrl = `../catalog(Marwan)/authors.html?slug=${author.slug}`;
-                
-                grid.innerHTML += `
-                    <div class="author-grid-card">
-                        <a href="${authorUrl}">
-                            <div class="author-grid-image" style="background-image: url('${author.profileImg ? author.profileImg.replace(/\\/g, '/') : 'resources/Authors/default-author.jpg'}');">
-                                <div class="author-grid-overlay">
-                                    <div class="author-grid-stats">
-                                        <div class="stats-line"></div>
-                                        <span class="stats-text">${author.books ? author.books.length : 0} BOOK${author.books && author.books.length !== 1 ? 'S' : ''}</span>
-                                    </div>
-                                    <div class="author-grid-info">
-                                        <h3 class="author-grid-name">${author.name}</h3>
-                                        <p class="author-grid-desc">${author.stats || 'Author'}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                `;
-                 // Fetch real book count
-                fetch(`http://localhost:3000/books?author=${encodeURIComponent(author.name)}`)
-                  .then(res => res.json())
-                  .then(books => {
-                    const countEl = document.getElementById(`book-count-${author.slug}`);
-                    if (countEl) {
-                      const count = books.length;
-                      countEl.textContent = `${count} BOOK${count !== 1 ? 'S' : ''}`;
-                    }
-                  })
-                  .catch(() => {});
-            });
+            allAuthors = authors;
+            filteredAuthors = authors;
+            renderPage(1);
+            renderPagination();
         })
         .catch(err => {
             console.error('Error fetching authors:', err);
-            const grid = document.getElementById('authorsGrid');
-            grid.innerHTML = `<div class="error-message">Failed to load authors: ${err.message}</div>`;
+            document.getElementById('authorsGrid').innerHTML =
+                `<div class="error-message">Failed to load authors: ${err.message}</div>`;
         });
 
-  // Search functionality
-  document.getElementById('authorSearchInput').addEventListener('input', function() {
-    const query = this.value.toLowerCase();
-    const cards = document.querySelectorAll('.author-grid-card');
-    let found = 0;
+    function renderPage(page) {
+        currentPage = page;
+        const grid = document.getElementById('authorsGrid');
+        grid.innerHTML = '';
 
-    cards.forEach(card => {
-      const name = card.querySelector('.author-grid-name').textContent.toLowerCase();
-      const stats = card.querySelector('.author-grid-desc').textContent.toLowerCase();
-      
-      if (name.includes(query) || stats.includes(query)) {
-        card.style.display = 'block';
-        found++;
-      } else {
-        card.style.display = 'none';
-      }
+        const start = (page - 1) * AUTHORS_PER_PAGE;
+        const end = start + AUTHORS_PER_PAGE;
+        const pageAuthors = filteredAuthors.slice(start, end);
+
+        if (pageAuthors.length === 0) {
+            document.getElementById('noResults').style.display = 'block';
+            return;
+        }
+
+        document.getElementById('noResults').style.display = 'none';
+
+        pageAuthors.forEach(author => {
+            const authorUrl = `../catalog(Marwan)/authors.html?slug=${author.slug}`;
+            const bookCount = author.books ? author.books.length : 0;
+
+            // Fix image path
+            let imgPath = '';
+            if (author.profileImg) {
+                const clean = author.profileImg.replace(/\\/g, '/');
+                imgPath = clean.startsWith('http') ? clean : `../../${clean}`;
+            } else {
+                imgPath = '../../resources/Authors/default-author.jpg';
+            }
+
+            const card = document.createElement('div');
+            card.className = 'author-grid-card';
+            card.innerHTML = `
+                <a href="${authorUrl}">
+                    <div class="author-grid-image" style="background-image: url('${imgPath}');">
+                        <div class="author-grid-overlay">
+                            <div class="author-grid-stats">
+                                <div class="stats-line"></div>
+                                <span class="stats-text">${bookCount} BOOK${bookCount !== 1 ? 'S' : ''}</span>
+                            </div>
+                            <div class="author-grid-info">
+                                <h3 class="author-grid-name">${author.name}</h3>
+                                <p class="author-grid-desc">${author.stats || 'Author'}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            `;
+            grid.appendChild(card);
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        renderPagination();
+    }
+
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredAuthors.length / AUTHORS_PER_PAGE);
+
+        const old = document.getElementById('authors-pagination');
+        if (old) old.remove();
+
+        if (totalPages <= 1) return;
+
+        const pagination = document.createElement('div');
+        pagination.id = 'authors-pagination';
+        pagination.style.cssText = `
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 40px 0 60px;
+            font-family: 'Jost', sans-serif;
+        `;
+
+        // Previous button
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = '←';
+        prevBtn.style.cssText = `
+            padding: 8px 16px;
+            border: 1px solid #312F2C;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Jost', sans-serif;
+            font-size: 14px;
+            color: #312F2C;
+            opacity: ${currentPage === 1 ? '0.3' : '1'};
+        `;
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) renderPage(currentPage - 1);
+        });
+        pagination.appendChild(prevBtn);
+
+        // Page number buttons
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.textContent = i;
+            pageBtn.style.cssText = `
+                width: 36px;
+                height: 36px;
+                border: 1px solid ${i === currentPage ? '#312F2C' : '#ccc'};
+                background: ${i === currentPage ? '#312F2C' : 'transparent'};
+                color: ${i === currentPage ? '#fff' : '#312F2C'};
+                cursor: pointer;
+                font-family: 'Jost', sans-serif;
+                font-size: 14px;
+            `;
+            pageBtn.addEventListener('click', () => renderPage(i));
+            pagination.appendChild(pageBtn);
+        }
+
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = '→';
+        nextBtn.style.cssText = `
+            padding: 8px 16px;
+            border: 1px solid #312F2C;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Jost', sans-serif;
+            font-size: 14px;
+            color: #312F2C;
+            opacity: ${currentPage === totalPages ? '0.3' : '1'};
+        `;
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) renderPage(currentPage + 1);
+        });
+        pagination.appendChild(nextBtn);
+
+        document.getElementById('authorsGrid').after(pagination);
+    }
+
+    // Search
+    document.getElementById('authorSearchInput').addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+
+        if (query === '') {
+            filteredAuthors = allAuthors;
+        } else {
+            filteredAuthors = allAuthors.filter(author =>
+                author.name.toLowerCase().includes(query) ||
+                (author.stats || '').toLowerCase().includes(query)
+            );
+        }
+
+        renderPage(1);
     });
-
-    document.getElementById('noResults').style.display = found === 0 ? 'block' : 'none';
-  });
 </script>
+
 
       </body>
       </html>
