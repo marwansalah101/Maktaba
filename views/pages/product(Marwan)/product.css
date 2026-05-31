@@ -82,6 +82,7 @@ body { background: var(--bg); }
         drop-shadow(0 6px 16px rgba(49, 47, 44, 0.12))
         drop-shadow(0 20px 40px rgba(49, 47, 44, 0.17))
         drop-shadow(0 44px 72px rgba(49, 47, 44, 0.13));
+    will-change: transform;
     transition:
         transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
         filter  0.65s ease;
@@ -491,6 +492,7 @@ body { background: var(--bg); }
     height: auto;
     flex-shrink: 0;
     filter: drop-shadow(0 4px 10px rgba(49, 47, 44, 0.18));
+    will-change: transform;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
                 filter 0.4s ease;
 }
