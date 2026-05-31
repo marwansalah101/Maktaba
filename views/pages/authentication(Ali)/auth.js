@@ -46,8 +46,7 @@ function googleSignIn() {
     }
     google.accounts.id.prompt();
 }
-
-
+const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
 // ═══════════════════════════════════════════════════════════════
 //  MAIN AUTH MODULE
 // ═══════════════════════════════════════════════════════════════
@@ -462,11 +461,119 @@ function closeAddBookModal() {
     const modal = document.getElementById('addBookModal');
     if (modal) modal.classList.remove('show');
 }
+function openAddAuthorModal() {
+    const modal = document.getElementById('addAuthorModal');
+    if (modal) { modal.classList.add('show'); const form = document.getElementById('addAuthorForm'); if (form) form.reset(); }
+}
+function closeAddAuthorModal() {
+    const modal = document.getElementById('addAuthorModal');
+    if (modal) modal.classList.remove('show');
+}
+function normalizeAuthorBooks(value) {
+    return value
+      .split(',')
+      .map(item => item.trim())
+      .filter(item => /^[0-9a-fA-F]{24}$/.test(item));
+}
+function appendAuthorCard(author) {
+    const cards = document.querySelector('.cards');
+    if (!cards || !author) return;
+
+    const booksCount = Array.isArray(author.books) ? author.books.length : 0;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="avatar">${author.name.charAt(0).toUpperCase()}</div>
+      <div class="info">
+        <h3>${author.name}</h3>
+        <p class="sub">${author.slug.replace(/-/g, ' ')}</p>
+        <p class="desc">${author.aboutText || ''}</p>
+        <div class="bottom">
+          <span class="books">${booksCount} book${booksCount !== 1 ? 's' : ''}</span>
+          <div>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
+    cards.insertBefore(card, cards.firstChild);
+
+    const counter = document.querySelector('.header p');
+    if (counter) {
+      const current = parseInt(counter.textContent, 10);
+      if (!Number.isNaN(current)) {
+        counter.textContent = `${current + 1} registered authors`;
+      }
+    }
+}
+function initAuthorForm() {
+    const form = document.getElementById('addAuthorForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('authorName').value.trim();
+        const slug = document.getElementById('authorSlug').value.trim();
+        const stats = document.getElementById('authorStats').value.trim();
+        const aboutTitle = document.getElementById('authorAboutTitle').value.trim();
+        const aboutText = document.getElementById('authorAboutText').value.trim();
+        const bannerImg = document.getElementById('authorBannerImg').value.trim();
+        const profileImgFile = document.getElementById('authorProfileImgFile').files[0];
+        const booksInput = document.getElementById('authorBooks').value.trim();
+        const books = normalizeAuthorBooks(booksInput);
+
+        if (!name || !slug || !bannerImg || !profileImgFile) {
+            alert('Please complete all required fields before submitting.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('slug', slug);
+        formData.append('stats', stats);
+        formData.append('aboutTitle', aboutTitle);
+        formData.append('aboutText', aboutText);
+        formData.append('bannerImg', bannerImg);
+        formData.append('profileImg', profileImgFile);
+        if (books.length > 0) {
+            formData.append('books', JSON.stringify(books));
+        }
+
+        try {
+            const token = localStorage.getItem('maktabaToken');
+            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+            const res = await fetch(ADMIN_API_BASE + '/api/authors', {
+                method: 'POST',
+                headers,
+                body: formData,
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                const error = data.error || data.message || 'Failed to add author.';
+                alert(error);
+                return;
+            }
+
+            appendAuthorCard(data);
+            closeAddAuthorModal();
+            alert('Author added successfully.');
+        } catch (err) {
+            console.error('Add author failed:', err);
+            alert('Unable to add author. Check your network and try again.');
+        }
+    });
+}
 document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (event) => {
-        const modal = document.getElementById('addBookModal');
-        if (modal && event.target === modal) closeAddBookModal();
+        const bookModal = document.getElementById('addBookModal');
+        const authorModal = document.getElementById('addAuthorModal');
+        if (bookModal && event.target === bookModal) closeAddBookModal();
+        if (authorModal && event.target === authorModal) closeAddAuthorModal();
     });
+    initAuthorForm();
 });
 
 
@@ -526,7 +633,7 @@ window.addEventListener('load', function () {
 
 /*---- Genre Breakdown ----*/
 window.addEventListener('load', function () {
-    const genres = [
+    const defaultGenres = [
         { label: 'Historical Fiction',  pct: 28, color: '#C0392B' },
         { label: 'Literary Fiction',    pct: 22, color: '#2471A3' },
         { label: 'Poetry / Philosophy', pct: 18, color: '#1E8449' },
@@ -534,11 +641,59 @@ window.addEventListener('load', function () {
         { label: 'Romantic Fiction',    pct: 10, color: '#6C3483' },
         { label: 'Post-colonial',       pct: 7,  color: '#784212' },
     ];
+    const genres = Array.isArray(window.genreBreakdownData) && window.genreBreakdownData.length > 0
+      ? window.genreBreakdownData.slice(0, 6).map((item, index) => ({
+          label: item.genre,
+          pct: Math.round((item.pct || 0) * 10) / 10,
+          color: defaultGenres[index]?.color || ['#C0392B', '#2471A3', '#1E8449', '#D4AC0D', '#6C3483', '#784212'][index % 6],
+        }))
+      : defaultGenres;
+
     const legend = document.getElementById('genreLegend');
-    if (legend) { genres.forEach(g => { legend.innerHTML += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><div style="display:flex;align-items:center;gap:6px;"><div style="width:9px;height:9px;border-radius:50%;background:${g.color};flex-shrink:0;"></div><span style="font-size:12px;color:#888;">${g.label}</span></div><span style="font-size:12px;font-weight:500;">${g.pct}%</span></div>`; }); }
+    if (legend) {
+      legend.innerHTML = genres.map(g => `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:9px;height:9px;border-radius:50%;background:${g.color};flex-shrink:0;"></div>
+            <span style="font-size:12px;color:#888;">${g.label}</span>
+          </div>
+          <span style="font-size:12px;font-weight:500;">${g.pct}%</span>
+        </div>`).join('');
+    }
+
     const ctx = document.getElementById('genreChart');
     if (!ctx) return;
-    new Chart(ctx.getContext('2d'), { type: 'doughnut', data: { labels: genres.map(g => g.label), datasets: [{ data: genres.map(g => g.pct), backgroundColor: genres.map(g => g.color), borderWidth: 2, borderColor: '#fff', hoverOffset: 4 }] }, options: { responsive: false, maintainAspectRatio: true, cutout: '60%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } } } } });
+
+    if (window.genreChartInstance) {
+      try { window.genreChartInstance.destroy(); } catch (e) { }
+    }
+
+    window.genreChartInstance = new Chart(ctx.getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: genres.map(g => g.label),
+        datasets: [{
+          data: genres.map(g => g.pct),
+          backgroundColor: genres.map(g => g.color),
+          borderWidth: 2,
+          borderColor: '#fff',
+          hoverOffset: 4,
+        }],
+      },
+      options: {
+        responsive: false,
+        maintainAspectRatio: true,
+        cutout: '60%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.label}: ${ctx.parsed}%`,
+            },
+          },
+        },
+      },
+    });
 });
 
 /*---- Quick Metrics ----*/

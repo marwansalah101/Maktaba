@@ -25,6 +25,7 @@ app.use(express.json());
 
 /* ── Static files — serves the whole views/ folder through Express */
 app.use(express.static(path.join(__dirname, '..', 'views'), { index: 'home.html' }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* ── Rate limiting — applied to API routes only, not static assets */
 const limiter = rateLimit({
