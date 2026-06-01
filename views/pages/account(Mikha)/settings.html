@@ -213,34 +213,31 @@
 
       <div class="field-row">
         <span class="field-label">Name</span>
-        <div class="field-value"><input type="text" id="acc-name" value="Wade Armstrong"></div>
+        <div class="field-value"><input type="text" id="acc-name" placeholder="Your name"></div>
       </div>
       <div class="field-row">
         <span class="field-label">Email</span>
-        <div class="field-value"><input type="email" id="acc-email" value="wade@email.com"></div>
-      </div>
-      <div class="field-row">
-        <span class="field-label">Password</span>
-        <div class="field-value"><input type="password" id="acc-password" value="password123"></div>
+        <div class="field-value"><input type="email" id="acc-email" placeholder="you@email.com"></div>
       </div>
 
-      <button class="save-btn" onclick="showToast('Changes Saved')">Save Changes</button>
+      <button class="save-btn" onclick="saveAccount()">Save Changes</button>
     </div>
 
     <!-- ── PRIVACY ───────────────────────────────────────────────────── -->
     <div id="tab-privacy" class="tab-panel">
       <h1 class="page-title">Privacy</h1>
       <div class="privacy-card">
-        <h2 class="privacy-card-title">Account Details</h2>
-        <p class="privacy-card-sub">Manage your account security settings</p>
-        <div class="privacy-row">
-          <div class="privacy-row-info"><span>Verify Email Address</span><span style="font-size:12px;color:#aaa">Confirm your credentials</span></div>
-          <span class="verified-badge">Verified</span>
+        <h2 class="privacy-card-title">Change Password</h2>
+        <p class="privacy-card-sub">Enter your current password, then choose a new one.</p>
+        <div class="field-row">
+          <span class="field-label">Current Password</span>
+          <div class="field-value"><input type="password" id="acc-current-password" placeholder="Your current password" autocomplete="current-password"></div>
         </div>
-        <div class="privacy-row">
-          <div class="privacy-row-info"><span>Update Password</span><span style="font-size:12px;color:#aaa">Protect your account</span></div>
-          <button class="privacy-btn">Change Password</button>
+        <div class="field-row">
+          <span class="field-label">New Password</span>
+          <div class="field-value"><input type="password" id="acc-password" placeholder="At least 8 characters" autocomplete="new-password"></div>
         </div>
+        <button class="save-btn" onclick="changePassword()">Update Password</button>
       </div>
       <div class="privacy-card">
         <h2 class="privacy-card-title">Recovery Settings</h2>

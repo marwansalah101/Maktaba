@@ -149,7 +149,7 @@
   </button>
 
   <script>
-    const API_BASE = 'http://localhost:3000';
+    const API_BASE = window.location.origin;
     const colorClasses = ['yellow', 'red', 'green', 'brown', 'blue', 'purple'];
     let allBooks = [];
 
@@ -229,9 +229,13 @@
       };
 
       try {
+        const token = localStorage.getItem('maktabaToken');
         const res = await fetch(`${API_BASE}/books`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
           body: JSON.stringify(newBook),
         });
 
@@ -257,8 +261,10 @@
       if (!confirm(`Delete "${title}"?`)) return;
 
       try {
+        const token = localStorage.getItem('maktabaToken');
         const res = await fetch(`${API_BASE}/books/title/${encodeURIComponent(title)}`, {
           method: 'DELETE',
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);

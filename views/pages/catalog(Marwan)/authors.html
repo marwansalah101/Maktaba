@@ -256,7 +256,7 @@
 
         // Display books - the author object should have populated books
        // Fetch books by author name
-fetch(`http://localhost:3000/books?author=${encodeURIComponent(author.name)}`)
+fetch(`${apiBase}/books?author=${encodeURIComponent(author.name)}`)
   .then(res => res.json())
   .then(books => {
     displayBooks(books);
