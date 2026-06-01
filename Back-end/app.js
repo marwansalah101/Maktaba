@@ -1,33 +1,75 @@
-require('dotenv').config({ path: '../.env' });
-const express = require('express');
-const path    = require('path');
+const path     = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+const express  = require('express');
 const mongoose = require('mongoose');
 const helmet   = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors     = require('cors');
 const app = express();
 
+const isProd = process.env.NODE_ENV === 'production';
+
 /* ── Security headers ──────────────────────────────────────────────
-   Disable CSP and cross-origin policies here because the frontend
-   uses inline <script> tags throughout. Configure CSP properly
-   before production deployment.                                    */
+   Relaxed CSP: the frontend relies on inline <script>/<style> tags, so
+   'unsafe-inline' is permitted (note §1.5). External origins actually
+   used by the app are explicitly allow-listed. Tightening to a strict
+   nonce-based CSP would require moving every inline script to a file.  */
 app.use(helmet({
-    contentSecurityPolicy:      false,
-    crossOriginOpenerPolicy:    false,
-    crossOriginResourcePolicy:  false,
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc:  ["'self'"],
+            scriptSrc:   ["'self'", "'unsafe-inline'", 'https://accounts.google.com', 'https://apis.google.com', 'https://cdn.jsdelivr.net'],
+            // The frontend uses inline on* event-handler attributes (onclick, etc.).
+            // 'unsafe-inline' in script-src does NOT cover these — script-src-attr must
+            // allow them explicitly, or every inline handler is blocked by CSP.
+            scriptSrcAttr: ["'unsafe-inline'"],
+            styleSrc:    ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+            fontSrc:     ["'self'", 'https://fonts.gstatic.com', 'data:'],
+            imgSrc:      ["'self'", 'data:', 'https:'],
+            connectSrc:  ["'self'", 'https://accounts.google.com'],
+            frameSrc:    ["'self'", 'https://accounts.google.com'],
+            objectSrc:   ["'none'"],
+        },
+    },
+    // Allow images/uploads to be embedded cross-origin where needed.
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    // Google Sign-In popups need a relaxed opener policy.
+    crossOriginOpenerPolicy:   { policy: 'same-origin-allow-popups' },
 }));
 
-/* ── CORS ──────────────────────────────────────────────────────── */
-app.use(cors());
+/* ── CORS ───────────────────────────────────────────────────────────
+   In production, restrict to the configured frontend origin(s); in dev,
+   reflect the request origin. The frontend is same-origin (served by
+   Express) so this only matters for external API consumers (note §1.6). */
+const allowedOrigins = (process.env.ALLOWED_ORIGIN || '')
+    .split(',').map(s => s.trim()).filter(Boolean);
+app.use(cors({
+    origin: isProd ? (allowedOrigins.length ? allowedOrigins : false) : true,
+    credentials: true,
+}));
 
 /* ── Body parsing ──────────────────────────────────────────────── */
 app.use(express.json());
+
+/* ── Health check ─────────────────────────────────────────────────
+   Returns 200 with DB connection state for load balancers / uptime
+   monitors (note §6.3). readyState 1 === connected.                  */
+app.get('/health', (req, res) => {
+    const dbState = mongoose.connection.readyState;
+    res.status(dbState === 1 ? 200 : 503).json({
+        status: dbState === 1 ? 'ok' : 'degraded',
+        db: ['disconnected', 'connected', 'connecting', 'disconnecting'][dbState] || 'unknown',
+        uptime: process.uptime(),
+    });
+});
 
 /* ── Static files — serves the whole views/ folder through Express */
 app.use(express.static(path.join(__dirname, '..', 'views'), { index: 'home.html' }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-/* ── Rate limiting — applied to API routes only, not static assets */
+/* ── Rate limiting ─────────────────────────────────────────────────
+   Global limiter for the API, plus a stricter limiter targeting the
+   auth endpoints to slow brute-force / credential-stuffing (note §1.7). */
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 300,                  // 300 API calls per IP per window
@@ -36,18 +78,19 @@ const limiter = rateLimit({
     message: { error: 'Too many requests — please try again later.' },
 });
 
-const authController = require('./controllers/authController');
-
-/* ── Auth endpoint ─────────────────────────────────────────────────
-   Credentials are stored in .env and checked server-side.
-   Admin password should be bcrypt-hashed before production use.   */
-app.post('/api/auth/login',  authController.login);
-app.post('/api/auth/signup', authController.signup);
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10,                   // 10 login/signup attempts per IP per window
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many authentication attempts — please try again later.' },
+});
 
 /* ── AI Recommendation proxy ───────────────────────────────────────
-   The OpenRouter API key stays server-side and is never sent to
-   the browser. The SSE stream is forwarded directly to the client.  */
-app.post('/api/recommend', authController.recommend);
+   The OpenRouter API key stays server-side and is never sent to the
+   browser. The SSE stream is forwarded directly to the client.        */
+const authController = require('./controllers/authController');
+app.post('/api/recommend', limiter, authController.recommend);
 
 /* ── Clean page URLs ────────────────────────────────────────────── */
 const productHtmlPath    = path.join(__dirname, '..', 'views', 'pages', 'product(Marwan)', 'product.html');
@@ -56,12 +99,15 @@ const collectionHtmlPath = path.join(__dirname, '..', 'views', 'pages', 'catalog
 app.get('/book/:slug',  (req, res) => res.sendFile(productHtmlPath));
 app.get('/collection',  (req, res) => res.sendFile(collectionHtmlPath));
 
-/* ── API routes — rate limiter applied here, after static files ────
-   routes.js mounts:  /books         → books.js
-                      /api/authors   → Authors.js              */
+/* ── API routes ────────────────────────────────────────────────────
+   Stricter limiter on the auth endpoints first, then the global API
+   limiter, then the routers. Login/signup are defined once, in
+   Authroutes.js (mounted under /api/auth via routes.js) — no longer
+   duplicated here (note §2.5).                                         */
 const routes = require('./routes/routes');
-app.use('/api', limiter);   // protects /api/authors, /api/recommend, /api/auth/login
-app.use('/books', limiter); // protects /books
+app.use(['/api/auth/login', '/api/auth/signup'], authLimiter);
+app.use('/api', limiter);
+app.use('/books', limiter);
 app.use('/', routes);
 
 /* ── 404 handler — catches any route that nothing above matched ── */
@@ -88,9 +134,9 @@ const connectDB = async () => {
             heartbeatFrequencyMS:     2000,
             maxPoolSize:              10,
         });
-        console.log('✅ MongoDB connected');
+        console.log('MongoDB connected');
     } catch (err) {
-        console.log('❌ MongoDB connection error:', err.message);
+        console.log('MongoDB connection error:', err.message);
         setTimeout(connectDB, 5000);
     }
 };
@@ -98,9 +144,31 @@ const connectDB = async () => {
 connectDB();
 
 mongoose.connection.on('disconnected', () => {
-    console.log('❌ MongoDB disconnected — reconnecting...');
+    console.log('MongoDB disconnected — reconnecting...');
     setTimeout(connectDB, 5000);
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+/* ── Graceful shutdown ─────────────────────────────────────────────
+   Stop accepting connections, drain in-flight requests, then close the
+   DB connection so a process kill can't corrupt an in-flight write
+   (note §6.2).                                                          */
+const shutdown = (signal) => {
+    console.log(`${signal} received — shutting down gracefully`);
+    server.close(() => {
+        mongoose.connection.close(false).finally(() => {
+            console.log('Closed out remaining connections');
+            process.exit(0);
+        });
+    });
+    // Force-exit if shutdown hangs.
+    setTimeout(() => {
+        console.error('Forced shutdown after timeout');
+        process.exit(1);
+    }, 10000).unref();
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT',  () => shutdown('SIGINT'));

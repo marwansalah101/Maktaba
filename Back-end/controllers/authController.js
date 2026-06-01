@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/user');
 const jwt  = require('jsonwebtoken');
 
 // ── Helper: sign JWT and send response ───────────────────────────────────────
@@ -89,21 +89,28 @@ exports.login = async (req, res, next) => {
       return sendToken(user, 200, res);
     }
 
-    // ── 3. Fallback: check hard-coded admin in .env ──────────────────────────
-    // (useful during development or if admin is not seeded in DB)
-    const adminEmail    = (process.env.ADMIN_EMAIL    || '').toLowerCase();
-    const adminPassword =  process.env.ADMIN_PASSWORD || '';
-
-    if (adminEmail && normalizedEmail === adminEmail && password === adminPassword) {
-      return res.json({ success: true, role: 'admin', email: adminEmail });
-    }
-
-    // ── 4. Nothing matched ───────────────────────────────────────────────────
+    // ── 3. Nothing matched ───────────────────────────────────────────────────
+    // No env-based plaintext fallback: admin accounts live in the DB with a
+    // bcrypt-hashed password and the 'admin' role, and authenticate here too.
     return res.status(401).json({ error: 'Incorrect email or password.' });
 
   } catch (err) {
     next(err);
   }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// @desc    Logout — clears the auth cookie
+// @route   POST /api/auth/logout
+// @access  Public
+// ─────────────────────────────────────────────────────────────────────────────
+exports.logout = (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure:   process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+  res.status(200).json({ success: true, message: 'Logged out.' });
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -113,6 +120,11 @@ exports.login = async (req, res, next) => {
 // ─────────────────────────────────────────────────────────────────────────────
 exports.getUser = async (req, res, next) => {
   try {
+    // Ownership check: a user may only fetch their own profile; admins fetch any.
+    if (req.params.id !== String(req.user.id) && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'You can only access your own profile.' });
+    }
+
     const user = await User.findById(req.params.id);
 
     if (!user) {
@@ -124,6 +136,254 @@ exports.getUser = async (req, res, next) => {
     if (err.name === 'CastError') {
       return res.status(400).json({ error: 'Invalid user ID format.' });
     }
+    next(err);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  Favorites — a user's saved books (own list only; admins may act on any user)
+//  Routes: GET/POST/DELETE /api/auth/users/:id/favorites[/:bookId]
+// ─────────────────────────────────────────────────────────────────────────────
+const ownsOrAdmin = (req) =>
+  req.params.id === String(req.user.id) || req.user.role === 'admin';
+
+exports.getFavorites = async (req, res, next) => {
+  try {
+    if (!ownsOrAdmin(req)) {
+      return res.status(403).json({ error: 'You can only access your own favorites.' });
+    }
+    const user = await User.findById(req.params.id).populate('favorites');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json({ success: true, favorites: user.favorites });
+  } catch (err) {
+    if (err.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid ID format.' });
+    }
+    next(err);
+  }
+};
+
+exports.addFavorite = async (req, res, next) => {
+  try {
+    if (!ownsOrAdmin(req)) {
+      return res.status(403).json({ error: 'You can only modify your own favorites.' });
+    }
+    // $addToSet prevents duplicate entries
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $addToSet: { favorites: req.params.bookId } },
+      { new: true }
+    ).populate('favorites');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json({ success: true, favorites: user.favorites });
+  } catch (err) {
+    if (err.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid ID format.' });
+    }
+    next(err);
+  }
+};
+
+exports.removeFavorite = async (req, res, next) => {
+  try {
+    if (!ownsOrAdmin(req)) {
+      return res.status(403).json({ error: 'You can only modify your own favorites.' });
+    }
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $pull: { favorites: req.params.bookId } },
+      { new: true }
+    ).populate('favorites');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json({ success: true, favorites: user.favorites });
+  } catch (err) {
+    if (err.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid ID format.' });
+    }
+    next(err);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  Account — the authenticated user's own profile / cart / favorites
+//  All keyed off req.user (set by `protect`), so no IDs leak across users.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const EMAIL_RX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// @desc  Full profile of the logged-in user
+// @route GET /api/auth/me
+exports.getMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select('-cart');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json({ success: true, user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc  Update own profile (name, email, phone, address, payment)
+// @route PUT /api/auth/profile
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const { name, email, phone, address, payment } = req.body || {};
+    const update = {};
+
+    if (name !== undefined) {
+      if (String(name).trim().length < 2) {
+        return res.status(422).json({ error: 'Name must be at least 2 characters.' });
+      }
+      update.name = String(name).trim();
+    }
+
+    if (email !== undefined) {
+      const normalized = String(email).trim().toLowerCase();
+      if (!EMAIL_RX.test(normalized)) {
+        return res.status(422).json({ error: 'Please provide a valid email.' });
+      }
+      // Reject if another account already uses this email.
+      const clash = await User.findOne({ email: normalized, _id: { $ne: req.user.id } });
+      if (clash) return res.status(409).json({ error: 'Email is already in use.' });
+      update.email = normalized;
+    }
+
+    if (phone !== undefined) update.phone = String(phone).trim();
+
+    if (address && typeof address === 'object') {
+      update.address = {
+        fullName: String(address.fullName || '').trim(),
+        street:   String(address.street   || '').trim(),
+        city:     String(address.city     || '').trim(),
+        phone:    String(address.phone    || '').trim(),
+      };
+    }
+
+    if (payment && typeof payment === 'object') {
+      // Only a masked summary is stored — never the full PAN or CVV.
+      const digits = String(payment.cardNumber || '').replace(/\D/g, '');
+      update.payment = {
+        method:   String(payment.method   || '').trim(),
+        cardName: String(payment.cardName || '').trim(),
+        expiry:   String(payment.expiry   || '').trim(),
+        last4:    digits ? digits.slice(-4) : String(payment.last4 || '').slice(-4),
+      };
+    }
+
+    const user = await User.findByIdAndUpdate(req.user.id, update, {
+      new: true, runValidators: true,
+    }).select('-cart');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    res.status(200).json({ success: true, user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc  Change own password (requires the current password)
+// @route PUT /api/auth/password
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body || {};
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Current and new password are required.' });
+    }
+    if (String(newPassword).length < 8) {
+      return res.status(422).json({ error: 'New password must be at least 8 characters.' });
+    }
+
+    const user = await User.findById(req.user.id).select('+password');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    const ok = await user.matchPassword(currentPassword);
+    if (!ok) return res.status(401).json({ error: 'Current password is incorrect.' });
+
+    user.password = newPassword; // hashed by the pre-save hook
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password updated.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc  Get the logged-in user's server-side cart
+// @route GET /api/auth/cart
+exports.getCart = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select('cart');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json({ success: true, items: user.cart });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc  Replace the logged-in user's cart with the supplied items
+// @route PUT /api/auth/cart   body: { items: [...] }
+exports.updateCart = async (req, res, next) => {
+  try {
+    const items = Array.isArray(req.body?.items) ? req.body.items : [];
+    const cart = items
+      .filter(i => i && i.title)
+      .map(i => ({
+        bookId: String(i.bookId || ''),
+        title:  String(i.title),
+        author: String(i.author || ''),
+        image:  String(i.image  || ''),
+        price:  Number(i.price) || 0,
+        qty:    Math.max(1, parseInt(i.qty, 10) || 1),
+      }));
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id, { cart }, { new: true }
+    ).select('cart');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    res.status(200).json({ success: true, items: user.cart });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ── Favorites keyed off the logged-in user (no :id needed) ──────────────────
+exports.getMyFavorites = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).populate('favorites');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json({ success: true, favorites: user.favorites });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.addMyFavorite = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $addToSet: { favorites: req.params.bookId } },
+      { new: true }
+    ).populate('favorites');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json({ success: true, favorites: user.favorites });
+  } catch (err) {
+    if (err.name === 'CastError') return res.status(400).json({ error: 'Invalid book ID.' });
+    next(err);
+  }
+};
+
+exports.removeMyFavorite = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $pull: { favorites: req.params.bookId } },
+      { new: true }
+    ).populate('favorites');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.status(200).json({ success: true, favorites: user.favorites });
+  } catch (err) {
+    if (err.name === 'CastError') return res.status(400).json({ error: 'Invalid book ID.' });
     next(err);
   }
 };

@@ -4,7 +4,9 @@ const orderItemSchema = new mongoose.Schema({
     bookId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
-        required: true
+        // Optional: title-only items (e.g. a removed book) are allowed and stored
+        // with bookId:null by the order handler. Was required:true (note §5.2).
+        required: false
     },
     title: {
         type: String,
@@ -143,8 +145,9 @@ const orderSchema = new mongoose.Schema({
     collection: 'orders'
 });
 
-// Generate order number before saving
-orderSchema.pre('save', async function(next) {
+// Generate order number BEFORE validation (validate runs before save in
+// Mongoose, so a pre('save') hook would set it too late for the required check).
+orderSchema.pre('validate', async function(next) {
     if (this.isNew && !this.orderNumber) {
         const date = new Date();
         const year = date.getFullYear();

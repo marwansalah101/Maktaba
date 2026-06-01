@@ -1,3 +1,117 @@
+/* ══════════════════════════════════════════════════════════════════
+   MAKTABA — shared auth + account helpers
+   Used across all pages that load this file. Source of truth for login
+   state, authenticated fetches, toasts, and login-gating.
+══════════════════════════════════════════════════════════════════ */
+const MAKTABA = (function () {
+    const ORIGIN = window.location.origin;
+
+    function getToken() { return localStorage.getItem('maktabaToken') || ''; }
+    function isLoggedIn() { return !!getToken(); }
+
+    function getUser() {
+        try { return JSON.parse(localStorage.getItem('maktabaLoggedInUser')) || null; }
+        catch (e) { return null; }
+    }
+
+    // fetch() wrapper that attaches the Bearer token. Path may be relative ('/api/..').
+    function authFetch(path, opts = {}) {
+        const headers = Object.assign({}, opts.headers || {});
+        const token = getToken();
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return fetch(ORIGIN + path, Object.assign({}, opts, { headers }));
+    }
+
+    // Lightweight toast — reuses #toast if the page has one, else builds its own.
+    let toastTimer;
+    function toast(msg) {
+        let el = document.getElementById('mktb-toast');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'mktb-toast';
+            el.style.cssText =
+                'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);' +
+                'background:#312F2C;color:#fff;padding:14px 26px;border-radius:6px;' +
+                'font-family:DM Sans,sans-serif;font-size:14px;z-index:99999;opacity:0;' +
+                'transition:opacity .3s;box-shadow:0 8px 24px rgba(0,0,0,.2);pointer-events:none;max-width:90vw;text-align:center;';
+            document.body.appendChild(el);
+        }
+        el.textContent = msg;
+        requestAnimationFrame(() => { el.style.opacity = '1'; });
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { el.style.opacity = '0'; }, 2600);
+    }
+
+    // Returns true if logged in; otherwise shows a toast and returns false.
+    function requireLogin(action = 'do that') {
+        if (isLoggedIn()) return true;
+        toast(`Please log in to ${action}.`);
+        return false;
+    }
+
+    function logout() {
+        authFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+        ['maktabaToken', 'maktabaUserName', 'maktabaUserEmail', 'maktabaUserRole',
+         'maktabaLoggedInUser', 'cart'].forEach(k => localStorage.removeItem(k));
+        window.location.href = '/';
+    }
+
+    return { ORIGIN, getToken, isLoggedIn, getUser, authFetch, toast, requireLogin, logout };
+})();
+// Expose globally — `const` at top level does NOT create a window property,
+// so other files (account.js, product.js) must reach it via window.MAKTABA.
+window.MAKTABA = MAKTABA;
+
+/* Reflect auth state in the navbar dropdown (single Settings entry + Login/Logout). */
+function updateNavbarAuth() {
+    const dd = document.getElementById('menuDropdown');
+    if (!dd) return;
+
+    const links = Array.from(dd.querySelectorAll('a'));
+    const loggedIn = MAKTABA.isLoggedIn();
+
+    // The static markup links "Profile" → signup.html. We never want a name/profile
+    // entry; the dropdown already has a "Settings" link.
+    const profileLink = links.find(a => /signup\.html|signin\.html/i.test(a.getAttribute('href') || '')
+        || /^(profile|login|sign in|my account)$/i.test(a.textContent.trim()));
+    const settingsLink = links.find(a => /settings\.html/i.test(a.getAttribute('href') || ''));
+
+    if (profileLink) {
+        if (loggedIn) {
+            // Hide the profile/name entry if a Settings link already exists;
+            // otherwise repurpose this one as the single Settings entry.
+            if (settingsLink && settingsLink !== profileLink) {
+                profileLink.style.display = 'none';
+            } else {
+                profileLink.textContent = 'Settings';
+                profileLink.setAttribute('href', '/pages/account(Mikha)/settings.html');
+                profileLink.style.display = '';
+            }
+        } else {
+            profileLink.textContent = 'Login';
+            profileLink.setAttribute('href', '/pages/authentication(Ali)/signin.html');
+            profileLink.style.display = '';
+        }
+    }
+
+    // Ensure a single Logout entry exists only while logged in.
+    let logoutLink = document.getElementById('mktb-logout-link');
+    if (loggedIn) {
+        if (!logoutLink) {
+            logoutLink = document.createElement('a');
+            logoutLink.id = 'mktb-logout-link';
+            logoutLink.href = '#';
+            logoutLink.textContent = 'Logout';
+            logoutLink.addEventListener('click', (e) => { e.preventDefault(); MAKTABA.logout(); });
+            dd.appendChild(logoutLink);
+        }
+    } else if (logoutLink) {
+        logoutLink.remove();
+    }
+}
+
+window.addEventListener('DOMContentLoaded', updateNavbarAuth);
+
 const menuBtn = document.getElementById('menuBtn');
 const menuDropdown = document.getElementById('menuDropdown');
 const menuWrapper = document.querySelector('.menu-dropdown-wrapper');
@@ -359,10 +473,37 @@ function saveCart(cart) {
     } catch (error) {
         // Keep the in-memory cart for local-file or blocked-storage previews.
     }
+    // Persist to the logged-in user's server cart (fire-and-forget).
+    if (window.MAKTABA && MAKTABA.isLoggedIn()) {
+        MAKTABA.authFetch('/api/auth/cart', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: normalized }),
+        }).catch(() => {});
+    }
 }
+
+// Pull the server cart into local cache on load, then re-render any cart UI.
+function syncCartFromServer() {
+    if (!(window.MAKTABA && MAKTABA.isLoggedIn())) return;
+    MAKTABA.authFetch('/api/auth/cart')
+        .then(r => (r.ok ? r.json() : null))
+        .then(data => {
+            if (!data || !Array.isArray(data.items)) return;
+            const normalized = normalizeCart(data.items);
+            memoryCartStore.cart = normalized;
+            try { localStorage.setItem('cart', JSON.stringify(normalized)); } catch (e) {}
+            if (typeof renderCart === 'function') renderCart();
+            if (typeof renderCheckoutItems === 'function') renderCheckoutItems();
+        })
+        .catch(() => {});
+}
+window.addEventListener('DOMContentLoaded', syncCartFromServer);
 
 function addBookToCart(book) {
     if (!book || !book.title) return 0;
+    // Adding to cart requires being logged in (cart persists to the user's DB).
+    if (window.MAKTABA && !MAKTABA.requireLogin('add items to your cart')) return 0;
     const cart = getCart();
     const existing = cart.find(item => item.title === book.title);
     if (existing) {
@@ -638,10 +779,73 @@ function setupPaymentForm(paymentForm) {
 
         if (!valid) return;
 
-        const orderId = '#MKTBA-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-        localStorage.setItem('paymentInfo', JSON.stringify({ method: methodInput.value }));
-        localStorage.setItem('pendingOrderId', orderId);
-        window.location.href = './order-success.html';
+        // Placing an order requires being logged in; the order is created in the DB.
+        if (!(window.MAKTABA && MAKTABA.isLoggedIn())) {
+            MAKTABA.toast ? MAKTABA.toast('Please log in to place an order.') : alert('Please log in to place an order.');
+            return;
+        }
+
+        const cart = getCart();
+        if (cart.length === 0) { MAKTABA.toast('Your cart is empty.'); return; }
+
+        const ship = readStorage('shippingInfo', {});
+        const subtotal = cart.reduce((s, i) => s + (parseFloat(i.price) || 0) * (i.qty || 1), 0);
+        const shipping = CART_SHIPPING;
+
+        const methodMap = {
+            'Card': 'credit_card', 'Credit Card': 'credit_card', 'Credit / Debit Card': 'credit_card',
+            'PayPal': 'paypal', 'Paypal': 'paypal',
+            'Bank Transfer': 'bank_transfer', 'Cash': 'cash_on_delivery', 'Cash on Delivery': 'cash_on_delivery',
+        };
+        const user = MAKTABA.getUser() || {};
+
+        const payload = {
+            customerInfo: {
+                email: user.email || ship.email || '',
+                firstName: ship.firstName || 'Customer',
+                lastName: ship.lastName || '.',
+            },
+            items: cart.map(i => {
+                const item = {
+                    title: i.title,
+                    author: i.author || 'Unknown',
+                    price: parseFloat(i.price) || 0,
+                    quantity: i.qty || 1,
+                    image: i.image || '',
+                };
+                if (i.bookId) item.bookId = i.bookId; // omit when unknown (title-only item)
+                return item;
+            }),
+            shippingAddress: {
+                fullName: `${ship.firstName || ''} ${ship.lastName || ''}`.trim() || 'Customer',
+                address: `${ship.street || ''} ${ship.number || ''}`.trim() || 'N/A',
+                city: ship.place || 'N/A',
+                postalCode: ship.postcode || '00000',
+                country: ship.country || 'N/A',
+                phone: ship.phone || '',
+            },
+            paymentInfo: { method: methodMap[methodInput.value] || 'credit_card', status: 'pending' },
+            orderSummary: { subtotal, shipping, tax: 0, total: subtotal + shipping },
+        };
+
+        const submitBtn = event.submitter || paymentForm.querySelector('[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
+
+        MAKTABA.authFetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        })
+            .then(async (r) => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not place order.'); return d; })
+            .then((d) => {
+                localStorage.setItem('paymentInfo', JSON.stringify({ method: methodInput.value }));
+                localStorage.setItem('pendingOrderId', d.orderNumber || ('#MKTBA-' + Math.random().toString(36).substr(2, 6).toUpperCase()));
+                window.location.href = './order-success.html';
+            })
+            .catch((err) => {
+                if (submitBtn) submitBtn.disabled = false;
+                MAKTABA.toast(err.message || 'Could not place order.');
+            });
     });
 }
 

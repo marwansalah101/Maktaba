@@ -125,9 +125,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     ──────────────────────────────────────────────────────────────── */
     const favoriteIcon = document.getElementById('favorite-icon');
 
-    const getFavorites  = ()      => JSON.parse(localStorage.getItem('favorites') || '[]');
-    const saveFavorites = (favs)  => localStorage.setItem('favorites', JSON.stringify(favs));
-
     function updateHeartUI(isFav) {
         if (isFav) {
             favoriteIcon.classList.add('filled');
@@ -140,54 +137,62 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    updateHeartUI(getFavorites().includes(selectedBook.title));
+    // Favorites are persisted to the logged-in user's account (by book _id).
+    const bookId = selectedBook._id || null;
+    let isFav = false;
 
-    favoriteIcon.addEventListener('click', () => {
-        let favs = getFavorites();
-        const idx = favs.indexOf(selectedBook.title);
-        if (idx === -1) {
-            favs.push(selectedBook.title);
-            saveFavorites(favs);
-            updateHeartUI(true);
-            // Pop animation
-            favoriteIcon.style.transform = 'scale(1.5)';
-            setTimeout(() => { favoriteIcon.style.transform = 'scale(1)'; }, 220);
-        } else {
-            favs.splice(idx, 1);
-            saveFavorites(favs);
-            updateHeartUI(false);
-        }
-    });
-
-    /* ── Cart helpers ──────────────────────────────────────────── */
-    function addBookToCart() {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existing = cart.find(item => item.title === selectedBook.title);
-        if (existing) {
-            existing.qty = (existing.qty || 1) + 1;
-        } else {
-            cart.push({
-                title:  selectedBook.title,
-                author: selectedBook.author,
-                price:  selectedBook.price,
-                image:  selectedBook.image,
-                qty:    1
-            });
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        return existing ? existing.qty : 1;
+    if (window.MAKTABA && MAKTABA.isLoggedIn() && bookId) {
+        MAKTABA.authFetch('/api/auth/favorites')
+            .then(r => (r.ok ? r.json() : null))
+            .then(data => {
+                if (data && Array.isArray(data.favorites)) {
+                    isFav = data.favorites.some(b => String(b._id) === String(bookId));
+                    updateHeartUI(isFav);
+                }
+            })
+            .catch(() => {});
     }
 
-    /* ── Add to Cart button ────────────────────────────────────── */
+    favoriteIcon.addEventListener('click', () => {
+        if (!(window.MAKTABA && MAKTABA.requireLogin('save favorites'))) return;
+        if (!bookId) { MAKTABA.toast('Favorites are unavailable for this book.'); return; }
+
+        const method = isFav ? 'DELETE' : 'POST';
+        MAKTABA.authFetch(`/api/auth/favorites/${bookId}`, { method })
+            .then(r => {
+                if (!r.ok) throw new Error('failed');
+                isFav = !isFav;
+                updateHeartUI(isFav);
+                if (isFav) {
+                    favoriteIcon.style.transform = 'scale(1.5)';
+                    setTimeout(() => { favoriteIcon.style.transform = 'scale(1)'; }, 220);
+                }
+            })
+            .catch(() => MAKTABA.toast('Could not update favorites. Please try again.'));
+    });
+
+    /* ── Build the cart item for this book ─────────────────────── */
+    function thisBookItem() {
+        return {
+            bookId: selectedBook._id || '',
+            title:  selectedBook.title,
+            author: selectedBook.author,
+            price:  selectedBook.price,
+            image:  selectedBook.image,
+            qty:    1,
+        };
+    }
+
+    /* ── Add to Cart button (gated + persisted via shared cart) ── */
     const addToCartBtn = document.querySelector('.add-to-cart-btn');
     addToCartBtn.addEventListener('click', () => {
-        const qty = addBookToCart();
+        // window.addBookToCart (script.js) enforces login and syncs to the DB.
+        const qty = window.addBookToCart(thisBookItem());
+        if (!qty) return; // not logged in — toast already shown
         const original = addToCartBtn.textContent;
 
-        // Fly the book cover to the cart icon
         flyToCart(document.getElementById('main-image'));
 
-        // Brief button feedback
         addToCartBtn.textContent = `Added (${qty})`;
         addToCartBtn.style.background = '#e8f5e9';
         addToCartBtn.style.borderColor = '#4caf50';
@@ -203,7 +208,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     /* ── Buy Now button ────────────────────────────────────────── */
     document.querySelector('.buy-now-btn').addEventListener('click', () => {
-        addBookToCart();
+        const qty = window.addBookToCart(thisBookItem());
+        if (!qty) return; // not logged in — toast already shown
         window.location.href = '/pages/checkout(Rojeh)/checkout.html';
     });
 

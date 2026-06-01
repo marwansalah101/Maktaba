@@ -59,7 +59,9 @@
       "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(48\\).toString\\('hex'\\)\\)\")",
       "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
       "PowerShell(Stop-Process -Force)",
-      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"testuser@maktaba.com\",\"password\":\"securePass123\"}' -UseBasicParsing; $d = $r.Content | ConvertFrom-Json; Write-Output \"DB id: $\\($d.user.id\\)\"; Write-Output \"name: $\\($d.user.name\\)\"; Write-Output \"email: $\\($d.user.email\\)\")"
+      "PowerShell($r = Invoke-WebRequest -Uri \"http://localhost:3000/api/auth/login\" -Method POST -ContentType \"application/json\" -Body '{\"email\":\"testuser@maktaba.com\",\"password\":\"securePass123\"}' -UseBasicParsing; $d = $r.Content | ConvertFrom-Json; Write-Output \"DB id: $\\($d.user.id\\)\"; Write-Output \"name: $\\($d.user.name\\)\"; Write-Output \"email: $\\($d.user.email\\)\")",
+      "Bash(rm -f utils/logger.js)",
+      "Bash(npm uninstall *)"
     ]
   }
 }

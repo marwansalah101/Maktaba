@@ -1,16 +1,27 @@
 ﻿const mongoose = require("mongoose");
 
+function toSlug(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 const bookSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      maxlength: 300
+    },
+
+    slug: {
+      type: String,
+      index: true
     },
 
     author: {
       type: String,
-      required: true
+      required: true,
+      maxlength: 200
     },
 
     authorId: {
@@ -20,7 +31,8 @@ const bookSchema = new mongoose.Schema(
 
     genre: {
       type: String,
-      required: true
+      required: true,
+      maxlength: 100
     },
 
     year: {
@@ -40,12 +52,14 @@ const bookSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      required: true
+      required: true,
+      maxlength: 5000
     },
 
     quote: {
       type: String,
-      default: ""
+      default: "",
+      maxlength: 1000
     },
 
     price: {
@@ -86,5 +100,16 @@ const bookSchema = new mongoose.Schema(
   },
   { timestamps: true, collection: 'Book' }
 );
+
+// Index title for fast title lookups / search (note §5.3).
+bookSchema.index({ title: 1 });
+
+// Keep slug in sync with title on create/save (note §2.3).
+bookSchema.pre('save', function (next) {
+  if (this.isModified('title') || !this.slug) {
+    this.slug = toSlug(this.title);
+  }
+  next();
+});
 
 module.exports = mongoose.model("Book", bookSchema);

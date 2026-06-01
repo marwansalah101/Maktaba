@@ -36,7 +36,7 @@ function handleGoogleResponse(response) {
     localStorage.setItem('maktabaUserName',  googleUser.fullname);
     localStorage.setItem('maktabaUserEmail', googleUser.email);
 
-    window.location.href = 'http://127.0.0.1:5501/views/pages/home(fares)/home.html';
+    window.location.href = '../home(fares)/home.html';
 }
 
 function googleSignIn() {
@@ -46,14 +46,15 @@ function googleSignIn() {
     }
     google.accounts.id.prompt();
 }
-const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
+// Same-origin: the frontend is served by Express, so relative paths reach the API.
+const ADMIN_API_BASE = window.location.origin;
 // ═══════════════════════════════════════════════════════════════
 //  MAIN AUTH MODULE
 // ═══════════════════════════════════════════════════════════════
 (() => {
 
-    // Always points to Express — works on both Live Server and port 3000
-    const API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
+    // Same-origin: the frontend is served by Express, so relative paths reach the API.
+    const API_BASE = window.location.origin;
 
     // ─── Validation Rules ───────────────────────────────────────────
     const rules = {

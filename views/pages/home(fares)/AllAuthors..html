@@ -224,7 +224,7 @@
                     </div>
                 `;
                  // Fetch real book count
-                fetch(`http://localhost:3000/books?author=${encodeURIComponent(author.name)}`)
+                fetch(`${apiBase}/books?author=${encodeURIComponent(author.name)}`)
                   .then(res => res.json())
                   .then(books => {
                     const countEl = document.getElementById(`book-count-${author.slug}`);

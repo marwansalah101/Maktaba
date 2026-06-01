@@ -1,8 +1,24 @@
 const Author = require('../models/Author');
+const { stripHtml } = require('../utils/sanitize');
+
+// Strip HTML from author free-text fields (guards against stored XSS).
+const AUTHOR_TEXT_FIELDS = ['name', 'stats', 'aboutTitle', 'aboutText'];
+function sanitizeAuthorFields(obj) {
+    for (const f of AUTHOR_TEXT_FIELDS) {
+        if (typeof obj[f] === 'string') obj[f] = stripHtml(obj[f]);
+    }
+    return obj;
+}
 
 exports.getAllAuthors = async (req, res, next) => {
     try {
-        res.json(await Author.find());
+        // Opt-in pagination: full array unless ?page/?limit are supplied (FE-safe).
+        if (req.query.page === undefined && req.query.limit === undefined) {
+            return res.json(await Author.find());
+        }
+        const page  = Math.max(1, parseInt(req.query.page, 10)  || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 20));
+        res.json(await Author.find().skip((page - 1) * limit).limit(limit));
     } catch (err) {
         next(err);
     }
@@ -61,7 +77,7 @@ exports.createAuthor = async (req, res, next) => {
             }
         }
 
-        const saved = await new Author({
+        const saved = await new Author(sanitizeAuthorFields({
             name,
             slug,
             stats,
@@ -70,7 +86,7 @@ exports.createAuthor = async (req, res, next) => {
             bannerImg,
             profileImg,
             books: parsedBooks,
-        }).save();
+        })).save();
         res.status(201).json(saved);
     } catch (err) {
         next(err);
@@ -82,8 +98,9 @@ exports.updateAuthor = async (req, res, next) => {
         const { name, slug, stats, aboutTitle, aboutText, bannerImg, profileImg, books } = req.body;
         const update = { name, slug, stats, aboutTitle, aboutText, bannerImg, profileImg, books };
         Object.keys(update).forEach(k => update[k] === undefined && delete update[k]);
+        sanitizeAuthorFields(update);
 
-        const updated = await Author.findByIdAndUpdate(req.params.id, update, { new: true });
+        const updated = await Author.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: true });
         if (!updated) return res.status(404).json({ message: 'Author not found' });
         res.json(updated);
     } catch (err) {

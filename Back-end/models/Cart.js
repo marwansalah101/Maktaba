@@ -17,4 +17,7 @@ const cartSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// TTL: anonymous session carts auto-expire 30 days after last update (note §5.4).
+cartSchema.index({ updatedAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
+
 module.exports = mongoose.model('Cart', cartSchema);
