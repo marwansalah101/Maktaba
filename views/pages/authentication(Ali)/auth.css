@@ -556,6 +556,63 @@
   border-color: rgba(240, 237, 229, 0.35);
 }
 
+/* Dark mode styles for signin card */
+.signin-card.dark {
+  background: #1a1814;
+  color: #F0EDE5;
+}
+
+.signin-card.dark .signin-card-brand,
+.signin-card.dark .signin-card-title,
+.signin-card.dark .signin-card-subtitle,
+.signin-card.dark .form-label,
+.signin-card.dark .form-input,
+.signin-card.dark .card-footer {
+  color: #F0EDE5;
+}
+
+.signin-card.dark .form-input {
+  border-bottom-color: rgba(240, 237, 229, 0.25);
+}
+
+.signin-card.dark .form-input::placeholder {
+  color: rgba(240, 237, 229, 0.3);
+}
+
+.signin-card.dark .btn-primary {
+  background: #F0EDE5;
+  color: #1a1814;
+}
+
+.signin-card.dark .btn-primary:hover {
+  background: #d4d0c8;
+}
+
+.signin-card.dark .or-divider {
+  color: rgba(240, 237, 229, 0.45);
+}
+
+.signin-card.dark .btn-social {
+  background: rgba(255,255,255,0.08);
+}
+
+.signin-card.dark .btn-social:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.signin-card.dark .card-footer a {
+  color: #F0EDE5;
+}
+
+.signin-card.dark .dark-mode-btn {
+  color: #F0EDE5;
+  border-color: rgba(240, 237, 229, 0.35);
+}
+
+.signin-card.dark a {
+  color: #F0EDE5;
+}
+
 
 
 
@@ -1647,6 +1704,119 @@ body.admin-dashboard-page {
 }
 
 @media (max-width: 1100px) {
+  .admin-dashboard-page .stat-grid,
+  .insight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panel-heading,
+  .panel-totals {
+    flex-direction: column;
+  }
+}
+
+/* Dashboard Dark Mode Button */
+.dashboard-dark-mode-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+  transition: all 0.2s ease;
+  z-index: 50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-dark-mode-btn:hover {
+  background: #f5f5f5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Dashboard Dark Mode Styles */
+body.admin-dashboard-page {
+  transition: background 0.3s ease, color 0.3s ease, opacity 0.15s ease;
+}
+
+body.admin-dashboard-page.dark-mode {
+  background: #0f0d0a;
+  color: #ffffff;
+}
+
+body.admin-dashboard-page.dark-mode .admin-sidebar {
+  background: #1a1814;
+  border-right-color: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
+}
+
+body.admin-dashboard-page.dark-mode .admin-nav a {
+  color: #ffffff;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+body.admin-dashboard-page.dark-mode .admin-nav a:hover,
+body.admin-dashboard-page.dark-mode .admin-nav a.active {
+  color: #F0EDE5;
+  background: rgba(232, 228, 223, 0.08);
+}
+
+body.admin-dashboard-page.dark-mode .admin-header {
+  background: #1a1814;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
+}
+
+body.admin-dashboard-page.dark-mode .admin-header h1,
+body.admin-dashboard-page.dark-mode .admin-header p {
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+body.admin-dashboard-page.dark-mode .auth-card,
+body.admin-dashboard-page.dark-mode .panel,
+body.admin-dashboard-page.dark-mode .lsection {
+  background: #000000;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.admin-dashboard-page.dark-mode .auth-card strong,
+body.admin-dashboard-page.dark-mode .panel h2,
+body.admin-dashboard-page.dark-mode .panel p {
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+body.admin-dashboard-page.dark-mode .panel-heading,
+body.admin-dashboard-page.dark-mode .panel-totals {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+body.admin-dashboard-page.dark-mode canvas {
+  filter: invert(0.93) hue-rotate(180deg);
+}
+
+body.admin-dashboard-page.dark-mode .dashboard-dark-mode-btn {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.2);
+  color: #333;
+}
+
+body.admin-dashboard-page.dark-mode .dashboard-dark-mode-btn:hover {
+  background: #f0f0f0;
+}
+
+@media (max-width: 1100px) {
+
   .admin-dashboard-page .stat-grid,
   .insight-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

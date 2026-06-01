@@ -258,7 +258,7 @@ const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:
 
 
 function toggleDarkMode() {
-  const card = document.querySelector('.signup-card');
+  const card = document.querySelector('.signin-card') || document.querySelector('.signup-card');
   const icon = document.getElementById('dark-icon');
   card.classList.toggle('dark');
 
