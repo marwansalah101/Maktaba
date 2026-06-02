@@ -476,7 +476,7 @@ function normalizeAuthorBooks(value) {
       .map(item => item.trim())
       .filter(item => /^[0-9a-fA-F]{24}$/.test(item));
 }
-function appendAuthorCard(author) {
+function appendAuthorCard(author, updateCount = true) {
     const cards = document.querySelector('.cards');
     if (!cards || !author) return;
 
@@ -487,7 +487,7 @@ function appendAuthorCard(author) {
       <div class="avatar">${author.name.charAt(0).toUpperCase()}</div>
       <div class="info">
         <h3>${author.name}</h3>
-        <p class="sub">${author.slug.replace(/-/g, ' ')}</p>
+        <p class="sub">${author.slug ? author.slug.replace(/-/g, ' ') : ''}</p>
         <p class="desc">${author.aboutText || ''}</p>
         <div class="bottom">
           <span class="books">${booksCount} book${booksCount !== 1 ? 's' : ''}</span>
@@ -500,14 +500,75 @@ function appendAuthorCard(author) {
     `;
     cards.insertBefore(card, cards.firstChild);
 
-    const counter = document.querySelector('.header p');
-    if (counter) {
-      const current = parseInt(counter.textContent, 10);
-      if (!Number.isNaN(current)) {
-        counter.textContent = `${current + 1} registered authors`;
+    if (updateCount) {
+      const counter = document.querySelector('.header p');
+      if (counter) {
+        const current = parseInt(counter.textContent, 10);
+        if (!Number.isNaN(current)) {
+          counter.textContent = `${current + 1} registered authors`;
+        }
       }
     }
 }
+let authorCache = [];
+
+function updateAuthorCount(count) {
+    const counter = document.querySelector('.header p');
+    if (counter) {
+        counter.textContent = `${count} registered author${count !== 1 ? 's' : ''}`;
+    }
+}
+
+function renderAuthors(authors) {
+    const cards = document.querySelector('.cards');
+    if (!cards) return;
+
+    cards.innerHTML = '';
+    if (!Array.isArray(authors) || authors.length === 0) {
+        cards.innerHTML = '<div class="empty-state">No authors available.</div>';
+        updateAuthorCount(0);
+        return;
+    }
+
+    authors.forEach(author => appendAuthorCard(author, false));
+    updateAuthorCount(authors.length);
+}
+
+async function loadAuthors() {
+    const cards = document.querySelector('.cards');
+    if (!cards) return;
+
+    cards.innerHTML = '<div class="loading-state">Loading authors...</div>';
+
+    try {
+        const res = await fetch(ADMIN_API_BASE + '/api/authors');
+        if (!res.ok) {
+            throw new Error(`Failed to load authors: ${res.status}`);
+        }
+        const authors = await res.json();
+        authorCache = Array.isArray(authors) ? authors : [];
+        renderAuthors(authorCache);
+    } catch (err) {
+        console.error(err);
+        cards.innerHTML = '<div class="error-state">Unable to load author data. Please refresh.</div>';
+        updateAuthorCount(0);
+    }
+}
+
+function filterAuthors(query) {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) {
+        renderAuthors(authorCache);
+        return;
+    }
+    const filtered = authorCache.filter(author => {
+        return [author.name, author.slug, author.stats, author.aboutText]
+          .filter(Boolean)
+          .some(value => value.toLowerCase().includes(normalized));
+    });
+    renderAuthors(filtered);
+}
+
 function initAuthorForm() {
     const form = document.getElementById('addAuthorForm');
     if (!form) return;
@@ -558,7 +619,8 @@ function initAuthorForm() {
                 return;
             }
 
-            appendAuthorCard(data);
+            authorCache.unshift(data);
+            appendAuthorCard(data, true);
             closeAddAuthorModal();
             alert('Author added successfully.');
         } catch (err) {
@@ -567,6 +629,7 @@ function initAuthorForm() {
         }
     });
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (event) => {
         const bookModal = document.getElementById('addBookModal');
@@ -575,6 +638,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (authorModal && event.target === authorModal) closeAddAuthorModal();
     });
     initAuthorForm();
+    const searchInput = document.querySelector('.search');
+    if (searchInput) {
+        searchInput.addEventListener('input', () => filterAuthors(searchInput.value));
+    }
+    if (document.body.classList.contains('authors-body')) {
+        loadAuthors();
+    }
 });
 
 

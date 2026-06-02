@@ -1715,29 +1715,53 @@ body.admin-dashboard-page {
   }
 }
 
-/* Dashboard Dark Mode Button */
-.dashboard-dark-mode-btn {
+/* Dashboard Dark Mode Switch */
+.dashboard-dark-mode-switch {
   position: fixed;
   bottom: 24px;
   left: 24px;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #333;
-  transition: all 0.2s ease;
   z-index: 50;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
-
-.dashboard-dark-mode-btn:hover {
-  background: #f5f5f5;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.dashboard-dark-mode-switch .switch {
+  display: inline-block;
+  position: relative;
+  width: 54px;
+  height: 28px;
+}
+.dashboard-dark-mode-switch .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.dashboard-dark-mode-switch .switch .slider {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background: #e6e6e6;
+  border-radius: 999px;
+  transition: background 0.25s ease;
+}
+.dashboard-dark-mode-switch .switch .slider::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.dashboard-dark-mode-switch .switch input:checked + .slider {
+  background: #3b5e2f;
+}
+.dashboard-dark-mode-switch .switch input:checked + .slider::before {
+  transform: translateX(26px);
+}
+.dashboard-dark-mode-switch .switch input:focus-visible + .slider {
+  box-shadow: 0 0 0 3px rgba(59, 94, 47, 0.25);
 }
 
 /* Dashboard Dark Mode Styles */
@@ -1805,14 +1829,53 @@ body.admin-dashboard-page.dark-mode canvas {
   filter: invert(0.93) hue-rotate(180deg);
 }
 
-body.admin-dashboard-page.dark-mode .dashboard-dark-mode-btn {
-  background: white;
-  border-color: rgba(0, 0, 0, 0.2);
-  color: #333;
+body.admin-dashboard-page.dark-mode .dashboard-dark-mode-switch .slider {
+  background: #5a5a5a;
 }
 
-body.admin-dashboard-page.dark-mode .dashboard-dark-mode-btn:hover {
-  background: #f0f0f0;
+body.admin-dashboard-page.dark-mode .dashboard-dark-mode-switch .slider::before {
+  background: #f7f7f7;
+}
+
+body.admin-dashboard-page.dark-mode .admin-list-main .container,
+body.admin-dashboard-page.dark-mode .admin-list-main .table-container,
+body.admin-dashboard-page.dark-mode .admin-list-main .card,
+body.admin-dashboard-page.dark-mode .admin-list-main .modal-content,
+body.admin-dashboard-page.dark-mode .admin-list-main .header h1,
+body.admin-dashboard-page.dark-mode .admin-list-main .header p,
+body.admin-dashboard-page.dark-mode .admin-list-main .btn,
+body.admin-dashboard-page.dark-mode .admin-list-main .btn-submit,
+body.admin-dashboard-page.dark-mode .admin-list-main .btn-cancel {
+  background: #121212;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f5f5f5;
+}
+
+body.admin-dashboard-page.dark-mode .admin-list-main .search {
+  background: #1a1814;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f5f5f5;
+}
+
+body.admin-dashboard-page.dark-mode .admin-list-main .search::placeholder {
+  color: #bbb;
+}
+
+body.admin-dashboard-page.dark-mode .admin-list-main table {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.admin-dashboard-page.dark-mode .admin-list-main th,
+body.admin-dashboard-page.dark-mode .admin-list-main td {
+  color: #f5f5f5;
+}
+
+body.admin-dashboard-page.dark-mode .admin-list-main th {
+  background: #131212;
+}
+
+body.admin-dashboard-page.dark-mode .admin-list-main .card:hover {
+  box-shadow: 0 12px 28px rgba(255, 255, 255, 0.08);
 }
 
 @media (max-width: 1100px) {
