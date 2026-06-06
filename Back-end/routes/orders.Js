@@ -19,27 +19,19 @@ router.post("/create", requireEmail, async (req, res) => {
     try {
         const { paymentMethod, shippingAddress } = req.body;
 
-        let orderItems = [];
-
-        // Try DB cart first, fallback to items sent in body
         const cart = await Cart.findOne({ userEmail: req.userEmail });
-        if (cart && cart.items.length > 0) {
-            orderItems = cart.items;
-        } else if (req.body.items && req.body.items.length > 0) {
-            orderItems = req.body.items;
-        } else {
+        if (!cart || cart.items.length === 0)
             return res.status(400).json({ error: "Cart is empty." });
-        }
 
-        const totalAmount = orderItems.reduce(
+        const totalAmount = cart.items.reduce(
             (sum, item) => sum + item.price * item.quantity, 0
         );
 
         const order = await Order.create({
             userEmail: req.userEmail,
-            items: orderItems,
+            items: cart.items,
             totalAmount,
-            paymentMethod: paymentMethod || "cash_on_delivery",
+            paymentMethod: paymentMethod || "credit_card",
             shippingAddress
         });
 
