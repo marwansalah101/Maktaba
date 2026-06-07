@@ -566,8 +566,10 @@ function renderBooks(booksToRender) {
             <a href="${productUrl}" class="book-link">
               <h3 class="book-title">${book.title}</h3>
             </a>
-            <p class="book-author">${book.author}</p>
-            <p class="book-price">€${book.price}</p>
+            <a href="/pages/catalog(Marwan)/authors.html?slug=${normalizeSlug(book.author)}" class="book-author-link">
+              <p class="book-author">${book.author}</p>
+            </a>
+            <p class="book-price">L.E ${book.price}</p>
           </div>
           <button class="add-to-cart" type="button">Add to cart</button>
         `;

@@ -415,9 +415,8 @@ margin-left:100px;
 }
 
 .font-card:hover .card-price::before {
-    content: '$';
-    font-size: 12px;
-}
+    content: 'L.E ';
+    }
 
 /* Remove unused styles */
 .card-arrow {
@@ -756,8 +755,8 @@ margin-left:100px;
     box-sizing: border-box;
 }
 
-.best-sellers h2 {
-    font-family: 'Times New Roman', Times, serif;
+.best-sellers {
+    font-family: 'Times New Roman', serif;
     font-weight: bold;
     font-size: 30px;
     color: #312F2C;
@@ -765,16 +764,11 @@ margin-left:100px;
     margin-bottom: 5px;
     margin-top: 30px;
 }
-
-.title-underline {
-    width: 180px;
-    height: 1px;
-    background-color: #333;
-    margin: 0 auto 20px auto;
-    /* Centers the div and adds bottom space */
+.best-sellers h2 {
+    font-weight:bold;
 }
 
-.best-sellers p {
+.best-sellers  p {
 
     font-family: 'Times New Roman', Times, serif;
     font-size: 14px;

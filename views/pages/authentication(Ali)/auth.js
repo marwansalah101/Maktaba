@@ -36,7 +36,7 @@ function handleGoogleResponse(response) {
     localStorage.setItem('maktabaUserName',  googleUser.fullname);
     localStorage.setItem('maktabaUserEmail', googleUser.email);
 
-    window.location.href = 'http://127.0.0.1:5501/views/pages/home(fares)/home.html';
+    window.location.href = '../../home.html';
 }
 
 function googleSignIn() {
@@ -175,6 +175,8 @@ const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:
         const fullnameEl = document.getElementById('fullname');
         const emailEl    = document.getElementById('email');
         const passwordEl = document.getElementById('password');
+        const confirmEl  = document.getElementById('confirm-password');
+        const termsEl    = document.getElementById('acceptTerms');
 
         fullnameEl && fullnameEl.addEventListener('blur', () => {
             if (!fullnameEl.value.trim()) { clearState(fullnameEl); return; }
@@ -199,6 +201,19 @@ const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:
             } else {
                 clearState(passwordEl);
             }
+            // Re-check the confirm field as the password changes.
+            if (confirmEl && confirmEl.value) {
+                confirmEl.value === passwordEl.value
+                    ? showValid(confirmEl)
+                    : showError(confirmEl, 'Passwords do not match.');
+            }
+        });
+
+        confirmEl && confirmEl.addEventListener('blur', () => {
+            if (!confirmEl.value) { clearState(confirmEl); return; }
+            confirmEl.value === passwordEl.value
+                ? showValid(confirmEl)
+                : showError(confirmEl, 'Passwords do not match.');
         });
 
         form.addEventListener('submit', e => {
@@ -214,8 +229,20 @@ const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:
             if (!passwordEl.value || !rules.password_signup.validate(passwordEl.value)) {
                 showError(passwordEl, rules.password_signup.message); valid = false;
             }
+            // Confirm-password must match (field only present on the new sign-up page).
+            if (confirmEl) {
+                if (!confirmEl.value || confirmEl.value !== passwordEl.value) {
+                    showError(confirmEl, 'Passwords do not match.'); valid = false;
+                }
+            }
 
             if (!valid) return;
+
+            // Require the Terms checkbox when present.
+            if (termsEl && !termsEl.checked) {
+                showToast('Please accept the Terms & Privacy Policy to continue.', 'error');
+                return;
+            }
 
             const btn = form.querySelector('.btn-primary');
             btn.textContent = 'Creating account…';
@@ -258,8 +285,9 @@ const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:
 
 
 function toggleDarkMode() {
-  const card = document.querySelector('.signup-card');
+  const card = document.querySelector('.auth-shell') || document.querySelector('.signup-card') || document.querySelector('.signin-card');
   const icon = document.getElementById('dark-icon');
+  if (!card) return;
   card.classList.toggle('dark');
 
   if (card.classList.contains('dark')) {
