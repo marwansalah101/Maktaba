@@ -4,103 +4,180 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maktaba — Create Account</title>
+  <link rel="stylesheet" href="../../preloader.css">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="./auth.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" sizes="64x64" href="../../resources/asset/Logo.svg">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body class="Sign-in">
 
-  <div class="signup-card">
-
-    <a href="../../home.html" style="text-decoration: none;">
-      <div class="signup-card-brand">Maktaba</div>
-    </a>
-
-    <div class="divider-ornament">
-      <div class="line"></div>
-      <div class="diamond"></div>
-      <div class="line"></div>
+  <!-- ── Preloader ─────────────────────────────────────────────── -->
+  <div id="mkt-preloader" aria-hidden="true" role="presentation">
+    <div class="mkt-pl-stage">
+      <div class="mkt-pl-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-label="Maktaba">
+          <g transform="translate(7, 9) scale(0.196)">
+            <path fill="#0d0d0d" d="M251.83,49.834v166.107H143.855l-12.735-12.444h-10.408l-12.735,12.444H0V49.834h18.321v140.789v14.905l14.049-4.98 c23.612-8.371,46.618-12.44,70.332-12.44c4.713,0,9.725,0.188,14.895,0.559l5.352,0.385v0.427l2.967-0.214l2.967,0.214v-0.427 l5.352-0.385c5.17-0.371,10.182-0.559,14.895-0.559c23.714,0,46.72,4.069,70.332,12.44l14.049,4.98v-14.905V49.834H251.83z M133.479,50.362v127.802c5.261-0.378,10.499-0.587,15.649-0.587c24.821,0,49.12,4.278,73.851,13.046V36.507 c-5.26-0.413-10.493-0.618-15.631-0.618C182.629,35.889,158.398,40.638,133.479,50.362z M28.851,190.623 c24.731-8.768,49.029-13.046,73.851-13.046c5.15,0,10.389,0.209,15.649,0.587V50.362c-24.92-9.725-49.15-14.474-73.869-14.474 c-5.138,0-10.371,0.205-15.631,0.618V190.623z"/>
+          </g>
+        </svg>
+      </div>
+      <div class="mkt-pl-rule"></div>
+      <p class="mkt-pl-wordmark">Maktaba</p>
+      <div class="mkt-pl-dots"><span></span><span></span><span></span></div>
     </div>
+  </div>
 
-    <h1 class="signup-card-title">Create account</h1>
-    <p class="signup-card-subtitle">Join our community of readers.</p>
+  <!-- ── Split shell ───────────────────────────────────────────── -->
+  <div class="auth-shell auth-shell--signup">
 
-    <form id="signupForm" novalidate>
+    <!-- Visual panel -->
+    <aside class="auth-visual">
+      <a class="auth-logo" href="../../home.html" aria-label="Maktaba home">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true">
+          <g transform="translate(7, 9) scale(0.196)">
+            <path d="M251.83,49.834v166.107H143.855l-12.735-12.444h-10.408l-12.735,12.444H0V49.834h18.321v140.789v14.905l14.049-4.98 c23.612-8.371,46.618-12.44,70.332-12.44c4.713,0,9.725,0.188,14.895,0.559l5.352,0.385v0.427l2.967-0.214l2.967,0.214v-0.427 l5.352-0.385c5.17-0.371,10.182-0.559,14.895-0.559c23.714,0,46.72,4.069,70.332,12.44l14.049,4.98v-14.905V49.834H251.83z M133.479,50.362v127.802c5.261-0.378,10.499-0.587,15.649-0.587c24.821,0,49.12,4.278,73.851,13.046V36.507 c-5.26-0.413-10.493-0.618-15.631-0.618C182.629,35.889,158.398,40.638,133.479,50.362z M28.851,190.623 c24.731-8.768,49.029-13.046,73.851-13.046c5.15,0,10.389,0.209,15.649,0.587V50.362c-24.92-9.725-49.15-14.474-73.869-14.474 c-5.138,0-10.371,0.205-15.631,0.618V190.623z"/>
+          </g>
+        </svg>
+        <span>Maktaba</span>
+      </a>
 
-      <div class="form-group">
-        <label class="form-label" for="fullname">Full Name</label>
-        <input class="form-input" type="text" id="fullname" name="fullname" placeholder="Enter your name" autocomplete="name">
-        <div class="error-msg" id="fullname-error"></div>
+      <div class="auth-visual__body">
+        <h2 class="auth-visual__headline">Your next<br><em>great read</em><br>starts here.</h2>
+        <p class="auth-visual__sub">Join a community of readers and build a library that grows with your taste — saved favourites, order history, and titles picked for you.</p>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="email">E-mail</label>
-        <input class="form-input" type="email" id="email" name="email" placeholder="Enter your e-mail" autocomplete="email">
-        <div class="error-msg" id="email-error"></div>
+      <div class="auth-visual__foot">
+        <figure class="auth-quote">
+          <blockquote>"A room without books is like a body without a soul."</blockquote>
+          <figcaption>— Marcus Tullius Cicero</figcaption>
+        </figure>
+        <nav class="auth-visual__links">
+          <a href="../legal(fares)/privacy-policy.html">Terms</a>
+          <a href="../account(Mikha)/contact-us.html">Contact Us</a>
+        </nav>
       </div>
+    </aside>
 
-      <div class="form-group">
-        <label class="form-label" for="password">Password</label>
-        <input class="form-input" type="password" id="password" name="password" placeholder="Create a password" autocomplete="new-password">
-        <button type="button" class="toggle-password" aria-label="Toggle password visibility" data-target="password">
-          <svg id="eye-signup" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
+    <!-- Form panel -->
+    <main class="auth-panel">
+      <div class="signup-card">
+
+        <a class="signup-card-brand" href="../../home.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true">
+            <g transform="translate(7, 9) scale(0.196)">
+              <path d="M251.83,49.834v166.107H143.855l-12.735-12.444h-10.408l-12.735,12.444H0V49.834h18.321v140.789v14.905l14.049-4.98 c23.612-8.371,46.618-12.44,70.332-12.44c4.713,0,9.725,0.188,14.895,0.559l5.352,0.385v0.427l2.967-0.214l2.967,0.214v-0.427 l5.352-0.385c5.17-0.371,10.182-0.559,14.895-0.559c23.714,0,46.72,4.069,70.332,12.44l14.049,4.98v-14.905V49.834H251.83z M133.479,50.362v127.802c5.261-0.378,10.499-0.587,15.649-0.587c24.821,0,49.12,4.278,73.851,13.046V36.507 c-5.26-0.413-10.493-0.618-15.631-0.618C182.629,35.889,158.398,40.638,133.479,50.362z M28.851,190.623 c24.731-8.768,49.029-13.046,73.851-13.046c5.15,0,10.389,0.209,15.649,0.587V50.362c-24.92-9.725-49.15-14.474-73.869-14.474 c-5.138,0-10.371,0.205-15.631,0.618V190.623z"/>
+            </g>
           </svg>
-        </button>
-        <div class="error-msg" id="password-error"></div>
+          <span>Maktaba</span>
+        </a>
+
+        <h1 class="signup-card-title">Create account</h1>
+        <p class="signup-card-subtitle">Join our community of readers.</p>
+
+        <form id="signupForm" novalidate>
+
+          <div class="form-group">
+            <label class="form-label" for="fullname">Full Name</label>
+            <div class="input-wrap">
+              <input class="form-input" type="text" id="fullname" name="fullname" placeholder="Enter your name" autocomplete="name">
+            </div>
+            <div class="error-msg" id="fullname-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">E-mail</label>
+            <div class="input-wrap">
+              <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
+            </div>
+            <div class="error-msg" id="email-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-wrap">
+              <input class="form-input" type="password" id="password" name="password" placeholder="Create a password" autocomplete="new-password">
+              <button type="button" class="toggle-password" aria-label="Toggle password visibility" data-target="password">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <div class="password-strength" aria-hidden="true">
+              <span class="strength-bar"></span><span class="strength-bar"></span><span class="strength-bar"></span><span class="strength-bar"></span>
+            </div>
+            <p class="form-hint">Use 8 or more characters with a mix of letters, numbers &amp; symbols.</p>
+            <div class="error-msg" id="password-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="confirm-password">Repeat Password</label>
+            <div class="input-wrap">
+              <input class="form-input" type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter your password" autocomplete="new-password">
+              <button type="button" class="toggle-password" aria-label="Toggle password visibility" data-target="confirm-password">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <div class="error-msg" id="confirm-password-error"></div>
+          </div>
+
+          <label class="auth-terms">
+            <input type="checkbox" id="acceptTerms">
+            <span>I accept the <a href="../legal(fares)/privacy-policy.html">Terms &amp; Privacy Policy</a>.</span>
+          </label>
+
+          <button type="submit" class="btn-primary">Sign Up</button>
+
+        </form>
+
+        <div class="or-divider">or</div>
+
+        <div class="social-logins">
+          <button class="btn-social" type="button" aria-label="Sign up with Google" onclick="googleSignIn()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+            </svg>
+            <span>Google</span>
+          </button>
+          <button class="btn-social" type="button" aria-label="Sign up with Apple">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path>
+            </svg>
+            <span>Apple</span>
+          </button>
+        </div>
+
+        <p class="card-footer">
+          Already have an account? <a href="./signin.html">Sign in</a>
+        </p>
+
       </div>
-
-      <button type="submit" class="btn-primary">Sign Up</button>
-
-    </form>
-
-    <div class="or-divider">or</div>
-
-    <div class="social-logins">
-
-      <button class="btn-social" type="button" aria-label="Log in with Google" onclick="googleSignIn()">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
-        </svg>
-      </button>
-
-      <button class="btn-social" type="button" aria-label="Log in with Facebook">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1877F2">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
-        </svg>
-      </button>
-
-      <button class="btn-social" type="button" aria-label="Log in with Apple">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path>
-        </svg>
-      </button>
-
-    </div>
-
-    <p class="card-footer">
-      Already have an account? <a href="./signin.html">Log in</a>
-    </p>
-
-
-<button class="dark-mode-btn" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
-  <svg id="dark-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-  </svg>
-</button>
-
+    </main>
 
   </div>
+
+  <button class="dark-mode-btn" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+    <svg id="dark-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
 
   <script src="../../data.js"></script>
   <script src="./auth.js"></script>
   <script src="../../script.js"></script>
+  <script src="../../preloader.js"></script>
 
 </body>
 </html>
