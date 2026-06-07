@@ -651,26 +651,26 @@ function setupPaymentForm(paymentForm) {
 const footerLinks = document.querySelectorAll('.footer-link');
 
 footerLinks.forEach(link => {
+    const targetId = link.getAttribute('data-target');
+    if (!targetId) return; // only intercept footer links meant to scroll within the current page
+
     link.addEventListener('click', function (e) {
+        const targetSection = document.getElementById(targetId);
+        if (!targetSection) return; // allow normal navigation if the section does not exist
+
         e.preventDefault();
 
+        // Get the position and scroll smoothly
+        const offset = 80; // Space for your header/top padding
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = targetSection.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
 
-        const targetId = this.getAttribute('data-target');
-        const targetSection = document.getElementById(targetId);
-
-        if (targetSection) {
-            // Get the position and scroll smoothly
-            const offset = 80; // Space for your header/top padding
-            const bodyRect = document.body.getBoundingClientRect().top;
-            const elementRect = targetSection.getBoundingClientRect().top;
-            const elementPosition = elementRect - bodyRect;
-            const offsetPosition = elementPosition - offset;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-        }
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
     });
 });
 

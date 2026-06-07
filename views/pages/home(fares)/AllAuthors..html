@@ -160,9 +160,9 @@
               <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="../checkout(Rojeh)/checkout.html">Shipping &amp; Delivery</a></li>
+                    <li><a href="../account(Mikha)/settings.html#tab-address">Shipping &amp; Delivery</a></li>
                     <li><a href="../legal(fares)/returns-policy.html">Returns</a></li>
-                    <li><a href="../checkout(Rojeh)/payment.html">Payment Methods</a></li>
+                    <li><a href="../account(Mikha)/settings.html#tab-payment">Payment Methods</a></li>
                     <li><a href="../checkout(Rojeh)/order-success.html">Track Order</a></li>
                     <li><a href="../account(Mikha)/contact-us.html">FAQ</a></li>
                 </ul>
@@ -219,11 +219,12 @@
         grid.innerHTML = '';
 
         const start = (page - 1) * AUTHORS_PER_PAGE;
-        const end = start + AUTHORS_PER_PAGE;
+        const end = Math.min(start + AUTHORS_PER_PAGE, filteredAuthors.length);
         const pageAuthors = filteredAuthors.slice(start, end);
 
         if (pageAuthors.length === 0) {
             document.getElementById('noResults').style.display = 'block';
+            document.getElementById('authorsGrid').innerHTML = '';
             return;
         }
 

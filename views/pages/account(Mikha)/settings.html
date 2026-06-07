@@ -355,6 +355,21 @@
 <div id="toast">Changes Saved</div>
 
 <script>
+/* ── AUTO-OPEN TAB FROM URL HASH ── */
+function openTabFromHash() {
+    const hash = window.location.hash.substring(1); // Remove '#'
+    if (hash && (hash === 'tab-account' || hash === 'tab-privacy' || hash === 'tab-address' || hash === 'tab-payment' || hash === 'tab-orders')) {
+        const tabName = hash.replace('tab-', '');
+        showTab(tabName, document.querySelector(`button[onclick="showTab('${tabName}'`));
+        setTimeout(() => {
+            document.getElementById(hash).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+    }
+}
+
+window.addEventListener('load', openTabFromHash);
+window.addEventListener('hashchange', openTabFromHash);
+
 /* ── PAYMENT METHOD ── */
 function selectPayMethod(value, btn) {
     document.getElementById("pay-method").value = value;
