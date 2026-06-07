@@ -569,7 +569,7 @@ function renderBooks(booksToRender) {
             <a href="/pages/catalog(Marwan)/authors.html?slug=${normalizeSlug(book.author)}" class="book-author-link">
               <p class="book-author">${book.author}</p>
             </a>
-            <p class="book-price">L.E ${book.price}</p>
+            <p class="book-price">L.E ${(Number(book.price)).toFixed(2)}</p>
           </div>
           <button class="add-to-cart" type="button">Add to cart</button>
         `;
@@ -604,6 +604,17 @@ function renderBooks(booksToRender) {
                 addBtn.style.background = '';
             }, 1200);
         });
+
+        const favBtn = card.querySelector('.collection-fav-btn');
+        if (favBtn) {
+            updateFavoriteButton(favBtn, book.title);
+            favBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                const wasAdded = toggleFavorite(book.title);
+                updateFavoriteButton(favBtn, book.title);
+                favBtn.setAttribute('aria-label', wasAdded ? 'Remove from favorites' : 'Add to favorites');
+            });
+        }
 
         container.appendChild(card);
     });

@@ -1,4 +1,4 @@
-﻿// ─────────────────────────────────────────────────────────────────────────────
+﻿    // ─────────────────────────────────────────────────────────────────────────────
 //  account.js  —  Maktaba  |  Settings Page
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -257,10 +257,96 @@ function closeTracking() {
     document.getElementById("tracking-modal-overlay").classList.remove("open");
 }
 
+function renderFavoritesPage() {
+    const list = document.querySelector('.favorites-list');
+    if (!list) return;
+
+    const favoriteBooks = getFavoriteBooks();
+
+    if (favoriteBooks.length === 0) {
+        list.innerHTML = `
+            <div class="favorites-empty">
+                <p>You don't have any favorites yet.</p>
+                <a class="favorites-empty-link" href="../catalog(Marwan)/collection.html">Browse the collection</a>
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = favoriteBooks.map(book => {
+        const image = resolveAssetPath(book.image || book.cover || '../../resources/img/book-placeholder.png');
+        const author = book.author || 'Unknown author';
+        const price = Number(book.price) ? Number(book.price).toFixed(2) : String(book.price || '0.00');
+        const category = book.genre || book.category || 'General';
+
+          return `
+            <div class="favorite-item" data-title="${book.title}">
+                <div class="favorite-left">
+                    <img src="${image}" alt="${book.title}">
+                    <div class="favorite-info">
+                        <span class="favorite-category">${category}</span>
+                        <h3>${book.title}</h3>
+                        <p>${author}</p>
+                    </div>
+                </div>
+                <div class="favorite-right">
+                    <span class="favorite-price">&euro;${price}</span>
+                    <button class="favorite-bag-btn" data-title="${book.title}" data-author="${author}" data-price="${price}" data-image="${image}" aria-label="Add ${book.title} to cart">
+                        <span class="material-symbols-outlined">shopping_bag</span>
+                    </button>
+                    <button class="favorite-heart-btn${isFavorite(book.title) ? ' active' : ''}" data-title="${book.title}" aria-label="Remove ${book.title} from favorites">
+                        <span class="material-symbols-outlined">favorite</span>
+                    </button>
+                    <button class="favorite-remove-btn" type="button" data-title="${book.title}">Remove</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    attachFavoritesPageListeners();
+}
+
+function attachFavoritesPageListeners() {
+    document.querySelectorAll('.favorite-bag-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const book = {
+                title: this.dataset.title,
+                author: this.dataset.author,
+                price: this.dataset.price,
+                image: this.dataset.image,
+                qty: 1
+            };
+            addBookToCart(book);
+            const cover = this.closest('.favorite-item')?.querySelector('img');
+            flyToCart(cover);
+        });
+    });
+
+    document.querySelectorAll('.favorite-heart-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const title = this.dataset.title;
+            const nowFav = toggleFavorite(title);
+            updateFavoriteButton(this, title);
+            if (!nowFav) {
+                renderFavoritesPage();
+            }
+        });
+    });
+
+    document.querySelectorAll('.favorite-remove-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const title = this.dataset.title;
+            toggleFavorite(title);
+            renderFavoritesPage();
+        });
+    });
+}
+
 /* ── AUTO-INIT ───────────────────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", () => {
     // ✅ FIX: load account settings on page load (account tab is default)
     loadAccountSettings();
 
     if (document.getElementById("tab-orders")?.classList.contains("active")) loadOrderHistory();
+    if (document.querySelector('.favorites-list')) renderFavoritesPage();
 });

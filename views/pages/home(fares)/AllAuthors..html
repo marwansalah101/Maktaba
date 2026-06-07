@@ -185,7 +185,6 @@
 
     <!-- JavaScript -->
     <script src="../../data.js"></script>
-    <script src="./home.js"></script>
     <script src="../../script.js"></script>
 
 <script>
@@ -196,6 +195,11 @@
     let allAuthors = [];
     let filteredAuthors = [];
 
+    const authorsGrid = document.getElementById('authorsGrid');
+    if (authorsGrid) {
+        authorsGrid.innerHTML = '<div class="loading-message">Loading authors...</div>';
+    }
+
     fetch(`${apiBase}/api/authors`)
         .then(res => {
             if (!res.ok) throw new Error('Network response was not ok');
@@ -205,7 +209,6 @@
             allAuthors = authors;
             filteredAuthors = authors;
             renderPage(1);
-            renderPagination();
         })
         .catch(err => {
             console.error('Error fetching authors:', err);
@@ -232,7 +235,9 @@
 
         pageAuthors.forEach(author => {
             const authorUrl = `../catalog(Marwan)/authors.html?slug=${author.slug}`;
-            const bookCount = author.books ? author.books.length : 0;
+            const bookCount = typeof author.bookCount === 'number'
+                ? author.bookCount
+                : (author.books ? author.books.length : 0);
 
             // Fix image path
             let imgPath = '';
@@ -264,7 +269,7 @@
             grid.appendChild(card);
         });
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0);
         renderPagination();
     }
 

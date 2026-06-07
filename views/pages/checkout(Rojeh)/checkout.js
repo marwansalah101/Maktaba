@@ -18,10 +18,18 @@ function updateCartSummary(subtotal) {
     const subEl = document.getElementById('summary-subtotal');
     const shipEl = document.getElementById('summary-shipping');
     const totalEl = document.getElementById('summary-total');
-    if (!subEl) return;
-    subEl.textContent = `€${subtotal.toFixed(2)}`;
-    shipEl.textContent = `€${shipping.toFixed(2)}`;
-    totalEl.textContent = `€${(subtotal + shipping).toFixed(2)}`;
+    const pageTotal = document.getElementById('cart-page-total');
+    const countEl = document.getElementById('cart-item-count');
+
+    const itemCount = cart.reduce((sum, item) => sum + (parseInt(item.qty, 10) || 1), 0);
+    if (countEl) {
+        countEl.textContent = `${itemCount} ${itemCount === 1 ? 'Item' : 'Items'}`;
+    }
+
+    if (subEl) subEl.textContent = `€${subtotal.toFixed(2)}`;
+    if (shipEl) shipEl.textContent = `€${shipping.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `€${(subtotal + shipping).toFixed(2)}`;
+    if (pageTotal) pageTotal.textContent = `€${subtotal.toFixed(2)}`;
 }
 
 function changeQty(index, delta) {
@@ -61,8 +69,8 @@ function renderCart() {
     let subtotal = 0;
 
     cart.forEach((book, index) => {
-        const qty = book.qty || 1;
-        const price = parseFloat(book.price);
+        const qty = Math.max(1, parseInt(book.qty, 10) || 1);
+        const price = parseFloat(String(book.price).replace(/[^0-9.-]/g, '')) || 0;
         subtotal += price * qty;
 
         const item = document.createElement('div');

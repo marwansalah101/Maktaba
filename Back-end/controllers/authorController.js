@@ -1,8 +1,24 @@
 const Author = require('../models/Author');
+const Book = require('../models/Book');
 
 exports.getAllAuthors = async (req, res, next) => {
     try {
-        res.json(await Author.find());
+        const authors = await Author.find();
+        const counts = await Book.aggregate([
+            { $group: { _id: '$author', count: { $sum: 1 } } }
+        ]);
+        const countMap = new Map(counts.map(item => [item._id, item.count]));
+
+        const authorsWithCounts = authors.map(author => {
+            const authorObj = author.toObject();
+            const countByName = countMap.get(author.name) || 0;
+            const bookCount = Array.isArray(authorObj.books) && authorObj.books.length > 0
+                ? authorObj.books.length
+                : countByName;
+            return { ...authorObj, bookCount };
+        });
+
+        res.json(authorsWithCounts);
     } catch (err) {
         next(err);
     }
