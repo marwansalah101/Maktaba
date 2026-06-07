@@ -192,9 +192,9 @@
               <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="../checkout(Rojeh)/checkout.html">Shipping &amp; Delivery</a></li>
+                    <li><a href="../account(Mikha)/settings.html#tab-address">Shipping &amp; Delivery</a></li>
                     <li><a href="../legal(fares)/returns-policy.html">Returns</a></li>
-                    <li><a href="../checkout(Rojeh)/payment.html">Payment Methods</a></li>
+                    <li><a href="../account(Mikha)/settings.html#tab-payment">Payment Methods</a></li>
                     <li><a href="../checkout(Rojeh)/order-success.html">Track Order</a></li>
                     <li><a href="../account(Mikha)/contact-us.html">FAQ</a></li>
                 </ul>
@@ -290,6 +290,7 @@ fetch(`http://localhost:3000/books?author=${encodeURIComponent(author.name)}`)
     const author = book.author || '';
     const year = book.year || '';
     const price = book.price ? `${book.price}` : '';
+    const genre = book.genre || '';
 
     grid.innerHTML += `
       <div class="recent-book-card">
@@ -300,21 +301,52 @@ fetch(`http://localhost:3000/books?author=${encodeURIComponent(author.name)}`)
           <div class="recent-book-image-wrap">
             <img src="${image}" alt="${title}">
           </div>
-          <p class="recent-book-subline">${year} · ${book.genre || ''}</p>
-          <div class="recent-book-meta">
-            <div>
-              <p class="recent-book-author">${author}</p>
-              <p class="recent-book-price">$${price}</p>
-            </div>
-            <button class="recent-book-add">+</button>
-          </div>
+          <p class="recent-book-subline">${year} · ${genre}</p>
         </a>
+        <div class="recent-book-meta">
+          <p class="recent-book-price">L.E ${price}</p>
+          <button class="recent-book-add" type="button"
+            data-title="${encodeURIComponent(title)}"
+            data-author="${encodeURIComponent(author)}"
+            data-year="${encodeURIComponent(year)}"
+            data-price="${encodeURIComponent(price)}"
+            data-genre="${encodeURIComponent(genre)}"
+            data-image="${encodeURIComponent(image)}"
+          >+</button>
+        </div>
       </div>
     `;
   });
+
+
+
+  // Add flying animation for "Add to Cart" buttons
+  grid.querySelectorAll('.recent-book-add').forEach(button => {
+    button.addEventListener('click', function (event) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      const book = {
+        title: decodeURIComponent(this.dataset.title || ''),
+        author: decodeURIComponent(this.dataset.author || ''),
+        year: decodeURIComponent(this.dataset.year || ''),
+        price: parseFloat(decodeURIComponent(this.dataset.price || '0')) || 0,
+        genre: decodeURIComponent(this.dataset.genre || ''),
+        image: decodeURIComponent(this.dataset.image || ''),
+        qty: 1
+      };
+
+      addBookToCart(book);
+      const sourceImg = this.closest('.recent-book-card')?.querySelector('img');
+      flyToCart(sourceImg || this);
+
+      const originalLabel = this.textContent;
+      this.textContent = '✓';
+      setTimeout(() => { this.textContent = originalLabel; }, 1200);
+    });
+  });
 }
   
-
 </script>
 
     
