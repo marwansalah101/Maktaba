@@ -304,7 +304,7 @@ fetch(`http://localhost:3000/books?author=${encodeURIComponent(author.name)}`)
           <p class="recent-book-subline">${year} · ${genre}</p>
         </a>
         <div class="recent-book-meta">
-          <p class="recent-book-price">L.E ${price}</p>
+          <p class="recent-book-price">L.E ${(Number(price)).toFixed(2)}</p>
           <button class="recent-book-add" type="button"
             data-title="${encodeURIComponent(title)}"
             data-author="${encodeURIComponent(author)}"

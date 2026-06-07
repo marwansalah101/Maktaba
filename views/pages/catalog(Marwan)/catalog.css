@@ -1905,6 +1905,7 @@
     margin-bottom: 18px;
     min-height: 240px;
     overflow: visible;
+    position: relative;
 }
 .book-cover-stage {
     position: relative;
@@ -2025,6 +2026,7 @@
 }
 .add-to-cart:hover  { background-color: #646362; }
 .add-to-cart:active { transform: scale(0.97); }
+
 
 @keyframes fade-up {
     from { transform: translateY(18px); opacity: 0; }

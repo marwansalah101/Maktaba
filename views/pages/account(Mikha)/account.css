@@ -300,6 +300,51 @@
 .favorite-heart-btn:hover .material-symbols-outlined {
     transform: scale(1.1);
 }
+
+.favorite-remove-btn {
+    background: transparent;
+    border: 1px solid #6c4b46;
+    color: #6c4b46;
+    border-radius: 999px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.favorite-remove-btn:hover {
+    background: #6c4b46;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.favorites-empty {
+    padding: 80px 40px;
+    text-align: center;
+    color: #4f433b;
+}
+
+.favorites-empty p {
+    margin: 0 0 14px;
+    font-size: 1.05rem;
+}
+
+.favorites-empty-link {
+    display: inline-block;
+    padding: 14px 24px;
+    border-radius: 999px;
+    background: #312f2c;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: background 0.2s ease;
+}
+
+.favorites-empty-link:hover {
+    background: #503f37;
+}
+
 .fly-item {
     position: fixed;
     width: 38px;

@@ -232,7 +232,7 @@ class BookCardsSlider {
                 <span class="card-author">${data.author}</span>
             </div>
             
-            <div class="card-price">L${data.price}</div>
+            <div class="card-price">${data.price}</div>
         `;
         
         card.appendChild(link);
