@@ -129,8 +129,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Show button feedback
             const originalText = this.textContent;
-            this.textContent = 'Added ✓';
-            this.style.background = '#5a4232';
+            this.textContent = ' ADDED ✓';
+            this.style.background = '#46ba42';
             setTimeout(() => {
                 this.textContent = originalText;
                 this.style.background = '';

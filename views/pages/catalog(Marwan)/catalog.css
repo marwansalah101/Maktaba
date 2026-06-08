@@ -213,7 +213,7 @@
 
 .layered-section {
     background-color: #312F2C;
-    min-height: 450px;
+    height:100%;
     width: 100%;
     display: flex;
     justify-content: flex-start; /* Forces everything to the left */
@@ -234,7 +234,8 @@
     position: relative;
     z-index: 2;             /* Keeps photo on top layer */
     flex: 0 0 500px;        /* Fixed width for the photo */
-    height: 320px;
+    height: 600px;
+    width: 100%;
     
     overflow: hidden;
 }
@@ -242,7 +243,7 @@
 .photo-box img {
     margin-left: 40px;
     margin-right: 60px;
-    width: calc(100% - 100px);
+  width: calc(100% - 30px);
     height: 100%;
     display: block;
     object-fit: cover;
@@ -251,6 +252,7 @@
     box-shadow: 20px 20px 60px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.1); 
 }
+
 
 
 
@@ -264,7 +266,7 @@
 }
 
 .text-box h2 {
-   font-family: 'serif'; /* Gives that classic library/book feel */
+   font-family: "EB Garamond", serif; /* Gives that classic library/book feel */
     font-size: 1.2rem;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -273,7 +275,8 @@
 }
 
 .text-box p {
-    font-size: 15px;
+    font-family: "EB Garamond", serif;
+    font-size: 20px;
     line-height: 1.8;
     color: #F0EDE5;
     margin-bottom: 20px;
@@ -1620,8 +1623,6 @@
     border-bottom: 1px solid #d9d0c4;
     flex-wrap: wrap;
     gap: 12px;
-    position: relative;
-    z-index: 10;
 }
 .collection-count {
     font-family: 'Jost', sans-serif;
@@ -1907,7 +1908,6 @@
     margin-bottom: 18px;
     min-height: 240px;
     overflow: visible;
-    position: relative;
 }
 .book-cover-stage {
     position: relative;
@@ -1968,7 +1968,6 @@
     letter-spacing: 1.5px;
     color: #b3a699;
     margin: 0;
-    cursor: default;
 }
 .book-details {
     font-family: 'Jost', sans-serif;
@@ -1977,8 +1976,6 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     color: #8b7d6b;
-    cursor: default;
-
 }
 .book-title {
     font-family: 'Lora', serif;
@@ -1988,7 +1985,6 @@
     margin: 4px 0 2px;
     line-height: 1.3;
     transition: color 0.2s;
-    cursor: default;
 }
 .book-listing:hover .book-title { color: #5a4232; }
 .book-author {
@@ -1997,17 +1993,14 @@
     color: #8C7B75;
     margin: 0 0 5px;
     text-decoration: none;
-    cursor: pointer;
+    cursor: default;
 }
-.book-author:hover { text-decoration: underline; animation: underline 0.2s ease; }
 .book-price {
     font-family: 'Lora', serif;
     font-size: 14px;
     color: #312F2C;
     font-style: italic;
     margin: 0;
-    cursor: default;
-
 }
 .add-to-cart {
     font-family: 'Jost', sans-serif;
@@ -2035,7 +2028,6 @@
 }
 .add-to-cart:hover  { background-color: #646362; }
 .add-to-cart:active { transform: scale(0.97); }
-
 
 @keyframes fade-up {
     from { transform: translateY(18px); opacity: 0; }
