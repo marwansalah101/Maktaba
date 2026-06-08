@@ -1620,6 +1620,8 @@
     border-bottom: 1px solid #d9d0c4;
     flex-wrap: wrap;
     gap: 12px;
+    position: relative;
+    z-index: 10;
 }
 .collection-count {
     font-family: 'Jost', sans-serif;
