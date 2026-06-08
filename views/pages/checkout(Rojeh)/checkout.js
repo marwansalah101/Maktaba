@@ -1,5 +1,5 @@
 // Checkout behavior is handled by ../../script.js to avoid duplicate global checkout code.
-//add to cart 
+
 
 
 const CART_SHIPPING = 60;
