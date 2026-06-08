@@ -11,11 +11,11 @@ const app = express();
    Disable CSP and cross-origin policies here because the frontend
    uses inline <script> tags throughout. Configure CSP properly
    before production deployment.                                    */
-app.use(helmet({
-    contentSecurityPolicy:      false,
-    crossOriginOpenerPolicy:    false,
-    crossOriginResourcePolicy:  false,
-}));
+    app.use(helmet({
+        contentSecurityPolicy:      false,
+        crossOriginOpenerPolicy:    false,
+        crossOriginResourcePolicy:  false,
+    }));
 
 /* ── CORS ──────────────────────────────────────────────────────── */
 app.use(cors());
@@ -25,7 +25,6 @@ app.use(express.json());
 
 /* ── Static files — serves the whole views/ folder through Express */
 app.use(express.static(path.join(__dirname, '..', 'views'), { index: 'home.html' }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* ── Rate limiting — applied to API routes only, not static assets */
 const limiter = rateLimit({
@@ -33,7 +32,7 @@ const limiter = rateLimit({
     max: 300,                  // 300 API calls per IP per window
     standardHeaders: true,
     legacyHeaders: false,
-    message: { error: 'Too many requests — please try again later.' },
+    message: { error: 'Too many requests - please try again later.' },
 });
 
 const authController = require('./controllers/authController');
@@ -74,12 +73,19 @@ app.use((req, res) => {
    this as an error handler (the err argument is the first).     */
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-    console.error(`[ERROR] ${req.method} ${req.path} —`, err.message);
+    console.error(`[ERROR] ${req.method} ${req.path} -`, err.message);
     res.status(err.status || 500).json({ error: err.message || 'Internal server error.' });
 });
 
 /* ── MongoDB connection ─────────────────────────────────────────── */
 const connectDB = async () => {
+    const colors = {
+        reset:  '\x1b[0m',
+        green:  '\x1b[32m',
+        red:    '\x1b[31m',
+        yellow: '\x1b[33m',
+    };
+
     try {
         await mongoose.connect(process.env.MONGO_URI, {
             serverSelectionTimeoutMS: 30000,
@@ -88,9 +94,10 @@ const connectDB = async () => {
             heartbeatFrequencyMS:     2000,
             maxPoolSize:              10,
         });
-        console.log('✅ MongoDB connected');
+        console.log(`${colors.green}MongoDB connected${colors.reset}`);
     } catch (err) {
-        console.log('❌ MongoDB connection error:', err.message);
+        console.log(`${colors.red}MongoDB connection error: ${err.message}${colors.reset}`);
+        console.log(`${colors.yellow}Retrying in 5 seconds...${colors.reset}`);
         setTimeout(connectDB, 5000);
     }
 };
@@ -98,7 +105,7 @@ const connectDB = async () => {
 connectDB();
 
 mongoose.connection.on('disconnected', () => {
-    console.log('❌ MongoDB disconnected — reconnecting...');
+    console.log(`${colors.red}MongoDB disconnected - reconnecting...${colors.reset}`);
     setTimeout(connectDB, 5000);
 });
 

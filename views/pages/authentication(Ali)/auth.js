@@ -36,7 +36,7 @@ function handleGoogleResponse(response) {
     localStorage.setItem('maktabaUserName',  googleUser.fullname);
     localStorage.setItem('maktabaUserEmail', googleUser.email);
 
-    window.location.href = '../../home.html';
+    window.location.href = '/home.html';
 }
 
 function googleSignIn() {
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 var go = function () {
                     if (role === 'admin') window.location.href = './dashboard.html';
-                    else window.location.href = '../../home.html';
+                    else window.location.href = '/home.html';
                 };
                 // Merge this account's saved cart + favorites from the DB, then redirect.
                 if (typeof window.mkSyncOnLogin === 'function') {
@@ -602,6 +602,253 @@ function initAuthorForm() {
         }
     });
 }
+function initBookForm() {
+    const form = document.getElementById('addBookForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title       = document.getElementById('bookTitle')?.value.trim();
+        const author      = document.getElementById('bookAuthor')?.value.trim();
+        const genre       = document.getElementById('bookGenre')?.value.trim();
+        const year        = document.getElementById('bookYear')?.value;
+        const price       = document.getElementById('bookPrice')?.value;
+        const stock       = document.getElementById('bookStock')?.value;
+        const ISBN        = document.getElementById('bookISBN')?.value.trim() || '';
+        const pages       = document.getElementById('bookPages')?.value || 0;
+        const image       = document.getElementById('bookImage')?.value.trim() || '';
+        const description = document.getElementById('bookDescription')?.value.trim() || '';
+        const language    = document.getElementById('bookLanguage')?.value.trim() || 'English';
+        const quote       = document.getElementById('bookQuote')?.value.trim() || '';
+
+        if (!title || !author || !genre || !year || !price) {
+            alert('Please complete all required fields.');
+            return;
+        }
+
+        const modal = document.getElementById('addBookModal');
+        const editId = modal && modal.dataset.editId;
+
+        try {
+            const token = localStorage.getItem('maktabaToken');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            const url    = editId ? ADMIN_API_BASE + '/books/id/' + editId : ADMIN_API_BASE + '/books';
+            const method = editId ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers,
+                body: JSON.stringify({ title, author, genre, year: Number(year), price: Number(price), stock: Number(stock) || 0, ISBN, pages: Number(pages), image, description, language, quote }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                alert(data.error || data.message || 'Failed to save book.');
+                return;
+            }
+
+            if (modal) delete modal.dataset.editId;
+            closeAddBookModal();
+            alert(editId ? `"${data.title}" updated.` : `"${data.title}" added.`);
+            loadAdminBooks();
+        } catch (err) {
+            console.error('Save book failed:', err);
+            alert('Unable to save book. Check your network and try again.');
+        }
+    });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ADMIN BOOKS TABLE — dynamic load + edit/delete
+══════════════════════════════════════════════════════════════════ */
+const BOOK_COLORS = ['yellow','red','green','brown','blue','purple','orange','teal'];
+
+async function loadAdminBooks() {
+    const tbody = document.getElementById('books-tbody');
+    const countEl = document.getElementById('books-count');
+    if (!tbody) return;
+
+    try {
+        const res = await fetch(ADMIN_API_BASE + '/books');
+        const books = await res.json();
+        const list = Array.isArray(books) ? books : (books.books || []);
+
+        if (countEl) countEl.textContent = list.length + ' title' + (list.length !== 1 ? 's' : '') + ' in the collection';
+
+        tbody.innerHTML = list.length === 0
+            ? '<tr><td colspan="8" style="text-align:center;padding:24px;color:#888;">No books found.</td></tr>'
+            : list.map((b, i) => {
+                const color = BOOK_COLORS[i % BOOK_COLORS.length];
+                const imgEl = b.image
+                    ? `<img src="${b.image}" alt="${b.title}" style="width:32px;height:44px;object-fit:cover;border-radius:3px;">`
+                    : `<span class="color-box ${color}"></span>`;
+                return `
+                <tr data-id="${b._id}">
+                  <td>${imgEl}</td>
+                  <td>${b.title}</td>
+                  <td>${b.author}</td>
+                  <td><span class="tag">${b.genre}</span></td>
+                  <td>${b.year || '—'}</td>
+                  <td class="price">$${Number(b.price).toFixed(2)}</td>
+                  <td>${b.stock != null ? b.stock : '—'}</td>
+                  <td>
+                    <button class="edit" onclick="openEditBookModal('${b._id}','${(b.title||'').replace(/'/g,"\\'")}','${(b.author||'').replace(/'/g,"\\'")}','${(b.genre||'').replace(/'/g,"\\'")}',${b.year||0},${b.price||0},${b.stock||0})">Edit</button>
+                    <button class="delete" onclick="deleteBook('${b._id}')">Delete</button>
+                  </td>
+                </tr>`;
+            }).join('');
+
+        // wire search
+        const searchEl = document.querySelector('.search');
+        if (searchEl && !searchEl._wired) {
+            searchEl._wired = true;
+            searchEl.addEventListener('input', () => {
+                const q = searchEl.value.toLowerCase();
+                tbody.querySelectorAll('tr[data-id]').forEach(tr => {
+                    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+                });
+            });
+        }
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;color:#c0392b;">Failed to load books.</td></tr>';
+    }
+}
+
+async function deleteBook(id) {
+    if (!confirm('Delete this book? This cannot be undone.')) return;
+    try {
+        const token = localStorage.getItem('maktabaToken');
+        const res = await fetch(ADMIN_API_BASE + '/books/id/' + id, {
+            method: 'DELETE',
+            headers: token ? { Authorization: 'Bearer ' + token } : {}
+        });
+        if (res.ok) {
+            const row = document.querySelector('tr[data-id="' + id + '"]');
+            if (row) row.remove();
+            const countEl = document.getElementById('books-count');
+            if (countEl) {
+                const n = parseInt(countEl.textContent) - 1;
+                countEl.textContent = n + ' title' + (n !== 1 ? 's' : '') + ' in the collection';
+            }
+        } else {
+            const d = await res.json().catch(() => ({}));
+            alert(d.error || 'Delete failed.');
+        }
+    } catch (err) { alert('Network error.'); }
+}
+
+function openEditBookModal(id, title, author, genre, year, price, stock) {
+    // Reuse the addBookModal for editing
+    const modal = document.getElementById('addBookModal');
+    if (!modal) return;
+    document.querySelector('.modal-header h2').textContent = 'Edit Book';
+    document.getElementById('bookTitle').value  = title;
+    document.getElementById('bookAuthor').value = author;
+    document.getElementById('bookGenre').value  = genre;
+    document.getElementById('bookYear').value   = year;
+    document.getElementById('bookPrice').value  = price;
+    document.getElementById('bookStock').value  = stock;
+    modal.dataset.editId = id;
+    modal.classList.add('show');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ADMIN AUTHORS CARDS — dynamic load + edit/delete
+══════════════════════════════════════════════════════════════════ */
+async function loadAdminAuthors() {
+    const cards = document.getElementById('authors-cards');
+    const countEl = document.getElementById('authors-count');
+    if (!cards) return;
+
+    try {
+        const token = localStorage.getItem('maktabaToken');
+        const headers = token ? { Authorization: 'Bearer ' + token } : {};
+        const res = await fetch(ADMIN_API_BASE + '/api/authors', { headers });
+        const data = await res.json();
+        const list = Array.isArray(data) ? data : (data.authors || []);
+
+        if (countEl) countEl.textContent = list.length + ' registered author' + (list.length !== 1 ? 's' : '');
+
+        if (list.length === 0) {
+            cards.innerHTML = '<p style="padding:24px;color:#888;">No authors found.</p>';
+            return;
+        }
+
+        cards.innerHTML = list.map(a => {
+            const initial = (a.name || '?').charAt(0).toUpperCase();
+            const booksCount = Array.isArray(a.books) ? a.books.length : 0;
+            const sub = [a.nationality, a.birthYear].filter(Boolean).join(' - ');
+            return `
+            <div class="card" data-id="${a._id}">
+              <div class="avatar">${initial}</div>
+              <div class="info">
+                <h3>${a.name}</h3>
+                ${sub ? `<p class="sub">${sub}</p>` : ''}
+                <p class="desc">${a.aboutText || ''}</p>
+                <div class="bottom">
+                  <span class="books">${booksCount} book${booksCount !== 1 ? 's' : ''}</span>
+                  <div>
+                    <button class="edit" onclick="editAuthorPrompt('${a._id}','${(a.name||'').replace(/'/g,"\\'")}')">Edit</button>
+                    <button class="delete" onclick="deleteAuthor('${a._id}')">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+
+        // wire search
+        const searchEl = document.querySelector('.search');
+        if (searchEl && !searchEl._wired) {
+            searchEl._wired = true;
+            searchEl.addEventListener('input', () => {
+                const q = searchEl.value.toLowerCase();
+                cards.querySelectorAll('.card[data-id]').forEach(c => {
+                    c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+                });
+            });
+        }
+    } catch (err) {
+        cards.innerHTML = '<p style="padding:24px;color:#c0392b;">Failed to load authors.</p>';
+    }
+}
+
+function editAuthorPrompt(id, name) {
+    const newName = prompt('Edit author name:', name);
+    if (!newName || newName.trim() === name) return;
+    const token = localStorage.getItem('maktabaToken');
+    fetch(ADMIN_API_BASE + '/api/authors/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+        body: JSON.stringify({ name: newName.trim() })
+    })
+    .then(r => r.json())
+    .then(d => {
+        if (d.error) { alert(d.error); return; }
+        loadAdminAuthors();
+    })
+    .catch(() => alert('Network error.'));
+}
+
+async function deleteAuthor(id) {
+    if (!confirm('Delete this author? This cannot be undone.')) return;
+    try {
+        const token = localStorage.getItem('maktabaToken');
+        const res = await fetch(ADMIN_API_BASE + '/api/authors/' + id, {
+            method: 'DELETE',
+            headers: token ? { Authorization: 'Bearer ' + token } : {}
+        });
+        if (res.ok) {
+            loadAdminAuthors();
+        } else {
+            const d = await res.json().catch(() => ({}));
+            alert(d.error || 'Delete failed.');
+        }
+    } catch (err) { alert('Network error.'); }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (event) => {
         const bookModal = document.getElementById('addBookModal');
@@ -610,6 +857,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (authorModal && event.target === authorModal) closeAddAuthorModal();
     });
     initAuthorForm();
+    initBookForm();
+    // Load dynamic data
+    loadAdminBooks();
+    loadAdminAuthors();
 });
 
 

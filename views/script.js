@@ -261,6 +261,10 @@ function resolveFavoriteBook(title) {
         const matched = Books.find(book => book.title === title);
         if (matched) return matched;
     }
+    try {
+        const cache = JSON.parse(localStorage.getItem('mktFavData') || '{}');
+        if (cache[title]) return { title, ...cache[title] };
+    } catch (_) {}
     return { title, author: 'Unknown author', price: '0.00', image: '', genre: '', category: '' };
 }
 
@@ -564,16 +568,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const submitBtn = document.getElementById('checkoutSubmitBtn');
     if (submitBtn) {
-        submitBtn.addEventListener('click', function () {
+        submitBtn.addEventListener('click', async function () {
             if (getCart().length === 0) return;
             if (!validateShippingForm()) return;
-            localStorage.setItem('shippingInfo', JSON.stringify(collectShippingInfo()));
+            const info = collectShippingInfo();
+            localStorage.setItem('shippingInfo', JSON.stringify(info));
+
+            // Optionally save shipping address back to the user account
+            const saveChk = document.getElementById('save-addr-checkbox');
+            const tok = localStorage.getItem('maktabaToken');
+            if (saveChk && saveChk.checked && tok) {
+                try {
+                    const mkBase = location.port === '3000' ? '' : 'http://localhost:3000';
+                    await fetch(mkBase + '/api/auth/profile', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+                        body: JSON.stringify({
+                            address: {
+                                fullName: (info.firstName + ' ' + info.lastName).trim(),
+                                street:   info.street + (info.number ? ' ' + info.number : ''),
+                                city:     info.place,
+                                phone:    info.phone
+                            }
+                        })
+                    });
+                } catch(_) {}
+            }
             window.location.href = './payment.html';
         });
 
         const tok = localStorage.getItem('maktabaToken');
         if (tok) {
             const mkBase = location.port === '3000' ? '' : 'http://localhost:3000';
+            // Show "Save to account" checkbox for signed-in users
+            const saveWrap = document.getElementById('save-addr-wrap');
+            if (saveWrap) saveWrap.style.display = '';
+
             fetch(mkBase + '/api/auth/me', { headers: { 'Authorization': 'Bearer ' + tok } })
                 .then(r => r.ok ? r.json() : null)
                 .then(data => {
@@ -628,9 +658,12 @@ function setupPaymentForm(paymentForm) {
     });
     updateMethod();
 
-    // Auto-fill saved payment for logged-in users
+    // Auto-fill saved payment + show "Save to account" for logged-in users
     const tok = localStorage.getItem('maktabaToken');
     if (tok) {
+        const savePayWrap = document.getElementById('save-pay-wrap');
+        if (savePayWrap) savePayWrap.style.display = '';
+
         const mkBase = location.port === '3000' ? '' : 'http://localhost:3000';
         fetch(mkBase + '/api/auth/me', { headers: { 'Authorization': 'Bearer ' + tok } })
             .then(r => r.ok ? r.json() : null)
@@ -744,6 +777,31 @@ function setupPaymentForm(paymentForm) {
 
         localStorage.setItem('paymentInfo', JSON.stringify({ method: methodInput.value }));
         localStorage.setItem('pendingOrderId', orderId);
+
+        // Optionally save payment details back to the user account
+        const savePayChk = document.getElementById('save-pay-checkbox');
+        if (savePayChk && savePayChk.checked && tok) {
+            try {
+                const mkBase2 = location.port === '3000' ? '' : 'http://localhost:3000';
+                const cardName = (document.getElementById('card-name') || {}).value || '';
+                const cardNum  = (document.getElementById('card-number') || {}).value || '';
+                const month    = (document.getElementById('card-month') || {}).value || '';
+                const year     = (document.getElementById('card-year') || {}).value || '';
+                await fetch(mkBase2 + '/api/auth/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+                    body: JSON.stringify({
+                        payment: {
+                            method:     methodInput.value,
+                            cardName:   cardName,
+                            cardNumber: cardNum.replace(/\D/g, '').slice(-4),
+                            expiry:     month && year ? month + '/' + year : ''
+                        }
+                    })
+                });
+            } catch(_) {}
+        }
+
         window.location.href = './order-success.html';
     });
 }
@@ -890,7 +948,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ["maktabaToken","maktabaUserName","maktabaUserEmail","maktabaUserRole","maktabaLoggedInUser"].forEach(function(k){ localStorage.removeItem(k); });
     try { localStorage.removeItem("cart"); localStorage.removeItem("favorites"); } catch(e) {}
     try { sessionStorage.setItem("mkFlashToast", "You have been logged out."); } catch (e) {}
-    location.href = location.pathname.indexOf("/pages/") !== -1 ? "../../home.html" : "./home.html";
+    location.href = "/home.html";
   }
   window.mkLogout = mkLogout;
 
@@ -898,9 +956,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function paintNav() {
     var dd = document.querySelector(".menu-dropdown");
     if (!dd) return;
-    var signinHref = location.pathname.indexOf("/pages/") !== -1
-      ? "../authentication(Ali)/signin.html"
-      : "./pages/authentication(Ali)/signin.html";
+    var signinHref = "/pages/authentication(Ali)/signin.html";
     var link = dd.querySelector("#mkAuthLink");
     if (!link) { link = document.createElement("a"); link.id = "mkAuthLink"; dd.appendChild(link); }
     if (authed()) {

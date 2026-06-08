@@ -510,6 +510,12 @@ function getFilteredBooks() {
     return sortBooks(books);
 }
 
+function bookStars(rating) {
+    const r = Math.max(0, Math.min(5, parseFloat(rating) || 0));
+    const full = Math.floor(r);
+    return '★'.repeat(full) + '☆'.repeat(5 - full);
+}
+
 /* Renders the full book grid — called on every filter/sort/search change */
 function renderBooks(booksToRender) {
     if (!container) return;
@@ -552,8 +558,8 @@ function renderBooks(booksToRender) {
         */
         card.innerHTML = `
           <div class="book-rating-row">
-            <span class="book-stars">★★★★★</span>
-            <span class="book-stars-count">(5)</span>
+            <span class="book-stars">${bookStars(book.averageRating)}</span>
+            <span class="book-stars-count">(${book.averageRating ? Number(book.averageRating).toFixed(1) : 'N/A'})</span>
           </div>
           <a href="${productUrl}" class="book-cover-wrap book-link">
             <div class="book-cover-stage">
@@ -613,6 +619,13 @@ function renderBooks(booksToRender) {
                 const wasAdded = toggleFavorite(book.title);
                 updateFavoriteButton(favBtn, book.title);
                 favBtn.setAttribute('aria-label', wasAdded ? 'Remove from favorites' : 'Add to favorites');
+                if (wasAdded) {
+                    try {
+                        const fc = JSON.parse(localStorage.getItem('mktFavData') || '{}');
+                        fc[book.title] = { image: book.image, author: book.author, price: book.price, genre: book.genre };
+                        localStorage.setItem('mktFavData', JSON.stringify(fc));
+                    } catch (_) {}
+                }
             });
         }
 

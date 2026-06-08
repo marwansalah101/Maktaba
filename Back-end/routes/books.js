@@ -11,6 +11,8 @@ router.get('/slug/:slug',          books.getBookBySlug);
 router.post('/',                   books.createBook);
 router.put('/title/:title',        books.updateBook);
 router.delete('/title/:title',     books.deleteBook);
+router.put('/id/:id',              books.updateBookById);
+router.delete('/id/:id',           books.deleteBookById);
 
 router.get('/:bookId/reviews',     reviews.getReviews);
 router.post('/:bookId/reviews',    reviews.addReview);

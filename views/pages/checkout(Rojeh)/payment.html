@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="/preloader.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment - Maktaba</title>
@@ -14,21 +15,36 @@
   <link rel="icon" type="image/svg+xml" sizes="64x64" href="../../resources/asset/Logo.svg">
 </head>
 <body class="checkout-page payment-page">
+    <!-- ── PRELOADER ────────────────────────────────────────── -->
+    <div id="mkt-preloader" aria-hidden="true" role="presentation">
+        <div class="mkt-pl-stage">
+            <div class="mkt-pl-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-label="Maktaba">
+                    <g transform="translate(7, 9) scale(0.196)">
+                        <path fill="#0d0d0d" d="M251.83,49.834v166.107H143.855l-12.735-12.444h-10.408l-12.735,12.444H0V49.834h18.321v140.789v14.905l14.049-4.98 c23.612-8.371,46.618-12.44,70.332-12.44c4.713,0,9.725,0.188,14.895,0.559l5.352,0.385v0.427l2.967-0.214l2.967,0.214v-0.427 l5.352-0.385c5.17-0.371,10.182-0.559,14.895-0.559c23.714,0,46.72,4.069,70.332,12.44l14.049,4.98v-14.905V49.834H251.83z M133.479,50.362v127.802c5.261-0.378,10.499-0.587,15.649-0.587c24.821,0,49.12,4.278,73.851,13.046V36.507 c-5.26-0.413-10.493-0.618-15.631-0.618C182.629,35.889,158.398,40.638,133.479,50.362z M28.851,190.623 c24.731-8.768,49.029-13.046,73.851-13.046c5.15,0,10.389,0.209,15.649,0.587V50.362c-24.92-9.725-49.15-14.474-73.869-14.474 c-5.138,0-10.371,0.205-15.631,0.618V190.623z"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="mkt-pl-rule"></div>
+            <p class="mkt-pl-wordmark">Maktaba</p>
+            <div class="mkt-pl-dots"><span></span><span></span><span></span></div>
+        </div>
+    </div>
   <nav class="navbar">
-    <div id="Maktaba"><a href="../../home.html"><h1>Maktaba</h1></a></div>
+    <div id="Maktaba"><a href="/home.html"><h1>Maktaba</h1></a></div>
     <ul class="navrbar-text">
-      <li><a href="../../home.html">Home</a></li>
-      <li><a href="../catalog(Marwan)/genres.html">Browse</a></li>
-      <li><a href="../catalog(Marwan)/collection.html">Collection</a></li>
-      <li><a href="../account(Mikha)/favorites.html">Favourites</a></li>
+      <li><a href="/home.html">Home</a></li>
+      <li><a href="/pages/catalog(Marwan)/genres.html">Browse</a></li>
+      <li><a href="/collection">Collection</a></li>
+      <li><a href="/pages/account(Mikha)/favorites.html">Favourites</a></li>
     </ul>
     <div class="navbar-icons">
       <a href="./add-to-cart.html"><span class="material-symbols-outlined">shopping_bag</span></a>
       <div class="menu-dropdown-wrapper" id="menuWrapper"><span class="material-symbols-outlined" id="menuBtn">menu</span></div>
       <div class="menu-dropdown" id="menuDropdown">
-        <a href="../home(fares)/AllAuthors.html">Authors</a>
-        <a href="../account(Mikha)/settings.html">Settings</a>
-        <a href="../account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
+        <a href="/pages/home(fares)/AllAuthors.html">Authors</a>
+        <a href="/pages/account(Mikha)/settings.html">Settings</a>
+        <a href="/pages/account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
       </div>
     </div>
   </nav>
@@ -117,6 +133,12 @@
             </div>
           </div>
 
+          <div id="save-pay-wrap" class="save-to-account-wrap" style="display:none;margin-bottom:12px;">
+            <label class="save-to-account-label">
+              <input type="checkbox" id="save-pay-checkbox">
+              Save payment details to my account
+            </label>
+          </div>
           <button class="checkout-btn" type="submit">Place Order</button>
           <a href="./checkout.html" class="checkout-back-link">&larr; Back to shipping</a>
         </form>
@@ -137,5 +159,6 @@
 
   <script src="../../data.js"></script>
   <script src="../../script.js"></script>
+  <script src="/preloader.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,7 +11,7 @@
 <body class="admin-dashboard-page book-body">
   <aside class="admin-sidebar">
     <div class="admin-brand">
-      <a id="Maktaba" href="../../home.html">Maktaba</a>
+      <a id="Maktaba" href="/home.html">Maktaba</a>
       <span>Admin Console</span>
     </div>
 
@@ -27,7 +27,7 @@
       <div class="header">
         <div>
           <h1>Books</h1>
-          <p>6 titles in the collection</p>
+          <p id="books-count">Loading…</p>
         </div>
 
         <button class="add-btn" id="addbookbtn" onclick="openAddBookModal()">+ Add Book</button>
@@ -36,7 +36,7 @@
       <input type="text" placeholder="Search books or authors..." class="search">
 
       <div class="table-container">
-        <table>
+        <table id="booksTable">
           <thead>
             <tr>
               <th>Cover</th>
@@ -49,91 +49,8 @@
               <th>Actions</th>
             </tr>
           </thead>
-
-          <tbody>
-            <tr>
-              <td><span class="color-box yellow"></span></td>
-              <td>Palace Walk</td>
-              <td>Naguib Mahfouz</td>
-              <td><span class="tag">Historical Fiction</span></td>
-              <td>1956</td>
-              <td class="price">$12.99</td>
-              <td>24</td>
-              <td>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </td>
-            </tr>
-
-            <tr>
-              <td><span class="color-box red"></span></td>
-              <td>The Cairo Trilogy</td>
-              <td>Naguib Mahfouz</td>
-              <td><span class="tag">Literary Fiction</span></td>
-              <td>1957</td>
-              <td class="price">$29.99</td>
-              <td>10</td>
-              <td>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </td>
-            </tr>
-
-            <tr>
-              <td><span class="color-box green"></span></td>
-              <td>The Prophet</td>
-              <td>Khalil Gibran</td>
-              <td><span class="tag">Poetry / Philosophy</span></td>
-              <td>1923</td>
-              <td class="price">$8.99</td>
-              <td>45</td>
-              <td>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </td>
-            </tr>
-
-            <tr>
-              <td><span class="color-box brown"></span></td>
-              <td>Broken Wings</td>
-              <td>Khalil Gibran</td>
-              <td><span class="tag">Romantic Fiction</span></td>
-              <td>1912</td>
-              <td class="price">$7.99</td>
-              <td>18</td>
-              <td>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </td>
-            </tr>
-
-            <tr>
-              <td><span class="color-box blue"></span></td>
-              <td>Season of Migration to the North</td>
-              <td>Tayeb Salih</td>
-              <td><span class="tag">Postcolonial</span></td>
-              <td>1966</td>
-              <td class="price">$11.99</td>
-              <td>7</td>
-              <td>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </td>
-            </tr>
-
-            <tr>
-              <td><span class="color-box purple"></span></td>
-              <td>Midaq Alley</td>
-              <td>Naguib Mahfouz</td>
-              <td><span class="tag">Social Realism</span></td>
-              <td>1947</td>
-              <td class="price">$10.99</td>
-              <td>31</td>
-              <td>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </td>
-            </tr>
+          <tbody id="books-tbody">
+            <tr><td colspan="8" style="text-align:center;padding:24px;color:#888;">Loading books…</td></tr>
           </tbody>
         </table>
       </div>
