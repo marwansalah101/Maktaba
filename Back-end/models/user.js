@@ -23,6 +23,37 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  // Saved shipping address (Settings → Address)
+  address: {
+    fullName: { type: String, trim: true, default: '' },
+    street:   { type: String, trim: true, default: '' },
+    city:     { type: String, trim: true, default: '' },
+    phone:    { type: String, trim: true, default: '' },
+  },
+  // Saved payment method — only a masked summary is ever stored
+  payment: {
+    method:   { type: String, trim: true, default: '' },
+    cardName: { type: String, trim: true, default: '' },
+    last4:    { type: String, trim: true, default: '' },
+    expiry:   { type: String, trim: true, default: '' },
+  },
+  // Liked books (stored by title, matching the catalogue identifiers)
+  favorites: {
+    type: [String],
+    default: [],
+  },
+  // Persisted shopping cart
+  cart: {
+    type: [{
+      _id:    false,
+      title:  String,
+      author: String,
+      image:  String,
+      price:  mongoose.Schema.Types.Mixed,
+      qty:    { type: Number, default: 1, min: 1 },
+    }],
+    default: [],
+  },
   role: {
     type: String,
     enum: ['user', 'admin'],

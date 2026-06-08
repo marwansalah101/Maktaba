@@ -18,6 +18,12 @@
 </head>
 
 <body class="favorites-page">
+<script>
+  if (!localStorage.getItem('maktabaToken')) {
+    sessionStorage.setItem('mkFlashToast', 'Please sign in to view your favourites.');
+    location.replace('../authentication(Ali)/signin.html');
+  }
+</script>
 
 
 
@@ -58,7 +64,6 @@
               </div>
               <div class="menu-dropdown" id="menuDropdown">
                   <a href="../home(fares)/AllAuthors.html">Authors</a>
-                  <a href="../authentication(Ali)/signup.html">Profile</a>
                   <a href="../account(Mikha)/settings.html">Settings</a>
                   <a href="../account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
               </div>

@@ -10,8 +10,9 @@ const orderItemSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-    userEmail: { type: String, required: true, lowercase: true, trim: true },
-    items:     [orderItemSchema],
+    orderNumber: { type: String, unique: true, sparse: true },
+    userEmail:   { type: String, required: true, lowercase: true, trim: true },
+    items:       [orderItemSchema],
     totalAmount: { type: Number, required: true },
     paymentMethod: {
         type: String,
@@ -30,6 +31,14 @@ const orderSchema = new mongoose.Schema({
         phone:    String
     },
     createdAt: { type: Date, default: Date.now }
+});
+
+// Auto-generate orderNumber before save if not already set
+orderSchema.pre("save", function (next) {
+    if (!this.orderNumber) {
+        this.orderNumber = "MKTBA-" + String(this._id).slice(-6).toUpperCase();
+    }
+    next();
 });
 
 module.exports = mongoose.model("Order", orderSchema);

@@ -20,6 +20,12 @@
 </head>
 
 <body class="Cart-page">
+<script>
+  if (!localStorage.getItem('maktabaToken')) {
+    sessionStorage.setItem('mkFlashToast', 'Please sign in to view your cart.');
+    location.replace('../authentication(Ali)/signin.html');
+  }
+</script>
   <nav class="navbar">
           <div id="Maktaba">
               <a href="../../home.html">
@@ -57,7 +63,6 @@
               </div>
               <div class="menu-dropdown" id="menuDropdown">
                   <a href="../home(fares)/AllAuthors.html">Authors</a>
-                  <a href="../authentication(Ali)/signup.html">Profile</a>
                   <a href="../account(Mikha)/settings.html">Settings</a>
                   <a href="../account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
               </div>

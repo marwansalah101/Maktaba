@@ -27,7 +27,6 @@
       <div class="menu-dropdown-wrapper" id="menuWrapper"><span class="material-symbols-outlined" id="menuBtn">menu</span></div>
       <div class="menu-dropdown" id="menuDropdown">
         <a href="../home(fares)/AllAuthors.html">Authors</a>
-        <a href="../authentication(Ali)/signup.html">Profile</a>
         <a href="../account(Mikha)/settings.html">Settings</a>
         <a href="../account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
       </div>
@@ -46,6 +45,12 @@
     <div class="checkout-layout">
       <section class="checkout-form-area">
         <h1 class="checkout-title">Shipping details</h1>
+
+        <div id="saved-addr-banner" class="saved-info-banner" style="display:none">
+          <span class="material-symbols-outlined">home</span>
+          <span class="saved-info-text"></span>
+          <button class="use-saved-btn">Use saved address</button>
+        </div>
 
         <div class="checkout-section">
           <p class="checkout-section-label">Contact Information</p>
@@ -101,6 +106,5 @@
 
   <script src="../../data.js"></script>
   <script src="../../script.js"></script>
-  <script src="./checkout.js"></script>
 </body>
 </html>

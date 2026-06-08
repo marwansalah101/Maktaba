@@ -41,10 +41,8 @@ const authController = require('./controllers/authController');
 /* ── Auth endpoint ─────────────────────────────────────────────────
    Credentials are stored in .env and checked server-side.
    Admin password should be bcrypt-hashed before production use.   */
-app.post('/api/auth/login',  authController.login);
-app.post('/api/auth/signup', authController.signup);
-app.get('/api/auth/me',authController.getUser);
-app.put('/api/auth/update-profile', authController.updateProfile);
+// Auth routes (login/signup/logout/me/profile/cart/favorites) are handled by
+// routes/Authroutes.js, mounted under /api/auth via routes.js below.
 
 /* ── AI Recommendation proxy ───────────────────────────────────────
    The OpenRouter API key stays server-side and is never sent to
