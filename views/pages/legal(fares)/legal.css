@@ -10,9 +10,10 @@
 .privacyPolicy-box {
     background-color: #312F2C; 
     text-align: center;
-    padding: 80px 20px;
+    padding: 140px 0 40px 0;
+    margin-bottom: 20px;
    
-    margin-bottom: 40px;
+
 }
 
 .privacyPolicy-box h1 {

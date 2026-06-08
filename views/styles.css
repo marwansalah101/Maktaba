@@ -540,6 +540,12 @@ height: 0px;
     color: #ffffff;
 }
 
+/* Ensure footer font matches home page footer across pages */
+.footer-bottom p,
+.footer-bottom-links li a {
+    font-family: 'Cormorant Garamond', serif;
+}
+
 .footer-bottom-links {
     display: flex;
     gap: 60px;              
