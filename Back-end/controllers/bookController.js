@@ -79,6 +79,12 @@ exports.createBook = async (req, res, next) => {
         }
 
         const { title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock } = req.body;
+        if (price !== undefined && (isNaN(Number(price)) || Number(price) < 0)) {
+            return res.status(422).json({ error: 'Price must be a non-negative number.' });
+        }
+        if (stock !== undefined && (isNaN(Number(stock)) || Number(stock) < 0 || !Number.isInteger(Number(stock)))) {
+            return res.status(422).json({ error: 'Stock must be a non-negative integer.' });
+        }
         const saved = await new Book({ title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock }).save();
         res.status(201).json(saved);
     } catch (err) {
@@ -90,6 +96,12 @@ exports.updateBook = async (req, res, next) => {
     try {
         const title = decodeURIComponent(req.params.title);
         const { title: newTitle, author, genre, year, image, pages, description, quote, price, language, ISBN, stock } = req.body;
+        if (price !== undefined && (isNaN(Number(price)) || Number(price) < 0)) {
+            return res.status(422).json({ error: 'Price must be a non-negative number.' });
+        }
+        if (stock !== undefined && (isNaN(Number(stock)) || Number(stock) < 0 || !Number.isInteger(Number(stock)))) {
+            return res.status(422).json({ error: 'Stock must be a non-negative integer.' });
+        }
         const update = { title: newTitle, author, genre, year, image, pages, description, quote, price, language, ISBN, stock };
         Object.keys(update).forEach(k => update[k] === undefined && delete update[k]);
 
@@ -113,6 +125,32 @@ exports.deleteBook = async (req, res, next) => {
         });
         if (!deleted) return res.status(404).json({ message: 'Book not found' });
         res.json({ message: 'Book deleted successfully' });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.deleteBookById = async (req, res, next) => {
+    try {
+        const deleted = await Book.findByIdAndDelete(req.params.id);
+        if (!deleted) return res.status(404).json({ message: 'Book not found' });
+        res.json({ message: 'Book deleted successfully' });
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.updateBookById = async (req, res, next) => {
+    try {
+        const { title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock } = req.body;
+        if (price !== undefined && (isNaN(Number(price)) || Number(price) < 0)) {
+            return res.status(422).json({ error: 'Price must be a non-negative number.' });
+        }
+        const update = { title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock };
+        Object.keys(update).forEach(k => update[k] === undefined && delete update[k]);
+        const updated = await Book.findByIdAndUpdate(req.params.id, update, { new: true });
+        if (!updated) return res.status(404).json({ message: 'Book not found' });
+        res.json(updated);
     } catch (err) {
         next(err);
     }

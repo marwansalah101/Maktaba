@@ -105,6 +105,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('main-ISBN').innerText         = selectedBook.ISBN;
     document.getElementById('main-genre').innerText        = selectedBook.genre;
 
+    /* ── Star rating ───────────────────────────────────────────── */
+    const ratingEl = document.querySelector('.product-rating');
+    if (ratingEl && selectedBook.averageRating != null) {
+        const r    = Math.max(0, Math.min(5, parseFloat(selectedBook.averageRating) || 0));
+        const full = Math.floor(r);
+        ratingEl.innerHTML = `${'★'.repeat(full)}${'☆'.repeat(5 - full)} <span>(${r.toFixed(1)})</span>`;
+    }
+
     /* ── Availability badge ────────────────────────────────────── */
     /* Use stock count (from DB) or fall back to the legacy available flag */
     const availabilityEl = document.getElementById('main-availability');
@@ -148,6 +156,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (idx === -1) {
             favs.push(selectedBook.title);
             saveFavorites(favs);
+            try {
+                const fc = JSON.parse(localStorage.getItem('mktFavData') || '{}');
+                fc[selectedBook.title] = { image: selectedBook.image, author: selectedBook.author, price: selectedBook.price, genre: selectedBook.genre };
+                localStorage.setItem('mktFavData', JSON.stringify(fc));
+            } catch (_) {}
             updateHeartUI(true);
             // Pop animation
             favoriteIcon.style.transform = 'scale(1.5)';
@@ -283,80 +296,110 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    /* ── Reviews ───────────────────────────────────────────────────
-       Per-book reviews are stored in localStorage under
-       'reviews__<title>'. Static reviews are appended so there is
-       always some content even for new books.
+    /* ── Reviews — loaded from DB, saved to DB (requires sign-in) ──
+       Falls back to two static seed reviews when no DB reviews exist.
     ──────────────────────────────────────────────────────────────── */
-    const REVIEW_KEY  = 'reviews__' + selectedBook.title;
-    const getReviews  = ()  => JSON.parse(localStorage.getItem(REVIEW_KEY) || '[]');
-    const saveReviews = (r) => localStorage.setItem(REVIEW_KEY, JSON.stringify(r));
-
     const STATIC_REVIEWS = [
-        { author: 'Elena M.',  rating: 5, text: "Absolutely loved this! The story pulled me in from the very first page and didn't let go until the end.", date: 'October 12, 2025' },
-        { author: 'David K.',  rating: 4, text: 'Great read overall. The characters were well-developed, though the middle dragged a bit. Still very solid.', date: 'September 28, 2025' }
+        { reviewer: 'Elena M.',  rating: 5, comment: "Absolutely loved this! The story pulled me in from the very first page and didn't let go until the end.", createdAt: '2025-10-12' },
+        { reviewer: 'David K.',  rating: 4, comment: 'Great read overall. The characters were well-developed, though the middle dragged a bit. Still very solid.', createdAt: '2025-09-28' }
     ];
 
-    function renderReviews() {
+    function fmtDate(iso) {
+        try { return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); }
+        catch(_) { return iso || ''; }
+    }
+
+    async function fetchAndRenderReviews() {
         const grid = document.getElementById('reviews-grid');
         if (!grid) return;
-        const all = [...getReviews(), ...STATIC_REVIEWS];
+        let dbReviews = [];
+        if (selectedBook._id) {
+            try {
+                const res = await fetch(`/books/${selectedBook._id}/reviews`);
+                if (res.ok) dbReviews = await res.json();
+            } catch(_) {}
+        }
+        const all = dbReviews.length > 0 ? dbReviews : STATIC_REVIEWS;
         grid.innerHTML = all.map(r => {
-            const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+            const rating = r.rating || 5;
+            const stars  = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+            const name   = r.reviewer || r.author || 'Anonymous';
+            const text   = r.comment  || r.text   || '';
+            const date   = fmtDate(r.createdAt || r.date);
             return `
                 <div class="review-card">
                     <div class="review-header">
-                        <span class="review-author">${r.author}</span>
+                        <span class="review-author">${name}</span>
                         <span class="review-rating">${stars}</span>
                     </div>
-                    <p class="review-text">${r.text}</p>
-                    <div class="review-date">${r.date}</div>
+                    <p class="review-text">${text}</p>
+                    <div class="review-date">${date}</div>
                 </div>`;
         }).join('');
     }
 
-    renderReviews();
+    fetchAndRenderReviews();
 
-    /* ── Write a Review form toggle ─────────────────────────────── */
+    /* ── Write a Review — requires sign-in ──────────────────────── */
     const writeReviewBtn  = document.querySelector('.write-review-btn');
     const reviewFormPanel = document.getElementById('review-form-panel');
 
     if (writeReviewBtn && reviewFormPanel) {
-        // Toggle the form panel open / closed
         writeReviewBtn.addEventListener('click', () => {
+            const token = localStorage.getItem('maktabaToken');
+            if (!token) {
+                document.getElementById('review-form-error').textContent =
+                    'Please sign in to write a review.';
+                reviewFormPanel.classList.add('open');
+                writeReviewBtn.textContent = 'Cancel';
+                return;
+            }
             const isOpen = reviewFormPanel.classList.toggle('open');
             writeReviewBtn.textContent = isOpen ? 'Cancel' : 'Write a Review';
+            if (isOpen) document.getElementById('review-form-error').textContent = '';
         });
 
-        // Submit the review
-        document.getElementById('submit-review-btn').addEventListener('click', () => {
+        document.getElementById('submit-review-btn').addEventListener('click', async () => {
             const text        = document.getElementById('review-text-input').value.trim();
             const ratingInput = document.querySelector('input[name="rating"]:checked');
             const rating      = ratingInput ? parseInt(ratingInput.value) : 5;
+            const errEl       = document.getElementById('review-form-error');
 
-            if (!text) {
-                document.getElementById('review-form-error').textContent =
-                    'Please write your review before submitting.';
+            const token = localStorage.getItem('maktabaToken');
+            if (!token) {
+                errEl.textContent = 'Please sign in to submit a review.';
                 return;
             }
-            document.getElementById('review-form-error').textContent = '';
+            if (!text) {
+                errEl.textContent = 'Please write your review before submitting.';
+                return;
+            }
+            if (!selectedBook._id) {
+                errEl.textContent = 'Cannot submit review — book ID not found.';
+                return;
+            }
+            errEl.textContent = '';
 
-            const reviews = getReviews();
-            reviews.unshift({
-                author: 'You',
-                rating,
-                text,
-                date: new Date().toLocaleDateString('en-US', {
-                    year: 'numeric', month: 'long', day: 'numeric'
-                })
-            });
-            saveReviews(reviews);
-            renderReviews();
+            const userName = localStorage.getItem('maktabaUserName') || 'Reader';
 
-            // Reset form
-            document.getElementById('review-text-input').value = '';
-            reviewFormPanel.classList.remove('open');
-            writeReviewBtn.textContent = 'Write a Review';
+            try {
+                const res = await fetch(`/books/${selectedBook._id}/reviews`, {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body:    JSON.stringify({ rating, reviewer: userName, comment: text })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    errEl.textContent = data.error || 'Could not submit review.';
+                    return;
+                }
+                document.getElementById('review-text-input').value = '';
+                reviewFormPanel.classList.remove('open');
+                writeReviewBtn.textContent = 'Write a Review';
+                await fetchAndRenderReviews();
+            } catch(_) {
+                errEl.textContent = 'Network error — please try again.';
+            }
         });
     }
 

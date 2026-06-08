@@ -212,7 +212,23 @@ exports.login = async (req, res, next) => {
     const adminPassword =  process.env.ADMIN_PASSWORD || '';
 
     if (adminEmail && normalizedEmail === adminEmail && password === adminPassword) {
-      return res.json({ success: true, role: 'admin', email: adminEmail });
+      const adminToken = jwt.sign(
+        { id: 'env-admin', role: 'admin' },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      );
+      res.cookie('token', adminToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      return res.json({
+        success: true,
+        token: adminToken,
+        role: 'admin',
+        user: { id: 'env-admin', name: 'Admin', email: adminEmail, role: 'admin' }
+      });
     }
 
     // ── 4. Nothing matched ───────────────────────────────────────────────────
@@ -280,7 +296,7 @@ exports.recommend = async (req, res, next) => {
         'X-Title':       'Maktaba',
       },
       body: JSON.stringify({
-        model:      'openai/gpt-oss-120b',
+        model:      'openai/gpt-4o-mini',
         stream:     true,
         max_tokens: 600,
         messages: [

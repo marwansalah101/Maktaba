@@ -1623,6 +1623,8 @@
     border-bottom: 1px solid #d9d0c4;
     flex-wrap: wrap;
     gap: 12px;
+    position: relative;
+    z-index: 50;
 }
 .collection-count {
     font-family: 'Jost', sans-serif;
@@ -1676,7 +1678,7 @@
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(49, 47, 44, 0.1);
     min-width: 185px;
-    z-index: 500;
+    z-index: 1000;
     overflow: hidden;
 }
 .sort-panel.open { display: flex; }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,7 +11,7 @@
 <body class="admin-dashboard-page authors-body">
   <aside class="admin-sidebar">
     <div class="admin-brand">
-      <a id="Maktaba" href="../../home.html">Maktaba</a>
+      <a id="Maktaba" href="/home.html">Maktaba</a>
       <span>Admin Console</span>
     </div>
 
@@ -27,7 +27,7 @@
       <div class="header">
         <div>
           <h1>Authors</h1>
-          <p>3 registered authors</p>
+          <p id="authors-count">Loading…</p>
         </div>
 
         <button class="add-btn" onclick="openAddAuthorModal()">+ Add Author</button>
@@ -35,60 +35,8 @@
 
       <input type="text" placeholder="Search authors..." class="search">
 
-      <div class="cards">
-        <div class="card">
-          <div class="avatar">N</div>
-
-          <div class="info">
-            <h3>Naguib Mahfouz</h3>
-            <p class="sub">Egyptian - 1911</p>
-            <p class="desc">Nobel Prize winner, father of modern Arabic literature.</p>
-
-            <div class="bottom">
-              <span class="books">3 books</span>
-              <div>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="avatar">K</div>
-
-          <div class="info">
-            <h3>Khalil Gibran</h3>
-            <p class="sub">Lebanese - 1883</p>
-            <p class="desc">Poet, philosopher, and visual artist known for The Prophet.</p>
-
-            <div class="bottom">
-              <span class="books">2 books</span>
-              <div>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="avatar">T</div>
-
-          <div class="info">
-            <h3>Tayeb Salih</h3>
-            <p class="sub">Sudanese - 1929</p>
-            <p class="desc">Author of Season of Migration to the North, a post-colonial classic.</p>
-
-            <div class="bottom">
-              <span class="books">1 book</span>
-              <div>
-                <button class="edit">Edit</button>
-                <button class="delete">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="cards" id="authors-cards">
+        <p style="padding:24px;color:#888;">Loading authors…</p>
       </div>
     </div>
 

@@ -288,22 +288,23 @@ function renderFavoritesPage() {
         list.innerHTML = `
             <div class="favorites-empty">
                 <p>You don't have any favorites yet.</p>
-                <a class="favorites-empty-link" href="../catalog(Marwan)/collection.html">Browse the collection</a>
+                <a class="favorites-empty-link" href="/collection">Browse the collection</a>
             </div>
         `;
         return;
     }
 
     list.innerHTML = favoriteBooks.map(book => {
-        const image = resolveAssetPath(book.image || book.cover || '../../resources/img/book-placeholder.png');
+        const rawImg = book.image || book.cover || '';
+        const image  = rawImg ? resolveAssetPath(rawImg) : '';
         const author = book.author || 'Unknown author';
         const price = Number(book.price) ? Number(book.price).toFixed(2) : String(book.price || '0.00');
         const category = book.genre || book.category || 'General';
 
           return `
             <div class="favorite-item" data-title="${book.title}">
-                <a href="../product(Marwan)/product.html?title=${encodeURIComponent(book.title)}" class="favorite-left" style="text-decoration:none;">
-                    <img src="${image}" alt="${book.title}">
+                <a href="/pages/product(Marwan)/product.html?title=${encodeURIComponent(book.title)}" class="favorite-left" style="text-decoration:none;">
+                    <img src="${image}" alt="${book.title}"${!image ? ' style="visibility:hidden"' : ''} onerror="this.style.visibility='hidden'">
                     <div class="favorite-info">
                         <span class="favorite-category">${category}</span>
                         <h3>${book.title}</h3>

@@ -367,7 +367,7 @@ class AllAuthorsPage {
         const bookCount = author.books ? author.books.length : 0;
 
         card.innerHTML = `
-            <a href="../catalog(Marwan)/authors.html?slug=${authorIdentifier}">
+            <a href="/pages/catalog(Marwan)/authors.html?slug=${authorIdentifier}">
                 <div class="author-grid-image" style="background-image: url('${imagePath}');">
                     <div class="author-grid-overlay">
                         <div class="author-grid-stats">

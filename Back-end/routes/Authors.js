@@ -18,11 +18,17 @@ const storage = multer.diskStorage({
   },
 });
 
+const ALLOWED_IMG_EXTS = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
     if (!file.mimetype.startsWith('image/')) {
       return cb(new Error('Only image files are allowed for profile images.'));
+    }
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!ALLOWED_IMG_EXTS.includes(ext)) {
+      return cb(new Error(`Unsupported image format. Allowed: ${ALLOWED_IMG_EXTS.join(', ')}`));
     }
     cb(null, true);
   },

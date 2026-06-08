@@ -633,6 +633,23 @@
 }
 .saved-info-banner .use-saved-btn:hover { background: #4F6A4A; }
 
+.save-to-account-wrap { margin-bottom: 12px; }
+.save-to-account-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: #312F2C;
+    cursor: pointer;
+}
+.save-to-account-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #312F2C;
+    cursor: pointer;
+}
+
 .checkout-section {
     margin-bottom: 28px;
 }
