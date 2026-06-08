@@ -302,23 +302,22 @@ function renderFavoritesPage() {
 
           return `
             <div class="favorite-item" data-title="${book.title}">
-                <div class="favorite-left">
+                <a href="../product(Marwan)/product.html?title=${encodeURIComponent(book.title)}" class="favorite-left" style="text-decoration:none;">
                     <img src="${image}" alt="${book.title}">
                     <div class="favorite-info">
                         <span class="favorite-category">${category}</span>
                         <h3>${book.title}</h3>
                         <p>${author}</p>
                     </div>
-                </div>
+                </a>
                 <div class="favorite-right">
-                    <span class="favorite-price">&euro;${price}</span>
+                    <span class="favorite-price" style="font-family: 'Lora', serif;">${price} L.E</span>
                     <button class="favorite-bag-btn" data-title="${book.title}" data-author="${author}" data-price="${price}" data-image="${image}" aria-label="Add ${book.title} to cart">
-                        <span class="material-symbols-outlined">shopping_bag</span>
+                        <span class="material-symbols-outlined" style="color: black !important;">shopping_bag</span>
                     </button>
-                    <button class="favorite-heart-btn${isFavorite(book.title) ? ' active' : ''}" data-title="${book.title}" aria-label="Remove ${book.title} from favorites">
-                        <span class="material-symbols-outlined">favorite</span>
+                    <button class="favorite-remove-btn" type="button" data-title="${book.title}" aria-label="Remove from favorites">
+                        <span class="material-symbols-outlined">close</span>
                     </button>
-                    <button class="favorite-remove-btn" type="button" data-title="${book.title}">Remove</button>
                 </div>
             </div>
         `;

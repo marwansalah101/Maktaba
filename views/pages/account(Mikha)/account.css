@@ -8,8 +8,9 @@
 }
 
 .favorites-wrapper {
-    max-width: 980px;
-    margin: 0 auto;
+    max-width: 900px;
+    margin: 0;
+    margin-left: 5%;
     padding: 100px 32px 70px;
 }
 
@@ -302,21 +303,27 @@
 }
 
 .favorite-remove-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
-    border: 1px solid #6c4b46;
-    color: #6c4b46;
-    border-radius: 999px;
-    padding: 10px 16px;
+    color: #605c55b5;
     cursor: pointer;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.9rem;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition: 0.25s ease;
 }
 
 .favorite-remove-btn:hover {
-    background: #6c4b46;
-    color: #fff;
-    transform: translateY(-1px);
+    background: #eeddcc;
+    color: #ef5b5b;
+    transform: scale(1.06);
+}
+
+.favorite-remove-btn .material-symbols-outlined {
+    font-size: 24px;
 }
 
 .favorites-empty {

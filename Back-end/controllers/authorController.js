@@ -24,10 +24,52 @@ exports.getAllAuthors = async (req, res, next) => {
     }
 };
 
+function nameToSlug(s) {
+    return String(s || '')
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
 exports.getAuthorBySlug = async (req, res, next) => {
     try {
-        const author = await Author.findOne({ slug: req.params.slug }).populate('books');
-        if (!author) return res.status(404).json({ message: 'Author not found' });
+        let author = await Author.findOne({ slug: req.params.slug }).populate('books');
+
+        if (!author) {
+            // Fallback 1: match any author whose normalized name equals the incoming slug.
+            // Fixes mismatches like "j-k-rowling" vs stored "jk-rowling" and
+            // "gabriel-garcia-marquez" vs stored slug with different accent handling.
+            const all = await Author.find({}, 'name slug');
+            const hit = all.find(a => nameToSlug(a.name) === req.params.slug);
+            if (hit) {
+                author = await Author.findById(hit._id).populate('books');
+            }
+        }
+
+        if (!author) {
+            // Fallback 2: no Author document at all — build a minimal response from the
+            // Book collection using the same slug function so the page still shows books.
+            const allBooks = await Book.find({});
+            const authorBooks = allBooks.filter(b => nameToSlug(b.author) === req.params.slug);
+            if (authorBooks.length > 0) {
+                const authorName = authorBooks[0].author;
+                return res.json({
+                    name: authorName,
+                    slug: req.params.slug,
+                    stats: '',
+                    aboutTitle: `About ${authorName}`,
+                    aboutText: 'No biography available.',
+                    bannerImg: '',
+                    profileImg: '',
+                    books: authorBooks,
+                    _synthetic: true,
+                });
+            }
+            return res.status(404).json({ message: 'Author not found' });
+        }
+
         res.json(author);
     } catch (err) {
         next(err);

@@ -783,9 +783,11 @@ window.addEventListener('scroll', function () {
    books row, and the recent books grid from authorData.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* Converts a string to a URL-safe slug (e.g. "Ernest Hemingway" → "ernest-hemingway") */
+/* Converts a string to a URL-safe slug (e.g. "Gabriel García Márquez" → "gabriel-garcia-marquez") */
 function normalizeSlug(value) {
     return String(value || '')
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
