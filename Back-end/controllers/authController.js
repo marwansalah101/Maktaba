@@ -1,23 +1,121 @@
 const User = require('../models/User');
 const jwt  = require('jsonwebtoken');
-// Update profile
-exports.updateProfile = async (req, res, next) => {
+const EMAIL_RX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// @desc  Full profile of the logged-in user (Settings, cart, favorites)
+// @route GET /api/auth/me   (protect)
+exports.getMe = async (req, res, next) => {
   try {
-    const { email, name, phone } = req.body || {};
-    if (!email) return res.status(400).json({ error: 'Email is required.' });
-
-    const user = await User.findOneAndUpdate(
-      { email: email.trim().toLowerCase() },
-      { name, phone },
-      { new: true }
-    );
-
+    const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found.' });
-
-    res.json({ success: true, user: { name: user.name, email: user.email } });
+    res.status(200).json({ success: true, user });
   } catch (err) {
     next(err);
   }
+};
+
+// @desc  Update the logged-in user's own profile (name/email/phone/password/address/payment)
+// @route PUT /api/auth/profile   (protect)
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const { name, email, phone, password, address, payment } = req.body || {};
+    const user = await User.findById(req.user.id).select('+password');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    if (name !== undefined) {
+      if (String(name).trim().length < 2) return res.status(422).json({ error: 'Name must be at least 2 characters.' });
+      user.name = String(name).trim();
+    }
+    if (email !== undefined) {
+      const normalized = String(email).trim().toLowerCase();
+      if (!EMAIL_RX.test(normalized)) return res.status(422).json({ error: 'Please provide a valid email.' });
+      const clash = await User.findOne({ email: normalized, _id: { $ne: user._id } });
+      if (clash) return res.status(409).json({ error: 'Email is already in use.' });
+      user.email = normalized;
+    }
+    if (phone !== undefined) user.phone = String(phone).trim();
+
+    if (address && typeof address === 'object') {
+      user.address = {
+        fullName: String(address.fullName || '').trim(),
+        street:   String(address.street   || '').trim(),
+        city:     String(address.city     || '').trim(),
+        phone:    String(address.phone    || '').trim(),
+      };
+    }
+    if (payment && typeof payment === 'object') {
+      // Never store the full PAN or CVV — only a masked summary.
+      const digits = String(payment.cardNumber || payment.last4 || '').replace(/\D/g, '');
+      user.payment = {
+        method:   String(payment.method   || '').trim(),
+        cardName: String(payment.cardName || '').trim(),
+        expiry:   String(payment.expiry   || '').trim(),
+        last4:    digits ? digits.slice(-4) : '',
+      };
+    }
+    if (password && String(password).trim().length >= 8) {
+      user.password = String(password).trim(); // hashed by pre-save hook
+    }
+
+    await user.save();
+    const safe = user.toObject(); delete safe.password;
+    res.json({ success: true, user: safe });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc  Logout — clears the auth cookie
+// @route POST /api/auth/logout
+exports.logout = (req, res) => {
+  res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+  res.status(200).json({ success: true, message: 'Logged out.' });
+};
+
+// @desc  Get / replace the logged-in user's cart
+// @route GET|PUT /api/auth/cart   (protect)
+exports.getCart = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select('cart');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.json({ success: true, cart: user.cart || [] });
+  } catch (err) { next(err); }
+};
+
+exports.updateCart = async (req, res, next) => {
+  try {
+    const items = Array.isArray(req.body?.cart) ? req.body.cart : [];
+    const cart = items.filter(i => i && i.title).map(i => ({
+      title:  String(i.title),
+      author: String(i.author || ''),
+      image:  String(i.image  || ''),
+      price:  i.price,
+      qty:    Math.max(1, parseInt(i.qty, 10) || 1),
+    }));
+    const user = await User.findByIdAndUpdate(req.user.id, { cart }, { new: true }).select('cart');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.json({ success: true, cart: user.cart });
+  } catch (err) { next(err); }
+};
+
+// @desc  Get / replace the logged-in user's favorites (book titles)
+// @route GET|PUT /api/auth/favorites   (protect)
+exports.getFavorites = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select('favorites');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.json({ success: true, favorites: user.favorites || [] });
+  } catch (err) { next(err); }
+};
+
+exports.updateFavorites = async (req, res, next) => {
+  try {
+    const raw = Array.isArray(req.body?.favorites) ? req.body.favorites : [];
+    const favorites = [...new Set(raw.map(t => String(t)).filter(Boolean))];
+    const user = await User.findByIdAndUpdate(req.user.id, { favorites }, { new: true }).select('favorites');
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+    res.json({ success: true, favorites: user.favorites });
+  } catch (err) { next(err); }
 };
 
 // ── Helper: sign JWT and send response ───────────────────────────────────────

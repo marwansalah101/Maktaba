@@ -1,25 +1,96 @@
 const express = require("express");
 const router  = express.Router();
 const Order   = require("../models/Order");
-const Cart    = require("../models/Cart");
+const { protect } = require("../middlewares/auth");
 
-function getUserEmail(req) {
-    return (req.headers["x-user-email"] || "").trim().toLowerCase();
+function mapPaymentMethod(method) {
+    if (!method) return "credit_card";
+    const m = String(method).toLowerCase();
+    if (m.includes("cash")) return "cash_on_delivery";
+    if (m.includes("debit")) return "debit_card";
+    return "credit_card";
 }
 
-function requireEmail(req, res, next) {
-    const email = getUserEmail(req);
-    if (!email) return res.status(401).json({ error: "Not logged in." });
-    req.userEmail = email;
-    next();
-}
-
-// POST /orders/create — place an order from the current cart
-router.post("/create", requireEmail, async (req, res) => {
+// POST / — place an order from the checkout flow
+router.post("/", async (req, res) => {
     try {
-        const { paymentMethod, shippingAddress } = req.body;
+        const { customerInfo, items, shippingAddress, paymentInfo, orderSummary } = req.body;
 
-        const cart = await Cart.findOne({ userEmail: req.userEmail });
+        if (!customerInfo || !items || !Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({ error: "Missing required order data." });
+        }
+
+        // Prefer JWT email over form email so orders are always linked to the account
+        let userEmail = (customerInfo.email || "").toLowerCase().trim();
+        const authHeader = req.headers.authorization;
+        if (authHeader && authHeader.startsWith("Bearer ")) {
+            try {
+                const jwt = require("jsonwebtoken");
+                const decoded = jwt.verify(authHeader.split(" ")[1], process.env.JWT_SECRET);
+                const User = require("../models/user");
+                const user = await User.findById(decoded.id).select("email");
+                if (user) userEmail = user.email.toLowerCase();
+            } catch (e) { /* use form email */ }
+        }
+
+        if (!userEmail) return res.status(400).json({ error: "An email is required to place an order." });
+
+        const addr = shippingAddress || {};
+        const info = customerInfo || {};
+        const summary = orderSummary || {};
+
+        const order = await Order.create({
+            userEmail,
+            items: items.map(item => ({
+                bookId:   item.bookId   || undefined,
+                title:    item.title    || "",
+                author:   item.author   || "",
+                price:    parseFloat(item.price)    || 0,
+                image:    item.image    || "",
+                quantity: parseInt(item.quantity || item.qty || 1, 10)
+            })),
+            totalAmount: parseFloat(summary.total) || 0,
+            paymentMethod: mapPaymentMethod(paymentInfo && paymentInfo.method),
+            shippingAddress: {
+                fullName: [info.firstName, info.lastName].filter(Boolean).join(" "),
+                address:  [addr.street, addr.number].filter(Boolean).join(" "),
+                city:     addr.place || addr.city || "",
+                phone:    info.phone || ""
+            }
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Order created successfully",
+            orderNumber: "MKTBA-" + String(order._id).slice(-6).toUpperCase(),
+            orderId: order._id
+        });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// GET /mine — logged-in user's order history (JWT required)
+router.get("/mine", protect, async (req, res) => {
+    try {
+        const orders = await Order.find({ userEmail: req.user.email.toLowerCase() })
+            .sort({ createdAt: -1 });
+        res.json({ success: true, orders });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// POST /create — legacy endpoint (x-user-email header, kept for compatibility)
+router.post("/create", async (req, res) => {
+    try {
+        const email = (req.headers["x-user-email"] || "").trim().toLowerCase();
+        if (!email) return res.status(401).json({ error: "Not logged in." });
+
+        const { paymentMethod, shippingAddress } = req.body;
+        const Cart = require("../models/Cart");
+
+        const cart = await Cart.findOne({ userEmail: email });
         if (!cart || cart.items.length === 0)
             return res.status(400).json({ error: "Cart is empty." });
 
@@ -28,36 +99,37 @@ router.post("/create", requireEmail, async (req, res) => {
         );
 
         const order = await Order.create({
-            userEmail: req.userEmail,
+            userEmail: email,
             items: cart.items,
             totalAmount,
             paymentMethod: paymentMethod || "credit_card",
             shippingAddress
         });
 
-        // Clear the cart after order is placed
-        await Cart.findOneAndUpdate({ userEmail: req.userEmail }, { items: [] });
-
+        await Cart.findOneAndUpdate({ userEmail: email }, { items: [] });
         res.json({ success: true, orderId: order._id });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// GET /orders/history — get all past orders for the user
-router.get("/history", requireEmail, async (req, res) => {
+// GET /history — legacy endpoint (x-user-email header)
+router.get("/history", async (req, res) => {
     try {
-        const orders = await Order.find({ userEmail: req.userEmail }).sort({ createdAt: -1 });
+        const email = (req.headers["x-user-email"] || "").trim().toLowerCase();
+        if (!email) return res.status(401).json({ error: "Not logged in." });
+        const orders = await Order.find({ userEmail: email }).sort({ createdAt: -1 });
         res.json({ success: true, orders });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// GET /orders/:id — single order details
-router.get("/:id", requireEmail, async (req, res) => {
+// GET /:id — single order by ID
+router.get("/:id", async (req, res) => {
     try {
-        const order = await Order.findOne({ _id: req.params.id, userEmail: req.userEmail });
+        const email = (req.headers["x-user-email"] || "").trim().toLowerCase();
+        const order = await Order.findOne({ _id: req.params.id, userEmail: email });
         if (!order) return res.status(404).json({ error: "Order not found." });
         res.json({ success: true, order });
     } catch (err) {

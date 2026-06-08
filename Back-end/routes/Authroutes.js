@@ -1,74 +1,30 @@
 const express = require('express');
 const router  = express.Router();
-const { signup, login, getUser, recommend } = require('../controllers/authController');
+const ctrl = require('../controllers/authController');
+const { protect } = require('../middlewares/auth');
 
-// POST /api/auth/signup
-router.post('/signup', signup);
+// ── Public auth ──────────────────────────────────────────────────────────────
+router.post('/signup',    ctrl.signup);
+router.post('/login',     ctrl.login);
+router.post('/logout',    ctrl.logout);
+router.post('/recommend', ctrl.recommend);
 
-// POST /api/auth/login
-router.post('/login', login);
+// ── Logged-in user's own data (session via JWT) ─────────────────────────────
+router.get('/me',         protect, ctrl.getMe);
+router.put('/profile',    protect, ctrl.updateProfile);
+router.get('/cart',       protect, ctrl.getCart);
+router.put('/cart',       protect, ctrl.updateCart);
+router.get('/favorites',  protect, ctrl.getFavorites);
+router.put('/favorites',  protect, ctrl.updateFavorites);
 
-// POST /api/auth/recommend
-router.post('/recommend', recommend);
+// ── Lookup ───────────────────────────────────────────────────────────────────
+router.get('/users/:id',  ctrl.getUser);
 
-// GET /api/auth/users/:id
-router.get('/users/:id', getUser);
-
-// GET /api/auth/users
 router.get('/users', async (req, res, next) => {
   try {
     const User  = require('../models/User');
-    const users = await User.find().select('-__v');
+    const users = await User.find().select('-__v -password');
     res.status(200).json({ success: true, count: users.length, users });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// GET /api/auth/profile
-router.get('/profile', async (req, res, next) => {
-  try {
-    const User  = require('../models/User');
-    const email = (req.headers['x-user-email'] || '').trim().toLowerCase();
-    if (!email) return res.status(400).json({ error: 'Email header missing.' });
-
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: 'User not found.' });
-
-    res.json({ name: user.name, email: user.email });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// PUT /api/auth/update
-router.put('/update', async (req, res, next) => {
-  try {
-    const User  = require('../models/User');
-    const email = (req.headers['x-user-email'] || '').trim().toLowerCase();
-    if (!email) return res.status(400).json({ error: 'Email header missing.' });
-
-    const { name, email: newEmail, password } = req.body || {};
-
-    const updateFields = {};
-    if (name)     updateFields.name  = name.trim();
-    if (newEmail) updateFields.email = newEmail.trim().toLowerCase();
-
-    let user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: 'User not found.' });
-
-    if (updateFields.name)  user.name  = updateFields.name;
-    if (updateFields.email) user.email = updateFields.email;
-
-    if (password && password.trim().length >= 8) {
-      user.password = password.trim();
-      user = await user.save();
-    } else {
-      await User.updateOne({ email }, { $set: updateFields });
-      user = await User.findOne({ email: updateFields.email || email });
-    }
-
-    res.json({ success: true, name: user.name, email: user.email });
   } catch (err) {
     next(err);
   }

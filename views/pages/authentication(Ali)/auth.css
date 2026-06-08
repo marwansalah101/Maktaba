@@ -425,19 +425,28 @@
 }
 .card-footer a:hover { border-bottom-color:var(--espresso); }
 
-/* ── Compact density for the taller SIGN-UP form (fits 100% zoom) ─── */
-.auth-shell--signup .auth-panel { padding-top:30px; padding-bottom:30px; }
-.auth-shell--signup .signup-card-brand { margin-bottom:13px; }
-.auth-shell--signup .signup-card-title { font-size:27px; }
-.auth-shell--signup .signup-card-subtitle { margin-bottom:16px; }
-.auth-shell--signup .form-group { margin-bottom:11px; }
-.auth-shell--signup .form-input { padding-top:11px; padding-bottom:11px; }
-.auth-shell--signup .password-strength { margin-top:0; }
+/* ── Fluid vertical rhythm — forms scale with viewport height so they
+      never need an internal scrollbar (handles Windows display scaling). ── */
+.auth-panel { padding-top:clamp(24px, 4.4vh, 42px); padding-bottom:clamp(24px, 4.4vh, 42px); }
+.signin-card-brand, .signup-card-brand { margin-bottom:clamp(11px, 2vh, 20px); }
+.signin-card-subtitle, .signup-card-subtitle { margin-bottom:clamp(12px, 2.6vh, 26px); }
+.form-group { margin-bottom:clamp(10px, 2.1vh, 17px); }
+.form-input { padding-top:clamp(10px, 1.5vh, 13px); padding-bottom:clamp(10px, 1.5vh, 13px); }
+.or-divider { margin:clamp(10px, 2vh, 22px) 0; }
+.card-footer { margin-top:clamp(12px, 2.3vh, 24px); }
+
+/* Sign-up is the tall one — scale it down harder. */
+.auth-shell--signup .auth-panel { padding-top:clamp(16px, 3vh, 30px); padding-bottom:clamp(16px, 3vh, 30px); }
+.auth-shell--signup .signup-card-brand { margin-bottom:clamp(7px, 1.5vh, 13px); }
+.auth-shell--signup .signup-card-title { font-size:clamp(22px, 3.2vh, 27px); }
+.auth-shell--signup .form-group { margin-bottom:clamp(5px, 1.3vh, 11px); gap:clamp(4px, 0.8vh, 7px); }
+.auth-shell--signup .form-input { padding-top:clamp(8px, 1.3vh, 12px); padding-bottom:clamp(8px, 1.3vh, 12px); }
 .auth-shell--signup .form-hint { font-size:11px; line-height:1.4; margin-top:-2px; }
-.auth-shell--signup .auth-terms { margin:2px 0 13px; }
-.auth-shell--signup .or-divider { margin:14px 0; }
-.auth-shell--signup .btn-primary { padding:13px; }
-.auth-shell--signup .card-footer { margin-top:14px; }
+.auth-shell--signup .auth-terms { margin:2px 0 clamp(7px, 1.5vh, 13px); }
+.auth-shell--signup .or-divider { margin:clamp(7px, 1.5vh, 14px) 0; }
+.auth-shell--signup .btn-primary { padding:clamp(11px, 1.6vh, 13px); }
+.auth-shell--signup .social-logins .btn-social { height:clamp(40px, 5.4vh, 46px); }
+.auth-shell--signup .card-footer { margin-top:clamp(8px, 1.6vh, 14px); }
 
 /* ── Welcome overlay (post-login flourish, used by auth.js) ──────── */
 #welcomeOverlay {
@@ -590,56 +599,24 @@
 }
 
 
-/* ── Height-responsive: the form always fits, never scrolls ──── */
-/* Sign-in is short and fits unaided. Sign-up is tall (~728px), so it
-   compresses progressively on shorter viewports (common with Windows
-   display scaling) so there is never an internal scrollbar. */
-@media (max-height: 900px) {
-  .auth-shell--signup .auth-panel { padding-top:28px; padding-bottom:28px; }
-  .auth-shell--signup .signup-card-subtitle { display:none; }
-  .auth-shell--signup .signup-card-brand { margin-bottom:10px; }
-  .auth-shell--signup .signup-card-title { font-size:25px; }
-  .auth-shell--signup .form-group { margin-bottom:9px; gap:6px; }
-  .auth-shell--signup .form-input { padding-top:11px; padding-bottom:11px; }
-  .auth-shell--signup .form-hint { margin-top:-2px; font-size:11px; }
-  .auth-shell--signup .auth-terms { margin:2px 0 11px; }
-  .auth-shell--signup .or-divider { margin:12px 0; }
-  .auth-shell--signup .card-footer { margin-top:12px; }
-}
-@media (max-height: 740px) {
-  .auth-shell--signup .auth-panel { padding-top:22px; padding-bottom:22px; }
-  .auth-shell--signup .signup-card-brand { margin-bottom:8px; }
-  .auth-shell--signup .signup-card-title { font-size:24px; }
-  .auth-shell--signup .form-group { margin-bottom:7px; gap:5px; }
-  .auth-shell--signup .form-input { padding-top:9px; padding-bottom:9px; }
-  .auth-shell--signup .form-hint { display:none; }
+/* ── Drop optional bits as height shrinks (keeps sign-up fitting) ── */
+@media (max-height: 880px) { .auth-shell--signup .signup-card-subtitle { display:none; } }
+@media (max-height: 720px) { .auth-shell--signup .form-hint { display:none; } }
+@media (max-height: 670px) {
   .auth-shell--signup .password-strength { display:none; }
-  .auth-shell--signup .auth-terms { margin:2px 0 8px; }
-  .auth-shell--signup .or-divider { margin:9px 0; }
-  .auth-shell--signup .btn-primary { padding:12px; }
-  .auth-shell--signup .social-logins .btn-social { height:43px; }
-  .auth-shell--signup .card-footer { margin-top:9px; }
-  .form-group { margin-bottom:13px; }
-}
-@media (max-height: 600px) {
-  .auth-shell--signup .auth-panel { padding-top:18px; padding-bottom:18px; }
-  .auth-shell--signup .signup-card-title { font-size:22px; }
-  .auth-shell--signup .form-group { margin-bottom:5px; gap:4px; }
-  .auth-shell--signup .form-input { padding-top:8px; padding-bottom:8px; }
-  .auth-shell--signup .auth-terms { font-size:11.5px; margin:0 0 7px; }
-  .auth-shell--signup .or-divider { margin:7px 0; }
-  .auth-shell--signup .social-logins .btn-social { height:42px; }
-  .auth-shell--signup .card-footer { margin-top:7px; }
-  .auth-panel { padding-top:24px; padding-bottom:24px; }
-  .signin-card-subtitle { margin-bottom:13px; }
-  .form-group { margin-bottom:11px; }
-}
-@media (max-height: 540px) {
-  .signin-card-subtitle { display:none; }
-  .signin-card-brand, .signup-card-brand { margin-bottom:6px; }
-  .auth-shell--signup .form-group { margin-bottom:4px; }
+  .auth-shell--signup .auth-panel { padding-top:16px; padding-bottom:16px; }
+  .auth-shell--signup .signup-card-brand { margin-bottom:6px; }
+  .auth-shell--signup .signup-card-title { font-size:21px; }
+  .auth-shell--signup .form-group { margin-bottom:4px; gap:4px; }
+  .auth-shell--signup .form-input { padding-top:7px; padding-bottom:7px; }
+  .auth-shell--signup .form-label { font-size:9.5px; }
   .auth-shell--signup .auth-terms { margin:0 0 6px; }
+  .auth-shell--signup .or-divider { margin:6px 0; }
+  .auth-shell--signup .btn-primary { padding:10px; }
+  .auth-shell--signup .social-logins .btn-social { height:40px; }
+  .auth-shell--signup .card-footer { margin-top:6px; }
 }
+@media (max-height: 600px) { .signin-card-subtitle { display:none; } }
 
 /*---------dashboard------------*/
 

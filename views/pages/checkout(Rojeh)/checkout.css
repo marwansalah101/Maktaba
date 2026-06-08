@@ -596,6 +596,43 @@
     margin-bottom: 32px;
 }
 
+/* Saved address / payment banner */
+.saved-info-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f5f2ec;
+    border: 1px solid #d4c4a8;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    color: #312F2C;
+}
+.saved-info-banner .material-symbols-outlined {
+    font-size: 20px;
+    color: #4F6A4A;
+    flex-shrink: 0;
+}
+.saved-info-banner .saved-info-text {
+    flex: 1;
+    font-size: 13px;
+    font-family: 'Jost', sans-serif;
+}
+.saved-info-banner .use-saved-btn {
+    background: #312F2C;
+    color: #F0EDE5;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Jost', sans-serif;
+    white-space: nowrap;
+    transition: background .2s;
+    flex-shrink: 0;
+}
+.saved-info-banner .use-saved-btn:hover { background: #4F6A4A; }
+
 .checkout-section {
     margin-bottom: 28px;
 }

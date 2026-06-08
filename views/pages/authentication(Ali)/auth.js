@@ -267,10 +267,8 @@ const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:
                     btn.disabled = false;
                     return;
                 }
-                sessionStorage.setItem('mktbToast', JSON.stringify({
-                    msg:  'Account created! Please sign in.',
-                    type: 'success'
-                }));
+                // Confirmation toast shown on the sign-in page after redirect.
+                try { sessionStorage.setItem('mkFlashToast', 'Account created — please sign in to continue.'); } catch (e) {}
                 window.location.href = './signin.html';
             })
             .catch(function () {
@@ -375,10 +373,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 btn.textContent = 'Sign In';
                 btn.disabled = false;
-                if (role === 'admin') {
-                    window.location.href = './dashboard.html';
+
+                // Hand off a confirmation toast to the destination page.
+                var who = (data.user && data.user.name) ? data.user.name : 'reader';
+                try { sessionStorage.setItem('mkFlashToast', 'Welcome back, ' + who + '!'); } catch (e) {}
+
+                var go = function () {
+                    if (role === 'admin') window.location.href = './dashboard.html';
+                    else window.location.href = '../../home.html';
+                };
+                // Merge this account's saved cart + favorites from the DB, then redirect.
+                if (typeof window.mkSyncOnLogin === 'function') {
+                    window.mkSyncOnLogin().then(go, go);
                 } else {
-                    window.location.href = '../../home.html';
+                    go();
                 }
             })
             .catch(function () {

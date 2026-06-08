@@ -192,17 +192,16 @@ function renderOrder() {
     }
 }
 
-function showToast() {
+function showOrderToast() {
     const toast = document.getElementById("toast");
     if (!toast) return;
-    setTimeout(() => {
-        toast.classList.add("show");
-    }, 400);
+    setTimeout(() => toast.classList.add("show"), 400);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+    if (!document.getElementById("order-items-list")) return;
     renderOrder();
-    showToast();
+    showOrderToast();
 });
 
 const STORAGE_FAVORITES_KEY = 'favorites';
@@ -571,6 +570,39 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('shippingInfo', JSON.stringify(collectShippingInfo()));
             window.location.href = './payment.html';
         });
+
+        const tok = localStorage.getItem('maktabaToken');
+        if (tok) {
+            const mkBase = location.port === '3000' ? '' : 'http://localhost:3000';
+            fetch(mkBase + '/api/auth/me', { headers: { 'Authorization': 'Bearer ' + tok } })
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    const user = data && data.user;
+                    const banner = document.getElementById('saved-addr-banner');
+                    if (!banner || !user) return;
+                    const addr = user.address || {};
+                    const hasData = addr.fullName || addr.street || user.email;
+                    if (!hasData) return;
+                    const label = [addr.fullName || user.name, addr.street, addr.city].filter(Boolean).join(' · ');
+                    banner.querySelector('.saved-info-text').textContent = label;
+                    banner.style.display = 'flex';
+                    banner.querySelector('.use-saved-btn').onclick = function () {
+                        const parts = (addr.fullName || user.name || '').trim().split(' ');
+                        const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
+                        set('co-fname', parts[0]);
+                        set('co-lname', parts.slice(1).join(' '));
+                        set('co-email', user.email || '');
+                        set('co-phone', addr.phone || '');
+                        set('co-street', addr.street || '');
+                        set('co-number', '');
+                        set('co-postcode', '');
+                        set('co-place', addr.city || '');
+                        set('co-country', '');
+                        banner.style.display = 'none';
+                        if (typeof window.mkToast === 'function') window.mkToast('Saved address applied.');
+                    };
+                }).catch(() => {});
+        }
     }
 
     const paymentForm = document.getElementById('payment-form');
@@ -596,7 +628,42 @@ function setupPaymentForm(paymentForm) {
     });
     updateMethod();
 
-    paymentForm.addEventListener('submit', event => {
+    // Auto-fill saved payment for logged-in users
+    const tok = localStorage.getItem('maktabaToken');
+    if (tok) {
+        const mkBase = location.port === '3000' ? '' : 'http://localhost:3000';
+        fetch(mkBase + '/api/auth/me', { headers: { 'Authorization': 'Bearer ' + tok } })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                const user = data && data.user;
+                const banner = document.getElementById('saved-pay-banner');
+                if (!banner || !user) return;
+                const pay = user.payment || {};
+                if (!pay.last4) return;
+                const label = 'Card ending in ' + pay.last4 + (pay.expiry ? ' · exp ' + pay.expiry : '');
+                banner.querySelector('.saved-info-text').textContent = label;
+                banner.style.display = 'flex';
+                banner.querySelector('.use-saved-btn').onclick = function () {
+                    const cardRadio = paymentForm.querySelector('input[value="Card"]');
+                    if (cardRadio) { cardRadio.checked = true; updateMethod(); }
+                    const set = (id, v) => { const el = document.getElementById(id); if (el && v) el.value = v; };
+                    set('card-name', pay.cardName || '');
+                    const numEl = document.getElementById('card-number');
+                    if (numEl) { numEl.value = '•••• •••• •••• ' + pay.last4; numEl.dataset.savedCard = 'true'; }
+                    if (pay.expiry) {
+                        const parts = pay.expiry.split(/[\s/]+/);
+                        const mEl = document.getElementById('card-month');
+                        const yEl = document.getElementById('card-year');
+                        if (mEl && parts[0]) mEl.value = parts[0].padStart(2, '0');
+                        if (yEl && parts[1]) yEl.value = parts[1].length === 2 ? '20' + parts[1] : parts[1];
+                    }
+                    banner.style.display = 'none';
+                    if (typeof window.mkToast === 'function') window.mkToast('Saved payment applied.');
+                };
+            }).catch(() => {});
+    }
+
+    paymentForm.addEventListener('submit', async event => {
         event.preventDefault();
         const methodInput = paymentForm.querySelector('input[name="paymentMethod"]:checked');
         let valid = true;
@@ -608,15 +675,18 @@ function setupPaymentForm(paymentForm) {
         }
 
         if (methodInput && methodInput.value === 'Card') {
+            const numEl = document.getElementById('card-number');
+            const usingSaved = numEl && numEl.dataset.savedCard === 'true';
             const cardRules = {
-                'card-name': value => value ? '' : 'Name on card is required.',
-                'card-number': value => /^\d{13,19}$/.test(value.replace(/\s/g, '')) ? '' : 'Enter a valid card number.',
-                'card-month': value => value ? '' : 'Choose an expiry month.',
-                'card-year': value => value ? '' : 'Choose an expiry year.',
-                'card-cvc': value => /^\d{3,4}$/.test(value) ? '' : 'Enter a valid CVC.'
+                'card-name':   value => value ? '' : 'Name on card is required.',
+                'card-number': value => usingSaved || /^\d{13,19}$/.test(value.replace(/[\s•]/g, '')) ? '' : 'Enter a valid card number.',
+                'card-month':  value => value ? '' : 'Choose an expiry month.',
+                'card-year':   value => value ? '' : 'Choose an expiry year.',
+                'card-cvc':    value => usingSaved || /^\d{3,4}$/.test(value) ? '' : 'Enter a valid CVC.'
             };
             Object.entries(cardRules).forEach(([id, rule]) => {
                 const input = document.getElementById(id);
+                if (!input) return;
                 const message = rule(input.value.trim());
                 setFieldError(input, message);
                 if (message) valid = false;
@@ -625,7 +695,53 @@ function setupPaymentForm(paymentForm) {
 
         if (!valid) return;
 
-        const orderId = '#MKTBA-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+        const placeBtn = paymentForm.querySelector('[type="submit"]');
+        if (placeBtn) { placeBtn.disabled = true; placeBtn.textContent = 'Placing order…'; }
+
+        const shippingInfo = readStorage('shippingInfo', {});
+        const cart = getCart();
+        let subtotal = 0;
+        cart.forEach(item => { subtotal += (parseFloat(item.price) || 0) * (item.qty || 1); });
+        const shipping = cart.length > 0 ? CART_SHIPPING : 0;
+
+        const orderPayload = {
+            customerInfo: {
+                firstName: shippingInfo.firstName || '',
+                lastName:  shippingInfo.lastName  || '',
+                email:     shippingInfo.email     || localStorage.getItem('maktabaUserEmail') || '',
+                phone:     shippingInfo.phone     || ''
+            },
+            items: cart.map(item => ({
+                title:    item.title  || '',
+                author:   item.author || '',
+                price:    parseFloat(item.price) || 0,
+                quantity: item.qty || 1,
+                image:    item.image || ''
+            })),
+            shippingAddress: {
+                street:   shippingInfo.street   || '',
+                number:   shippingInfo.number   || '',
+                postcode: shippingInfo.postcode || '',
+                place:    shippingInfo.place    || '',
+                country:  shippingInfo.country  || ''
+            },
+            paymentInfo:  { method: methodInput.value, status: 'pending' },
+            orderSummary: { subtotal, shipping, total: subtotal + shipping }
+        };
+
+        let orderId = 'MKTBA-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+        try {
+            const mkBase = location.port === '3000' ? '' : 'http://localhost:3000';
+            const hdrs = { 'Content-Type': 'application/json' };
+            const t = localStorage.getItem('maktabaToken');
+            if (t) hdrs['Authorization'] = 'Bearer ' + t;
+            const res = await fetch(mkBase + '/api/orders', {
+                method: 'POST', headers: hdrs, body: JSON.stringify(orderPayload)
+            });
+            const result = await res.json();
+            if (result.orderNumber) orderId = result.orderNumber;
+        } catch (e) { /* fall through with generated id */ }
+
         localStorage.setItem('paymentInfo', JSON.stringify({ method: methodInput.value }));
         localStorage.setItem('pendingOrderId', orderId);
         window.location.href = './order-success.html';
@@ -726,3 +842,161 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+/* ===================================================================
+   MAKTABA SESSION MODULE
+   - Navbar auth toggle (Sign In  <->  Log Out)
+   - Bottom-right dark confirmation toast (primary theme color)
+   - Logout
+   - Cart + Favorites <-> User collection sync (when logged in)
+   =================================================================== */
+(function () {
+  "use strict";
+  var BASE = (location.port === "3000") ? "" : "http://localhost:3000";
+  function token()   { return localStorage.getItem("maktabaToken") || ""; }
+  function authed()  { return !!token(); }
+  function jsonHdr() { var h = { "Content-Type": "application/json" }; if (authed()) h["Authorization"] = "Bearer " + token(); return h; }
+  function getHdr()  { return authed() ? { "Authorization": "Bearer " + token() } : {}; }
+
+  /* ---- Confirmation toast: dark (primary), bottom-right ---- */
+  function mkToast(msg, opts) {
+    opts = opts || {};
+    var old = document.getElementById("mk-session-toast"); if (old) old.remove();
+    var t = document.createElement("div");
+    t.id = "mk-session-toast";
+    t.textContent = msg;
+    t.style.cssText =
+      "position:fixed;bottom:28px;right:28px;z-index:2147483647;" +
+      "background:#312F2C;color:#F0EDE5;padding:14px 20px;border-radius:12px;" +
+      "font:500 14px/1.45 Jost,system-ui,Segoe UI,sans-serif;letter-spacing:.01em;" +
+      "box-shadow:0 16px 40px -12px rgba(0,0,0,.5);max-width:340px;" +
+      "transform:translateY(16px);opacity:0;transition:transform .45s cubic-bezier(.16,1,.3,1),opacity .45s;pointer-events:none;";
+    document.body.appendChild(t);
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ t.style.transform="translateY(0)"; t.style.opacity="1"; }); });
+    setTimeout(function(){ t.style.transform="translateY(16px)"; t.style.opacity="0"; setTimeout(function(){ if(t.parentNode) t.remove(); }, 480); }, opts.duration || 3200);
+  }
+  window.mkToast = mkToast;
+
+  /* Show a toast handed off from a previous page (e.g. after login redirect) */
+  try {
+    var pend = sessionStorage.getItem("mkFlashToast");
+    if (pend) { sessionStorage.removeItem("mkFlashToast"); setTimeout(function(){ mkToast(pend); }, 400); }
+  } catch (e) {}
+
+  /* ---- Logout ---- */
+  function mkLogout() {
+    try { fetch(BASE + "/api/auth/logout", { method: "POST", headers: getHdr() }).catch(function(){}); } catch (e) {}
+    ["maktabaToken","maktabaUserName","maktabaUserEmail","maktabaUserRole","maktabaLoggedInUser"].forEach(function(k){ localStorage.removeItem(k); });
+    try { localStorage.removeItem("cart"); localStorage.removeItem("favorites"); } catch(e) {}
+    try { sessionStorage.setItem("mkFlashToast", "You have been logged out."); } catch (e) {}
+    location.href = location.pathname.indexOf("/pages/") !== -1 ? "../../home.html" : "./home.html";
+  }
+  window.mkLogout = mkLogout;
+
+  /* ---- Navbar: Sign In when logged out, Log Out when logged in ---- */
+  function paintNav() {
+    var dd = document.querySelector(".menu-dropdown");
+    if (!dd) return;
+    var signinHref = location.pathname.indexOf("/pages/") !== -1
+      ? "../authentication(Ali)/signin.html"
+      : "./pages/authentication(Ali)/signin.html";
+    var link = dd.querySelector("#mkAuthLink");
+    if (!link) { link = document.createElement("a"); link.id = "mkAuthLink"; dd.appendChild(link); }
+    if (authed()) {
+      link.textContent = "Log Out";
+      link.href = "#";
+      link.onclick = function (e) { e.preventDefault(); mkLogout(); };
+    } else {
+      link.textContent = "Sign In";
+      link.href = signinHref;
+      link.onclick = null;
+    }
+  }
+  window.mkPaintNav = paintNav;
+
+  /* ---- Favorites + Cart DB sync ---- */
+  function pushFavorites() {
+    if (!authed()) return;
+    var fav; try { fav = JSON.parse(localStorage.getItem("favorites") || "[]"); } catch (e) { fav = []; }
+    fav = fav.map(function(x){ return typeof x === "string" ? x : (x && x.title); }).filter(Boolean);
+    fetch(BASE + "/api/auth/favorites", { method:"PUT", headers: jsonHdr(), body: JSON.stringify({ favorites: fav }) }).catch(function(){});
+  }
+  function pushCart() {
+    if (!authed()) return;
+    var cart; try { cart = JSON.parse(localStorage.getItem("cart") || "[]"); } catch (e) { cart = []; }
+    fetch(BASE + "/api/auth/cart", { method:"PUT", headers: jsonHdr(), body: JSON.stringify({ cart: cart }) }).catch(function(){});
+  }
+  window.mkPushFavorites = pushFavorites;
+  window.mkPushCart = pushCart;
+
+  /* Wrap the global save functions (defined above in this file) so every
+     change also persists to the User document when logged in. */
+  // Persist to the User document whenever the cart / favorites change in
+  // localStorage — reliably catches every write path (add, remove, qty, clear).
+  /* ---- Cart badge: red item-count dot above the cart icon ---- */
+  function updateCartBadge() {
+    var cartLinks = document.querySelectorAll('.navbar-icons a');
+    var cart; try { cart = JSON.parse(localStorage.getItem("cart") || "[]"); } catch(e) { cart = []; }
+    var count = 0;
+    cart.forEach(function(i) { count += Math.max(1, parseInt(i.qty || 1, 10)); });
+    cartLinks.forEach(function(link) {
+      var icon = link.querySelector('.material-symbols-outlined');
+      if (!icon || icon.textContent.trim() !== 'shopping_bag') return;
+      var badge = link.querySelector('.mk-cart-badge');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'mk-cart-badge';
+        badge.style.cssText = 'position:absolute;top:-7px;right:-7px;background:#c0392b;color:#fff;' +
+          'border-radius:50%;min-width:18px;height:18px;padding:0 3px;box-sizing:border-box;' +
+          'font:700 10px/18px Jost,system-ui,sans-serif;text-align:center;pointer-events:none;';
+        link.style.position = 'relative';
+        link.appendChild(badge);
+      }
+      badge.textContent = count > 99 ? '99+' : String(count);
+      badge.style.display = count > 0 ? 'block' : 'none';
+    });
+  }
+  window.mkUpdateCartBadge = updateCartBadge;
+
+  var _origSet = localStorage.setItem.bind(localStorage);
+  var _pushTimers = {};
+  function _debounce(key, fn) { clearTimeout(_pushTimers[key]); _pushTimers[key] = setTimeout(fn, 250); }
+  localStorage.setItem = function (k, v) {
+    _origSet(k, v);
+    if (k === "cart") updateCartBadge();
+    if (!authed()) return;
+    if (k === "cart") _debounce("cart", pushCart);
+    else if (k === "favorites") _debounce("fav", pushFavorites);
+  };
+
+  /* Called by auth.js right after a successful login: merge DB <-> local,
+     then persist the union so nothing is lost across devices. */
+  window.mkSyncOnLogin = function () {
+    if (!authed()) return Promise.resolve();
+    return Promise.all([
+      fetch(BASE + "/api/auth/favorites", { headers: getHdr() }).then(function(r){ return r.ok ? r.json() : {favorites:[]}; }).catch(function(){ return {favorites:[]}; }),
+      fetch(BASE + "/api/auth/cart",      { headers: getHdr() }).then(function(r){ return r.ok ? r.json() : {cart:[]}; }).catch(function(){ return {cart:[]}; })
+    ]).then(function (res) {
+      var dbFav = (res[0] && res[0].favorites) || [];
+      var dbCart = (res[1] && res[1].cart) || [];
+      var locFav; try { locFav = JSON.parse(localStorage.getItem("favorites") || "[]"); } catch (e) { locFav = []; }
+      locFav = locFav.map(function(x){ return typeof x==="string"?x:(x&&x.title); }).filter(Boolean);
+      var mergedFav = Array.prototype.slice.call(new Set(dbFav.concat(locFav)));
+      var locCart; try { locCart = JSON.parse(localStorage.getItem("cart") || "[]"); } catch (e) { locCart = []; }
+      // Cart: prefer DB if it has items, else keep the local cart.
+      var mergedCart = (dbCart && dbCart.length) ? dbCart : locCart;
+      localStorage.setItem("favorites", JSON.stringify(mergedFav));
+      localStorage.setItem("cart", JSON.stringify(mergedCart));
+      pushFavorites(); pushCart();
+    }).catch(function(){});
+  };
+
+  /* Paint the navbar + badge as soon as the DOM is ready (and now, if already ready). */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function() { paintNav(); updateCartBadge(); });
+  } else {
+    paintNav();
+    updateCartBadge();
+  }
+})();

@@ -2,12 +2,24 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 const Book = require('../models/Book');
+const { protect } = require('../middlewares/auth');
 
 // GET all orders (for admin)
 router.get("/", async (req, res) => {
     try {
         const orders = await Order.find().populate('items.bookId').sort({ createdAt: -1 });
         res.json(orders);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// GET the logged-in user's own orders (session via JWT)
+router.get("/mine", protect, async (req, res) => {
+    try {
+        const orders = await Order.find({ 'customerInfo.email': req.user.email })
+            .populate('items.bookId').sort({ createdAt: -1 });
+        res.json({ success: true, orders });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

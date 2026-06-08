@@ -27,7 +27,6 @@
       <div class="menu-dropdown-wrapper" id="menuWrapper"><span class="material-symbols-outlined" id="menuBtn">menu</span></div>
       <div class="menu-dropdown" id="menuDropdown">
         <a href="../home(fares)/AllAuthors.html">Authors</a>
-        <a href="../authentication(Ali)/signup.html">Profile</a>
         <a href="../account(Mikha)/settings.html">Settings</a>
         <a href="../account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
       </div>
@@ -65,6 +64,12 @@
             </label>
           </div>
           <p id="payment-method-error" class="field-error"></p>
+
+          <div id="saved-pay-banner" class="saved-info-banner" style="display:none">
+            <span class="material-symbols-outlined">credit_card</span>
+            <span class="saved-info-text"></span>
+            <button type="button" class="use-saved-btn">Use saved card</button>
+          </div>
 
           <div id="card-payment-fields" class="checkout-section payment-card-fields">
             <p class="checkout-section-label">Card details</p>
