@@ -568,7 +568,6 @@ function renderBooks(booksToRender) {
           </div>
           <a href="${productUrl}" class="book-cover-wrap book-link">
             <div class="book-cover-stage">
-              <img class="book-cover-glow" src="${imgSrc}" aria-hidden="true" draggable="false">
               <img class="book-cover" src="${imgSrc}" alt="${book.title}">
             </div>
           </a>
