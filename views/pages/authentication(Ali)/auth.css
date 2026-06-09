@@ -545,6 +545,12 @@
 }
 .dark-mode-btn:hover { background:#fff; transform:translateY(-1px); }
 
+/* Dark page background — applied to <body> when dark mode is active */
+.Sign-in.dark {
+  background: #1a1816;
+  transition: background 0.35s ease;
+}
+
 .auth-shell.dark { background:#1B1916; }
 .auth-shell.dark .auth-panel { background:#1B1916; }
 .auth-shell.dark .signin-card-title,
@@ -574,6 +580,15 @@
 .auth-shell.dark .or-divider { color:rgba(240,237,229,.5); }
 .auth-shell.dark .or-divider::before,
 .auth-shell.dark .or-divider::after { background:rgba(240,237,229,.16); }
+
+.Sign-in.dark .dark-mode-btn {
+  background: rgba(40,36,32,.85);
+  border-color: rgba(240,237,229,.18);
+  color: var(--cream);
+}
+.Sign-in.dark .dark-mode-btn:hover {
+  background: rgba(55,50,45,.95);
+}
 
 /* ── Responsive ──────────────────────────────────────────────────── */
 @media (max-width:880px) {
