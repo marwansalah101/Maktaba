@@ -1025,37 +1025,94 @@ body {
 
 .cards {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   flex-wrap: wrap;
-  width: 1950px;
+  width: auto;
+  align-items: flex-start;
+  overflow: visible;
 }
 
 .card {
   background: white;
   border-radius: 12px;
-  padding: 15px;
-  width: 300px;
+  padding: 12px;
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-width: 350px;
-  transition: 0.25s;
-   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-
+  border: 1px solid rgba(49,47,44,0.08);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  cursor: default;
+  overflow: hidden;
+  align-items: flex-start;
+  position: relative;
 }
 
+/* Slightly grow on hover to signal interactivity */
 .card:hover {
-  transform: scale(1.08); 
-  box-shadow: 0 8px 20px rgba(75, 1, 1, 0.841); 
+  transform: scale(1.03);
+  box-shadow: 0 6px 18px rgba(49,47,44,0.14);
+}
 
+.card.expanded {
+  transform: scale(1.03);
+  box-shadow: 0 8px 22px rgba(49,47,44,0.16);
+  z-index: 10;
+  overflow: hidden;
+}
 
-  transform: translateY(-5px);
+/* Info column fills remaining width */
+.card .info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Description — clipped to 2 lines by default */
+.card .desc {
+  font-size: 12px;
+  margin: 5px 0;
+  color: #555;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: 2.8em;
+  transition: max-height 0.3s ease;
+  word-break: break-word;
+}
+
+/* Expanded: scrollable area, capped to keep card in-bounds */
+.card.expanded .desc {
+  display: block;
+  -webkit-line-clamp: unset;
+  max-height: 120px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(49,47,44,0.2) transparent;
+  padding-right: 4px;
+}
+
+.card.expanded .desc::-webkit-scrollbar {
+  width: 4px;
+}
+.card.expanded .desc::-webkit-scrollbar-track {
+  background: transparent;
+}
+.card.expanded .desc::-webkit-scrollbar-thumb {
+  background: rgba(49,47,44,0.2);
+  border-radius: 2px;
 }
 
 .avatar {
-  width: 45px;
-  height: 45px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   background: #1f1408;
   color: white;
   display: flex;
@@ -1063,11 +1120,17 @@ width: 350px;
   justify-content: center;
   border-radius: 50%;
   font-weight: bold;
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 /* Info */
 .info h3 {
-  font-size: 16px;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sub {
@@ -1086,13 +1149,19 @@ width: 350px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(49,47,44,0.07);
 }
 
 .books {
   background: #eee;
-  padding: 4px 8px;
+  padding: 3px 8px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 11px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Buttons */
@@ -1100,19 +1169,21 @@ width: 350px;
   background: #e6f4ea;
   color: green;
   border: none;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
-  margin-right: 5px;
+  margin-right: 4px;
   cursor: pointer;
+  font-size: 12px;
 }
 
 .delete {
   background: #fdeaea;
   color: red;
   border: none;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 12px;
 }
 
 
@@ -1265,10 +1336,20 @@ body.admin-dashboard-page {
 .admin-dashboard-page .auth-card:hover,
 .admin-dashboard-page .panel:hover,
 .admin-dashboard-page .lsection:hover,
+.admin-dashboard-page .auth-card:hover,
+.admin-dashboard-page .panel:hover,
+.admin-dashboard-page .lsection:hover,
 .admin-dashboard-page .card:hover,
 .admin-dashboard-page .section:hover {
   transform: none;
   box-shadow: 0 8px 22px rgba(49, 47, 44, 0.08);
+}
+
+/* Allow .card.expanded to override the blanket hover reset */
+.admin-dashboard-page .card.expanded {
+  transform: scale(1.03) !important;
+  box-shadow: 0 8px 22px rgba(49,47,44,0.16) !important;
+  overflow: hidden !important;
 }
 
 .admin-dashboard-page .stat-card {

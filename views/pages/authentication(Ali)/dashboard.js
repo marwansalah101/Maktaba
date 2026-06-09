@@ -84,6 +84,16 @@ function appendAuthorCard(author) {
     `;
     cards.insertBefore(card, cards.firstChild);
 
+    // Wire 1.5s hover-to-expand
+    let hoverTimer = null;
+    card.addEventListener('mouseenter', () => {
+        hoverTimer = setTimeout(() => card.classList.add('expanded'), 500);
+    });
+    card.addEventListener('mouseleave', () => {
+        clearTimeout(hoverTimer);
+        card.classList.remove('expanded');
+    });
+
     const counter = document.querySelector('.header p');
     if (counter) {
         const current = parseInt(counter.textContent, 10);
@@ -429,6 +439,22 @@ async function loadAdminAuthors() {
               </div>
             </div>`;
         }).join('');
+
+        // Wire 0.5s hover-to-expand on each author card
+        cards.querySelectorAll('.card[data-id]').forEach(card => {
+            let hoverTimer = null;
+
+            card.addEventListener('mouseenter', () => {
+                hoverTimer = setTimeout(() => {
+                    card.classList.add('expanded');
+                }, 500);
+            });
+
+            card.addEventListener('mouseleave', () => {
+                clearTimeout(hoverTimer);
+                card.classList.remove('expanded');
+            });
+        });
 
         // wire search
         const searchEl = document.querySelector('.search');
