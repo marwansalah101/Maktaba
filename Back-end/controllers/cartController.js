@@ -35,7 +35,6 @@ exports.addToCart = async (req, res, next) => {
         next(err);
     }
 };
-
 exports.updateCartItem = async (req, res, next) => {
     const sessionId = getSessionId(req);
     const { qty } = req.body;
