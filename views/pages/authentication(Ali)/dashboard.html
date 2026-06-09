@@ -284,15 +284,31 @@
         return;
       }
 
+      const statusOptions = ['processing', 'successful', 'rejected', 'shipped', 'delivered', 'cancelled'];
+      const statusColors  = {
+        processing: { bg: 'rgba(195,57,48,0.1)',  color: '#c0392b' },
+        successful: { bg: 'rgba(39,174,96,0.12)', color: '#1e8449' },
+        rejected:   { bg: 'rgba(100,100,100,0.1)',color: '#555'    },
+        shipped:    { bg: 'rgba(41,128,185,0.1)', color: '#2471a3' },
+        delivered:  { bg: 'rgba(39,174,96,0.12)', color: '#1e8449' },
+        cancelled:  { bg: 'rgba(100,100,100,0.1)',color: '#555'    },
+      };
+
       const rows = recentOrders.map(order => {
-        const createdAt = order.createdAt ? new Date(order.createdAt) : null;
-        const dateText = createdAt && !Number.isNaN(createdAt.getTime())
+        const createdAt  = order.createdAt ? new Date(order.createdAt) : null;
+        const dateText   = createdAt && !Number.isNaN(createdAt.getTime())
           ? createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
           : 'Unknown date';
-        const status = String(order.orderStatus || 'processing').replace(/_/g, ' ');
+        const status     = String(order.orderStatus || 'processing');
         const itemsCount = Number(order.itemsCount || 0);
+        const sc         = statusColors[status] || statusColors.processing;
+
+        const optionsHtml = statusOptions.map(s =>
+          `<option value="${s}" ${s === status ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`
+        ).join('');
+
         return `
-          <div class="recent-order-row">
+          <div class="recent-order-row" data-order-id="${order._id}">
             <div class="recent-order-main">
               <strong>${order.orderNumber || 'Order'}</strong>
               <span>${order.userEmail || 'Unknown customer'}</span>
@@ -300,7 +316,13 @@
             <div class="recent-order-meta">
               <span>${itemsCount} unit${itemsCount === 1 ? '' : 's'}</span>
               <span>L.E ${Number(order.totalAmount || 0).toFixed(2)}</span>
-              <span class="recent-order-pill">${status}</span>
+              <select class="order-status-select" data-order-id="${order._id}"
+                style="background:${sc.bg};color:${sc.color};border:1px solid ${sc.color}33;
+                       border-radius:999px;padding:2px 8px;font-size:10px;font-weight:600;
+                       font-family:inherit;cursor:pointer;outline:none;appearance:none;
+                       -webkit-appearance:none;text-align:center;">
+                ${optionsHtml}
+              </select>
               <span>${dateText}</span>
             </div>
           </div>`;
@@ -310,6 +332,38 @@
         <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Orders</p>
         <p style="font-size:11px;color:#888;margin:0 0 1rem;">Latest customer orders</p>
         <div class="recent-orders-list">${rows}</div>`;
+
+      // Wire change handlers on all status selects
+      card.querySelectorAll('.order-status-select').forEach(sel => {
+        sel.addEventListener('change', async function () {
+          const orderId   = this.dataset.orderId;
+          const newStatus = this.value;
+          const sc        = statusColors[newStatus] || statusColors.processing;
+
+          // Optimistic UI update
+          this.style.background = sc.bg;
+          this.style.color      = sc.color;
+          this.style.borderColor = sc.color + '33';
+
+          try {
+            const token = localStorage.getItem('maktabaToken');
+            const res   = await fetch(API_BASE + '/api/orders/' + orderId + '/status', {
+              method:  'PATCH',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body:    JSON.stringify({ status: newStatus })
+            });
+            const data = await res.json();
+            if (!res.ok) {
+              alert(data.error || 'Failed to update status.');
+              // Revert select on failure — reload to get fresh state
+              loadDashboardStats();
+            }
+          } catch (err) {
+            alert('Network error — could not update status.');
+            loadDashboardStats();
+          }
+        });
+      });
     }
 
     document.addEventListener('DOMContentLoaded', loadDashboardStats);
