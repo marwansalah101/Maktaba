@@ -1,7 +1,11 @@
 // HOME PAGE 
 
+function toSlug(s) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 function getProductUrlFromHome(title) {
-    return `./pages/product(Marwan)/product.html?title=${encodeURIComponent(title)}`;
+    return `/book/${toSlug(title)}`;
 }
 
 function normalizeAssetToken(value) {
@@ -185,18 +189,13 @@ class BookCardsSlider {
         if (!container) return;
 
         this.container = container;
-        
-        // Create the cards list
-        const cardsList = document.createElement('ul');
-        cardsList.className = 'font-cards-container';
-        
+
         this.data.forEach((cardData, index) => {
             const card = this.createCard(cardData, index);
-            cardsList.appendChild(card);
+            container.appendChild(card);
         });
-        
-        container.appendChild(cardsList);
-        this.cards = cardsList.querySelectorAll('.font-card');
+
+        this.cards = container.querySelectorAll('.font-card');
     }
 
     createCard(data, index) {
@@ -440,4 +439,3 @@ class AllAuthorsPage {
 document.addEventListener('DOMContentLoaded', () => {
     new AllAuthorsPage();
 });
-

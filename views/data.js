@@ -24,7 +24,7 @@ const Books = [
         quote: "The most dangerous place on Earth is the center of it.",
         price: 480,
         language: "English",
-        stock: 0,
+        stock: 5,
         ISBN: "978-1503215153"
     },
     {
@@ -66,7 +66,7 @@ const Books = [
         quote: "The most dangerous place on Earth is the center of it.",
         price: 580,
         language: "English",
-        stock: 0,
+        stock: 5,
         ISBN: "978-0441175988"
     },
     {
