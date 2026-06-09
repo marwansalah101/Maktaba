@@ -28,6 +28,12 @@ function getPriceMarkup(book, prefix, qty) {
     return { html: `<span class="mk-price-current">${formatMoney(price * quantity, prefix)}</span>`, hasSale: false };
 }
 
+function resolveAssetPath(imagePath) {
+    if (!imagePath) return '';
+    if (/^(https?:|data:|\.\/|\.\.\/)/.test(imagePath)) return imagePath;
+    return '/' + String(imagePath).replace(/^\/+/, '');
+}
+
 function getCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
 }
@@ -101,7 +107,7 @@ function renderCart() {
         const item = document.createElement('div');
         item.className = 'cart-item';
         item.innerHTML = `
-            <img class="cart-item-img" src="${book.image}" alt="${book.title}">
+            <img class="cart-item-img" src="${resolveAssetPath(book.image)}" alt="${book.title}">
             <div class="cart-item-info">
                 <h3>${book.title}</h3>
                 <p>${book.author}</p>
@@ -159,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return `
                     <div class="checkout-order-item">
                         <img class="checkout-book-cover"
-                             src="${item.image || ''}"
+                             src="${resolveAssetPath(item.image)}"
                              alt="${item.title}"
                              onerror="this.style.background='#d4c4b0';this.removeAttribute('src')">
                         <div class="checkout-item-info">
