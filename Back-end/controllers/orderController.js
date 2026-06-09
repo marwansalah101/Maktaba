@@ -128,3 +128,22 @@ exports.getOrderById = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.updateStatus = async (req, res, next) => {
+    try {
+        const allowed = ['processing', 'shipped', 'delivered', 'cancelled', 'rejected', 'successful'];
+        const { status } = req.body;
+        if (!status || !allowed.includes(status)) {
+            return res.status(400).json({ error: `Invalid status. Must be one of: ${allowed.join(', ')}` });
+        }
+        const order = await Order.findByIdAndUpdate(
+            req.params.id,
+            { orderStatus: status },
+            { new: true, select: 'orderNumber orderStatus' }
+        );
+        if (!order) return res.status(404).json({ error: 'Order not found.' });
+        res.json({ success: true, orderNumber: order.orderNumber, orderStatus: order.orderStatus });
+    } catch (err) {
+        next(err);
+    }
+};
