@@ -84,6 +84,16 @@ function appendAuthorCard(author) {
     `;
     cards.insertBefore(card, cards.firstChild);
 
+    // Wire 1.5s hover-to-expand
+    let hoverTimer = null;
+    card.addEventListener('mouseenter', () => {
+        hoverTimer = setTimeout(() => card.classList.add('expanded'), 500);
+    });
+    card.addEventListener('mouseleave', () => {
+        clearTimeout(hoverTimer);
+        card.classList.remove('expanded');
+    });
+
     const counter = document.querySelector('.header p');
     if (counter) {
         const current = parseInt(counter.textContent, 10);
@@ -430,6 +440,22 @@ async function loadAdminAuthors() {
             </div>`;
         }).join('');
 
+        // Wire 0.5s hover-to-expand on each author card
+        cards.querySelectorAll('.card[data-id]').forEach(card => {
+            let hoverTimer = null;
+
+            card.addEventListener('mouseenter', () => {
+                hoverTimer = setTimeout(() => {
+                    card.classList.add('expanded');
+                }, 500);
+            });
+
+            card.addEventListener('mouseleave', () => {
+                clearTimeout(hoverTimer);
+                card.classList.remove('expanded');
+            });
+        });
+
         // wire search
         const searchEl = document.querySelector('.search');
         if (searchEl && !searchEl._wired) {
@@ -614,3 +640,262 @@ window.addEventListener('load', function () {
     });
     card.innerHTML = `<p style="font-size:14px;font-weight:500;margin:0 0 2px;">⚠️ Low Stock</p><p style="font-size:11px;color:#888;margin:0 0 1rem;">Titles needing restock</p>${rows}`;
 });
+
+/* ══════════════════════════════════════════════════════════════════
+   DASHBOARD STATS — load, render charts, recent orders, low stock
+══════════════════════════════════════════════════════════════════ */
+const DASHBOARD_API_BASE = window.location.origin;
+
+async function loadDashboardStats() {
+  const token = localStorage.getItem('maktabaToken');
+
+  if (!token) {
+    console.warn('[Dashboard] No maktabaToken found in localStorage. ' +
+      'Make sure you are logged in via the admin login page.');
+    ['stat-new-books', 'stat-new-authors', 'stat-orders-note', 'stat-low-stock-count', 'stat-users-note']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = 'not logged in';
+      });
+    return;
+  }
+
+  try {
+    const res = await fetch(`${DASHBOARD_API_BASE}/api/dashboard/stats`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      console.error('[Dashboard] API error:', res.status, body);
+      ['stat-new-books', 'stat-new-authors', 'stat-orders-note', 'stat-low-stock-count', 'stat-users-note']
+        .forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = `error ${res.status}`;
+        });
+      return;
+    }
+
+    const { stats } = await res.json();
+
+    // ── Stat cards ────────────────────────────────────────────────
+    document.getElementById('stat-total-books').textContent = stats.totalBooks;
+    document.getElementById('stat-new-books').textContent =
+      stats.newBooksThisMonth > 0
+        ? `+${stats.newBooksThisMonth} this month`
+        : 'no new books this month';
+
+    document.getElementById('stat-total-authors').textContent = stats.totalAuthors;
+    document.getElementById('stat-new-authors').textContent =
+      stats.authorsAddedThisMonth > 0
+        ? `+${stats.authorsAddedThisMonth} this month`
+        : 'no new authors this month';
+
+    document.getElementById('stat-total-orders').textContent = stats.totalOrders;
+    document.getElementById('stat-orders-note').textContent =
+      `${Array.isArray(stats.recentOrders) ? stats.recentOrders.length : 0} recent order${Array.isArray(stats.recentOrders) && stats.recentOrders.length === 1 ? '' : 's'} shown`;
+    const revenueOrders = document.getElementById('revenue-total-orders');
+    if (revenueOrders) revenueOrders.textContent = stats.totalOrders;
+
+    document.getElementById('stat-total-stock').textContent = stats.totalStock;
+    document.getElementById('stat-low-stock-count').textContent =
+      `${stats.lowStockBooks.length} low-stock item${stats.lowStockBooks.length !== 1 ? 's' : ''}`;
+
+    document.getElementById('stat-total-users').textContent = stats.totalUsers;
+    document.getElementById('stat-users-note').textContent = 'registered accounts';
+
+    if (Array.isArray(stats.genreBreakdown) && stats.genreBreakdown.length > 0) {
+      renderGenreBreakdownChart(stats.genreBreakdown);
+    }
+
+    renderRecentOrders(Array.isArray(stats.recentOrders) ? stats.recentOrders : []);
+
+    // ── Low Stock widget ──────────────────────────────────────────
+    if (stats.lowStockBooks.length > 0) {
+      const card = document.getElementById('lowStockCard');
+      if (!card) return;
+
+      const spineColors = ['#2C3E50', '#922B21', '#4A4A4A', '#B7950B', '#6C3483'];
+      let rows = '';
+      stats.lowStockBooks.forEach((book, i) => {
+        const isLast     = i === stats.lowStockBooks.length - 1;
+        const spineColor = book.coverColor || spineColors[i % spineColors.length];
+        const badgeColor = book.stock <= 7 ? '#C0392B' : '#B7770D';
+        rows += `
+          <div style="display:flex;align-items:center;justify-content:space-between;
+                      padding:10px 0;${isLast ? '' : 'border-bottom:0.5px solid #eee;'}">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:28px;height:36px;border-radius:3px;
+                          background:${spineColor};flex-shrink:0;"></div>
+              <div>
+                <p style="font-size:13px;font-weight:500;margin:0 0 2px;">
+                  ${book.title.length > 18 ? book.title.slice(0, 17) + '…' : book.title}
+                </p>
+                <p style="font-size:11px;color:#888;margin:0;">${book.author}</p>
+              </div>
+            </div>
+            <span style="font-size:11px;font-weight:500;color:${badgeColor};">
+              ${book.stock} left
+            </span>
+          </div>`;
+      });
+
+      card.innerHTML = `
+        <p style="font-size:14px;font-weight:500;margin:0 0 2px;">⚠️ Low Stock</p>
+        <p style="font-size:11px;color:#888;margin:0 0 1rem;">Titles needing restock</p>
+        ${rows}`;
+    }
+
+  } catch (err) {
+    console.error('[Dashboard] Fetch failed:', err);
+    ['stat-new-books', 'stat-new-authors', 'stat-orders-note', 'stat-low-stock-count', 'stat-users-note']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = 'fetch failed';
+      });
+  }
+}
+
+function renderGenreBreakdownChart(genreBreakdown) {
+  const chartEl  = document.getElementById('genreChart');
+  const legendEl = document.getElementById('genreLegend');
+  if (!chartEl || !legendEl || !Array.isArray(genreBreakdown)) return;
+
+  const colors = ['#C0392B', '#2471A3', '#1E8449', '#D4AC0D', '#6C3483', '#784212', '#117A65', '#7D3C98'];
+  const data   = genreBreakdown.slice(0, 6).map((item, index) => ({
+    label: item.genre,
+    pct:   Math.round((item.pct || 0) * 10) / 10,
+    color: colors[index % colors.length],
+  }));
+
+  legendEl.innerHTML = data.map(item => `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:9px;height:9px;border-radius:50%;background:${item.color};flex-shrink:0;"></div>
+        <span style="font-size:12px;color:#888;">${item.label}</span>
+      </div>
+      <span style="font-size:12px;font-weight:500;">${item.pct}%</span>
+    </div>`).join('');
+
+  if (window.genreChartInstance) {
+    try { window.genreChartInstance.destroy(); } catch (e) {}
+  }
+
+  window.genreChartInstance = new Chart(chartEl.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels:   data.map(item => item.label),
+      datasets: [{
+        data:            data.map(item => item.pct),
+        backgroundColor: data.map(item => item.color),
+        borderWidth:     2,
+        borderColor:     '#fff',
+        hoverOffset:     4,
+      }],
+    },
+    options: {
+      responsive:          true,
+      maintainAspectRatio: false,
+      cutout: '60%',
+      plugins: {
+        legend:  { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } },
+      },
+    },
+  });
+}
+
+function renderRecentOrders(recentOrders) {
+  const card = document.getElementById('recentOrdersCard');
+  if (!card) return;
+
+  if (!Array.isArray(recentOrders) || recentOrders.length === 0) {
+    card.innerHTML = `
+      <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Orders</p>
+      <p style="font-size:11px;color:#888;margin:0 0 1rem;">Latest customer orders</p>
+      <p style="margin:0;color:#888;font-size:12px;">No orders yet.</p>`;
+    return;
+  }
+
+  const statusOptions = ['processing', 'successful', 'rejected', 'shipped', 'delivered', 'cancelled'];
+  const statusColors  = {
+    processing: { bg: 'rgba(195,57,48,0.1)',   color: '#c0392b' },
+    successful: { bg: 'rgba(39,174,96,0.12)',  color: '#1e8449' },
+    rejected:   { bg: 'rgba(100,100,100,0.1)', color: '#555'    },
+    shipped:    { bg: 'rgba(41,128,185,0.1)',  color: '#2471a3' },
+    delivered:  { bg: 'rgba(39,174,96,0.12)',  color: '#1e8449' },
+    cancelled:  { bg: 'rgba(100,100,100,0.1)', color: '#555'    },
+  };
+
+  const rows = recentOrders.map(order => {
+    const createdAt  = order.createdAt ? new Date(order.createdAt) : null;
+    const dateText   = createdAt && !Number.isNaN(createdAt.getTime())
+      ? createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+      : 'Unknown date';
+    const status     = String(order.orderStatus || 'processing');
+    const itemsCount = Number(order.itemsCount || 0);
+    const sc         = statusColors[status] || statusColors.processing;
+
+    const optionsHtml = statusOptions.map(s =>
+      `<option value="${s}" ${s === status ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`
+    ).join('');
+
+    return `
+      <div class="recent-order-row" data-order-id="${order._id}">
+        <div class="recent-order-main">
+          <strong>${order.orderNumber || 'Order'}</strong>
+          <span>${order.userEmail || 'Unknown customer'}</span>
+        </div>
+        <div class="recent-order-meta">
+          <span>${itemsCount} unit${itemsCount === 1 ? '' : 's'}</span>
+          <span>L.E ${Number(order.totalAmount || 0).toFixed(2)}</span>
+          <select class="order-status-select" data-order-id="${order._id}"
+            style="background:${sc.bg};color:${sc.color};border:1px solid ${sc.color}33;
+                   border-radius:999px;padding:2px 8px;font-size:10px;font-weight:600;
+                   font-family:inherit;cursor:pointer;outline:none;appearance:none;
+                   -webkit-appearance:none;text-align:center;">
+            ${optionsHtml}
+          </select>
+          <span>${dateText}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  card.innerHTML = `
+    <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Orders</p>
+    <p style="font-size:11px;color:#888;margin:0 0 1rem;">Latest customer orders</p>
+    <div class="recent-orders-list">${rows}</div>`;
+
+  // Wire change handlers
+  card.querySelectorAll('.order-status-select').forEach(sel => {
+    sel.addEventListener('change', async function () {
+      const orderId   = this.dataset.orderId;
+      const newStatus = this.value;
+      const sc        = statusColors[newStatus] || statusColors.processing;
+
+      // Optimistic UI update
+      this.style.background  = sc.bg;
+      this.style.color       = sc.color;
+      this.style.borderColor = sc.color + '33';
+
+      try {
+        const token = localStorage.getItem('maktabaToken');
+        const res   = await fetch(DASHBOARD_API_BASE + '/api/orders/' + orderId + '/status', {
+          method:  'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body:    JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.error || 'Failed to update status.');
+          loadDashboardStats();
+        }
+      } catch (err) {
+        alert('Network error — could not update status.');
+        loadDashboardStats();
+      }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboardStats);

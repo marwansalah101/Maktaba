@@ -265,6 +265,7 @@ function toggleDarkMode() {
     const icon = document.getElementById('dark-icon');
     if (!card) return;
     card.classList.toggle('dark');
+    document.body.classList.toggle('dark', card.classList.contains('dark'));
 
     if (card.classList.contains('dark')) {
         icon.innerHTML = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
@@ -280,3 +281,117 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleDarkMode();
     }
 });
+
+/* ══════════════════════════════════════════════════════════════════
+   FORGOT PASSWORD — multi-step modal
+══════════════════════════════════════════════════════════════════ */
+const API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
+let fpEmail = '';
+
+function openForgotPw() {
+  document.getElementById('fp-modal-overlay').classList.add('open');
+  showStep(1);
+}
+
+function closeForgotPw() {
+  document.getElementById('fp-modal-overlay').classList.remove('open');
+  showStep(1);
+  document.getElementById('fp-email').value = '';
+  document.getElementById('fp-otp').value = '';
+  document.getElementById('fp-new-password').value = '';
+}
+
+function showStep(n) {
+  [1, 2, 3, 4].forEach(i => {
+    document.getElementById('fp-step-' + i).style.display = i === n ? '' : 'none';
+  });
+}
+
+function setFpError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function clearFpError(id) {
+  const el = document.getElementById(id);
+  el.textContent = '';
+  el.classList.remove('show');
+}
+
+async function submitForgotEmail() {
+  clearFpError('fp-error-1');
+  const email = document.getElementById('fp-email').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return setFpError('fp-error-1', 'Please enter a valid email address.');
+  }
+  const btn = event.target;
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    const res  = await fetch(API_BASE + '/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (!res.ok) return setFpError('fp-error-1', data.error || 'Something went wrong.');
+    fpEmail = email;
+    document.getElementById('fp-sent-email').textContent = email;
+    showStep(2);
+  } catch {
+    setFpError('fp-error-1', 'Cannot reach server.');
+  } finally {
+    btn.textContent = 'Send Code';
+    btn.disabled = false;
+  }
+}
+
+async function submitOtp() {
+  clearFpError('fp-error-2');
+  const otp = document.getElementById('fp-otp').value.trim();
+  if (otp.length !== 6) return setFpError('fp-error-2', 'Please enter the 6-digit code.');
+  const btn = event.target;
+  btn.textContent = 'Verifying...';
+  btn.disabled = true;
+  try {
+    const res  = await fetch(API_BASE + '/api/auth/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: fpEmail, otp })
+    });
+    const data = await res.json();
+    if (!res.ok) return setFpError('fp-error-2', data.error || 'Incorrect code.');
+    showStep(3);
+  } catch {
+    setFpError('fp-error-2', 'Cannot reach server.');
+  } finally {
+    btn.textContent = 'Verify Code';
+    btn.disabled = false;
+  }
+}
+
+async function submitNewPassword() {
+  clearFpError('fp-error-3');
+  const newPassword = document.getElementById('fp-new-password').value;
+  if (newPassword.length < 8) return setFpError('fp-error-3', 'Password must be at least 8 characters.');
+  const otp = document.getElementById('fp-otp').value.trim();
+  const btn = event.target;
+  btn.textContent = 'Updating...';
+  btn.disabled = true;
+  try {
+    const res  = await fetch(API_BASE + '/api/auth/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: fpEmail, otp, newPassword })
+    });
+    const data = await res.json();
+    if (!res.ok) return setFpError('fp-error-3', data.error || 'Something went wrong.');
+    showStep(4);
+  } catch {
+    setFpError('fp-error-3', 'Cannot reach server.');
+  } finally {
+    btn.textContent = 'Reset Password';
+    btn.disabled = false;
+  }
+}
