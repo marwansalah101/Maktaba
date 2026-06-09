@@ -122,7 +122,159 @@
 
 
 
+/* ── Featured Book Panel (Top-Rated Books) ── */
+.featured-book-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 380px;
+    max-width: fit-content;
+    background-color: #F0EDE5;
+    gap: 0;
+}
 
+.fbp-left {
+    flex: 1 1 55%;
+    padding: 56px 64px 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+}
+
+.fbp-ornament {
+    font-family: "EB Garamond", serif;
+    font-size: 14px;
+    color: #9a8f82;
+    letter-spacing: 6px;
+    margin: 0 0 28px;
+    text-align: center;
+}
+
+.fbp-genre {
+    font-family: "EB Garamond", serif;
+    font-size: 11px;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #8a7a6a;
+    margin-top:-20px;
+
+}
+
+.fbp-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: #312F2C;
+    margin: 0 0 6px;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+}
+
+.fbp-year {
+    font-family: "EB Garamond", serif;
+    font-size: 13px;
+    color: #9a8f82;
+    margin: 0 0 22px;
+    letter-spacing: 2px;
+}
+
+.fbp-description {
+    font-family: "EB Garamond", serif;
+    font-size: 17px;
+    line-height: 1.85;
+    color: #3d3632;
+    margin: 0 0 24px;
+    max-width: 52ch;
+    text-align: left;
+}
+
+.fbp-quote {
+    font-family: "EB Garamond", serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #7a6e64;
+    border-left: 2px solid #312F2C;
+    padding-left: 20px;
+    margin: 0 0 22px;
+    line-height: 1.7;
+}
+
+.fbp-rating {
+    font-family: "EB Garamond", serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: #c9a96e;
+    text-transform: uppercase;
+    margin: 0;
+    
+}
+
+.fbp-right {
+    flex: 0 0 42%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 100px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fbp-cover {
+    width: 100%;
+    height: 400px;
+    
+    object-position: center top;
+    display: block;
+    transition: transform 0.5s ease;
+    
+}
+
+.fbp-right:hover .fbp-cover {
+    transform: scale(1.03);
+    filter: sepia(0%) brightness(1);
+}
+
+.fbp-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+    color: #9a8f82;
+    font-family: "EB Garamond", serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 900px) {
+    .featured-book-panel {
+        flex-direction: column;
+    }
+    .fbp-right {
+        flex: none;
+        height: 420px;
+    }
+    .fbp-left {
+        padding: 40px 28px;
+    }
+}
+
+@media (max-width: 520px) {
+    .fbp-left {
+        padding: 32px 20px;
+    }
+    .fbp-title {
+        font-size: 1.6rem;
+    }
+    .fbp-description {
+        font-size: 15px;
+    }
+}
 
 
 
@@ -260,9 +412,15 @@
 .text-box {
     z-index: 1;             /* Lower layer than the photo */
        /* THE MAGIC: Pulls text BEHIND the photo */
-    padding-left: 90px;    /* Offsets text so the words aren't fully hidden */
+    padding-left: 140px;    /* Offsets text so the words aren't fully hidden */
     color: #F0EDE5;
     max-width: 600px;
+    height: 100%;
+    margin-top: 40px;
+    
+     /* Vertically centers the items relative to each other */
+  
+    
 }
 
 .text-box h2 {
@@ -271,15 +429,20 @@
     letter-spacing: 3px;
     text-transform: uppercase;
     color: #d4c4a8; /* Elegant gold/sand color for the title */
-    margin-bottom: 20px;
+    margin-bottom:25px;
+    margin-top: 50px;
+    text-align: center;
 }
 
 .text-box p {
     font-family: "EB Garamond", serif;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 1.8;
     color: #F0EDE5;
-    margin-bottom: 20px;
+
+    
+    align-items: center;    /* Vertically centers the items relative to each other */
+  justify-content: center;
 }
 
 @media (max-width: 980px) {
@@ -382,7 +545,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   max-width: 1450px;
-  margin: 0 auto;
+  margin-bottom: 60px;
 }
 
 .recent-book-card {
@@ -467,7 +630,7 @@
 .recent-book-add {
   border: none;
   background: transparent;
-  color: #d57b51;
+  color: #312F2C;
   font-size: 30px;
   line-height: 1;
   cursor: pointer;
@@ -594,17 +757,7 @@
 }
 
 
-.btn-outline {
-    display: inline-block;
-    margin-top: 40px;
-    padding: 12px 30px;
-    border: 1px solid #644444;
-    color: #4a4a4a;
-    text-decoration: none;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
 
-}
 
 .btn-outline:hover {
     background-color: #4a4a4a;
@@ -1910,13 +2063,13 @@
     margin-bottom: 18px;
     min-height: 240px;
     overflow: visible;
-}
-.book-cover-stage {
+}book-cover-stage {
     position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     padding-bottom: 8px;
+    cursor: default;
 }
 .book-cover-glow {
     position: absolute;
@@ -1935,10 +2088,12 @@
     user-select: none;
     transition: opacity 0.42s cubic-bezier(0.23, 1, 0.32, 1),
                 transform 0.42s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: default;
 }
 .book-listing:hover .book-cover-glow {
     opacity: 0.62;
     transform: translateX(-50%) scaleX(0.82) scaleY(0.32) translateY(6px);
+    cursor: default;
 }
 .book-cover {
     position: relative;
@@ -1951,6 +2106,7 @@
     filter: drop-shadow(0 4px 10px rgba(0,0,0,0.12));
     transition: transform 0.42s cubic-bezier(0.23, 1, 0.32, 1),
                 filter  0.42s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
 }
 .book-listing:hover .book-cover {
     transform: translateY(-10px) scale(1.03);
@@ -1962,6 +2118,7 @@
     flex-direction: column;
     gap: 3px;
     margin-bottom: 14px;
+    cursor: default;
 }
 .book-genre-tag {
     font-family: 'Jost', sans-serif;
@@ -1970,6 +2127,7 @@
     letter-spacing: 1.5px;
     color: #b3a699;
     margin: 0;
+    cursor: default;
 }
 .book-details {
     font-family: 'Jost', sans-serif;
@@ -1978,6 +2136,7 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     color: #8b7d6b;
+    cursor: default;
 }
 .book-title {
     font-family: 'Lora', serif;
@@ -1987,6 +2146,7 @@
     margin: 4px 0 2px;
     line-height: 1.3;
     transition: color 0.2s;
+    cursor: default;
 }
 .book-listing:hover .book-title { color: #5a4232; }
 .book-author {
@@ -1995,14 +2155,18 @@
     color: #8C7B75;
     margin: 0 0 5px;
     text-decoration: none;
-    cursor: default;
+    cursor: pointer;
 }
+.book-author:hover { 
+    text-decoration: underline; 
+    animation: underline 0.2s ease; }
 .book-price {
     font-family: 'Lora', serif;
     font-size: 14px;
     color: #312F2C;
     font-style: italic;
     margin: 0;
+    cursor: default;
 }
 .add-to-cart {
     font-family: 'Jost', sans-serif;
