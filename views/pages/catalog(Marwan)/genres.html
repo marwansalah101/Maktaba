@@ -15,7 +15,7 @@
     <link rel="icon" type="image/svg+xml" sizes="64x64" href="/resources/asset/Logo.svg">
 </head>
 
-<body class="browse-body">
+<body class="browse-body" data-nav-invert>
 
     <!-- ── PRELOADER ────────────────────────────────────────── -->
     <div id="mkt-preloader" aria-hidden="true" role="presentation">
@@ -35,25 +35,25 @@
 
     <nav class="navbar">
         <div id="Maktaba">
-            <a href="/home.html"><h1>Maktaba</h1></a>
+            <a href="/home"><h1>Maktaba</h1></a>
         </div>
         <ul class="navrbar-text">
-            <li><a href="/home.html">Home</a></li>
-            <li><a href="/pages/catalog(Marwan)/genres.html" class="active-link">Browse</a></li>
-            <li><a href="/pages/catalog(Marwan)/collection.html">Collection</a></li>
-            <li><a href="/pages/account(Mikha)/favorites.html">Favourites</a></li>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/browse" class="active-link">Browse</a></li>
+            <li><a href="/collection">Collection</a></li>
+            <li><a href="/favorites">Favourites</a></li>
         </ul>
         <div class="navbar-icons">
-            <a href="/pages/checkout(Rojeh)/add-to-cart.html">
+            <a href="/cart">
                 <span class="material-symbols-outlined">shopping_bag</span>
             </a>
             <div class="menu-dropdown-wrapper" id="menuWrapper">
                 <span class="material-symbols-outlined" id="menuBtn">menu</span>
             </div>
             <div class="menu-dropdown" id="menuDropdown">
-                <a href="/pages/home(fares)/AllAuthors.html">Authors</a>
-                <a href="/pages/account(Mikha)/settings.html">Settings</a>
-                <a href="/pages/account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
+                <a href="/authors">Authors</a>
+                <a href="/settings">Settings</a>
+                <a href="/contact" class="contact-placeholder">Contact Us</a>
             </div>
         </div>
     </nav>
@@ -116,7 +116,7 @@
         <div class="bw-genres-grid">
 
             <!-- 01 Fantasy — cream -->
-            <a class="bw-card bw-card--cream" data-tilt="5" href="/pages/catalog(Marwan)/collection.html?genre=Fantasy" aria-label="Browse Fantasy books">
+            <a class="bw-card bw-card--cream" data-tilt="5" href="/collection?genre=Fantasy" aria-label="Browse Fantasy books">
                 <span class="bw-card-num" aria-hidden="true">01</span>
                 <div class="bw-card-body">
                     <p class="bw-card-tag">Worlds Beyond</p>
@@ -127,7 +127,7 @@
             </a>
 
             <!-- 02 Horror — dark -->
-            <a class="bw-card bw-card--dark" data-tilt="5" href="/pages/catalog(Marwan)/collection.html?genre=Horror" aria-label="Browse Horror books">
+            <a class="bw-card bw-card--dark" data-tilt="5" href="/collection?genre=Horror" aria-label="Browse Horror books">
                 <span class="bw-card-num" aria-hidden="true">02</span>
                 <div class="bw-card-body">
                     <p class="bw-card-tag">Face Your Fears</p>
@@ -138,7 +138,7 @@
             </a>
 
             <!-- 03 Thriller — warm dark -->
-            <a class="bw-card bw-card--warm-dark" data-tilt="5" href="/pages/catalog(Marwan)/collection.html?genre=Thriller" aria-label="Browse Thriller books">
+            <a class="bw-card bw-card--warm-dark" data-tilt="5" href="/collection?genre=Thriller" aria-label="Browse Thriller books">
                 <span class="bw-card-num" aria-hidden="true">03</span>
                 <div class="bw-card-body">
                     <p class="bw-card-tag">Edge of Your Seat</p>
@@ -149,7 +149,7 @@
             </a>
 
             <!-- 04 Science Fiction — dark -->
-            <a class="bw-card bw-card--dark" data-tilt="5" href="/pages/catalog(Marwan)/collection.html?genre=Science-Fiction" aria-label="Browse Science Fiction books">
+            <a class="bw-card bw-card--dark" data-tilt="5" href="/collection?genre=Science-Fiction" aria-label="Browse Science Fiction books">
                 <span class="bw-card-num" aria-hidden="true">04</span>
                 <div class="bw-card-body">
                     <p class="bw-card-tag">The Future Now</p>
@@ -160,7 +160,7 @@
             </a>
 
             <!-- 05 Adventure — gold (the vivid accent card) -->
-            <a class="bw-card bw-card--gold" data-tilt="5" href="/pages/catalog(Marwan)/collection.html?genre=Adventure" aria-label="Browse Adventure books">
+            <a class="bw-card bw-card--gold" data-tilt="5" href="/collection?genre=Adventure" aria-label="Browse Adventure books">
                 <span class="bw-card-num" aria-hidden="true">05</span>
                 <div class="bw-card-body">
                     <p class="bw-card-tag">Beyond the Horizon</p>
@@ -171,7 +171,7 @@
             </a>
 
             <!-- 06 Drama — cream -->
-            <a class="bw-card bw-card--cream" data-tilt="5" href="/pages/catalog(Marwan)/collection.html?genre=Drama" aria-label="Browse Drama books">
+            <a class="bw-card bw-card--cream" data-tilt="5" href="/collection?genre=Drama" aria-label="Browse Drama books">
                 <span class="bw-card-num" aria-hidden="true">06</span>
                 <div class="bw-card-body">
                     <p class="bw-card-tag">Deeply Human</p>
@@ -305,17 +305,17 @@
                 <h4>About</h4>
                 <ul>
                    
-                    <li><a href="/pages/home(fares)/AllAuthors.html">Our Authors</a></li>
-                    <li><a href="/pages/account(Mikha)/contact-us.html">Contact Us</a></li>
+                    <li><a href="/authors">Our Authors</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="/pages/checkout(Rojeh)/checkout.html">Shipping &amp; Delivery</a></li>
-                    <li><a href="/pages/legal(fares)/returns-policy.html">Returns</a></li>
-                    <li><a href="/pages/checkout(Rojeh)/payment.html">Payment Methods</a></li>
-                    <li><a href="/pages/checkout(Rojeh)/order-success.html">Track Order</a></li>
+                    <li><a href="/checkout">Shipping &amp; Delivery</a></li>
+                    <li><a href="/returns">Returns</a></li>
+                    <li><a href="/payment">Payment Methods</a></li>
+                    <li><a href="/order-success">Track Order</a></li>
                     
                 </ul>
             </div>
@@ -323,8 +323,8 @@
         <div class="footer-bottom">
             <p>© 2026 Maktaba. All rights reserved.</p>
             <ul class="footer-bottom-links">
-                <li><a href="/pages/legal(fares)/privacy-policy.html">Privacy Policy</a></li>
-                <li><a href="/pages/legal(fares)/terms-of-use.html">Terms of Service</a></li>
+                <li><a href="/privacy">Privacy Policy</a></li>
+                <li><a href="/terms">Terms of Service</a></li>
                 
             </ul>
         </div>

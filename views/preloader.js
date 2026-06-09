@@ -36,6 +36,9 @@
                 /* Restore any overflow lock if present */
                 document.documentElement.style.overflow = '';
                 document.documentElement.style.overflowY = '';
+                if (typeof window.handleNavbarColorInversion === 'function') {
+                    window.handleNavbarColorInversion();
+                }
             }, 820); /* matches 0.78s CSS transition + 40ms buffer */
 
         }, remaining);

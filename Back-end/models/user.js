@@ -43,13 +43,17 @@ const userSchema = new mongoose.Schema({
     default: [],
   },
   // Persisted shopping cart
-  cart: {
-    type: [{
+    cart: {
+      type: [{
       _id:    false,
       title:  String,
       author: String,
       image:  String,
       price:  mongoose.Schema.Types.Mixed,
+      originalPrice: { type: mongoose.Schema.Types.Mixed, default: 0 },
+      salePrice:      { type: mongoose.Schema.Types.Mixed, default: 0 },
+      salePercent:    { type: Number, default: 0 },
+      isOnSale:       { type: Boolean, default: false },
       qty:    { type: Number, default: 1, min: 1 },
     }],
     default: [],

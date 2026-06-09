@@ -8,6 +8,55 @@ function toSlug(s) {
     return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 
+function parseOptionalNumber(value) {
+    if (value === undefined || value === null || value === '') return undefined;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : NaN;
+}
+
+function normalizeSaleFields(body) {
+    const basePrice = parseOptionalNumber(body.price);
+    const salePercent = parseOptionalNumber(body.salePercent);
+    const salePrice = parseOptionalNumber(body.salePrice);
+
+    if (Number.isNaN(basePrice)) return { error: 'Price must be a valid number.' };
+    if (Number.isNaN(salePercent)) return { error: 'Sale percent must be a valid number.' };
+    if (Number.isNaN(salePrice)) return { error: 'Sale price must be a valid number.' };
+
+    if (salePercent !== undefined && (salePercent < 0 || salePercent > 100)) {
+        return { error: 'Sale percent must be between 0 and 100.' };
+    }
+    if (salePrice !== undefined && salePrice < 0) {
+        return { error: 'Sale price must be a non-negative number.' };
+    }
+
+    let nextSalePercent = salePercent ?? 0;
+    let nextSalePrice = salePrice ?? 0;
+
+    if (basePrice !== undefined && basePrice > 0) {
+        if (nextSalePercent > 0 && salePrice === undefined) {
+            nextSalePrice = Number((basePrice * (1 - nextSalePercent / 100)).toFixed(2));
+        }
+
+        if (salePrice !== undefined && salePercent === undefined) {
+            nextSalePercent = Math.max(0, Math.round(((basePrice - nextSalePrice) / basePrice) * 100));
+        }
+
+        if (nextSalePercent > 0 && nextSalePrice > basePrice) {
+            return { error: 'Sale price must be less than the original price.' };
+        }
+
+        if (salePrice !== undefined && nextSalePrice >= basePrice && nextSalePercent > 0) {
+            return { error: 'Sale price must be less than the original price.' };
+        }
+    }
+
+    return {
+        salePercent: nextSalePercent || 0,
+        salePrice: nextSalePrice || 0,
+    };
+}
+
 exports.getGenres = async (req, res, next) => {
     try {
         const result = await Book.aggregate([
@@ -79,13 +128,30 @@ exports.createBook = async (req, res, next) => {
         }
 
         const { title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock } = req.body;
+        const sale = normalizeSaleFields(req.body);
+        if (sale.error) return res.status(422).json({ error: sale.error });
         if (price !== undefined && (isNaN(Number(price)) || Number(price) < 0)) {
             return res.status(422).json({ error: 'Price must be a non-negative number.' });
         }
         if (stock !== undefined && (isNaN(Number(stock)) || Number(stock) < 0 || !Number.isInteger(Number(stock)))) {
             return res.status(422).json({ error: 'Stock must be a non-negative integer.' });
         }
-        const saved = await new Book({ title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock }).save();
+        const saved = await new Book({
+            title,
+            author,
+            genre,
+            year,
+            image,
+            pages,
+            description,
+            quote,
+            price,
+            language,
+            ISBN,
+            stock,
+            salePercent: sale.salePercent,
+            salePrice: sale.salePrice,
+        }).save();
         res.status(201).json(saved);
     } catch (err) {
         next(err);
@@ -96,13 +162,34 @@ exports.updateBook = async (req, res, next) => {
     try {
         const title = decodeURIComponent(req.params.title);
         const { title: newTitle, author, genre, year, image, pages, description, quote, price, language, ISBN, stock } = req.body;
+        const hasSaleInput = Object.prototype.hasOwnProperty.call(req.body, 'salePercent')
+          || Object.prototype.hasOwnProperty.call(req.body, 'salePrice');
+        const sale = hasSaleInput ? normalizeSaleFields(req.body) : {};
+        if (sale.error) return res.status(422).json({ error: sale.error });
         if (price !== undefined && (isNaN(Number(price)) || Number(price) < 0)) {
             return res.status(422).json({ error: 'Price must be a non-negative number.' });
         }
         if (stock !== undefined && (isNaN(Number(stock)) || Number(stock) < 0 || !Number.isInteger(Number(stock)))) {
             return res.status(422).json({ error: 'Stock must be a non-negative integer.' });
         }
-        const update = { title: newTitle, author, genre, year, image, pages, description, quote, price, language, ISBN, stock };
+        const update = {
+            title: newTitle,
+            author,
+            genre,
+            year,
+            image,
+            pages,
+            description,
+            quote,
+            price,
+            language,
+            ISBN,
+            stock,
+        };
+        if (hasSaleInput) {
+            update.salePercent = sale.salePercent;
+            update.salePrice = sale.salePrice;
+        }
         Object.keys(update).forEach(k => update[k] === undefined && delete update[k]);
 
         const updated = await Book.findOneAndUpdate(
@@ -143,10 +230,31 @@ exports.deleteBookById = async (req, res, next) => {
 exports.updateBookById = async (req, res, next) => {
     try {
         const { title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock } = req.body;
+        const hasSaleInput = Object.prototype.hasOwnProperty.call(req.body, 'salePercent')
+          || Object.prototype.hasOwnProperty.call(req.body, 'salePrice');
+        const sale = hasSaleInput ? normalizeSaleFields(req.body) : {};
+        if (sale.error) return res.status(422).json({ error: sale.error });
         if (price !== undefined && (isNaN(Number(price)) || Number(price) < 0)) {
             return res.status(422).json({ error: 'Price must be a non-negative number.' });
         }
-        const update = { title, author, genre, year, image, pages, description, quote, price, language, ISBN, stock };
+        const update = {
+            title,
+            author,
+            genre,
+            year,
+            image,
+            pages,
+            description,
+            quote,
+            price,
+            language,
+            ISBN,
+            stock,
+        };
+        if (hasSaleInput) {
+            update.salePercent = sale.salePercent;
+            update.salePrice = sale.salePrice;
+        }
         Object.keys(update).forEach(k => update[k] === undefined && delete update[k]);
         const updated = await Book.findByIdAndUpdate(req.params.id, update, { new: true });
         if (!updated) return res.status(404).json({ message: 'Book not found' });

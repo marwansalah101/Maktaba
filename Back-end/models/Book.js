@@ -83,11 +83,13 @@ const bookSchema = new mongoose.Schema(
       default: 0,
       min: 0
     },
-    sale: {
+    salePercent: {
       type: Number,
-      default: 0,
-      min: 0,
-      max: 300  
+      default: 0
+    },
+    salePrice: {
+      type: Number,
+      default: 0
     }
   },
   { timestamps: true, collection: 'Book' }

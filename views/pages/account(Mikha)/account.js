@@ -1,4 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
+﻿// ─────────────────────────────────────────────────────────────────────────────
 //  account.js  —  Maktaba  |  Settings Page  (connected to the User collection)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -231,7 +231,7 @@ async function loadOrderHistory() {
                 <div class="order-card-date">${date}</div>
                 <div class="order-items-preview">${items}${more}</div>
                 <div class="order-card-footer">
-                    <span class="order-total-label">Total: <strong class="order-total-amount">&euro;${Number(total).toFixed(2)}</strong></span>
+                    <span class="order-total-label">Total: <strong class="order-total-amount">L.E ${Number(total).toFixed(2)}</strong></span>
                     <button class="track-btn" onclick="openTracking('${order._id}','${status}','${order.createdAt}')">Track Order</button>
                 </div>
             </div>`;
@@ -298,12 +298,14 @@ function renderFavoritesPage() {
         const rawImg = book.image || book.cover || '';
         const image  = rawImg ? resolveAssetPath(rawImg) : '';
         const author = book.author || 'Unknown author';
-        const price = Number(book.price) ? Number(book.price).toFixed(2) : String(book.price || '0.00');
         const category = book.genre || book.category || 'General';
+        const priceMarkup = (window.MKSale && window.MKSale.buildPriceMarkup)
+            ? window.MKSale.buildPriceMarkup(book, { prefix: 'L.E ', badge: false })
+            : { html: `L.E ${(Number(book.price) || 0).toFixed(2)}` };
 
           return `
             <div class="favorite-item" data-title="${book.title}">
-                <a href="/pages/product(Marwan)/product.html?title=${encodeURIComponent(book.title)}" class="favorite-left" style="text-decoration:none;">
+                <a href="/book/${encodeURIComponent(String(book.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))}" class="favorite-left" style="text-decoration:none;">
                     <img src="${image}" alt="${book.title}"${!image ? ' style="visibility:hidden"' : ''} onerror="this.style.visibility='hidden'">
                     <div class="favorite-info">
                         <span class="favorite-category">${category}</span>
@@ -312,8 +314,8 @@ function renderFavoritesPage() {
                     </div>
                 </a>
                 <div class="favorite-right">
-                    <span class="favorite-price" style="font-family: 'Lora', serif;">${price} L.E</span>
-                    <button class="favorite-bag-btn" data-title="${book.title}" data-author="${author}" data-price="${price}" data-image="${image}" aria-label="Add ${book.title} to cart">
+                    <span class="favorite-price" style="font-family: 'Lora', serif;">${priceMarkup.html}</span>
+                    <button class="favorite-bag-btn" data-title="${book.title}" data-author="${author}" data-price="${book.price || 0}" data-original-price="${book.originalPrice || book.price || 0}" data-sale-price="${book.salePrice || book.price || 0}" data-sale-percent="${book.salePercent || 0}" data-image="${image}" aria-label="Add ${book.title} to cart">
                         <span class="material-symbols-outlined" style="color: black !important;">shopping_bag</span>
                     </button>
                     <button class="favorite-remove-btn" type="button" data-title="${book.title}" aria-label="Remove from favorites">
@@ -334,6 +336,9 @@ function attachFavoritesPageListeners() {
                 title: this.dataset.title,
                 author: this.dataset.author,
                 price: this.dataset.price,
+                originalPrice: this.dataset.originalPrice,
+                salePrice: this.dataset.salePrice,
+                salePercent: this.dataset.salePercent,
                 image: this.dataset.image,
                 qty: 1
             };

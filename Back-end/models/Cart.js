@@ -5,6 +5,10 @@ const cartItemSchema = new mongoose.Schema({
     author: { type: String, default: '' },
     image:  { type: String, default: '' },
     price:  { type: Number, required: true },
+    originalPrice: { type: Number, default: 0 },
+    salePrice:     { type: Number, default: 0 },
+    salePercent:   { type: Number, default: 0 },
+    isOnSale:      { type: Boolean, default: false },
     qty:    { type: Number, required: true, min: 1, default: 1 },
 }, { _id: false });
 const cartSchema = new mongoose.Schema(

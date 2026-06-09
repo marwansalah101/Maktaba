@@ -1,4 +1,4 @@
-const menuBtn = document.getElementById('menuBtn');
+﻿const menuBtn = document.getElementById('menuBtn');
 const menuDropdown = document.getElementById('menuDropdown');
 const menuWrapper = document.querySelector('.menu-dropdown-wrapper');
 
@@ -133,6 +133,7 @@ function renderOrder() {
         const qty = item.qty || 1;
         const price = parseFloat(item.price) || 0;
         subtotal += price * qty;
+        const priceMarkup = renderLinePriceMarkup(item, qty, 'L.E ');
 
         const itemCard = document.createElement("div");
         itemCard.className = "order-item";
@@ -142,12 +143,12 @@ function renderOrder() {
                 <h4>${item.title}</h4>
                 <p>QTY: ${qty}</p>
             </div>
-            <div class="order-item-price">&euro;${(price * qty).toFixed(2)}</div>
+            <div class="order-item-price">${priceMarkup.html}</div>
         `;
         listContainer.appendChild(itemCard);
     });
 
-    totalElement.textContent = `\u20AC${(subtotal + shipping).toFixed(2)}`;
+    totalElement.textContent = `L.E ${(subtotal + shipping).toFixed(2)}`;
 
     const shippingAddress = document.getElementById('shipping-address');
     if (shippingAddress) {
@@ -272,20 +273,29 @@ function getFavoriteBooks() {
     return getFavorites().map(resolveFavoriteBook).filter(Boolean);
 }
 
-/* Make navbar items white over dark backgrounds globally */
-/* Dark sections that trigger white navbar: .book-bg (hero), .between-carouselss (ticker), .about-us, .site-footer */
+/* Navbar: white text over dark sections, dark text over light sections.
+   Enabled on pages with data-nav-invert on <body> (home + browse). */
+const NAV_DARK_SECTIONS = [
+    '.nav-dark-section',
+    '.book-bg',
+    '.between-carouselss',
+    '.about-us',
+    '.site-footer',
+    '.bw-card--dark',
+    '.bw-card--warm-dark',
+].join(', ');
+
 function handleNavbarColorInversion() {
     const navbar = document.querySelector('.navbar');
-    if (!navbar) return;
+    if (!navbar || !document.body.hasAttribute('data-nav-invert')) return;
 
-    const darkSections = document.querySelectorAll('.book-bg, .between-carouselss, .about-us, .site-footer');
     const navRect = navbar.getBoundingClientRect();
-
+    const navMidY = navRect.top + navRect.height / 2;
     let isDark = false;
 
-    darkSections.forEach(section => {
+    document.querySelectorAll(NAV_DARK_SECTIONS).forEach((section) => {
         const rect = section.getBoundingClientRect();
-        if (rect.top < navRect.bottom - 10 && rect.bottom > navRect.top + 10) {
+        if (rect.top <= navMidY && rect.bottom >= navMidY) {
             isDark = true;
         }
     });
@@ -300,8 +310,21 @@ function handleNavbarColorInversion() {
     }
 }
 
-window.addEventListener('scroll', handleNavbarColorInversion);
+window.handleNavbarColorInversion = handleNavbarColorInversion;
+
+let navInvertTicking = false;
+function scheduleNavbarColorInversion() {
+    if (navInvertTicking) return;
+    navInvertTicking = true;
+    requestAnimationFrame(() => {
+        navInvertTicking = false;
+        handleNavbarColorInversion();
+    });
+}
+
+window.addEventListener('scroll', scheduleNavbarColorInversion, { passive: true });
 window.addEventListener('DOMContentLoaded', handleNavbarColorInversion);
+window.addEventListener('load', handleNavbarColorInversion);
 window.addEventListener('resize', handleNavbarColorInversion);
 
 /*add to cart*/
@@ -323,10 +346,18 @@ function normalizeCart(cart) {
         if (!item || !item.title) return;
         const qty = Math.max(1, parseInt(item.qty || 1, 10));
         const existing = merged.find(book => book.title === item.title);
+        const incoming = (window.MKSale && window.MKSale.toCartItem)
+            ? window.MKSale.toCartItem({ ...item, qty })
+            : { ...item, qty };
         if (existing) {
+            const currentPrice = parseFloat(existing.price) || 0;
+            const incomingPrice = parseFloat(incoming.price) || 0;
+            if (!currentPrice || (incomingPrice > 0 && incomingPrice < currentPrice)) {
+                Object.assign(existing, incoming);
+            }
             existing.qty = (existing.qty || 1) + qty;
         } else {
-            merged.push({ ...item, qty });
+            merged.push(incoming);
         }
     });
     return merged;
@@ -355,20 +386,47 @@ function addBookToCart(book) {
     if (!book || !book.title) return 0;
     const cart = getCart();
     const existing = cart.find(item => item.title === book.title);
+    const incoming = (window.MKSale && window.MKSale.toCartItem)
+        ? window.MKSale.toCartItem({ ...book, qty: 1 })
+        : { ...book, qty: 1 };
     if (existing) {
-        existing.qty = (existing.qty || 1) + 1;
+        const nextQty = (existing.qty || 1) + 1;
+        const currentPrice = parseFloat(existing.price) || 0;
+        const incomingPrice = parseFloat(incoming.price) || 0;
+        if (!currentPrice || (incomingPrice > 0 && incomingPrice < currentPrice)) {
+            Object.assign(existing, incoming);
+        }
+        existing.qty = nextQty;
     } else {
-        cart.push({ ...book, qty: 1 });
+        cart.push(incoming);
     }
     saveCart(cart);
     return existing ? existing.qty : 1;
 }
 
+function renderLinePriceMarkup(book, qty, prefix) {
+    const quantity = Math.max(1, parseInt(qty, 10) || 1);
+    if (window.MKSale && window.MKSale.getPricing) {
+        const pricing = window.MKSale.getPricing(book);
+        if (pricing.hasSale) {
+            return {
+                html: `<span class="mk-price-original" style="text-decoration:line-through;color:#8b7b73;margin-right:10px;">${prefix}${(pricing.regularPrice * quantity).toFixed(2)}</span><span class="mk-price-current" style="color:#9f3d35;font-weight:700;">${prefix}${(pricing.effectivePrice * quantity).toFixed(2)}</span>`,
+                hasSale: true,
+            };
+        }
+        return {
+            html: `<span class="mk-price-current">${prefix}${(pricing.effectivePrice * quantity).toFixed(2)}</span>`,
+            hasSale: false,
+        };
+    }
+    const price = parseFloat(book && book.price) || 0;
+    return { html: `<span class="mk-price-current">${prefix}${(price * quantity).toFixed(2)}</span>`, hasSale: false };
+}
+
 function resolveAssetPath(imagePath) {
     if (!imagePath) return '';
     if (/^(https?:|data:|\.\/|\.\.\/)/.test(imagePath)) return imagePath;
-    const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
-    return basePath + imagePath;
+    return '/' + String(imagePath).replace(/^\/+/, '');
 }
 
 function updateCartSummary(subtotal) {
@@ -378,12 +436,12 @@ function updateCartSummary(subtotal) {
     const subEl = document.getElementById('summary-subtotal');
     const shipEl = document.getElementById('summary-shipping');
     const totalEl = document.getElementById('summary-total');
-    if (subEl) subEl.textContent = `\u20AC${subtotal.toFixed(2)}`;
-    if (shipEl) shipEl.textContent = `\u20AC${shipping.toFixed(2)}`;
-    if (totalEl) totalEl.textContent = `\u20AC${total.toFixed(2)}`;
+    if (subEl) subEl.textContent = `L.E ${subtotal.toFixed(2)}`;
+    if (shipEl) shipEl.textContent = `L.E ${shipping.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `L.E ${total.toFixed(2)}`;
 
     const pageTotal = document.getElementById('cart-page-total');
-    if (pageTotal) pageTotal.textContent = `\u20AC${total.toFixed(2)}`;
+    if (pageTotal) pageTotal.textContent = `L.E ${total.toFixed(2)}`;
 
     const countEl = document.getElementById('cart-item-count');
     if (countEl) {
@@ -431,6 +489,7 @@ function renderCart() {
         const qty = book.qty || 1;
         const price = parseFloat(book.price) || 0;
         subtotal += price * qty;
+        const priceMarkup = renderLinePriceMarkup(book, qty, 'L.E ');
 
         const item = document.createElement('div');
         item.className = 'cart-item';
@@ -439,7 +498,6 @@ function renderCart() {
             <div class="cart-item-info">
                 <h3>${book.title}</h3>
                 <p>${book.author || 'Maktaba Book'}</p>
-                <span>Short description of book selected from your library</span>
             </div>
             <div class="cart-item-meta cart-item-qty-control">
                 <span>Quantity</span>
@@ -450,7 +508,7 @@ function renderCart() {
                 </div>
             </div>
 
-            <div class="cart-item-price">&euro;${(price * qty).toFixed(2)}</div>
+            <div class="cart-item-price">${priceMarkup.html}</div>
             <button class="cart-remove-btn" onclick="removeItem(${index})" aria-label="Remove ${book.title}">&times;</button>
         `;
         container.appendChild(item);
@@ -465,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function () {
-            window.location.href = './checkout.html';
+            window.location.href = '/checkout';
         });
     }
 });
@@ -487,6 +545,7 @@ function renderCheckoutItems() {
             const qty = item.qty || 1;
             const price = parseFloat(item.price) || 0;
             subtotal += price * qty;
+            const priceMarkup = renderLinePriceMarkup(item, qty, 'L.E ');
             return `
                 <div class="checkout-order-item">
                     <img class="checkout-book-cover" src="${resolveAssetPath(item.image)}" alt="${item.title}" onerror="this.style.background='#d4c4b0';this.removeAttribute('src')">
@@ -494,16 +553,16 @@ function renderCheckoutItems() {
                         <div class="checkout-item-title">${item.title}</div>
                         <div class="checkout-item-qty">QTY: ${qty}</div>
                     </div>
-                    <div class="checkout-item-price">&euro;${(price * qty).toFixed(2)}</div>
+                    <div class="checkout-item-price">${priceMarkup.html}</div>
                 </div>
             `;
         }).join('');
     }
 
     const shipping = cart.length > 0 ? CART_SHIPPING : 0;
-    if (subtotalEl) subtotalEl.textContent = `\u20AC${subtotal.toFixed(2)}`;
-    if (shippingEl) shippingEl.textContent = `\u20AC${shipping.toFixed(2)}`;
-    if (totalEl) totalEl.textContent = `\u20AC${(subtotal + shipping).toFixed(2)}`;
+    if (subtotalEl) subtotalEl.textContent = `L.E ${subtotal.toFixed(2)}`;
+    if (shippingEl) shippingEl.textContent = `L.E ${shipping.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `L.E ${(subtotal + shipping).toFixed(2)}`;
 }
 
 function setFieldError(input, message) {
@@ -594,7 +653,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 } catch(_) {}
             }
-            window.location.href = './payment.html';
+            window.location.href = '/payment';
         });
 
         const tok = localStorage.getItem('maktabaToken');
@@ -749,7 +808,11 @@ function setupPaymentForm(paymentForm) {
                 author:   item.author || '',
                 price:    parseFloat(item.price) || 0,
                 quantity: item.qty || 1,
-                image:    item.image || ''
+                image:    item.image || '',
+                originalPrice: parseFloat(item.originalPrice ?? item.price) || 0,
+                salePrice:     parseFloat(item.salePrice ?? item.price) || 0,
+                salePercent:   Number(item.salePercent || 0),
+                isOnSale:      Boolean(item.isOnSale || ((parseFloat(item.salePrice ?? item.price) || 0) > 0 && (parseFloat(item.originalPrice ?? item.price) || 0) > (parseFloat(item.salePrice ?? item.price) || 0)))
             })),
             shippingAddress: {
                 street:   shippingInfo.street   || '',
@@ -802,7 +865,7 @@ function setupPaymentForm(paymentForm) {
             } catch(_) {}
         }
 
-        window.location.href = './order-success.html';
+        window.location.href = '/order-success';
     });
 }
 
@@ -848,9 +911,9 @@ footerLinks.forEach(link => {
             if (!href || href.startsWith('#')) return;
 
             const linkPage = href.split('/').pop().toLowerCase();
-            const isHome = currentPage === '' || currentPage === 'home.html';
+            const isHome = currentPage === '' || currentPage === 'home' || currentPage === 'home.html';
 
-            if (linkPage === currentPage || (isHome && linkPage === 'home.html')) {
+            if (linkPage === currentPage || (isHome && (linkPage === 'home' || linkPage === 'home.html'))) {
                 link.classList.add('active-link');
             }
         });
@@ -948,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ["maktabaToken","maktabaUserName","maktabaUserEmail","maktabaUserRole","maktabaLoggedInUser"].forEach(function(k){ localStorage.removeItem(k); });
     try { localStorage.removeItem("cart"); localStorage.removeItem("favorites"); } catch(e) {}
     try { sessionStorage.setItem("mkFlashToast", "You have been logged out."); } catch (e) {}
-    location.href = "/home.html";
+    location.href = "/home";
   }
   window.mkLogout = mkLogout;
 
@@ -956,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function paintNav() {
     var dd = document.querySelector(".menu-dropdown");
     if (!dd) return;
-    var signinHref = "/pages/authentication(Ali)/signin.html";
+    var signinHref = "/signin";
     var link = dd.querySelector("#mkAuthLink");
     if (!link) { link = document.createElement("a"); link.id = "mkAuthLink"; dd.appendChild(link); }
     if (authed()) {

@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/user');
 const jwt  = require('jsonwebtoken');
 const EMAIL_RX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -90,6 +90,10 @@ exports.updateCart = async (req, res, next) => {
       author: String(i.author || ''),
       image:  String(i.image  || ''),
       price:  i.price,
+      originalPrice: i.originalPrice ?? i.price,
+      salePrice:      i.salePrice ?? i.price,
+      salePercent:    Number(i.salePercent || 0),
+      isOnSale:       Boolean(i.isOnSale || (Number(i.salePrice || 0) > 0 && Number(i.originalPrice || i.price || 0) > Number(i.salePrice || 0))),
       qty:    Math.max(1, parseInt(i.qty, 10) || 1),
     }));
     const user = await User.findByIdAndUpdate(req.user.id, { cart }, { new: true }).select('cart');

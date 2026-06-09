@@ -36,7 +36,7 @@ function handleGoogleResponse(response) {
     localStorage.setItem('maktabaUserName',  googleUser.fullname);
     localStorage.setItem('maktabaUserEmail', googleUser.email);
 
-    window.location.href = '/home.html';
+    window.location.href = '/home';
 }
 
 function googleSignIn() {
@@ -269,7 +269,7 @@ const ADMIN_API_BASE = window.location.port === '3000' ? '' : 'http://localhost:
                 }
                 // Confirmation toast shown on the sign-in page after redirect.
                 try { sessionStorage.setItem('mkFlashToast', 'Account created — please sign in to continue.'); } catch (e) {}
-                window.location.href = './signin.html';
+                window.location.href = '/signin';
             })
             .catch(function () {
                 showError(emailEl, 'Cannot reach server — make sure the app is running on port 3000.');
@@ -379,8 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 try { sessionStorage.setItem('mkFlashToast', 'Welcome back, ' + who + '!'); } catch (e) {}
 
                 var go = function () {
-                    if (role === 'admin') window.location.href = './dashboard.html';
-                    else window.location.href = '/home.html';
+                    if (role === 'admin') window.location.href = '/dashboard';
+                    else window.location.href = '/home';
                 };
                 // Merge this account's saved cart + favorites from the DB, then redirect.
                 if (typeof window.mkSyncOnLogin === 'function') {
@@ -481,8 +481,8 @@ function submitForgotPw(e) {
 /* ══════════════════════════════════════════════════════════════════
    DASHBOARD NAVIGATION
 ══════════════════════════════════════════════════════════════════ */
-function goToAuthors() { window.location.href = './totalauth.html'; }
-function goToBooks()   { window.location.href = './authbooks.html'; }
+function goToAuthors() { window.location.href = '/totalauth'; }
+function goToBooks()   { window.location.href = '/authbooks'; }
 function toggleMenu()  { document.getElementById('sidebar').classList.toggle('active'); }
 
 
@@ -495,15 +495,35 @@ function openAddBookModal() {
 }
 function closeAddBookModal() {
     const modal = document.getElementById('addBookModal');
-    if (modal) modal.classList.remove('show');
+    if (!modal) return;
+    modal.classList.remove('show');
+    delete modal.dataset.editId;
+    const h2 = modal.querySelector('.modal-header h2');
+    if (h2) h2.textContent = 'Add New Book';
+    const form = document.getElementById('addBookForm');
+    if (form) form.reset();
 }
 function openAddAuthorModal() {
     const modal = document.getElementById('addAuthorModal');
-    if (modal) { modal.classList.add('show'); const form = document.getElementById('addAuthorForm'); if (form) form.reset(); }
+    if (!modal) return;
+    delete modal.dataset.editId;
+    const h2 = modal.querySelector('.modal-header h2');
+    if (h2) h2.textContent = 'Add New Author';
+    const profileField = document.getElementById('authorProfileImgFile');
+    if (profileField) profileField.setAttribute('required', '');
+    const form = document.getElementById('addAuthorForm');
+    if (form) form.reset();
+    modal.classList.add('show');
 }
 function closeAddAuthorModal() {
     const modal = document.getElementById('addAuthorModal');
-    if (modal) modal.classList.remove('show');
+    if (!modal) return;
+    modal.classList.remove('show');
+    delete modal.dataset.editId;
+    const h2 = modal.querySelector('.modal-header h2');
+    if (h2) h2.textContent = 'Add New Author';
+    const profileField = document.getElementById('authorProfileImgFile');
+    if (profileField) profileField.setAttribute('required', '');
 }
 function normalizeAuthorBooks(value) {
     return value
@@ -550,55 +570,81 @@ function initAuthorForm() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById('authorName').value.trim();
-        const slug = document.getElementById('authorSlug').value.trim();
-        const stats = document.getElementById('authorStats').value.trim();
+        const modal = document.getElementById('addAuthorModal');
+        const editId = modal && modal.dataset.editId;
+
+        const name       = document.getElementById('authorName').value.trim();
+        const slug       = document.getElementById('authorSlug').value.trim();
+        const stats      = document.getElementById('authorStats').value.trim();
         const aboutTitle = document.getElementById('authorAboutTitle').value.trim();
-        const aboutText = document.getElementById('authorAboutText').value.trim();
-        const bannerImg = document.getElementById('authorBannerImg').value.trim();
+        const aboutText  = document.getElementById('authorAboutText').value.trim();
+        const bannerImg  = document.getElementById('authorBannerImg').value.trim();
         const profileImgFile = document.getElementById('authorProfileImgFile').files[0];
         const booksInput = document.getElementById('authorBooks').value.trim();
         const books = normalizeAuthorBooks(booksInput);
 
-        if (!name || !slug || !bannerImg || !profileImgFile) {
+        if (!name || !slug || !bannerImg) {
             alert('Please complete all required fields before submitting.');
             return;
         }
-
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('slug', slug);
-        formData.append('stats', stats);
-        formData.append('aboutTitle', aboutTitle);
-        formData.append('aboutText', aboutText);
-        formData.append('bannerImg', bannerImg);
-        formData.append('profileImg', profileImgFile);
-        if (books.length > 0) {
-            formData.append('books', JSON.stringify(books));
+        if (!editId && !profileImgFile) {
+            alert('Please select a profile image.');
+            return;
         }
 
+        const token = localStorage.getItem('maktabaToken');
+        const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
+
         try {
-            const token = localStorage.getItem('maktabaToken');
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
-            const res = await fetch(ADMIN_API_BASE + '/api/authors', {
-                method: 'POST',
-                headers,
-                body: formData,
-            });
+            let res;
+            if (editId) {
+                if (profileImgFile) {
+                    const fd = new FormData();
+                    fd.append('name', name);
+                    fd.append('slug', slug);
+                    fd.append('stats', stats);
+                    fd.append('aboutTitle', aboutTitle);
+                    fd.append('aboutText', aboutText);
+                    fd.append('bannerImg', bannerImg);
+                    fd.append('profileImg', profileImgFile);
+                    if (books.length > 0) fd.append('books', JSON.stringify(books));
+                    res = await fetch(ADMIN_API_BASE + '/api/authors/' + editId, {
+                        method: 'PUT', headers: authHeaders, body: fd
+                    });
+                } else {
+                    res = await fetch(ADMIN_API_BASE + '/api/authors/' + editId, {
+                        method: 'PUT',
+                        headers: { ...authHeaders, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, slug, stats, aboutTitle, aboutText, bannerImg, books })
+                    });
+                }
+            } else {
+                const fd = new FormData();
+                fd.append('name', name);
+                fd.append('slug', slug);
+                fd.append('stats', stats);
+                fd.append('aboutTitle', aboutTitle);
+                fd.append('aboutText', aboutText);
+                fd.append('bannerImg', bannerImg);
+                fd.append('profileImg', profileImgFile);
+                if (books.length > 0) fd.append('books', JSON.stringify(books));
+                res = await fetch(ADMIN_API_BASE + '/api/authors', {
+                    method: 'POST', headers: authHeaders, body: fd
+                });
+            }
 
             const data = await res.json();
             if (!res.ok) {
-                const error = data.error || data.message || 'Failed to add author.';
-                alert(error);
+                alert(data.error || data.message || `Failed to ${editId ? 'update' : 'add'} author.`);
                 return;
             }
 
-            appendAuthorCard(data);
             closeAddAuthorModal();
-            alert('Author added successfully.');
+            alert(editId ? 'Author updated successfully.' : 'Author added successfully.');
+            loadAdminAuthors();
         } catch (err) {
-            console.error('Add author failed:', err);
-            alert('Unable to add author. Check your network and try again.');
+            console.error('Author form error:', err);
+            alert('Unable to save author. Check your network and try again.');
         }
     });
 }
@@ -615,6 +661,8 @@ function initBookForm() {
         const year        = document.getElementById('bookYear')?.value;
         const price       = document.getElementById('bookPrice')?.value;
         const stock       = document.getElementById('bookStock')?.value;
+        const salePercent = document.getElementById('bookSalePercent')?.value;
+        const salePrice   = document.getElementById('bookSalePrice')?.value;
         const ISBN        = document.getElementById('bookISBN')?.value.trim() || '';
         const pages       = document.getElementById('bookPages')?.value || 0;
         const image       = document.getElementById('bookImage')?.value.trim() || '';
@@ -641,7 +689,22 @@ function initBookForm() {
             const res = await fetch(url, {
                 method,
                 headers,
-                body: JSON.stringify({ title, author, genre, year: Number(year), price: Number(price), stock: Number(stock) || 0, ISBN, pages: Number(pages), image, description, language, quote }),
+                body: JSON.stringify({
+                    title,
+                    author,
+                    genre,
+                    year: Number(year),
+                    price: Number(price),
+                    stock: Number(stock) || 0,
+                    salePercent: salePercent === '' ? 0 : Number(salePercent),
+                    salePrice: salePrice === '' ? 0 : Number(salePrice),
+                    ISBN,
+                    pages: Number(pages),
+                    image,
+                    description,
+                    language,
+                    quote,
+                }),
             });
 
             const data = await res.json();
@@ -665,6 +728,7 @@ function initBookForm() {
    ADMIN BOOKS TABLE — dynamic load + edit/delete
 ══════════════════════════════════════════════════════════════════ */
 const BOOK_COLORS = ['yellow','red','green','brown','blue','purple','orange','teal'];
+let _adminBooksCache = [];
 
 async function loadAdminBooks() {
     const tbody = document.getElementById('books-tbody');
@@ -675,6 +739,7 @@ async function loadAdminBooks() {
         const res = await fetch(ADMIN_API_BASE + '/books');
         const books = await res.json();
         const list = Array.isArray(books) ? books : (books.books || []);
+        _adminBooksCache = list;
 
         if (countEl) countEl.textContent = list.length + ' title' + (list.length !== 1 ? 's' : '') + ' in the collection';
 
@@ -685,6 +750,11 @@ async function loadAdminBooks() {
                 const imgEl = b.image
                     ? `<img src="${b.image}" alt="${b.title}" style="width:32px;height:44px;object-fit:cover;border-radius:3px;">`
                     : `<span class="color-box ${color}"></span>`;
+                const price = Number(b.price || 0);
+                const salePrice = Number(b.salePrice || 0);
+                const salePercent = Number(b.salePercent || 0);
+                const onSale = salePercent > 0 || (salePrice > 0 && salePrice < price);
+                const saleDisplay = salePrice > 0 ? salePrice : (salePercent > 0 && price > 0 ? Number((price * (1 - salePercent / 100)).toFixed(2)) : 0);
                 return `
                 <tr data-id="${b._id}">
                   <td>${imgEl}</td>
@@ -692,10 +762,18 @@ async function loadAdminBooks() {
                   <td>${b.author}</td>
                   <td><span class="tag">${b.genre}</span></td>
                   <td>${b.year || '—'}</td>
-                  <td class="price">$${Number(b.price).toFixed(2)}</td>
+                  <td class="price">
+                    ${onSale ? `
+                      <div style="display:grid;gap:2px;">
+                        <span style="text-decoration:line-through;color:#888;font-size:11px;">L.E ${price.toFixed(2)}</span>
+                        <strong style="color:#c0392b;font-size:13px;">L.E ${saleDisplay.toFixed(2)}</strong>
+                        <span style="display:inline-flex;align-items:center;justify-content:center;background:#c0392b;color:#fff;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:600;width:max-content;">ON SALE</span>
+                      </div>
+                    ` : `L.E ${price.toFixed(2)}`}
+                  </td>
                   <td>${b.stock != null ? b.stock : '—'}</td>
                   <td>
-                    <button class="edit" onclick="openEditBookModal('${b._id}','${(b.title||'').replace(/'/g,"\\'")}','${(b.author||'').replace(/'/g,"\\'")}','${(b.genre||'').replace(/'/g,"\\'")}',${b.year||0},${b.price||0},${b.stock||0})">Edit</button>
+                    <button class="edit" onclick="openEditBookModal('${b._id}')">Edit</button>
                     <button class="delete" onclick="deleteBook('${b._id}')">Delete</button>
                   </td>
                 </tr>`;
@@ -740,17 +818,28 @@ async function deleteBook(id) {
     } catch (err) { alert('Network error.'); }
 }
 
-function openEditBookModal(id, title, author, genre, year, price, stock) {
-    // Reuse the addBookModal for editing
+function openEditBookModal(id) {
     const modal = document.getElementById('addBookModal');
     if (!modal) return;
-    document.querySelector('.modal-header h2').textContent = 'Edit Book';
-    document.getElementById('bookTitle').value  = title;
-    document.getElementById('bookAuthor').value = author;
-    document.getElementById('bookGenre').value  = genre;
-    document.getElementById('bookYear').value   = year;
-    document.getElementById('bookPrice').value  = price;
-    document.getElementById('bookStock').value  = stock;
+    const b = _adminBooksCache.find(x => x._id === id);
+    if (!b) { alert('Book data not found — try refreshing the page.'); return; }
+
+    const h2 = modal.querySelector('.modal-header h2');
+    if (h2) h2.textContent = 'Edit Book';
+    document.getElementById('bookTitle').value       = b.title       || '';
+    document.getElementById('bookAuthor').value      = b.author      || '';
+    document.getElementById('bookGenre').value       = b.genre       || '';
+    document.getElementById('bookYear').value        = b.year        || '';
+    document.getElementById('bookPrice').value       = b.price       || '';
+    document.getElementById('bookStock').value       = b.stock != null ? b.stock : '';
+    document.getElementById('bookSalePercent').value = b.salePercent != null ? b.salePercent : 0;
+    document.getElementById('bookSalePrice').value   = b.salePrice != null ? b.salePrice : 0;
+    document.getElementById('bookISBN').value        = b.ISBN        || '';
+    document.getElementById('bookPages').value       = b.pages       || '';
+    document.getElementById('bookImage').value       = b.image       || '';
+    document.getElementById('bookDescription').value = b.description || '';
+    document.getElementById('bookLanguage').value    = b.language    || 'English';
+    document.getElementById('bookQuote').value       = b.quote       || '';
     modal.dataset.editId = id;
     modal.classList.add('show');
 }
@@ -758,6 +847,8 @@ function openEditBookModal(id, title, author, genre, year, price, stock) {
 /* ══════════════════════════════════════════════════════════════════
    ADMIN AUTHORS CARDS — dynamic load + edit/delete
 ══════════════════════════════════════════════════════════════════ */
+let _adminAuthorsCache = [];
+
 async function loadAdminAuthors() {
     const cards = document.getElementById('authors-cards');
     const countEl = document.getElementById('authors-count');
@@ -769,6 +860,7 @@ async function loadAdminAuthors() {
         const res = await fetch(ADMIN_API_BASE + '/api/authors', { headers });
         const data = await res.json();
         const list = Array.isArray(data) ? data : (data.authors || []);
+        _adminAuthorsCache = list;
 
         if (countEl) countEl.textContent = list.length + ' registered author' + (list.length !== 1 ? 's' : '');
 
@@ -791,7 +883,7 @@ async function loadAdminAuthors() {
                 <div class="bottom">
                   <span class="books">${booksCount} book${booksCount !== 1 ? 's' : ''}</span>
                   <div>
-                    <button class="edit" onclick="editAuthorPrompt('${a._id}','${(a.name||'').replace(/'/g,"\\'")}')">Edit</button>
+                    <button class="edit" onclick="openEditAuthorModal('${a._id}')">Edit</button>
                     <button class="delete" onclick="deleteAuthor('${a._id}')">Delete</button>
                   </div>
                 </div>
@@ -815,21 +907,28 @@ async function loadAdminAuthors() {
     }
 }
 
-function editAuthorPrompt(id, name) {
-    const newName = prompt('Edit author name:', name);
-    if (!newName || newName.trim() === name) return;
-    const token = localStorage.getItem('maktabaToken');
-    fetch(ADMIN_API_BASE + '/api/authors/' + id, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
-        body: JSON.stringify({ name: newName.trim() })
-    })
-    .then(r => r.json())
-    .then(d => {
-        if (d.error) { alert(d.error); return; }
-        loadAdminAuthors();
-    })
-    .catch(() => alert('Network error.'));
+function openEditAuthorModal(id) {
+    const modal = document.getElementById('addAuthorModal');
+    if (!modal) return;
+    const a = _adminAuthorsCache.find(x => x._id === id);
+    if (!a) { alert('Author data not found — try refreshing the page.'); return; }
+
+    const h2 = modal.querySelector('.modal-header h2');
+    if (h2) h2.textContent = 'Edit Author';
+    document.getElementById('authorName').value       = a.name       || '';
+    document.getElementById('authorSlug').value       = a.slug       || '';
+    document.getElementById('authorStats').value      = a.stats      || '';
+    document.getElementById('authorAboutTitle').value = a.aboutTitle || '';
+    document.getElementById('authorAboutText').value  = a.aboutText  || '';
+    document.getElementById('authorBannerImg').value  = a.bannerImg  || '';
+    document.getElementById('authorBooks').value      = Array.isArray(a.books) ? a.books.join(', ') : '';
+
+    // Profile image is optional when editing — user only uploads if they want a new one
+    const profileField = document.getElementById('authorProfileImgFile');
+    if (profileField) profileField.removeAttribute('required');
+
+    modal.dataset.editId = id;
+    modal.classList.add('show');
 }
 
 async function deleteAuthor(id) {
@@ -850,6 +949,16 @@ async function deleteAuthor(id) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Admin guard — redirect non-admins away from admin pages
+    if (document.body.classList.contains('admin-dashboard-page')) {
+        const token = localStorage.getItem('maktabaToken');
+        const role  = localStorage.getItem('maktabaUserRole');
+        if (!token || role !== 'admin') {
+            window.location.href = '/signin';
+            return;
+        }
+    }
+
     window.addEventListener('click', (event) => {
         const bookModal = document.getElementById('addBookModal');
         const authorModal = document.getElementById('addAuthorModal');
@@ -882,39 +991,6 @@ window.addEventListener('load', function () {
             { label: 'Orders', data: sold.map(v => v * 35), borderColor: '#3B5E2F', backgroundColor: 'rgba(59,94,47,0.12)', borderWidth: 2, fill: true, tension: 0.45, pointRadius: 0 }
         ]},
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v } } } }
-    });
-});
-
-/*---- Weekly Visitors ----*/
-window.addEventListener('load', function () {
-    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    const visits = [320, 410, 350, 510, 600, 890, 430];
-    const peak = visits.indexOf(Math.max(...visits));
-    const peakEl = document.getElementById('peakDay');
-    if (peakEl) peakEl.textContent = `${days[peak]}: ${visits[peak]}`;
-    const ctx = document.getElementById('visitorsChart');
-    if (!ctx) return;
-    new Chart(ctx.getContext('2d'), {
-        type: 'bar',
-        data: { labels: days, datasets: [{ label: 'Visitors', data: visits, backgroundColor: visits.map((v, i) => i === peak ? '#1B2E4B' : '#2C4A72'), borderRadius: 4, borderSkipped: false, barPercentage: 0.5, categoryPercentage: 0.6 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} visitors` } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#888' }, border: { display: false } }, y: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, color: '#888', maxTicksLimit: 5 }, border: { display: false } } } }
-    });
-});
-
-/*---- Top Selling Books ----*/
-window.addEventListener('load', function () {
-    const books = ['The Prophet','Palace Walk','The Cairo Trilogy','Midday Alley','Broken Wings'];
-    const units = [520, 480, 610, 390, 310];
-    const revenue = [4800, 5600, 8200, 3600, 2800];
-    const ctx = document.getElementById('topBooksChart');
-    if (!ctx) return;
-    new Chart(ctx.getContext('2d'), {
-        type: 'bar',
-        data: { labels: books, datasets: [
-            { label: 'Units Sold', data: units, backgroundColor: '#C8A96E', borderRadius: 3, borderSkipped: false, barPercentage: 0.5, categoryPercentage: 0.7 },
-            { label: 'Revenue ($)', data: revenue, backgroundColor: '#3B5E2F', borderRadius: 3, borderSkipped: false, barPercentage: 0.5, categoryPercentage: 0.7 }
-        ]},
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, boxHeight: 12, padding: 12, font: { size: 12 }, color: '#888' } }, tooltip: { mode: 'index', intersect: false } }, scales: { x: { grid: { color: 'rgba(128,128,128,0.1)' }, ticks: { font: { size: 11 }, color: '#888' }, border: { display: false } }, y: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#888' }, border: { display: false } } } }
     });
 });
 
@@ -981,39 +1057,6 @@ window.addEventListener('load', function () {
         },
       },
     });
-});
-
-/*---- Quick Metrics ----*/
-window.addEventListener('load', function () {
-    const metrics = [
-        { label: 'Avg. Order Value', value: '$52.00', pct: 72, color: '#C8A96E' },
-        { label: 'Conversion Rate',  value: '3.8%',   pct: 38, color: '#3B5E2F' },
-        { label: 'Repeat Customers', value: '61%',    pct: 61, color: '#2471A3' },
-        { label: 'Return Rate',      value: '4.2%',   pct: 42, color: '#C0392B' },
-    ];
-    const card = document.getElementById('quickMetricsCard');
-    if (!card) return;
-    let rows = '';
-    metrics.forEach((m, i) => { const isLast = i === metrics.length - 1; rows += `<div style="margin-bottom:${isLast?'0':'16px'};"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:12px;color:#888;">${m.label}</span><span style="font-size:12px;font-weight:500;">${m.value}</span></div><div style="width:100%;height:4px;background:#f0f0f0;border-radius:2px;"><div style="width:${m.pct}%;height:4px;border-radius:2px;background:${m.color};"></div></div></div>`; });
-    card.innerHTML = `<p style="font-size:14px;font-weight:500;margin:0 0 2px;">Quick Metrics</p><p style="font-size:11px;color:#888;margin:0 0 1.25rem;">Key performance indicators</p>${rows}`;
-});
-
-/*---- Recent Activity ----*/
-window.addEventListener('load', function () {
-    const activities = [
-        { icon: '🛒', text: 'Order #1064 placed',          time: '2m ago'  },
-        { icon: '📦', text: '"The Prophet" restocked',      time: '9m ago'  },
-        { icon: '✍️', text: 'New author profile added',     time: '15m ago' },
-        { icon: '🛒', text: 'Order #1063 placed',           time: '41m ago' },
-        { icon: '⭐', text: '"Cairo Trilogy" got a review', time: '1h ago'  },
-        { icon: '📦', text: 'Stock updated for 3 titles',   time: '1h ago'  },
-        { icon: '🛒', text: 'Order #1062 placed',           time: '1h ago'  },
-    ];
-    const card = document.getElementById('recentActivityCard');
-    if (!card) return;
-    let rows = '';
-    activities.forEach((a, i) => { const isLast = i === activities.length - 1; rows += `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:10px 0;${isLast?'':'border-bottom:0.5px solid #eee;'}"><div style="display:flex;align-items:flex-start;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">${a.icon}</div><span style="font-size:12px;color:#333;padding-top:5px;">${a.text}</span></div><span style="font-size:11px;color:#888;white-space:nowrap;padding-top:6px;">${a.time}</span></div>`; });
-    card.innerHTML = `<p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Activity</p><p style="font-size:11px;color:#888;margin:0 0 0.5rem;">Latest store events</p>${rows}`;
 });
 
 /*---- Low Stock ----*/
