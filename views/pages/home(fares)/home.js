@@ -231,7 +231,7 @@ class BookCardsSlider {
                 <span class="card-author">${data.author}</span>
             </div>
             
-            <div class="card-price">${data.price}</div>
+            <div class="card-price">${(Number(data.price)).toFixed(2)}</div>
         `;
         
         card.appendChild(link);
@@ -433,6 +433,11 @@ class AllAuthorsPage {
     hideNoResults() {
         this.noResults.style.display = 'none';
     }
+
+
+
+
+
 }
 
 // Initialize the page when DOM is loaded

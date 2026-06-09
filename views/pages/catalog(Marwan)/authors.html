@@ -281,6 +281,7 @@
         return res.json();
       })
       .then(author => {
+        document.title = `${author.name} — Maktaba`;
         document.getElementById('author-name-heading').textContent = author.name;
         document.getElementById('author-stats-sub').textContent = author.stats || 'Author';
         document.getElementById('about-title').textContent = author.aboutTitle || `ABOUT ${author.name.toUpperCase()}`;
@@ -321,11 +322,13 @@
       })
       .catch(err => {
         console.error('Error fetching author:', err);
+        document.title = 'Author Not Found — Maktaba';
         document.getElementById('author-name-heading').textContent = 'Author Not Found';
         document.getElementById('author-stats-sub').textContent = 'Please check the URL and try again.';
         displayBooks([]);
       });
   } else {
+    document.title = 'No Author Selected — Maktaba';
     document.getElementById('author-name-heading').textContent = 'No Author Selected';
     document.getElementById('author-stats-sub').textContent = 'Please select an author to view their details.';
     displayBooks([]);

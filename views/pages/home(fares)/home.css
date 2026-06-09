@@ -20,8 +20,7 @@
     position: relative;
    
     background:
-        linear-gradient(180deg, rgba(8, 7, 6, 0.46) 0%, rgba(8, 7, 6, 0.66) 42%, rgba(8, 7, 6, 0.9) 100%),
-        url('../../resources/img/052987e722712b613a758d07a56b21fb.jpg') center center / cover no-repeat;
+    linear-gradient(180deg, rgba(8, 7, 6, 0.15) 0%, rgba(8, 7, 6, 0.35) 42%, rgba(8, 7, 6, 0.55) 100%),        url('../../resources/img/052987e722712b613a758d07a56b21fb.jpg') center center / cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
