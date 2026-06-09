@@ -1020,6 +1020,24 @@ document.addEventListener('DOMContentLoaded', () => {
     var dd = document.querySelector(".menu-dropdown");
     if (!dd) return;
     var signinHref = "/signin";
+
+    // ── Admin dashboard shortcut (only for role === 'admin') ──────────
+    var dashLink = dd.querySelector("#mkDashLink");
+    var role = localStorage.getItem("maktabaUserRole");
+    if (authed() && role === "admin") {
+      if (!dashLink) {
+        dashLink = document.createElement("a");
+        dashLink.id = "mkDashLink";
+        dashLink.href = "/dashboard";
+        dashLink.textContent = "Dashboard";
+        // Insert before the auth link so it always appears above Sign In / Log Out
+        dd.insertBefore(dashLink, dd.firstChild);
+      }
+    } else {
+      if (dashLink) dashLink.remove();
+    }
+
+    // ── Auth link ─────────────────────────────────────────────────────
     var link = dd.querySelector("#mkAuthLink");
     if (!link) { link = document.createElement("a"); link.id = "mkAuthLink"; dd.appendChild(link); }
     if (authed()) {
