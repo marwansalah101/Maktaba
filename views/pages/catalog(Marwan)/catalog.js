@@ -561,7 +561,7 @@ function renderBooks(booksToRender) {
            - .add-to-cart      — hidden until hover (CSS opacity trick)
         */
         card.innerHTML = `
-          ${priceMarkup.hasSale ? '<span class="book-sale-badge" aria-hidden="true" style="position:absolute;top:14px;left:14px;z-index:2;background:#9f3d35;color:#fff;font:700 11px/1 Jost,system-ui,sans-serif;letter-spacing:.08em;padding:9px 11px;text-transform:uppercase;border-radius:0;box-shadow:0 10px 24px rgba(0,0,0,.14);">ON SALE</span>' : ''}
+          ${priceMarkup.hasSale ? '<span class="book-sale-badge" aria-hidden="true" style="position:absolute;top:14px;right:14px;z-index:2;background:#9f3d35;color:#fff;font:700 11px/1 Jost,system-ui,sans-serif;letter-spacing:.08em;padding:9px 11px;text-transform:uppercase;border-radius:0;box-shadow:0 10px 24px rgba(0,0,0,.14);">ON SALE</span>' : ''}
           <div class="book-rating-row">
             <span class="book-stars">${bookStars(book.averageRating)}</span>
             <span class="book-stars-count">(${book.averageRating ? Number(book.averageRating).toFixed(1) : 'N/A'})</span>
@@ -792,6 +792,7 @@ window.addEventListener('scroll', function () {
     const scrollPos   = window.scrollY;
     const heroContent = document.querySelector('.authorPhoto-content');
     const heroBg      = document.querySelector('.authorPhoto-bg');
+    const navbar      = document.querySelector('.navbar');
 
     // Fade out the author name as the user scrolls
     if (heroContent) {
@@ -802,6 +803,29 @@ window.addEventListener('scroll', function () {
     // Subtle zoom / parallax on the hero photo
     if (heroBg) {
         heroBg.style.transform = 'scale(' + (1 + scrollPos / 2000) + ')';
+    }
+    
+    // Toggle navbar text color depending on background
+    if (navbar) {
+        const darkSections = document.querySelectorAll('.spotify-hero, .authorPhoto-bg, .site-footer');
+        const navRect = navbar.getBoundingClientRect();
+        // Check middle of the navbar
+        const checkY = navRect.top + (navRect.height / 2);
+        
+        let isOverDark = false;
+        darkSections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            // Allow a small buffer so it transitions slightly early
+            if (rect.top <= checkY && rect.bottom >= checkY - 20) {
+                isOverDark = true;
+            }
+        });
+
+        if (isOverDark) {
+            navbar.classList.add('text-white');
+        } else {
+            navbar.classList.remove('text-white');
+        }
     }
 });
 

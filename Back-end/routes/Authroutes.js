@@ -1,11 +1,12 @@
 const express = require('express');
 const router  = express.Router();
 const ctrl = require('../controllers/authController');
-const { protect } = require('../middlewares/auth');
+const { protect, adminOnly } = require('../middlewares/auth');
+const { signupRules, loginRules, validate } = require('../middlewares/validators');
 
 // ── Public auth ──────────────────────────────────────────────────────────────
-router.post('/signup',    ctrl.signup);
-router.post('/login',     ctrl.login);
+router.post('/signup',    signupRules, validate, ctrl.signup);
+router.post('/login',     loginRules,  validate, ctrl.login);
 router.post('/logout',    ctrl.logout);
 router.post('/recommend', ctrl.recommend);
 
@@ -17,12 +18,12 @@ router.put('/cart',       protect, ctrl.updateCart);
 router.get('/favorites',  protect, ctrl.getFavorites);
 router.put('/favorites',  protect, ctrl.updateFavorites);
 
-// ── Lookup ───────────────────────────────────────────────────────────────────
-router.get('/users/:id',  ctrl.getUser);
+// ── Admin-only user lookup ────────────────────────────────────────────────────
+router.get('/users/:id',  protect, adminOnly, ctrl.getUser);
 
-router.get('/users', async (req, res, next) => {
+router.get('/users', protect, adminOnly, async (req, res, next) => {
   try {
-    const User  = require('../models/User');
+    const User  = require('../models/user');
     const users = await User.find().select('-__v -password');
     res.status(200).json({ success: true, count: users.length, users });
   } catch (err) {

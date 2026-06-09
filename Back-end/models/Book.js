@@ -25,22 +25,25 @@ const bookSchema = new mongoose.Schema(
 
     year: {
       type: Number,
-      required: true
+      required: [true, 'Year is required.'],
+      min: [1000, 'Year must be a valid number.'],
+      max: [new Date().getFullYear() + 1, 'Year cannot be in the future.'],
     },
 
     image: {
       type: String,
-      required: true
+      required: [true, 'Image URL is required.'],
     },
 
     pages: {
       type: Number,
-      required: true
+      required: [true, 'Pages is required.'],
+      min: [1, 'Pages must be at least 1.'],
     },
 
     description: {
       type: String,
-      required: true
+      required: [true, 'Description is required.'],
     },
 
     quote: {
@@ -50,7 +53,8 @@ const bookSchema = new mongoose.Schema(
 
     price: {
       type: Number,
-      required: true
+      required: [true, 'Price is required.'],
+      min: [0, 'Price must be a non-negative number.'],
     },
 
     language: {
@@ -60,36 +64,39 @@ const bookSchema = new mongoose.Schema(
 
     ISBN: {
       type: String,
-      required: true,
-      unique: true
+      required: [true, 'ISBN is required.'],
+      unique: true,
     },
-    
+
     stock: {
       type: Number,
       required: true,
       default: 0,
-      min: 0
+      min: [0, 'Stock must be non-negative.'],
     },
 
     averageRating: {
       type: Number,
       default: 0,
-      min: 0,
-      max: 5
+      min: [0, 'Rating cannot be negative.'],
+      max: [5, 'Rating cannot exceed 5.'],
     },
 
     reviewCount: {
       type: Number,
       default: 0,
-      min: 0
+      min: [0, 'Review count cannot be negative.'],
     },
     salePercent: {
       type: Number,
-      default: 0
+      default: 0,
+      min: [0, 'Sale percent must be non-negative.'],
+      max: [100, 'Sale percent cannot exceed 100.'],
     },
     salePrice: {
       type: Number,
-      default: 0
+      default: 0,
+      min: [0, 'Sale price must be non-negative.'],
     }
   },
   { timestamps: true, collection: 'Book' }

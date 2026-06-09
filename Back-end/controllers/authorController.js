@@ -3,22 +3,32 @@ const Book = require('../models/Book');
 
 exports.getAllAuthors = async (req, res, next) => {
     try {
-        const authors = await Author.find();
         const counts = await Book.aggregate([
             { $group: { _id: '$author', count: { $sum: 1 } } }
         ]);
         const countMap = new Map(counts.map(item => [item._id, item.count]));
 
-        const authorsWithCounts = authors.map(author => {
-            const authorObj = author.toObject();
+        const addBookCount = (author) => {
+            const obj = author.toObject();
             const countByName = countMap.get(author.name) || 0;
-            const bookCount = Array.isArray(authorObj.books) && authorObj.books.length > 0
-                ? authorObj.books.length
-                : countByName;
-            return { ...authorObj, bookCount };
-        });
+            obj.bookCount = Array.isArray(obj.books) && obj.books.length > 0 ? obj.books.length : countByName;
+            return obj;
+        };
 
-        res.json(authorsWithCounts);
+        const pageNum  = parseInt(req.query.page,  10);
+        const limitNum = parseInt(req.query.limit, 10);
+
+        if (pageNum > 0) {
+            const page  = pageNum;
+            const limit = limitNum > 0 ? Math.min(limitNum, 100) : 12;
+            const total = await Author.countDocuments();
+            const authors = await Author.find().skip((page - 1) * limit).limit(limit);
+            const data = authors.map(addBookCount);
+            return res.json({ data, total, page, limit, totalPages: Math.ceil(total / limit) });
+        }
+
+        const authors = await Author.find();
+        res.json(authors.map(addBookCount));
     } catch (err) {
         next(err);
     }

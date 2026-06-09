@@ -23,6 +23,32 @@ app.use(cors());
 /* ── Body parsing ──────────────────────────────────────────────── */
 app.use(express.json());
 
+/* ── NoSQL injection sanitization ─────────────────────────────────
+   Strips keys that start with '$' or contain '.' from req.body and
+   req.query before any route handler sees them. Prevents operators
+   like { $where: "..." } from reaching Mongoose queries.           */
+function sanitizeObj(obj) {
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return;
+    for (const key of Object.keys(obj)) {
+        if (key.startsWith('$') || key.includes('.')) {
+            delete obj[key];
+        } else if (obj[key] !== null && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+            const before = Object.keys(obj[key]).length;
+            sanitizeObj(obj[key]);
+            // If sanitization emptied the nested object (all keys were operators), null it out
+            // so downstream handlers don't receive an unexpected {} where a string is expected.
+            if (before > 0 && Object.keys(obj[key]).length === 0) {
+                obj[key] = null;
+            }
+        }
+    }
+}
+app.use((req, res, next) => {
+    sanitizeObj(req.body);
+    sanitizeObj(req.query);
+    next();
+});
+
 /* ── Clean page URLs ────────────────────────────────────────── */
 const viewsDir = path.join(__dirname, '..', 'views');
 

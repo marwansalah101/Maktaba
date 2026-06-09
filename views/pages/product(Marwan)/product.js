@@ -255,6 +255,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     /* ── Buy Now button ────────────────────────────────────────── */
     document.querySelector('.buy-now-btn').addEventListener('click', () => {
+        const token = localStorage.getItem('maktabaToken');
+        if (!token) {
+            window.location.href = '/signin?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+            return;
+        }
         addBookToCart();
         window.location.href = '/checkout';
     });

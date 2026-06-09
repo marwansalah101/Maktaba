@@ -809,62 +809,72 @@ function renderRecentOrders(recentOrders) {
   const card = document.getElementById('recentOrdersCard');
   if (!card) return;
 
+  const statusOptions = ['processing', 'delivered', 'rejected'];
+  const statusColors  = {
+    processing: { bg: 'rgba(217,119,6,0.12)',  color: '#b45309', dot: '#f59e0b' },
+    delivered:  { bg: 'rgba(22,163,74,0.1)',   color: '#15803d', dot: '#16a34a' },
+    rejected:   { bg: 'rgba(220,38,38,0.1)',   color: '#dc2626', dot: '#ef4444' },
+  };
+
+  const headerHtml = `
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.1rem;">
+      <div>
+        <p style="font-size:14px;font-weight:600;margin:0 0 2px;color:#1a1a1a;">Recent Orders</p>
+        <p style="font-size:11px;color:#9ca3af;margin:0;">Latest customer activity</p>
+      </div>
+      ${recentOrders.length > 0 ? `<span style="background:#f3f4f6;color:#6b7280;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;">${recentOrders.length}</span>` : ''}
+    </div>`;
+
   if (!Array.isArray(recentOrders) || recentOrders.length === 0) {
-    card.innerHTML = `
-      <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Orders</p>
-      <p style="font-size:11px;color:#888;margin:0 0 1rem;">Latest customer orders</p>
-      <p style="margin:0;color:#888;font-size:12px;">No orders yet.</p>`;
+    card.innerHTML = headerHtml + `
+      <div style="text-align:center;padding:28px 0;color:#9ca3af;font-size:12px;">
+        No orders yet.
+      </div>`;
     return;
   }
 
-  const statusOptions = ['processing', 'successful', 'rejected', 'shipped', 'delivered', 'cancelled'];
-  const statusColors  = {
-    processing: { bg: 'rgba(195,57,48,0.1)',   color: '#c0392b' },
-    successful: { bg: 'rgba(39,174,96,0.12)',  color: '#1e8449' },
-    rejected:   { bg: 'rgba(100,100,100,0.1)', color: '#555'    },
-    shipped:    { bg: 'rgba(41,128,185,0.1)',  color: '#2471a3' },
-    delivered:  { bg: 'rgba(39,174,96,0.12)',  color: '#1e8449' },
-    cancelled:  { bg: 'rgba(100,100,100,0.1)', color: '#555'    },
-  };
-
-  const rows = recentOrders.map(order => {
+  const rows = recentOrders.map((order, i) => {
     const createdAt  = order.createdAt ? new Date(order.createdAt) : null;
     const dateText   = createdAt && !Number.isNaN(createdAt.getTime())
-      ? createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
-      : 'Unknown date';
-    const status     = String(order.orderStatus || 'processing');
+      ? createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+      : '—';
+    const rawStatus  = String(order.orderStatus || 'processing');
+    const status     = statusOptions.includes(rawStatus) ? rawStatus : 'processing';
     const itemsCount = Number(order.itemsCount || 0);
-    const sc         = statusColors[status] || statusColors.processing;
+    const sc         = statusColors[status];
+    const isLast     = i === recentOrders.length - 1;
 
     const optionsHtml = statusOptions.map(s =>
       `<option value="${s}" ${s === status ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`
     ).join('');
 
     return `
-      <div class="recent-order-row" data-order-id="${order._id}">
-        <div class="recent-order-main">
-          <strong>${order.orderNumber || 'Order'}</strong>
-          <span>${order.userEmail || 'Unknown customer'}</span>
+      <div class="recent-order-row" data-order-id="${order._id}"
+           style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
+                  padding:11px 0;${isLast ? '' : 'border-bottom:1px solid #f0f0f0;'}">
+        <div style="min-width:0;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+            <span style="font-size:12px;font-weight:600;color:#111;white-space:nowrap;">${order.orderNumber || 'Order'}</span>
+            <span style="font-size:10px;color:#9ca3af;">${dateText}</span>
+          </div>
+          <span style="font-size:11px;color:#6b7280;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            ${order.userEmail || 'Unknown customer'}
+          </span>
         </div>
-        <div class="recent-order-meta">
-          <span>${itemsCount} unit${itemsCount === 1 ? '' : 's'}</span>
-          <span>L.E ${Number(order.totalAmount || 0).toFixed(2)}</span>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;">
+          <span style="font-size:12px;font-weight:600;color:#111;">L.E ${Number(order.totalAmount || 0).toFixed(2)}</span>
           <select class="order-status-select" data-order-id="${order._id}"
-            style="background:${sc.bg};color:${sc.color};border:1px solid ${sc.color}33;
-                   border-radius:999px;padding:2px 8px;font-size:10px;font-weight:600;
+            style="background:${sc.bg};color:${sc.color};border:1px solid ${sc.color}40;
+                   border-radius:999px;padding:3px 10px 3px 8px;font-size:10px;font-weight:600;
                    font-family:inherit;cursor:pointer;outline:none;appearance:none;
-                   -webkit-appearance:none;text-align:center;">
+                   -webkit-appearance:none;">
             ${optionsHtml}
           </select>
-          <span>${dateText}</span>
         </div>
       </div>`;
   }).join('');
 
-  card.innerHTML = `
-    <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Orders</p>
-    <p style="font-size:11px;color:#888;margin:0 0 1rem;">Latest customer orders</p>
-    <div class="recent-orders-list">${rows}</div>`;
+  card.innerHTML = headerHtml + `<div class="recent-orders-list">${rows}</div>`;
 
   // Wire change handlers
   card.querySelectorAll('.order-status-select').forEach(sel => {
@@ -872,15 +882,23 @@ function renderRecentOrders(recentOrders) {
       const orderId   = this.dataset.orderId;
       const newStatus = this.value;
       const sc        = statusColors[newStatus] || statusColors.processing;
+      const prevValue = this.dataset.prevValue || this.value;
+      this.dataset.prevValue = newStatus;
 
-      // Optimistic UI update
+      // Optimistic colour update
       this.style.background  = sc.bg;
       this.style.color       = sc.color;
-      this.style.borderColor = sc.color + '33';
+      this.style.borderColor = sc.color + '40';
+      this.disabled = true;
 
       try {
         const token = localStorage.getItem('maktabaToken');
-        const res   = await fetch(DASHBOARD_API_BASE + '/api/orders/' + orderId + '/status', {
+        if (!token) {
+          alert('You must be logged in as admin to update orders.');
+          this.disabled = false;
+          return;
+        }
+        const res  = await fetch(DASHBOARD_API_BASE + '/api/orders/' + orderId + '/status', {
           method:  'PATCH',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
           body:    JSON.stringify({ status: newStatus })
@@ -888,13 +906,27 @@ function renderRecentOrders(recentOrders) {
         const data = await res.json();
         if (!res.ok) {
           alert(data.error || 'Failed to update status.');
-          loadDashboardStats();
+          // Revert colour to previous value
+          const prevSc = statusColors[prevValue] || statusColors.processing;
+          this.style.background  = prevSc.bg;
+          this.style.color       = prevSc.color;
+          this.style.borderColor = prevSc.color + '40';
+          this.value = prevValue;
+        } else {
+          // Brief green outline flash to confirm save
+          const savedBorder = this.style.borderColor;
+          this.style.outline = '2px solid #16a34a';
+          setTimeout(() => { this.style.outline = ''; }, 900);
         }
       } catch (err) {
         alert('Network error — could not update status.');
-        loadDashboardStats();
+      } finally {
+        this.disabled = false;
       }
     });
+
+    // Track initial value for revert-on-error
+    sel.dataset.prevValue = sel.value;
   });
 }
 

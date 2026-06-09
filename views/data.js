@@ -202,3 +202,104 @@ const authorData = {
         ]
     }
 };
+window.MKSale = window.MKSale || (function () {
+    function toNumber(value) {
+        const num = parseFloat(String(value == null ? '' : value).replace(/[^0-9.-]/g, ''));
+        return Number.isFinite(num) ? num : 0;
+    }
+
+    function formatMoney(amount, prefix) {
+        return `${prefix}${toNumber(amount).toFixed(2)}`;
+    }
+
+    function getPricing(book) {
+        const regularFromOriginal = toNumber(book && book.originalPrice);
+        const regularFromPrice = toNumber(book && book.price);
+        const saleFromField = toNumber(book && book.salePrice);
+        const salePercent = toNumber(book && book.salePercent);
+        const regularPrice = regularFromOriginal > 0 ? regularFromOriginal : regularFromPrice;
+        const hasSale = saleFromField > 0 && regularPrice > saleFromField;
+        const effectivePrice = hasSale ? saleFromField : regularPrice;
+        return {
+            hasSale,
+            regularPrice,
+            effectivePrice,
+            salePercent: hasSale ? salePercent : 0,
+        };
+    }
+
+    function buildPriceMarkup(book, options) {
+        const opts = options || {};
+        const prefix = typeof opts.prefix === 'string' ? opts.prefix : '€';
+        const pricing = getPricing(book);
+        const regular = formatMoney(pricing.regularPrice, prefix);
+        const current = formatMoney(pricing.effectivePrice, prefix);
+
+        if (!pricing.hasSale) {
+            return {
+                html: `<span class="mk-price-current">${current}</span>`,
+                hasSale: false,
+                regularPrice: pricing.regularPrice,
+                effectivePrice: pricing.effectivePrice,
+                salePercent: 0,
+            };
+        }
+
+        const badge = opts.badge ? `
+            <span style="position:absolute;top:10px;left:10px;z-index:2;background:#9f3d35;color:#fff;
+                font:700 10px/1 Jost,system-ui,sans-serif;letter-spacing:.08em;padding:8px 10px;
+                text-transform:uppercase;border-radius:0;box-shadow:0 8px 20px rgba(0,0,0,.15);">
+                ON SALE
+            </span>` : '';
+
+        return {
+            html: `${badge}<span class="mk-price-original" style="text-decoration:line-through;color:#8b7b73;margin-right:10px;">${regular}</span><span class="mk-price-current" style="color:#9f3d35;font-weight:700;">${current}</span>`,
+            hasSale: true,
+            regularPrice: pricing.regularPrice,
+            effectivePrice: pricing.effectivePrice,
+            salePercent: pricing.salePercent,
+        };
+    }
+
+    function decorateBook(book) {
+        if (!book || typeof book !== 'object') return book;
+        const pricing = getPricing(book);
+        return Object.assign({}, book, {
+            price: pricing.effectivePrice,
+            originalPrice: pricing.regularPrice,
+            salePrice: pricing.hasSale ? pricing.effectivePrice : pricing.regularPrice,
+            salePercent: pricing.salePercent,
+            isOnSale: pricing.hasSale,
+        });
+    }
+
+    function toCartItem(book) {
+        const decorated = decorateBook(book) || {};
+        const qty = Math.max(1, parseInt(decorated.qty, 10) || 1);
+        return Object.assign({}, decorated, { qty });
+    }
+
+    function toFavoriteCache(book) {
+        const decorated = decorateBook(book) || {};
+        return {
+            image: decorated.image || '',
+            author: decorated.author || '',
+            price: decorated.price || 0,
+            originalPrice: decorated.originalPrice || decorated.price || 0,
+            salePrice: decorated.salePrice || decorated.price || 0,
+            salePercent: decorated.salePercent || 0,
+            genre: decorated.genre || '',
+            category: decorated.category || '',
+        };
+    }
+
+    return {
+        toNumber,
+        formatMoney,
+        getPricing,
+        buildPriceMarkup,
+        decorateBook,
+        toCartItem,
+        toFavoriteCache,
+    };
+})();

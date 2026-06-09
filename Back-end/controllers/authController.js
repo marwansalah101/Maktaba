@@ -162,6 +162,15 @@ exports.signup = async (req, res, next) => {
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email and password are required.' });
     }
+    if (String(name).trim().length < 2) {
+      return res.status(422).json({ error: 'Name must be at least 2 characters.' });
+    }
+    if (!EMAIL_RX.test(String(email).trim().toLowerCase())) {
+      return res.status(422).json({ error: 'Please provide a valid email address.' });
+    }
+    if (String(password).length < 8) {
+      return res.status(422).json({ error: 'Password must be at least 8 characters.' });
+    }
 
     // Check duplicate email
     const existing = await User.findOne({ email: email.trim().toLowerCase() });
@@ -170,7 +179,7 @@ exports.signup = async (req, res, next) => {
     }
 
     // Create user — password is hashed by the pre-save hook
-    const user = await User.create({ name, email, password, phone });
+    const user = await User.create({ name: String(name).trim(), email: String(email).trim().toLowerCase(), password, phone });
 
     sendToken(user, 201, res);
   } catch (err) {

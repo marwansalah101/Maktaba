@@ -79,6 +79,18 @@ exports.getAllBooks = async (req, res, next) => {
         if (req.query.author) {
             filter.author = { $regex: new RegExp(`^${escapeRegex(req.query.author)}$`, 'i') };
         }
+
+        const pageNum  = parseInt(req.query.page,  10);
+        const limitNum = parseInt(req.query.limit, 10);
+
+        if (pageNum > 0) {
+            const page  = pageNum;
+            const limit = limitNum > 0 ? Math.min(limitNum, 100) : 12;
+            const total = await Book.countDocuments(filter);
+            const data  = await Book.find(filter).skip((page - 1) * limit).limit(limit);
+            return res.json({ data, total, page, limit, totalPages: Math.ceil(total / limit) });
+        }
+
         res.json(await Book.find(filter));
     } catch (err) {
         next(err);

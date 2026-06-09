@@ -4,6 +4,8 @@ const path = require('path');
 const multer = require('multer');
 const router  = express.Router();
 const authors = require('../controllers/authorController');
+const { protect, adminOnly } = require('../middlewares/auth');
+const { authorRules, validate } = require('../middlewares/validators');
 
 const uploadPath = path.join(__dirname, '..', 'uploads', 'authors');
 const storage = multer.diskStorage({
@@ -39,8 +41,8 @@ router.get('/',                   authors.getAllAuthors);
 router.get('/slug/:slug',         authors.getAuthorBySlug);
 router.get('/slug/:slug/books',   authors.getBooksByAuthorSlug);
 router.get('/:id',                authors.getAuthorById);
-router.post('/',                  upload.single('profileImg'), authors.createAuthor);
-router.put('/:id',                authors.updateAuthor);
-router.delete('/:id',             authors.deleteAuthor);
+router.post('/',                  protect, adminOnly, upload.single('profileImg'), authorRules, validate, authors.createAuthor);
+router.put('/:id',                protect, adminOnly, authors.updateAuthor);
+router.delete('/:id',             protect, adminOnly, authors.deleteAuthor);
 
 module.exports = router;
