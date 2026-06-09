@@ -1,8 +1,32 @@
-// Checkout behavior is handled by ../../script.js to avoid duplicate global checkout code.
+﻿// Checkout behavior is handled by ../../script.js to avoid duplicate global checkout code.
 
 
 
 const CART_SHIPPING = 60;
+
+function formatMoney(amount, prefix) {
+    const value = parseFloat(String(amount).replace(/[^0-9.-]/g, ''));
+    return `${prefix}${(Number.isFinite(value) ? value : 0).toFixed(2)}`;
+}
+
+function getPriceMarkup(book, prefix, qty) {
+    const quantity = Math.max(1, parseInt(qty, 10) || 1);
+    if (window.MKSale && window.MKSale.getPricing) {
+        const pricing = window.MKSale.getPricing(book);
+        if (pricing.hasSale) {
+            return {
+                html: `<span class="mk-price-original" style="text-decoration:line-through;color:#8b7b73;margin-right:10px;">${formatMoney(pricing.regularPrice * quantity, prefix)}</span><span class="mk-price-current" style="color:#9f3d35;font-weight:700;">${formatMoney(pricing.effectivePrice * quantity, prefix)}</span>`,
+                hasSale: true
+            };
+        }
+        return {
+            html: `<span class="mk-price-current">${formatMoney(pricing.effectivePrice * quantity, prefix)}</span>`,
+            hasSale: false
+        };
+    }
+    const price = parseFloat(String(book.price).replace(/[^0-9.-]/g, '')) || 0;
+    return { html: `<span class="mk-price-current">${formatMoney(price * quantity, prefix)}</span>`, hasSale: false };
+}
 
 function getCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
@@ -26,10 +50,10 @@ function updateCartSummary(subtotal) {
         countEl.textContent = `${itemCount} ${itemCount === 1 ? 'Item' : 'Items'}`;
     }
 
-    if (subEl) subEl.textContent = `€${subtotal.toFixed(2)}`;
-    if (shipEl) shipEl.textContent = `€${shipping.toFixed(2)}`;
-    if (totalEl) totalEl.textContent = `€${(subtotal + shipping).toFixed(2)}`;
-    if (pageTotal) pageTotal.textContent = `€${subtotal.toFixed(2)}`;
+    if (subEl) subEl.textContent = `L.E ${subtotal.toFixed(2)}`;
+    if (shipEl) shipEl.textContent = `L.E ${shipping.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `L.E ${(subtotal + shipping).toFixed(2)}`;
+    if (pageTotal) pageTotal.textContent = `L.E ${subtotal.toFixed(2)}`;
 }
 
 function changeQty(index, delta) {
@@ -72,6 +96,7 @@ function renderCart() {
         const qty = Math.max(1, parseInt(book.qty, 10) || 1);
         const price = parseFloat(String(book.price).replace(/[^0-9.-]/g, '')) || 0;
         subtotal += price * qty;
+        const priceMarkup = getPriceMarkup(book, 'L.E ', qty);
 
         const item = document.createElement('div');
         item.className = 'cart-item';
@@ -86,7 +111,7 @@ function renderCart() {
                     <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
                 </div>
             </div>
-            <div class="cart-item-price">€${(price * qty).toFixed(2)}</div>
+            <div class="cart-item-price">${priceMarkup.html}</div>
             <button class="cart-remove-btn" onclick="removeItem(${index})">✕</button>
         `;
         container.appendChild(item);
@@ -102,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function () {
-            window.location.href = 'Checkout.html';
+            window.location.href = '/checkout';
         });
     }
 });
@@ -130,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const qty = item.qty || 1;
                 const price = parseFloat(item.price);
                 subtotal += price * qty;
+                const priceMarkup = getPriceMarkup(item, 'L.E ', qty);
                 return `
                     <div class="checkout-order-item">
                         <img class="checkout-book-cover"
@@ -140,16 +166,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="checkout-item-title">${item.title}</div>
                             <div class="checkout-item-qty">QTY: ${qty}</div>
                         </div>
-                        <div class="checkout-item-price">€${(price * qty).toFixed(2)}</div>
+                        <div class="checkout-item-price">${priceMarkup.html}</div>
                     </div>
                 `;
             }).join('');
         }
 
         const shipping = cart.length > 0 ? 5 : 0;
-        if (subtotalEl) subtotalEl.textContent = `€${subtotal.toFixed(2)}`;
-        if (shippingEl) shippingEl.textContent = `€${shipping.toFixed(2)}`;
-        if (totalEl)    totalEl.textContent    = `€${(subtotal + shipping).toFixed(2)}`;
+        if (subtotalEl) subtotalEl.textContent = `L.E ${subtotal.toFixed(2)}`;
+        if (shippingEl) shippingEl.textContent = `L.E ${shipping.toFixed(2)}`;
+        if (totalEl)    totalEl.textContent    = `L.E ${(subtotal + shipping).toFixed(2)}`;
     }
 
     renderCheckoutItems();
@@ -192,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
             country:   document.getElementById('co-country').value
         }));
 
-        window.location.href = 'ordersucces.html';
+        window.location.href = '/order-success';
     });
 });
 

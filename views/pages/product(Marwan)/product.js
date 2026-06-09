@@ -90,10 +90,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    const saleBook = (window.MKSale && window.MKSale.decorateBook)
+        ? window.MKSale.decorateBook(selectedBook)
+        : selectedBook;
+    const mainPriceMarkup = (window.MKSale && window.MKSale.buildPriceMarkup)
+        ? window.MKSale.buildPriceMarkup(selectedBook, { prefix: 'L.E ', badge: false })
+        : { html: `L.E ${Number(selectedBook.price).toFixed(2)}`, hasSale: false };
+    const hasSaleBadge = (window.MKSale && window.MKSale.buildPriceMarkup)
+        ? window.MKSale.buildPriceMarkup(selectedBook, { prefix: 'L.E ', badge: true }).hasSale
+        : false;
+
     /* ── Populate static book data ─────────────────────────────── */
     document.getElementById('main-title').innerText        = selectedBook.title;
-    document.getElementById('main-author').innerText       = selectedBook.author;
-    document.getElementById('main-price').innerText        = `€${selectedBook.price}`;
+    const authorSlug = toSlug(selectedBook.author);
+    document.getElementById('main-author').innerHTML = `<a href="/author/${authorSlug}" style="color:inherit;text-decoration:none;border-bottom:1px solid currentColor;cursor:pointer;">${selectedBook.author}</a>`;
+    document.getElementById('main-price').innerHTML        = mainPriceMarkup.html;
     document.getElementById('main-description').innerText  = selectedBook.description;
     document.getElementById('main-quote').innerText        = `"${selectedBook.quote}"`;
     const imgEl  = document.getElementById('main-image');
@@ -131,6 +142,23 @@ document.addEventListener('DOMContentLoaded', async () => {
        Reads / writes a JSON array of book titles in localStorage.
        The 'FILL' font-variation-settings fills the Material Symbol.
     ──────────────────────────────────────────────────────────────── */
+    const coverStage = document.querySelector('.product-cover-stage');
+    if (coverStage) {
+        coverStage.style.position = 'relative';
+        let saleBadge = coverStage.querySelector('.product-sale-badge');
+        if (hasSaleBadge) {
+            if (!saleBadge) {
+                saleBadge = document.createElement('span');
+                saleBadge.className = 'product-sale-badge';
+                saleBadge.style.cssText = 'position:absolute;top:14px;left:14px;z-index:2;background:#9f3d35;color:#fff;font:700 11px/1 Jost,system-ui,sans-serif;letter-spacing:.08em;padding:9px 11px;text-transform:uppercase;border-radius:0;box-shadow:0 10px 24px rgba(0,0,0,.14);';
+                coverStage.appendChild(saleBadge);
+            }
+            saleBadge.textContent = 'ON SALE';
+        } else if (saleBadge) {
+            saleBadge.remove();
+        }
+    }
+
     const favoriteIcon = document.getElementById('favorite-icon');
 
     const getFavorites  = ()      => JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -158,7 +186,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             saveFavorites(favs);
             try {
                 const fc = JSON.parse(localStorage.getItem('mktFavData') || '{}');
-                fc[selectedBook.title] = { image: selectedBook.image, author: selectedBook.author, price: selectedBook.price, genre: selectedBook.genre };
+                fc[selectedBook.title] = (window.MKSale && window.MKSale.toFavoriteCache)
+                    ? window.MKSale.toFavoriteCache(selectedBook)
+                    : { image: selectedBook.image, author: selectedBook.author, price: selectedBook.price, genre: selectedBook.genre };
                 localStorage.setItem('mktFavData', JSON.stringify(fc));
             } catch (_) {}
             updateHeartUI(true);
@@ -176,16 +206,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     function addBookToCart() {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
         const existing = cart.find(item => item.title === selectedBook.title);
-        if (existing) {
-            existing.qty = (existing.qty || 1) + 1;
-        } else {
-            cart.push({
+        const incoming = (window.MKSale && window.MKSale.toCartItem)
+            ? window.MKSale.toCartItem(Object.assign({}, saleBook, { qty: 1 }))
+            : {
                 title:  selectedBook.title,
                 author: selectedBook.author,
                 price:  selectedBook.price,
                 image:  selectedBook.image,
                 qty:    1
-            });
+            };
+        if (existing) {
+            const nextQty = (existing.qty || 1) + 1;
+            const currentPrice = parseFloat(existing.price) || 0;
+            const incomingPrice = parseFloat(incoming.price) || 0;
+            if (!currentPrice || (incomingPrice > 0 && incomingPrice < currentPrice)) {
+                Object.assign(existing, incoming);
+            }
+            existing.qty = nextQty;
+        } else {
+            cart.push(incoming);
         }
         localStorage.setItem('cart', JSON.stringify(cart));
         return existing ? existing.qty : 1;
@@ -217,7 +256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* ── Buy Now button ────────────────────────────────────────── */
     document.querySelector('.buy-now-btn').addEventListener('click', () => {
         addBookToCart();
-        window.location.href = '/pages/checkout(Rojeh)/checkout.html';
+        window.location.href = '/checkout';
     });
 
     /* ── Share button ──────────────────────────────────────────────
@@ -261,17 +300,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    /* ── "More Like This" full-width floating books row ────────────
-       Shows same-genre books first, then fills with books from
-       closely related genres. A genre-similarity map defines
-       which genres count as "related". Books are shuffled within
-       each group so the row varies on every page load.
-    ──────────────────────────────────────────────────────────────── */
+    /* ── "More Like This" — fetches same-genre books from the DB ── */
     const suggestedBooksContainer = document.getElementById('suggested-books');
     if (suggestedBooksContainer) {
+        const moreTitleEl = document.getElementById('more-section-title');
+        if (moreTitleEl) moreTitleEl.textContent = `More ${selectedBook.genre}`;
 
-        // Only books from the exact same genre, excluding the current one
-        const pool = Books.filter(b => b.genre === selectedBook.genre && b.title !== selectedBook.title);
+        let pool = [];
+        try {
+            const res = await fetch(`/books?genre=${encodeURIComponent(selectedBook.genre)}`);
+            if (res.ok) {
+                const data = await res.json();
+                const all = Array.isArray(data) ? data : (data.books || []);
+                pool = all.filter(b => b.title !== selectedBook.title);
+            }
+        } catch (_) {}
+
+        // Fallback to static Books array if API returned nothing
+        if (pool.length === 0 && typeof Books !== 'undefined') {
+            pool = Books.filter(b => b.genre === selectedBook.genre && b.title !== selectedBook.title);
+        }
 
         // Fisher-Yates shuffle so order varies on each load
         for (let i = pool.length - 1; i > 0; i--) {
@@ -279,31 +327,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             [pool[i], pool[j]] = [pool[j], pool[i]];
         }
 
-        // Update the section heading with the current genre
-        const moreTitleEl = document.getElementById('more-section-title');
-        if (moreTitleEl) moreTitleEl.textContent = `More ${selectedBook.genre}`;
-
         if (pool.length === 0) {
             suggestedBooksContainer.innerHTML =
                 '<p style="font-family:Jost,sans-serif;font-size:12px;color:#8C7B75;">No similar books found.</p>';
         } else {
-            suggestedBooksContainer.innerHTML = pool.slice(0, 8).map(book => `
+            suggestedBooksContainer.innerHTML = pool.slice(0, 8).map(book => {
+                const img = book.image
+                    ? (book.image.startsWith('http') ? book.image : basePath + book.image)
+                    : '';
+                return `
                 <a href="/book/${toSlug(book.title)}" class="suggested-book">
-                    <img src="${basePath}${book.image}" alt="${book.title}">
+                    <img src="${img}" alt="${book.title}">
                     <div class="suggested-book-title">${book.title}</div>
-                </a>
-            `).join('');
+                </a>`;
+            }).join('');
         }
     }
 
-    /* ── Reviews — loaded from DB, saved to DB (requires sign-in) ──
-       Falls back to two static seed reviews when no DB reviews exist.
-    ──────────────────────────────────────────────────────────────── */
-    const STATIC_REVIEWS = [
-        { reviewer: 'Elena M.',  rating: 5, comment: "Absolutely loved this! The story pulled me in from the very first page and didn't let go until the end.", createdAt: '2025-10-12' },
-        { reviewer: 'David K.',  rating: 4, comment: 'Great read overall. The characters were well-developed, though the middle dragged a bit. Still very solid.', createdAt: '2025-09-28' }
-    ];
-
+    /* ── Reviews — loaded from DB only, empty state if none ── */
     function fmtDate(iso) {
         try { return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); }
         catch(_) { return iso || ''; }
@@ -319,8 +360,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (res.ok) dbReviews = await res.json();
             } catch(_) {}
         }
-        const all = dbReviews.length > 0 ? dbReviews : STATIC_REVIEWS;
-        grid.innerHTML = all.map(r => {
+        if (dbReviews.length === 0) {
+            grid.innerHTML = '<div style="text-align:center;padding:48px 0;font-family:Jost,sans-serif;color:#8C7B75;font-size:14px;letter-spacing:0.03em;border-top:1px solid #d9d0c4;">No reviews yet — be the first to share your thoughts!</div>';
+            return;
+        }
+        grid.innerHTML = dbReviews.map(r => {
             const rating = r.rating || 5;
             const stars  = '★'.repeat(rating) + '☆'.repeat(5 - rating);
             const name   = r.reviewer || r.author || 'Anonymous';

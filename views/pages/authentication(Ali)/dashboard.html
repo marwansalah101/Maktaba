@@ -1,23 +1,23 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maktaba Admin Dashboard</title>
-  <link rel="stylesheet" href="./auth.css">
+  <link rel="stylesheet" href="/pages/authentication(Ali)/auth.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
-  <script src="./auth.js" defer></script>
+  <script src="/pages/authentication(Ali)/auth.js" defer></script>
 </head>
 <body class="admin-dashboard-page">
   <aside class="admin-sidebar">
     <div class="admin-brand">
-      <a id="Maktaba" href="/home.html">Maktaba</a>
+      <a id="Maktaba" href="/home">Maktaba</a>
       <span>Admin Console</span>
     </div>
     <nav class="admin-nav" aria-label="Admin navigation">
-      <a class="active" href="./dashboard.html"><span>D</span>Dashboard</a>
-      <a href="./authbooks.html"><span>B</span>Books</a>
-      <a href="./totalauth.html"><span>A</span>Authors</a>
+      <a class="active" href="/dashboard"><span>D</span>Dashboard</a>
+      <a href="/authbooks"><span>B</span>Books</a>
+      <a href="/totalauth"><span>A</span>Authors</a>
     </nav>
   </aside>
 
@@ -25,7 +25,7 @@
     <header class="admin-header">
       <div>
         <h1>Dashboard</h1>
-        <p>Your bookstore at a glance - June 2025</p>
+        <p>Your bookstore at a glance</p>
       </div>
     </header>
 
@@ -47,16 +47,9 @@
 
       <article class="auth-card stat-card">
         <span class="stat-icon">*</span>
-        <strong>$8,970</strong>
-        <span>Revenue</span>
-        <small>+12.7% vs May</small>
-      </article>
-
-      <article class="auth-card stat-card">
-        <span class="stat-icon">*</span>
-        <strong>110</strong>
-        <span>Orders</span>
-        <small>+8.1% vs May</small>
+        <strong id="stat-total-orders">—</strong>
+        <span>Total Orders</span>
+        <small id="stat-orders-note">loading…</small>
       </article>
 
       <article class="auth-card stat-card">
@@ -64,6 +57,13 @@
         <strong id="stat-total-stock">—</strong>
         <span>Units In Stock</span>
         <small id="stat-low-stock-count">loading…</small>
+      </article>
+
+      <article class="auth-card stat-card">
+        <span class="stat-icon">*</span>
+        <strong id="stat-total-users">—</strong>
+        <span>Total Users</span>
+        <small id="stat-users-note">loading…</small>
       </article>
 
     </section>
@@ -77,7 +77,7 @@
           </div>
           <div class="panel-totals">
             <div><span>Book Revenue</span><strong>$48,970</strong></div>
-            <div><span>Total Orders</span><strong>921</strong></div>
+            <div><span>Total Orders</span><strong id="revenue-total-orders">—</strong></div>
           </div>
         </div>
         <div class="chart-frame large-chart"><canvas id="revenueChart"></canvas></div>
@@ -93,42 +93,27 @@
         </div>
       </article>
 
-      <article class="panel top-books-panel">
-        <div class="panel-heading compact">
-          <div><h2>Top Selling Books</h2><p>Units sold, all time</p></div>
-        </div>
-        <div class="chart-frame medium-chart"><canvas id="topBooksChart"></canvas></div>
-      </article>
-
-      <article class="panel visitors-panel">
-        <div class="panel-heading compact">
-          <div><h2>Weekly Visitors</h2><p>Store page visits this week</p></div>
-        </div>
-        <div class="chart-frame small-chart"><canvas id="visitorsChart"></canvas></div>
-        <div class="peak-row"><span>Peak Day</span><strong id="peakDay"></strong></div>
-      </article>
     </section>
 
     <section class="insight-grid">
-      <div class="lsection" id="quickMetricsCard"></div>
       <div class="lsection" id="lowStockCard"></div>
-      <div class="lsection" id="recentActivityCard"></div>
+      <div class="lsection" id="recentOrdersCard"></div>
     </section>
   </main>
 
   <!-- ── Dashboard stats loader ──────────────────────────────────── -->
   <script>
-    const API_BASE = 'http://localhost:3000';
+    const API_BASE = window.location.origin;
 
     async function loadDashboardStats() {
       const token = localStorage.getItem('maktabaToken');
 
       // ── Debug helper — remove after confirming it works ──────────
-      if (!token) {
-        console.warn('[Dashboard] No maktabaToken found in localStorage. ' +
+        if (!token) {
+          console.warn('[Dashboard] No maktabaToken found in localStorage. ' +
           'Make sure you are logged in via the admin login page.');
         // Show a visible error on the stat cards instead of silently staying "—"
-        ['stat-new-books', 'stat-new-authors', 'stat-low-stock-count']
+        ['stat-new-books', 'stat-new-authors', 'stat-orders-note', 'stat-low-stock-count', 'stat-users-note']
           .forEach(id => {
             const el = document.getElementById(id);
             if (el) el.textContent = 'not logged in';
@@ -145,7 +130,7 @@
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
           console.error('[Dashboard] API error:', res.status, body);
-          ['stat-new-books', 'stat-new-authors', 'stat-low-stock-count']
+          ['stat-new-books', 'stat-new-authors', 'stat-orders-note', 'stat-low-stock-count', 'stat-users-note']
             .forEach(id => {
               const el = document.getElementById(id);
               if (el) el.textContent = `error ${res.status}`;
@@ -168,13 +153,24 @@
             ? `+${stats.authorsAddedThisMonth} this month`
             : 'no new authors this month';
 
+        document.getElementById('stat-total-orders').textContent = stats.totalOrders;
+        document.getElementById('stat-orders-note').textContent =
+          `${Array.isArray(stats.recentOrders) ? stats.recentOrders.length : 0} recent order${Array.isArray(stats.recentOrders) && stats.recentOrders.length === 1 ? '' : 's'} shown`;
+        const revenueOrders = document.getElementById('revenue-total-orders');
+        if (revenueOrders) revenueOrders.textContent = stats.totalOrders;
+
         document.getElementById('stat-total-stock').textContent = stats.totalStock;
         document.getElementById('stat-low-stock-count').textContent =
           `${stats.lowStockBooks.length} low-stock item${stats.lowStockBooks.length !== 1 ? 's' : ''}`;
 
+        document.getElementById('stat-total-users').textContent = stats.totalUsers;
+        document.getElementById('stat-users-note').textContent = 'registered accounts';
+
         if (Array.isArray(stats.genreBreakdown) && stats.genreBreakdown.length > 0) {
           renderGenreBreakdownChart(stats.genreBreakdown);
         }
+
+        renderRecentOrders(Array.isArray(stats.recentOrders) ? stats.recentOrders : []);
 
         // ── Low Stock widget ──────────────────────────────────────
         if (stats.lowStockBooks.length > 0) {
@@ -214,7 +210,7 @@
 
       } catch (err) {
         console.error('[Dashboard] Fetch failed:', err);
-        ['stat-new-books', 'stat-new-authors', 'stat-low-stock-count']
+        ['stat-new-books', 'stat-new-authors', 'stat-orders-note', 'stat-low-stock-count', 'stat-users-note']
           .forEach(id => {
             const el = document.getElementById(id);
             if (el) el.textContent = 'fetch failed';
@@ -274,6 +270,46 @@
           },
         },
       });
+    }
+
+    function renderRecentOrders(recentOrders) {
+      const card = document.getElementById('recentOrdersCard');
+      if (!card) return;
+
+      if (!Array.isArray(recentOrders) || recentOrders.length === 0) {
+        card.innerHTML = `
+          <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Orders</p>
+          <p style="font-size:11px;color:#888;margin:0 0 1rem;">Latest customer orders</p>
+          <p style="margin:0;color:#888;font-size:12px;">No orders yet.</p>`;
+        return;
+      }
+
+      const rows = recentOrders.map(order => {
+        const createdAt = order.createdAt ? new Date(order.createdAt) : null;
+        const dateText = createdAt && !Number.isNaN(createdAt.getTime())
+          ? createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+          : 'Unknown date';
+        const status = String(order.orderStatus || 'processing').replace(/_/g, ' ');
+        const itemsCount = Number(order.itemsCount || 0);
+        return `
+          <div class="recent-order-row">
+            <div class="recent-order-main">
+              <strong>${order.orderNumber || 'Order'}</strong>
+              <span>${order.userEmail || 'Unknown customer'}</span>
+            </div>
+            <div class="recent-order-meta">
+              <span>${itemsCount} unit${itemsCount === 1 ? '' : 's'}</span>
+              <span>L.E ${Number(order.totalAmount || 0).toFixed(2)}</span>
+              <span class="recent-order-pill">${status}</span>
+              <span>${dateText}</span>
+            </div>
+          </div>`;
+      }).join('');
+
+      card.innerHTML = `
+        <p style="font-size:14px;font-weight:500;margin:0 0 2px;">Recent Orders</p>
+        <p style="font-size:11px;color:#888;margin:0 0 1rem;">Latest customer orders</p>
+        <div class="recent-orders-list">${rows}</div>`;
     }
 
     document.addEventListener('DOMContentLoaded', loadDashboardStats);

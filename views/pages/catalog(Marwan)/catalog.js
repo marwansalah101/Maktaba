@@ -65,7 +65,7 @@
     /* ── Render strips ──────────────────────────────────────── */
     stripsWrap.innerHTML = GENRES.map(function(g) {
         var metaId = 'g3Meta_' + g.slug.replace(/\s/g, '_');
-        var ctaHref = './authors.html?genre=' + encodeURIComponent(g.slug);
+        var ctaHref = '/collection?genre=' + encodeURIComponent(g.slug);
         return (
             '<div class="g3-strip"' +
                 ' role="listitem"' +
@@ -540,15 +540,19 @@ function renderBooks(booksToRender) {
         return;
     }
 
-    const basePath = window.location.pathname.includes('/pages/') ? '../../' : './';
+    const basePath = '/';
 
     visibleBooks.forEach((book, index) => {
         const card        = document.createElement('div');
         card.classList.add('book-listing');
         card.style.animationDelay = `${index * 55}ms`;
+        card.style.position = 'relative';
 
         const productUrl  = `/book/${normalizeSlug(book.title)}`;
         const imgSrc      = book.image.startsWith('http') ? book.image : `${basePath}${book.image}`;
+        const priceMarkup = (window.MKSale && window.MKSale.buildPriceMarkup)
+            ? window.MKSale.buildPriceMarkup(book, { prefix: 'L.E ', badge: false })
+            : { html: `L.E ${(Number(book.price)).toFixed(2)}`, hasSale: false };
 
         /* Card structure:
            - .book-rating-row  — star rating at the top
@@ -557,6 +561,7 @@ function renderBooks(booksToRender) {
            - .add-to-cart      — hidden until hover (CSS opacity trick)
         */
         card.innerHTML = `
+          ${priceMarkup.hasSale ? '<span class="book-sale-badge" aria-hidden="true" style="position:absolute;top:14px;left:14px;z-index:2;background:#9f3d35;color:#fff;font:700 11px/1 Jost,system-ui,sans-serif;letter-spacing:.08em;padding:9px 11px;text-transform:uppercase;border-radius:0;box-shadow:0 10px 24px rgba(0,0,0,.14);">ON SALE</span>' : ''}
           <div class="book-rating-row">
             <span class="book-stars">${bookStars(book.averageRating)}</span>
             <span class="book-stars-count">(${book.averageRating ? Number(book.averageRating).toFixed(1) : 'N/A'})</span>
@@ -572,10 +577,10 @@ function renderBooks(booksToRender) {
             <a href="${productUrl}" class="book-link">
               <h3 class="book-title">${book.title}</h3>
             </a>
-            <a href="/pages/catalog(Marwan)/authors.html?slug=${normalizeSlug(book.author)}" class="book-author-link">
+            <a href="/author/${normalizeSlug(book.author)}" class="book-author-link">
               <p class="book-author">${book.author}</p>
             </a>
-            <p class="book-price">L.E ${(Number(book.price)).toFixed(2)}</p>
+            <p class="book-price">${priceMarkup.html}</p>
           </div>
           <button class="add-to-cart" type="button">Add to cart</button>
         `;
@@ -585,16 +590,25 @@ function renderBooks(booksToRender) {
             e.stopPropagation();
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             const existing = cart.find(item => item.title === book.title);
-            if (existing) {
-                existing.qty = (existing.qty || 1) + 1;
-            } else {
-                cart.push({
+            const incoming = (window.MKSale && window.MKSale.toCartItem)
+                ? window.MKSale.toCartItem(Object.assign({}, book, { qty: 1 }))
+                : {
                     title:  book.title,
                     author: book.author,
                     price:  book.price,
                     image:  book.image,
                     qty:    1
-                });
+                };
+            if (existing) {
+                const nextQty = (existing.qty || 1) + 1;
+                const currentPrice = parseFloat(existing.price) || 0;
+                const incomingPrice = parseFloat(incoming.price) || 0;
+                if (!currentPrice || (incomingPrice > 0 && incomingPrice < currentPrice)) {
+                    Object.assign(existing, incoming);
+                }
+                existing.qty = nextQty;
+            } else {
+                cart.push(incoming);
             }
             localStorage.setItem('cart', JSON.stringify(cart));
 
@@ -622,7 +636,9 @@ function renderBooks(booksToRender) {
                 if (wasAdded) {
                     try {
                         const fc = JSON.parse(localStorage.getItem('mktFavData') || '{}');
-                        fc[book.title] = { image: book.image, author: book.author, price: book.price, genre: book.genre };
+                        fc[book.title] = (window.MKSale && window.MKSale.toFavoriteCache)
+                            ? window.MKSale.toFavoriteCache(book)
+                            : { image: book.image, author: book.author, price: book.price, genre: book.genre };
                         localStorage.setItem('mktFavData', JSON.stringify(fc));
                     } catch (_) {}
                 }
@@ -874,7 +890,7 @@ function renderRecentBooks(authorName) {
     const grid = document.getElementById('recent-books-grid');
     if (!grid || !Array.isArray(Books)) return;
 
-    const basePath      = window.location.pathname.includes('/pages/') ? '../../' : './';
+    const basePath      = '/';
     const booksToRender = getRecentBooksForAuthor(authorName);
 
     grid.innerHTML = booksToRender.map(book => {

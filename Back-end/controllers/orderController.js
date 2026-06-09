@@ -42,6 +42,10 @@ exports.placeOrder = async (req, res, next) => {
                 title:    item.title    || '',
                 author:   item.author   || '',
                 price:    parseFloat(item.price)    || 0,
+                originalPrice: parseFloat(item.originalPrice ?? item.price) || 0,
+                salePrice:     parseFloat(item.salePrice ?? item.price) || 0,
+                salePercent:   Number(item.salePercent || 0),
+                isOnSale:      Boolean(item.isOnSale || ((parseFloat(item.salePrice ?? item.price) || 0) > 0 && (parseFloat(item.originalPrice ?? item.price) || 0) > (parseFloat(item.salePrice ?? item.price) || 0))),
                 image:    item.image    || '',
                 quantity: parseInt(item.quantity || item.qty || 1, 10),
             })),
@@ -86,7 +90,7 @@ exports.createFromCart = async (req, res, next) => {
             return res.status(400).json({ error: 'Cart is empty.' });
 
         const totalAmount = cart.items.reduce(
-            (sum, item) => sum + item.price * item.quantity, 0
+            (sum, item) => sum + item.price * (item.qty || item.quantity || 1), 0
         );
 
         const order = await Order.create({

@@ -96,7 +96,7 @@ body {
 }
 
 /* Navbar white state — activated when navbar overlaps dark page sections */
-/* Dark sections: .book-bg (hero), .between-carouselss (ticker), .about-us, .site-footer */
+/* Dark sections: .book-bg, .between-carouselss, .about-us, .site-footer, browse dark cards */
 .navbar.text-white {
     background: rgba(255, 255, 255, 0.08);
     border-bottom-color: rgba(255, 255, 255, 0.12);
@@ -117,6 +117,10 @@ body {
 
 .navbar.text-white #Maktaba a {
     color: #ffffff;
+}
+
+.navbar.text-white .menu-dropdown a {
+    color: #312F2C;
 }
 
 .navbar-icons {

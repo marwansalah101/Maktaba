@@ -5,6 +5,10 @@ const orderItemSchema = new mongoose.Schema({
     title:    { type: String, required: true },
     author:   { type: String },
     price:    { type: Number, required: true },
+    originalPrice: { type: Number, default: 0 },
+    salePrice:     { type: Number, default: 0 },
+    salePercent:   { type: Number, default: 0 },
+    isOnSale:      { type: Boolean, default: false },
     image:    { type: String },
     quantity: { type: Number, required: true }
 });

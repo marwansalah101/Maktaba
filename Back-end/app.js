@@ -23,8 +23,133 @@ app.use(cors());
 /* ── Body parsing ──────────────────────────────────────────────── */
 app.use(express.json());
 
-/* ── Static files — serves the whole views/ folder through Express */
-app.use(express.static(path.join(__dirname, '..', 'views'), { index: 'home.html' }));
+/* ── Clean page URLs ────────────────────────────────────────── */
+const viewsDir = path.join(__dirname, '..', 'views');
+
+const slugify = (value) => String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+const pagePaths = {
+    home:        path.join(viewsDir, 'home.html'),
+    browse:      path.join(viewsDir, 'pages', 'catalog(Marwan)',     'genres.html'),
+    collection:  path.join(viewsDir, 'pages', 'catalog(Marwan)',     'collection.html'),
+    authors:     path.join(viewsDir, 'pages', 'home(fares)',         'AllAuthors..html'),
+    authorSlug:  path.join(viewsDir, 'pages', 'catalog(Marwan)',     'authors.html'),
+    product:     path.join(viewsDir, 'pages', 'product(Marwan)',     'product.html'),
+    cart:        path.join(viewsDir, 'pages', 'checkout(Rojeh)',     'add-to-cart.html'),
+    checkout:    path.join(viewsDir, 'pages', 'checkout(Rojeh)',     'checkout.html'),
+    payment:     path.join(viewsDir, 'pages', 'checkout(Rojeh)',     'payment.html'),
+    orderSuccess:path.join(viewsDir, 'pages', 'checkout(Rojeh)',     'order-success.html'),
+    favorites:   path.join(viewsDir, 'pages', 'account(Mikha)',      'favorites.html'),
+    settings:    path.join(viewsDir, 'pages', 'account(Mikha)',      'settings.html'),
+    contact:     path.join(viewsDir, 'pages', 'account(Mikha)',      'contact-us.html'),
+    signin:      path.join(viewsDir, 'pages', 'authentication(Ali)', 'signin.html'),
+    signup:      path.join(viewsDir, 'pages', 'authentication(Ali)', 'signup.html'),
+    dashboard:   path.join(viewsDir, 'pages', 'authentication(Ali)', 'dashboard.html'),
+    privacy:     path.join(viewsDir, 'pages', 'legal(fares)',        'privacy-policy.html'),
+    terms:       path.join(viewsDir, 'pages', 'legal(fares)',        'terms-of-use.html'),
+    returns:     path.join(viewsDir, 'pages', 'legal(fares)',        'returns-policy.html'),
+    authbooks:   path.join(viewsDir, 'pages', 'authentication(Ali)', 'authbooks.html'),
+    totalauth:   path.join(viewsDir, 'pages', 'authentication(Ali)', 'totalauth.html'),
+};
+
+const serve = (key) => (req, res) => res.sendFile(pagePaths[key]);
+
+/* Legacy .html paths use parentheses — Express 5 route syntax cannot
+   register them, so redirect via req.path lookup before page routes. */
+const legacyPathMap = {
+    '/home.html': '/home',
+    '/pages/catalog(Marwan)/genres.html': '/browse',
+    '/pages/catalog(Marwan)/collection.html': '/collection',
+    '/pages/home(fares)/AllAuthors.html': '/authors',
+    '/pages/account(Mikha)/favorites.html': '/favorites',
+    '/pages/account(Mikha)/settings.html': '/settings',
+    '/pages/account(Mikha)/contact-us.html': '/contact',
+    '/pages/checkout(Rojeh)/add-to-cart.html': '/cart',
+    '/pages/checkout(Rojeh)/checkout.html': '/checkout',
+    '/pages/checkout(Rojeh)/payment.html': '/payment',
+    '/pages/checkout(Rojeh)/order-success.html': '/order-success',
+    '/pages/legal(fares)/privacy-policy.html': '/privacy',
+    '/pages/legal(fares)/terms-of-use.html': '/terms',
+    '/pages/legal(fares)/returns-policy.html': '/returns',
+    '/pages/authentication(Ali)/signin.html': '/signin',
+    '/pages/authentication(Ali)/signup.html': '/signup',
+    '/pages/authentication(Ali)/dashboard.html': '/dashboard',
+    '/pages/authentication(Ali)/authbooks.html': '/authbooks',
+    '/pages/authentication(Ali)/totalauth.html': '/totalauth',
+};
+
+app.use((req, res, next) => {
+    if (req.method !== 'GET') return next();
+
+    const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+
+    if (req.path === '/pages/product(Marwan)/product.html') {
+        const title = req.query.title ? slugify(req.query.title) : '';
+        if (title) return res.redirect(`/book/${title}`);
+        return res.redirect('/collection');
+    }
+
+    if (req.path === '/pages/catalog(Marwan)/authors.html') {
+        const slug = req.query.slug ? slugify(req.query.slug) : '';
+        const genre = req.query.genre || '';
+        if (slug) return res.redirect(`/author/${slug}` + (genre ? `?genre=${encodeURIComponent(genre)}` : ''));
+        if (genre) return res.redirect(`/collection${query}`);
+        return res.redirect('/authors');
+    }
+
+    const target = legacyPathMap[req.path];
+    if (target) return res.redirect(target + query);
+
+    next();
+});
+
+// Home
+app.get('/home',          serve('home'));
+app.get('/',              serve('home'));
+
+// Browse / Genres
+app.get('/browse',        serve('browse'));
+
+// Collection
+app.get('/collection',    serve('collection'));
+
+// Authors
+app.get('/authors',       serve('authors'));
+app.get('/author/:slug',  serve('authorSlug'));
+
+// Product (book)
+app.get('/book/:slug',    serve('product'));
+
+// Admin pages
+app.get('/authbooks',     serve('authbooks'));
+app.get('/totalauth',     serve('totalauth'));
+
+// Cart & Checkout
+app.get('/cart',          serve('cart'));
+app.get('/checkout',      serve('checkout'));
+app.get('/payment',       serve('payment'));
+app.get('/order-success', serve('orderSuccess'));
+
+// Account
+app.get('/favorites',     serve('favorites'));
+app.get('/settings',      serve('settings'));
+app.get('/contact',       serve('contact'));
+
+// Auth
+app.get('/signin',        serve('signin'));
+app.get('/signup',        serve('signup'));
+app.get('/dashboard',     serve('dashboard'));
+
+// Legal
+app.get('/privacy',       serve('privacy'));
+app.get('/terms',         serve('terms'));
+app.get('/returns',       serve('returns'));
+
+/* ── Static assets (CSS, JS, images) — after clean page routes ─── */
+app.use(express.static(path.join(__dirname, '..', 'views'), { index: false }));
 
 /* ── Rate limiting — applied to API routes only, not static assets */
 const limiter = rateLimit({
@@ -37,23 +162,10 @@ const limiter = rateLimit({
 
 const authController = require('./controllers/authController');
 
-/* ── Auth endpoint ─────────────────────────────────────────────────
-   Credentials are stored in .env and checked server-side.
-   Admin password should be bcrypt-hashed before production use.   */
-// Auth routes (login/signup/logout/me/profile/cart/favorites) are handled by
-// routes/Authroutes.js, mounted under /api/auth via routes.js below.
-
 /* ── AI Recommendation proxy ───────────────────────────────────────
    The OpenRouter API key stays server-side and is never sent to
    the browser. The SSE stream is forwarded directly to the client.  */
 app.post('/api/recommend', authController.recommend);
-
-/* ── Clean page URLs ────────────────────────────────────────────── */
-const productHtmlPath    = path.join(__dirname, '..', 'views', 'pages', 'product(Marwan)', 'product.html');
-const collectionHtmlPath = path.join(__dirname, '..', 'views', 'pages', 'catalog(Marwan)', 'collection.html');
-
-app.get('/book/:slug',  (req, res) => res.sendFile(productHtmlPath));
-app.get('/collection',  (req, res) => res.sendFile(collectionHtmlPath));
 
 /* ── API routes — rate limiter applied here, after static files ────
    routes.js mounts:  /books         → books.js

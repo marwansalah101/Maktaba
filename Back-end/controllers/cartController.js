@@ -17,16 +17,33 @@ exports.getCart = async (req, res, next) => {
 
 exports.addToCart = async (req, res, next) => {
     const sessionId = getSessionId(req);
-    const { bookId, title, author, image, price } = req.body;
+    const { bookId, title, author, image, price, originalPrice, salePrice, salePercent, isOnSale } = req.body;
     try {
         let cart = await Cart.findOne({ sessionId });
         if (!cart) cart = new Cart({ sessionId, items: [] });
 
+        const incoming = {
+            bookId,
+            title,
+            author,
+            image,
+            price,
+            originalPrice: originalPrice ?? price,
+            salePrice: salePrice ?? price,
+            salePercent: Number(salePercent || 0),
+            isOnSale: Boolean(isOnSale || (Number(salePrice || 0) > 0 && Number(originalPrice || price || 0) > Number(salePrice || 0))),
+            qty: 1
+        };
         const existing = cart.items.find(i => i.bookId === bookId);
         if (existing) {
+            const currentPrice = Number(existing.price) || 0;
+            const incomingPrice = Number(incoming.price) || 0;
+            if (!currentPrice || (incomingPrice > 0 && incomingPrice < currentPrice)) {
+                Object.assign(existing, incoming);
+            }
             existing.qty += 1;
         } else {
-            cart.items.push({ bookId, title, author, image, price, qty: 1 });
+            cart.items.push(incoming);
         }
 
         await cart.save();

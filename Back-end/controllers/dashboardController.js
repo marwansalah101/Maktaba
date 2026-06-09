@@ -1,5 +1,7 @@
 const Book   = require('../models/Book');
 const Author = require('../models/Author');
+const User   = require('../models/user');
+const Order  = require('../models/Order');
 
 exports.getStats = async (req, res, next) => {
     try {
@@ -9,14 +11,19 @@ exports.getStats = async (req, res, next) => {
         const [
             totalBooks,
             totalAuthors,
+            totalUsers,
+            totalOrders,
             newBooksThisMonth,
             authorsAddedThisMonth,
             lowStockBooks,
             totalStockResult,
             genreCounts,
+            recentOrders,
         ] = await Promise.all([
             Book.countDocuments(),
             Author.countDocuments(),
+            User.collection.countDocuments({}),
+            Order.collection.countDocuments({}),
             Book.countDocuments({ createdAt: { $gte: startOfMonth } }),
             Author.countDocuments({ createdAt: { $gte: startOfMonth } }),
             Book.find({ stock: { $lte: 10 } })
@@ -29,6 +36,11 @@ exports.getStats = async (req, res, next) => {
                 { $group: { _id: '$genre', count: { $sum: 1 } } },
                 { $sort: { count: -1 } },
             ]),
+            Order.find({})
+                .sort({ createdAt: -1 })
+                .limit(8)
+                .select('orderNumber userEmail totalAmount orderStatus items createdAt paymentMethod')
+                .lean(),
         ]);
 
         const totalStock     = totalStockResult[0] ? totalStockResult[0].total : 0;
@@ -37,16 +49,31 @@ exports.getStats = async (req, res, next) => {
             count: item.count,
             pct:   totalBooks > 0 ? Math.round((item.count / totalBooks) * 1000) / 10 : 0,
         }));
+        const recentOrdersSummary = recentOrders.map(order => ({
+            _id: order._id,
+            orderNumber: order.orderNumber,
+            userEmail: order.userEmail,
+            totalAmount: order.totalAmount,
+            orderStatus: order.orderStatus,
+            paymentMethod: order.paymentMethod,
+            createdAt: order.createdAt,
+            itemsCount: Array.isArray(order.items)
+                ? order.items.reduce((sum, item) => sum + (Number(item.quantity || item.qty || 1) || 1), 0)
+                : 0,
+        }));
 
         res.json({
             stats: {
                 totalBooks,
                 totalAuthors,
+                totalUsers,
+                totalOrders,
                 newBooksThisMonth,
                 authorsAddedThisMonth,
                 totalStock,
                 lowStockBooks,
                 genreBreakdown,
+                recentOrders: recentOrdersSummary,
             },
         });
     } catch (err) {
