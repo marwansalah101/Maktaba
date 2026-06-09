@@ -122,13 +122,7 @@
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
             </svg>
-            <span>Google</span>
-          </button>
-          <button class="btn-social" type="button" aria-label="Sign in with Apple">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path>
-            </svg>
-            <span>Apple</span>
+            <span>Continue with Google</span>
           </button>
         </div>
 
@@ -213,119 +207,6 @@
   <script src="/pages/authentication(Ali)/signin.js"></script>
   <script src="/script.js"></script>
   <script src="/preloader.js"></script>
-
-  <script>
-    const API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
-    let fpEmail = '';
-
-    function openForgotPw() {
-      document.getElementById('fp-modal-overlay').classList.add('open');
-      showStep(1);
-    }
-
-    function closeForgotPw() {
-      document.getElementById('fp-modal-overlay').classList.remove('open');
-      showStep(1);
-      document.getElementById('fp-email').value = '';
-      document.getElementById('fp-otp').value = '';
-      document.getElementById('fp-new-password').value = '';
-    }
-
-    function showStep(n) {
-      [1,2,3,4].forEach(i => {
-        document.getElementById('fp-step-' + i).style.display = i === n ? '' : 'none';
-      });
-    }
-
-    function setError(id, msg) {
-      const el = document.getElementById(id);
-      el.textContent = msg;
-      el.classList.add('show');
-    }
-
-    function clearError(id) {
-      const el = document.getElementById(id);
-      el.textContent = '';
-      el.classList.remove('show');
-    }
-
-    async function submitForgotEmail() {
-      clearError('fp-error-1');
-      const email = document.getElementById('fp-email').value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        return setError('fp-error-1', 'Please enter a valid email address.');
-      }
-      const btn = event.target;
-      btn.textContent = 'Sending...';
-      btn.disabled = true;
-      try {
-        const res  = await fetch(API_BASE + '/api/auth/forgot-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-        if (!res.ok) return setError('fp-error-1', data.error || 'Something went wrong.');
-        fpEmail = email;
-        document.getElementById('fp-sent-email').textContent = email;
-        showStep(2);
-      } catch {
-        setError('fp-error-1', 'Cannot reach server.');
-      } finally {
-        btn.textContent = 'Send Code';
-        btn.disabled = false;
-      }
-    }
-
-    async function submitOtp() {
-      clearError('fp-error-2');
-      const otp = document.getElementById('fp-otp').value.trim();
-      if (otp.length !== 6) return setError('fp-error-2', 'Please enter the 6-digit code.');
-      const btn = event.target;
-      btn.textContent = 'Verifying...';
-      btn.disabled = true;
-      try {
-        const res  = await fetch(API_BASE + '/api/auth/verify-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: fpEmail, otp })
-        });
-        const data = await res.json();
-        if (!res.ok) return setError('fp-error-2', data.error || 'Incorrect code.');
-        showStep(3);
-      } catch {
-        setError('fp-error-2', 'Cannot reach server.');
-      } finally {
-        btn.textContent = 'Verify Code';
-        btn.disabled = false;
-      }
-    }
-
-    async function submitNewPassword() {
-      clearError('fp-error-3');
-      const newPassword = document.getElementById('fp-new-password').value;
-      if (newPassword.length < 8) return setError('fp-error-3', 'Password must be at least 8 characters.');
-      const otp = document.getElementById('fp-otp').value.trim();
-      const btn = event.target;
-      btn.textContent = 'Updating...';
-      btn.disabled = true;
-      try {
-        const res  = await fetch(API_BASE + '/api/auth/reset-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: fpEmail, otp, newPassword })
-        });
-        const data = await res.json();
-        if (!res.ok) return setError('fp-error-3', data.error || 'Something went wrong.');
-        showStep(4);
-      } catch {
-        setError('fp-error-3', 'Cannot reach server.');
-      } finally {
-        btn.textContent = 'Reset Password';
-        btn.disabled = false;
-      }
-    }
-  </script>
 
 </body>
 </html>
