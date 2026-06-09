@@ -123,7 +123,6 @@ function renderCart() {
 // Go to checkout
 document.addEventListener('DOMContentLoaded', function () {
     renderCart();
-
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function () {
