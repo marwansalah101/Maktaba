@@ -1,11 +1,17 @@
-require('dotenv').config({ path: '../.env' });
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const express = require('express');
-const path    = require('path');
 const mongoose = require('mongoose');
 const helmet   = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors     = require('cors');
 const app = express();
+const colors = {
+    reset:  '\x1b[0m',
+    green:  '\x1b[32m',
+    red:    '\x1b[31m',
+    yellow: '\x1b[33m',
+};
 
 /* ── Security headers ──────────────────────────────────────────────
    Disable CSP and cross-origin policies here because the frontend
@@ -191,13 +197,6 @@ app.use((err, req, res, next) => {
 
 /* ── MongoDB connection ─────────────────────────────────────────── */
 const connectDB = async () => {
-    const colors = {
-        reset:  '\x1b[0m',
-        green:  '\x1b[32m',
-        red:    '\x1b[31m',
-        yellow: '\x1b[33m',
-    };
-
     try {
         await mongoose.connect(process.env.MONGO_URI, {
             serverSelectionTimeoutMS: 30000,

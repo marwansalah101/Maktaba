@@ -22,7 +22,7 @@ router.get('/users/:id',  ctrl.getUser);
 
 router.get('/users', async (req, res, next) => {
   try {
-    const User  = require('../models/User');
+    const User = require('../models/user');
     const users = await User.find().select('-__v -password');
     res.status(200).json({ success: true, count: users.length, users });
   } catch (err) {
