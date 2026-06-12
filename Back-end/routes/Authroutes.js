@@ -12,6 +12,10 @@ router.post('/google',    ctrl.googleAuth);
 router.get('/google/start',    ctrl.startGoogleAuth);
 router.get('/google/callback', ctrl.handleGoogleCallback);
 
+router.post('/forgot-password', ctrl.forgotPassword);
+router.post('/verify-otp',      ctrl.verifyOtp);
+router.post('/reset-password',  ctrl.resetPassword);
+
 // ── Logged-in user's own data (session via JWT) ─────────────────────────────
 router.get('/me',         protect, ctrl.getMe);
 router.put('/profile',    protect, ctrl.updateProfile);
@@ -19,6 +23,10 @@ router.get('/cart',       protect, ctrl.getCart);
 router.put('/cart',       protect, ctrl.updateCart);
 router.get('/favorites',  protect, ctrl.getFavorites);
 router.put('/favorites',  protect, ctrl.updateFavorites);
+
+router.post('/request-verification', protect, ctrl.requestEmailVerification);
+router.post('/verify-email',         protect, ctrl.verifyEmail);
+router.post('/deactivate',           protect, ctrl.deactivateAccount);
 
 // ── Lookup ───────────────────────────────────────────────────────────────────
 router.get('/users/:id',  ctrl.getUser);

@@ -846,3 +846,62 @@
 
     .bw-finale-cta { width: 100%; max-width: 280px; text-align: center; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   BROWSE PAGE MOBILE  (≤767px)
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+    /* ── Genre hero ── */
+    .bw-hero { min-height: 80vh; padding-top: 60px; }
+    .bw-hero-inner { padding: 20px 20px 80px; }
+    .bw-hero-title { font-size: clamp(44px, 14vw, 80px); margin-bottom: 16px; }
+    .bw-hero-script { margin-bottom: 32px; }
+
+    /* ── Genres section ── */
+    .bw-genres { padding: 40px 0 0; }
+    .bw-section-header { padding: 0 20px 28px; }
+
+    /* ── Genre card grid: single column on mobile ── */
+    .bw-genres-grid {
+        grid-template-columns: 1fr;
+        gap: 2px;
+        background: var(--border);
+        padding: 0;
+    }
+
+    /* Cards: reduce height, always show description + CTA (no hover on touch) */
+    .bw-card { min-height: 180px; padding: 28px 24px 24px; }
+    .bw-card-num { display: none; }
+    .bw-card-desc { max-height: 200px; opacity: 1; }
+    .bw-card-cta { opacity: 1; transform: translateY(0); }
+
+    /* ── AI entrance heading ── */
+    .bw-ae-title { max-height: 0; visibility: hidden; }
+    .bw-ai-entrance {max-height: 0; visibility: hidden; }
+
+    /* ── AI two-column → single column ── */
+    .bw-ai-inner {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    .bw-ai-left {
+        padding: 36px 20px 28px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    .bw-ai-right {
+        padding: 24px 20px 32px;
+    }
+    .bw-chat { min-height: 380px; height: 380px; }
+    .bw-chat-messages { min-height: 200px; }
+
+    /* ── Mood chips ── */
+    .bw-moods { gap: 8px 14px; }
+
+    /* ── Stats strip ── */
+    .bw-stat { flex: 0 0 50%; text-align: center; }
+
+    /* ── Finale CTA ── */
+    .bw-finale { padding: 56px 20px; }
+}

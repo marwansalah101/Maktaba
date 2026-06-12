@@ -1,4 +1,4 @@
-﻿// ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 //  account.js  —  Maktaba  |  Settings Page  (connected to the User collection)
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -38,19 +38,7 @@ function showToast(msg) {
     setTimeout(() => t.classList.remove("show"), 2200);
 }
 
-/* ── AVATAR ──────────────────────────────────────────────────────────────── */
-function previewAvatar(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-        document.getElementById("avatarEl").innerHTML = `<img src="${ev.target.result}">`;
-    };
-    reader.readAsDataURL(file);
-}
-function removeAvatar() {
-    document.getElementById("avatarEl").innerHTML = "WA";
-}
+// Avatar functions removed
 
 /* ── PROFILE LOAD (one call powers account + address + payment) ──────────── */
 async function loadProfile(force) {
@@ -77,10 +65,21 @@ async function loadAccountSettings() {
     if (nameEl  && user.name)  nameEl.value  = user.name;
     if (emailEl && user.email) emailEl.value = user.email;
 
-    // avatar initials
-    const avatarEl = document.getElementById("avatarEl");
-    if (avatarEl && !avatarEl.querySelector("img") && user.name) {
-        avatarEl.textContent = user.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+    const badge = document.getElementById("email-verify-badge");
+    const verifyBtn = document.getElementById("verify-email-btn");
+    const otpSection = document.getElementById("verify-otp-section");
+
+    if (badge) {
+        if (user.isVerified) {
+            badge.textContent = "Verified";
+            badge.style.color = "green";
+            if (verifyBtn) verifyBtn.style.display = "none";
+            if (otpSection) otpSection.style.display = "none";
+        } else {
+            badge.textContent = "Not Verified";
+            badge.style.color = "#c0392b";
+            if (verifyBtn) verifyBtn.style.display = "inline-block";
+        }
     }
 }
 
@@ -109,11 +108,10 @@ async function saveAccountSettings() {
         }
         if (data.user?.name) {
             localStorage.setItem("maktabaUserName", data.user.name);
-            const avatarEl = document.getElementById("avatarEl");
-            if (avatarEl && !avatarEl.querySelector("img")) {
-                avatarEl.textContent = data.user.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
-            }
         }
+
+        // Update verify badge immediately in case email changed
+        loadAccountSettings();
         if (passwordEl) passwordEl.value = "";
         showToast("Changes saved!");
     } catch (err) {
@@ -151,6 +149,73 @@ async function saveAddress() {
         showToast("Address saved!");
     } catch (err) {
         showToast("Network error. Please try again.");
+    }
+}
+
+async function requestEmailVerification() {
+    if (!isLoggedIn()) { showToast("Please sign in first."); return; }
+    const btn = document.getElementById("verify-email-btn");
+    btn.textContent = "Sending...";
+    btn.disabled = true;
+    try {
+        const res = await fetch(MK_BASE + "/api/auth/request-verification", {
+            method: "POST", headers: authHeaders()
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { showToast(data.error || "Could not send code."); btn.textContent = "Verify Email"; btn.disabled = false; return; }
+        
+        showToast("Verification code sent to your email.");
+        document.getElementById("verify-otp-section").style.display = "flex";
+        btn.textContent = "Code Sent";
+    } catch (err) {
+        showToast("Network error.");
+        btn.textContent = "Verify Email";
+        btn.disabled = false;
+    }
+}
+
+async function submitEmailVerification() {
+    if (!isLoggedIn()) { showToast("Please sign in first."); return; }
+    const otp = document.getElementById("acc-verify-otp").value.trim();
+    if (!otp || otp.length !== 6) { showToast("Please enter the 6-digit code."); return; }
+    
+    try {
+        const res = await fetch(MK_BASE + "/api/auth/verify-email", {
+            method: "POST", headers: authHeaders(), body: JSON.stringify({ otp })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { showToast(data.error || "Invalid code."); return; }
+        
+        showToast("Email successfully verified!");
+        if (MK_USER) MK_USER.isVerified = true;
+        loadAccountSettings(); // refreshes UI
+    } catch (err) {
+        showToast("Network error.");
+    }
+}
+
+async function deactivateAccount() {
+    if (!isLoggedIn()) return;
+    if (!confirm("Are you sure you want to deactivate your account? This action is irreversible.")) return;
+    
+    try {
+        const res = await fetch(MK_BASE + "/api/auth/deactivate", {
+            method: "POST", headers: authHeaders()
+        });
+        if (res.ok) {
+            localStorage.removeItem("maktabaToken");
+            localStorage.removeItem("maktabaUserEmail");
+            localStorage.removeItem("maktabaUserName");
+            localStorage.removeItem("maktabaLoggedInUser");
+            localStorage.removeItem("maktabaUserRole");
+            alert("Your account has been deactivated.");
+            window.location.href = "/signin";
+        } else {
+            const data = await res.json().catch(() => ({}));
+            showToast(data.error || "Deactivation failed.");
+        }
+    } catch (err) {
+        showToast("Network error.");
     }
 }
 

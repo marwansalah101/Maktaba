@@ -13,6 +13,7 @@
 
 <style>
 *{ box-sizing:border-box; margin:0; padding:0; font-family:'DM Sans',sans-serif; }
+*:focus, *:focus-visible { outline: none !important; }
 
 .settings-page{
   max-width:100%; margin:0; padding:60px 0 60px 40px;
@@ -35,12 +36,11 @@
   border-bottom:.5px solid #e0ddd8; gap:16px;
 }
 .field-label{ width:160px; font-size:12px; color:#aaa; flex-shrink:0; }
-.field-value{ flex:1; }
+.field-value{ flex:1; min-width:0; }
 .field-value input, .field-value select{
-  border:none; background:none; font-size:14px; width:100%; outline:none;
-  font-family:'DM Sans',sans-serif;
+  border:none; background:none; font-size:14px; width:100%; outline:none !important;
+  font-family:'DM Sans',sans-serif; box-shadow: none !important;
 }
-.field-value input:focus{ border-bottom:1px solid #312F2C; }
 
 .save-btn{
   margin-top:30px; background:#312F2C; color:white; border:none;
@@ -71,8 +71,8 @@
 .pay-pill.selected{ background:#312F2C; color:white; border-color:#312F2C; }
 
 /* CARD NUMBER */
-.card-number-wrapper{ display:flex; align-items:center; gap:10px; }
-.card-number-wrapper input{ flex:1; }
+.card-number-wrapper{ display:flex; align-items:center; gap:10px; min-width:0; }
+.card-number-wrapper input{ flex:1; min-width:0; }
 #card-logo{ font-size:26px; flex-shrink:0; min-width:32px; text-align:center; transition:all .2s; }
 
 /* EXPIRY PICKER */
@@ -180,6 +180,43 @@
   color:white; padding:14px 26px; opacity:0; transition:.3s; z-index:999;
 }
 #toast.show{ opacity:1; }
+
+/* MOBILE */
+@media (max-width: 767px) {
+  .settings-page {
+    grid-template-columns: 1fr;
+    padding: 72px 0 48px;
+    gap: 0;
+  }
+  .settings-page > aside {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow-x: unset;
+    padding: 14px 16px 10px;
+    gap: 6px;
+    border-bottom: 1px solid #e0ddd8;
+  }
+  .settings-page > aside h2 { display: none; }
+  .nav-item {
+    flex-shrink: unset;
+    padding: 11px 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    text-align: center;
+    border: 1px solid #e0ddd8;
+    width: 100%;
+  }
+  .nav-item.active { border-color: #312F2C; }
+  .settings-main {
+    border-left: none;
+    border-top: none;
+    padding: 24px 16px 48px;
+  }
+  .page-title { font-size: 26px; margin-bottom: 28px; }
+  .field-label { width: 110px; font-size: 11px; }
+  .tracking-modal-box { padding: 28px 20px; }
+  .privacy-row { flex-direction: column; align-items: flex-start; }
+}
 </style>
 <script>
   if (!localStorage.getItem('maktabaToken')) {
@@ -205,13 +242,39 @@
             <div class="mkt-pl-dots"><span></span><span></span><span></span></div>
         </div>
     </div>
+
+<nav class="navbar">
+    <div id="Maktaba">
+        <a href="/home"><h1>Maktaba</h1></a>
+    </div>
+    <ul class="navrbar-text">
+        <li><a href="/home">Home</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/collection">Collection</a></li>
+        <li><a href="/favorites">Favourites</a></li>
+    </ul>
+    <div class="navbar-icons">
+        <a href="/cart">
+            <span class="material-symbols-outlined">shopping_bag</span>
+        </a>
+        <div class="menu-dropdown-wrapper" id="menuWrapper">
+            <span class="material-symbols-outlined" id="menuBtn">menu</span>
+        </div>
+        <div class="menu-dropdown" id="menuDropdown">
+            <a href="/authors">Authors</a>
+            <a href="/browse#bw-ai-section" class="nav-ai-link">Maktaba AI ✦</a>
+            <a href="/settings">Settings</a>
+            <a href="/contact" class="contact-placeholder">Contact Us</a>
+        </div>
+    </div>
+</nav>
+
 <div class="settings-page">
 
   <!-- SIDEBAR -->
   <aside>
     <h2 style="margin-bottom:20px">Settings</h2>
     <button class="nav-item active" onclick="showTab('account',this)">Account</button>
-    <button class="nav-item"        onclick="showTab('privacy',this)">Privacy</button>
     <button class="nav-item"        onclick="showTab('address',this)">Address</button>
     <button class="nav-item"        onclick="showTab('payment',this)">Payment</button>
     <button class="nav-item"        onclick="showTab('orders',this)">Orders</button>
@@ -224,12 +287,20 @@
     <div id="tab-account" class="tab-panel active">
       <h1 class="page-title">Account Settings</h1>
 
-      <div class="avatar-row">
-        <div class="avatar-circle" id="avatarEl">WA</div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <button onclick="avatarInput.click()">Upload</button>
-          <button onclick="removeAvatar()">Remove</button>
-          <input type="file" id="avatarInput" hidden accept="image/*" onchange="previewAvatar(event)">
+      <div class="field-row" style="flex-direction:column; align-items:flex-start; margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; width:100%; align-items:center; margin-bottom:12px;">
+          <span style="font-size:16px; font-weight:bold; font-family:'Playfair Display',serif;">Email Address</span>
+          <span id="email-verify-badge" style="font-size:12px; color:#c0392b; font-weight:bold;">Not Verified</span>
+        </div>
+        <div class="field-value" style="width:100%;">
+          <input type="email" id="acc-email" placeholder="your@email.com" style="border-bottom:1px solid #e0ddd8; padding-bottom:4px;">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:16px;">
+          <button id="verify-email-btn" onclick="requestEmailVerification()" style="background:#312F2C; color:white; border:none; padding:8px 18px; cursor:pointer;">Verify Email</button>
+        </div>
+        <div id="verify-otp-section" style="display:none; margin-top:10px; width:100%;">
+          <input type="text" id="acc-verify-otp" placeholder="6-digit code" style="border:1px solid #ddd; padding:8px; width:120px; font-size:14px; outline:none;">
+          <button onclick="submitEmailVerification()" style="background:#1e8449; color:white; border:none; padding:8px 18px; cursor:pointer;">Submit Code</button>
         </div>
       </div>
 
@@ -238,46 +309,17 @@
         <div class="field-value"><input type="text" id="acc-name" placeholder="Your name"></div>
       </div>
       <div class="field-row">
-        <span class="field-label">Email</span>
-        <div class="field-value"><input type="email" id="acc-email" placeholder="your@email.com"></div>
-      </div>
-      <div class="field-row">
         <span class="field-label">Password</span>
         <div class="field-value"><input type="password" id="acc-password" placeholder="New password (leave blank to keep current)"></div>
       </div>
 
-      <!-- ✅ FIX: استبدلنا showToast('Changes Saved') بـ saveAccountSettings() -->
       <button class="save-btn" onclick="saveAccountSettings()">Save Changes</button>
-    </div>
 
-    <!-- ── PRIVACY ───────────────────────────────────────────────────── -->
-    <div id="tab-privacy" class="tab-panel">
-      <h1 class="page-title">Privacy</h1>
-      <div class="privacy-card">
-        <h2 class="privacy-card-title">Account Details</h2>
-        <p class="privacy-card-sub">Manage your account security settings</p>
-        <div class="privacy-row">
-          <div class="privacy-row-info"><span>Verify Email Address</span><span style="font-size:12px;color:#aaa">Confirm your credentials</span></div>
-          <span class="verified-badge">Verified</span>
-        </div>
-        <div class="privacy-row">
-          <div class="privacy-row-info"><span>Update Password</span><span style="font-size:12px;color:#aaa">Protect your account</span></div>
-          <button class="privacy-btn">Change Password</button>
-        </div>
-      </div>
-      <div class="privacy-card">
-        <h2 class="privacy-card-title">Recovery Settings</h2>
-        <div class="privacy-row">
-          <div class="privacy-row-info"><span>Recovery Email</span></div>
-          <input class="privacy-input" placeholder="your@email.com">
-        </div>
-        <div class="privacy-row">
-          <div class="privacy-row-info"><span>Recovery Phone</span></div>
-          <button class="privacy-btn">Setup</button>
-        </div>
-        <div class="privacy-row">
-          <div class="privacy-row-info"><span>Deactivate Account</span></div>
-          <button class="privacy-btn danger">Deactivate</button>
+      <div class="privacy-card" style="margin-top:60px; padding:24px; border:1px solid #e0ddd8;">
+        <h2 class="privacy-card-title">Danger Zone</h2>
+        <div class="privacy-row" style="border-bottom:none; padding-bottom:0;">
+          <div class="privacy-row-info"><span>Deactivate Account</span><span style="font-size:12px;color:#aaa">This action is irreversible.</span></div>
+          <button class="privacy-btn danger" onclick="deactivateAccount()">Deactivate</button>
         </div>
       </div>
     </div>
@@ -380,9 +422,9 @@
 /* ── AUTO-OPEN TAB FROM URL HASH ── */
 function openTabFromHash() {
     const hash = window.location.hash.substring(1); // Remove '#'
-    if (hash && (hash === 'tab-account' || hash === 'tab-privacy' || hash === 'tab-address' || hash === 'tab-payment' || hash === 'tab-orders')) {
+    if (hash && (hash === 'tab-account' || hash === 'tab-address' || hash === 'tab-payment' || hash === 'tab-orders')) {
         const tabName = hash.replace('tab-', '');
-        showTab(tabName, document.querySelector(`button[onclick="showTab('${tabName}'`));
+        showTab(tabName, document.querySelector(`button[onclick="showTab('${tabName}',this)"]`));
         setTimeout(() => {
             document.getElementById(hash).scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 300);

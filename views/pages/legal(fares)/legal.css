@@ -80,3 +80,22 @@
     font-weight: bold;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   LEGAL PAGES MOBILE  (≤767px)
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+    .privacyPolicy-box { padding: 100px 16px 28px; }
+    .privacyPolicy-box h1 { font-size: 2rem; }
+
+    .policy-body { margin: 0 16px; }
+    .policy-body h2 { font-size: 1.3rem; }
+
+    .legal-nav {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-bottom: 12px;
+    }
+    .legal-nav a { font-size: 0.85rem; }
+}
+

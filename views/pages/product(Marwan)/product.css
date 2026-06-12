@@ -730,3 +730,58 @@ body { background: var(--bg); }
     100% { transform: scale(1); }
 }
 .cart-bounce { animation: cart-land 0.55s ease forwards; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PRODUCT PAGE MOBILE  (≤767px)
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+    .product-page { margin-top: 65px; }
+
+    /* ── Hero: stack cover above info ── */
+    .product-hero { grid-template-columns: 1fr; }
+
+    .product-cover-col {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 32px 20px 28px;
+    }
+    .product-cover-col img { max-width: 190px; }
+
+    .product-info { padding: 28px 20px 24px; }
+
+    .product-title { font-size: 30px; letter-spacing: -0.5px; }
+
+    .product-info-header { flex-wrap: wrap; gap: 10px; }
+
+    .product-rating-price-row { flex-wrap: wrap; gap: 12px; }
+
+    .product-purchase { flex-direction: column; gap: 10px; }
+    .buy-now-btn, .add-to-cart-btn { flex: none; width: 100%; }
+
+    /* ── Data strip: 2×2 ── */
+    .product-data { grid-template-columns: 1fr 1fr; }
+    .product-release-date,
+    .product-ISBN { border-bottom: 1px solid var(--border); }
+    .product-language { border-right: 1px solid var(--border); }
+    .product-pages { border-right: none; padding-right: 16px; }
+
+    /* ── Content: stack main + sidebar ── */
+    .product-content { grid-template-columns: 1fr; }
+    .product-content-main {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 28px 20px;
+    }
+    .product-quote p { font-size: 18px; }
+    .product-suggestions {
+        position: static;
+        max-height: none;
+        padding: 24px 20px;
+    }
+
+    /* ── Reviews ── */
+    .product-reviews-section { padding: 28px 20px 40px; }
+    .reviews-section-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .reviews-section-title { font-size: 24px; }
+}

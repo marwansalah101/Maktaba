@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const jwt  = require('jsonwebtoken');
+const emailService = require('../services/emailService');
 const crypto = require('crypto');
 const EMAIL_RX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const GOOGLE_SCOPES = 'openid email profile';
@@ -129,16 +130,18 @@ exports.updateProfile = async (req, res, next) => {
     const user = await User.findById(req.user.id).select('+password');
     if (!user) return res.status(404).json({ error: 'User not found.' });
 
-    if (name !== undefined) {
-      if (String(name).trim().length < 2) return res.status(422).json({ error: 'Name must be at least 2 characters.' });
+    if (name && String(name).trim()) {
       user.name = String(name).trim();
     }
-    if (email !== undefined) {
-      const normalized = String(email).trim().toLowerCase();
-      if (!EMAIL_RX.test(normalized)) return res.status(422).json({ error: 'Please provide a valid email.' });
-      const clash = await User.findOne({ email: normalized, _id: { $ne: user._id } });
+    if (email && String(email).trim().toLowerCase()) {
+      const normalizedEmail = String(email).trim().toLowerCase();
+      if (!EMAIL_RX.test(normalizedEmail)) return res.status(422).json({ error: 'Please provide a valid email.' });
+      const clash = await User.findOne({ email: normalizedEmail, _id: { $ne: user._id } });
       if (clash) return res.status(409).json({ error: 'Email is already in use.' });
-      user.email = normalized;
+      if (user.email !== normalizedEmail) {
+        user.email = normalizedEmail;
+        user.isVerified = false; // Reset verification on email change
+      }
     }
     if (phone !== undefined) user.phone = String(phone).trim();
 
@@ -161,7 +164,11 @@ exports.updateProfile = async (req, res, next) => {
       };
     }
     if (password && String(password).trim().length >= 8) {
+      if (!/[A-Z]/.test(password)) {
+        return res.status(422).json({ error: 'Password must contain at least one capital letter.' });
+      }
       user.password = String(password).trim(); // hashed by pre-save hook
+      await emailService.sendPasswordChangeEmail(user.email, user.name);
     }
 
     await user.save();
@@ -377,6 +384,13 @@ exports.signup = async (req, res, next) => {
       return res.status(400).json({ error: 'Name, email and password are required.' });
     }
 
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    }
+    if (!/[A-Z]/.test(password)) {
+      return res.status(400).json({ error: 'Password must contain at least one capital letter.' });
+    }
+
     // Check duplicate email
     const existing = await User.findOne({ email: email.trim().toLowerCase() });
     if (existing) {
@@ -385,6 +399,9 @@ exports.signup = async (req, res, next) => {
 
     // Create user — password is hashed by the pre-save hook
     const user = await User.create({ name, email, password, phone });
+    
+    // Send welcome email asynchronously
+    emailService.sendWelcomeEmail(user.email, user.name);
 
     sendToken(user, 201, res);
   } catch (err) {
@@ -542,5 +559,187 @@ exports.recommend = async (req, res, next) => {
     res.end();
   } catch (err) {
     if (!res.headersSent) next(err);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// @desc    Forgot Password - send OTP
+// @route   POST /api/auth/forgot-password
+// @access  Public
+// ─────────────────────────────────────────────────────────────────────────────
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    if (!user) return res.status(404).json({ error: 'There is no user with that email address.' });
+
+    // Generate 6 digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Set OTP and expiration (10 minutes)
+    user.resetPasswordOtp = otp;
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    await user.save({ validateBeforeSave: false });
+
+    // Send email
+    const emailSent = await emailService.sendPasswordResetOtp(user.email, otp);
+    if (!emailSent) {
+      user.resetPasswordOtp = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+      return res.status(500).json({ error: 'Email could not be sent' });
+    }
+
+    res.status(200).json({ success: true, data: 'Email sent' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// @desc    Verify OTP
+// @route   POST /api/auth/verify-otp
+// @access  Public
+// ─────────────────────────────────────────────────────────────────────────────
+exports.verifyOtp = async (req, res, next) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) return res.status(400).json({ error: 'Email and OTP are required.' });
+
+    const user = await User.findOne({
+      email: email.trim().toLowerCase(),
+      resetPasswordOtp: otp,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired OTP.' });
+    }
+
+    res.status(200).json({ success: true, data: 'OTP verified' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// @desc    Reset Password
+// @route   POST /api/auth/reset-password
+// @access  Public
+// ─────────────────────────────────────────────────────────────────────────────
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ error: 'Email, OTP, and new password are required.' });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    }
+    if (!/[A-Z]/.test(newPassword)) {
+      return res.status(400).json({ error: 'Password must contain at least one capital letter.' });
+    }
+
+    const user = await User.findOne({
+      email: email.trim().toLowerCase(),
+      resetPasswordOtp: otp,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired OTP.' });
+    }
+
+    // Set new password
+    user.password = newPassword;
+    user.resetPasswordOtp = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.status(200).json({ success: true, data: 'Password updated' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// @desc    Request Email Verification OTP
+// @route   POST /api/auth/request-verification
+// @access  Private
+// ─────────────────────────────────────────────────────────────────────────────
+exports.requestEmailVerification = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    if (user.isVerified) {
+      return res.status(400).json({ error: 'Email is already verified.' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.verifyEmailOtp = otp;
+    user.verifyEmailExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+    await user.save();
+
+    await emailService.sendEmailVerificationOtp(user.email, otp);
+
+    res.status(200).json({ success: true, message: 'Verification code sent to your email.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// @desc    Verify Email using OTP
+// @route   POST /api/auth/verify-email
+// @access  Private
+// ─────────────────────────────────────────────────────────────────────────────
+exports.verifyEmail = async (req, res, next) => {
+  try {
+    const { otp } = req.body;
+    if (!otp) return res.status(400).json({ error: 'OTP is required.' });
+
+    const user = await User.findOne({
+      _id: req.user.id,
+      verifyEmailOtp: otp,
+      verifyEmailExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired OTP.' });
+    }
+
+    user.isVerified = true;
+    user.verifyEmailOtp = undefined;
+    user.verifyEmailExpire = undefined;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Email successfully verified.', isVerified: true });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// @desc    Deactivate Account
+// @route   POST /api/auth/deactivate
+// @access  Private
+// ─────────────────────────────────────────────────────────────────────────────
+exports.deactivateAccount = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    user.isActive = false;
+    await user.save();
+
+    // Clear the cookie just like logout
+    res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+    res.status(200).json({ success: true, message: 'Account deactivated successfully.' });
+  } catch (err) {
+    next(err);
   }
 };

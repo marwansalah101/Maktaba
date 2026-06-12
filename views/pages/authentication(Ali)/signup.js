@@ -123,8 +123,8 @@ function consumeGoogleAuthHash() {
             message: 'Please enter a valid e-mail address.'
         },
         password_signup: {
-            validate: v => v.length >= 8,
-            message: 'Password must be at least 8 characters.'
+            validate: v => v.length >= 8 && /[A-Z]/.test(v),
+            message: 'Password must be at least 8 characters and contain a capital letter.'
         }
     };
 

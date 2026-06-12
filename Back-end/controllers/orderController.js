@@ -2,6 +2,7 @@ const Order = require('../models/Order');
 const Cart  = require('../models/Cart');
 const User  = require('../models/user');
 const jwt   = require('jsonwebtoken');
+const emailService = require('../services/emailService');
 
 function mapPaymentMethod(method) {
     if (!method) return 'credit_card';
@@ -59,6 +60,10 @@ exports.placeOrder = async (req, res, next) => {
             },
         });
 
+        // Send order confirmation email asynchronously
+        const customerName = info.firstName ? [info.firstName, info.lastName].filter(Boolean).join(' ') : 'Customer';
+        emailService.sendOrderConfirmationEmail(userEmail, customerName, order);
+
         res.status(201).json({
             success: true,
             message: 'Order created successfully',
@@ -102,6 +107,11 @@ exports.createFromCart = async (req, res, next) => {
         });
 
         await Cart.findOneAndUpdate({ userEmail: email }, { items: [] });
+        
+        // Send order confirmation email asynchronously
+        const customerName = shippingAddress && shippingAddress.fullName ? shippingAddress.fullName : 'Customer';
+        emailService.sendOrderConfirmationEmail(email, customerName, order);
+
         res.json({ success: true, orderId: order._id });
     } catch (err) {
         next(err);

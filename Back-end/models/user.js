@@ -14,6 +14,16 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verifyEmailOtp: {
+    type: String,
+  },
+  verifyEmailExpire: {
+    type: Date,
+  },
   password: {
     type: String,
     required: true,
@@ -77,6 +87,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
+  resetPasswordOtp: {
+    type: String,
+  },
+  resetPasswordExpire: {
+    type: Date,
   },
   createdAt: {
     type: Date,

@@ -40,6 +40,21 @@ if (menuBtn && menuDropdown && menuWrapper) {
 
     menuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (window.innerWidth <= 767) {
+            const mob = document.getElementById('mkMobileMenu');
+            if (mob) {
+                if (mob.classList.contains('open')) {
+                    mob.classList.remove('open');
+                    mob.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                } else {
+                    mob.classList.add('open');
+                    mob.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+            return;
+        }
         if (menuDropdown.classList.contains('open')) {
             closeDropdown();
         } else {
@@ -51,6 +66,52 @@ if (menuBtn && menuDropdown && menuWrapper) {
     menuDropdown.addEventListener('click', (e) => e.stopPropagation());
     document.addEventListener('click', closeDropdown);
 }
+
+/* ── Mobile full-screen navigation overlay ── */
+(function () {
+    const overlay = document.createElement('div');
+    overlay.id = 'mkMobileMenu';
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.innerHTML =
+        '<div class="mk-mob-head">' +
+            '<span class="mk-mob-brand">Maktaba</span>' +
+            '<button class="mk-mob-close" id="mkMobClose" aria-label="Close navigation">' +
+                '<span class="material-symbols-outlined">close</span>' +
+            '</button>' +
+        '</div>' +
+        '<nav class="mk-mob-nav">' +
+            '<a class="mk-mob-link" href="/home">Home</a>' +
+            '<a class="mk-mob-link" href="/browse">Browse</a>' +
+            '<a class="mk-mob-link" href="/collection">Collection</a>' +
+            '<a class="mk-mob-link" href="/favorites">Favourites</a>' +
+        '</nav>' +
+        '<div class="mk-mob-divider"></div>' +
+        '<div class="mk-mob-secondary">' +
+            '<a class="mk-mob-sec-link mk-mob-sec-link--ai" href="/browse#bw-ai-section">Maktaba AI ✶</a>' +
+            '<a class="mk-mob-sec-link" href="/settings">Settings</a>' +
+            '<a class="mk-mob-sec-link" href="/contact">Contact Us</a>' +
+        '</div>' +
+        '<div class="mk-mob-auth">' +
+            '<a class="mk-mob-sec-link" id="mkMobAuthBtn" href="/signin">Sign In</a>' +
+        '</div>';
+
+    document.body.appendChild(overlay);
+
+    document.getElementById('mkMobClose').addEventListener('click', function () {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) {
+            overlay.classList.remove('open');
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+    });
+}());
+
 const memoryCartStore = { cart: [] };
 
 function flyToCart(sourceEl) {
@@ -1048,6 +1109,20 @@ document.addEventListener('DOMContentLoaded', () => {
       link.textContent = "Sign In";
       link.href = signinHref;
       link.onclick = null;
+    }
+
+    // ── Mobile menu auth button ───────────────────────────────────────
+    var mobAuth = document.getElementById("mkMobAuthBtn");
+    if (mobAuth) {
+      if (authed()) {
+        mobAuth.textContent = "Log Out";
+        mobAuth.href = "#";
+        mobAuth.onclick = function (e) { e.preventDefault(); mkLogout(); };
+      } else {
+        mobAuth.textContent = "Sign In";
+        mobAuth.href = signinHref;
+        mobAuth.onclick = null;
+      }
     }
   }
   window.mkPaintNav = paintNav;

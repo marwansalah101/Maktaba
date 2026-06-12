@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (slug) {
         try {
-            const res = await fetch(`/books/slug/${encodeURIComponent(slug)}`);
+            const res = await fetch(`/books/slug/${encodeURIComponent(slug)}`, { cache: 'no-store' });
             if (res.ok) selectedBook = await res.json();
         } catch (_) {}
         if (!selectedBook && typeof Books !== 'undefined') {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } else if (bookTitle) {
         try {
-            const res = await fetch(`/books/title/${encodeURIComponent(bookTitle)}`);
+            const res = await fetch(`/books/title/${encodeURIComponent(bookTitle)}`, { cache: 'no-store' });
             if (res.ok) selectedBook = await res.json();
         } catch (_) {}
         if (!selectedBook && typeof Books !== 'undefined') {
@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         : false;
 
     /* ── Populate static book data ─────────────────────────────── */
+    document.title = `${selectedBook.title} — Maktaba`;
     document.getElementById('main-title').innerText        = selectedBook.title;
     const authorSlug = toSlug(selectedBook.author);
     document.getElementById('main-author').innerHTML = `<a href="/author/${authorSlug}" style="color:inherit;text-decoration:none;border-bottom:1px solid currentColor;cursor:pointer;">${selectedBook.author}</a>`;
@@ -410,7 +411,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const token = localStorage.getItem('maktabaToken');
             if (!token) {
-                errEl.textContent = 'Please sign in to submit a review.';
+                sessionStorage.setItem('mkFlashToast', 'Please sign in to submit a review.');
+                window.location.href = '/signin';
                 return;
             }
             if (!text) {

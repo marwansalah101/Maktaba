@@ -322,6 +322,56 @@
     100% { transform: scale(1); }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   FAVOURITES / ACCOUNT MOBILE  (≤767px)
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+    .fav-board { padding: 88px 16px 48px; }
+
+    .fav-board-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding-bottom: 20px;
+    }
+
+    .fav-add-all-btn { width: 100%; text-align: center; }
+
+    .favorite-item {
+        gap: 16px;
+        padding: 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .favorite-left {
+        gap: 16px;
+        flex: 1 1 100%;
+    }
+
+    .favorite-left img {
+        width: 72px;
+        height: 100px;
+    }
+
+    .favorite-info h3 { font-size: 16px; }
+
+    .favorite-right {
+        padding-right: 32px;
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+        flex: 1 1 100%;
+        justify-content: space-between;
+    }
+
+    .fav-board-footer {
+        flex-direction: column;
+        gap: 16px;
+        padding-top: 28px;
+    }
+}
+
 .cart-bounce {
     animation: cart-land 0.55s ease forwards;
 }

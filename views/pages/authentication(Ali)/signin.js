@@ -436,7 +436,7 @@ async function submitOtp() {
 async function submitNewPassword() {
   clearFpError('fp-error-3');
   const newPassword = document.getElementById('fp-new-password').value;
-  if (newPassword.length < 8) return setFpError('fp-error-3', 'Password must be at least 8 characters.');
+  if (newPassword.length < 8 || !/[A-Z]/.test(newPassword)) return setFpError('fp-error-3', 'Password must be at least 8 characters and contain a capital letter.');
   const otp = document.getElementById('fp-otp').value.trim();
   const btn = event.target;
   btn.textContent = 'Updating...';
