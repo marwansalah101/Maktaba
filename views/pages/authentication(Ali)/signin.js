@@ -110,7 +110,7 @@ function consumeGoogleAuthHash() {
 // ═══════════════════════════════════════════════════════════════
 (() => {
 
-    const API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
+    const API_BASE = '';
 
     // ─── Validation Rules ───────────────────────────────────────────
     const rules = {
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ══════════════════════════════════════════════════════════════════
    FORGOT PASSWORD — multi-step modal
 ══════════════════════════════════════════════════════════════════ */
-const API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
+const API_BASE = '';
 let fpEmail = '';
 
 function openForgotPw() {

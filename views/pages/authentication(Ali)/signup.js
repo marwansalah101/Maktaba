@@ -110,7 +110,7 @@ function consumeGoogleAuthHash() {
 // ═══════════════════════════════════════════════════════════════
 (() => {
 
-    const API_BASE = window.location.port === '3000' ? '' : 'http://localhost:3000';
+    const API_BASE = '';
 
     // ─── Validation Rules ───────────────────────────────────────────
     const rules = {
@@ -309,8 +309,7 @@ function consumeGoogleAuthHash() {
             .then(function (res) { return res.json(); })
             .then(function (data) {
                 if (data.error) {
-                    var msg = (data.error.toLowerCase().includes('email') || data.error.toLowerCase().includes('registered'))
-                        ? data.error : 'Sign up failed — please try again.';
+                    var msg = data.error || 'Sign up failed — please try again.';
                     showError(emailEl, msg);
                     btn.textContent = 'Sign Up';
                     btn.disabled = false;
