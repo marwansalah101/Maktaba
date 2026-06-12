@@ -275,7 +275,7 @@ function consumeGoogleAuthHash() {
                 }
             })
             .catch(function () {
-                showError(passwordEl, 'Cannot reach server — make sure the app is running on port 3000.');
+                showError(passwordEl, 'Cannot reach server — please try again in a moment.');
                 btn.textContent = 'Sign In';
                 btn.disabled = false;
             });

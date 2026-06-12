@@ -6,6 +6,7 @@ const helmet   = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors     = require('cors');
 const app = express();
+app.set('trust proxy', 1);
 const colors = {
     reset:  '\x1b[0m',
     green:  '\x1b[32m',
