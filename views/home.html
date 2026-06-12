@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html><html><head>
+<!DOCTYPE html><html><head>
   <link rel="stylesheet" href="/preloader.css">
   
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
@@ -6,9 +6,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Maktaba</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/pages/home(fares)/home.css">
-     <link rel="icon" type="image/svg + xml" sizes="64x64" href="/resources/asset/BlackLogo.svg">
+     <link rel="icon" type="image/svg+xml" sizes="64x64" href="/resources/asset/BlackLogo.svg">
       <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,300..700;1,300..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body data-nav-invert>
     <!-- ── PRELOADER ────────────────────────────────────────── -->
     <div id="mkt-preloader" aria-hidden="true" role="presentation">
         <div class="mkt-pl-stage">
@@ -35,18 +35,18 @@
     </div>
     <nav class="navbar">
         <div id="Maktaba">
-            <a href="/home.html">
+            <a href="/home">
                 <h1>Maktaba</h1>
             </a>
         </div>
         <ul class="navrbar-text">
             <li>
-                <a href="/home.html" class="active-link">
+                <a href="/home" class="active-link">
                     Home
                 </a>
             </li>
             <li>
-                <a href="/pages/catalog(Marwan)/genres.html">
+                <a href="/browse">
                     Browse
                 </a>
             </li>
@@ -56,22 +56,23 @@
                 </a>
             </li>
             <li>
-                <a href="/pages/account(Mikha)/favorites.html">
+                <a href="/favorites">
                     Favourites
                 </a>
             </li>
         </ul>
         <div class="navbar-icons">
-            <a href="/pages/checkout(Rojeh)/add-to-cart.html">
+            <a href="/cart">
                 <span class="material-symbols-outlined">shopping_bag</span>     
             </a>
             <div class="menu-dropdown-wrapper" id="menuWrapper">
                 <span class="material-symbols-outlined" id="menuBtn">menu</span>
             </div>
             <div class="menu-dropdown" id="menuDropdown">
-              <a href="/pages/home(fares)/AllAuthors.html">Authors</a>
-                <a href="/pages/account(Mikha)/settings.html">Settings</a>
-                <a href="/pages/account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
+              <a href="/authors">Authors</a>
+                <a href="/browse#bw-ai-section" class="nav-ai-link">Maktaba AI ✦</a>
+                <a href="/settings">Settings</a>
+                <a href="/contact" class="contact-placeholder">Contact Us</a>
             </div>
         </div>
     </nav>
@@ -81,55 +82,20 @@
 
 
     <div class="book-bg">
-
-        <div class="hero-text">
-        <div class="est">
-            <p>EST. 2024 &mdash; CURATED LITERATURE</p>
+        <span class="hero-watermark" aria-hidden="true">MAKTABA</span>
+        <div class="hero-panel">
+            <div class="hero-kicker">
+                <span class="hero-rule"></span>
+                EST. 2024 &mdash; CURATED LITERATURE
+                <span class="hero-rule"></span>
+            </div>
+            <h1 class="hero-title">Where every page <span>tells a story</span></h1>
+            <p class="hero-copy">A sanctuary for bibliophiles &mdash; explore rare editions, timeless classics, and contemporary masterpieces.</p>
+            <div class="hero-action">
+                <a href="/browse">EXPLORE NOW <span class="arrow">&rarr;</span></a>
+            </div>
         </div>
-        <div class="est">
-            <h3>Where every  page <br> tells a story</h3>
-            </div>
-       <div class="sub-est">
-         <p>A sanctuary for bibliophiles &mdash; explore rare editions, timeless classics, and contemporary masterpieces.</p>
-       </div>
-      
-    
     </div>
-      
-    <div class="homeBox">
-
-              <div class="writebox">
-                  <p>Featured</p>
-              </div>
-
-            <div class="writebox"> 
-                <h3>Your next adventures awaits ...</h3>    
-            </div>
-
-            <div class="description">
-                 <p>Discover handpicked selections from our editors &mdash; stories that linger long after the last page.</p>
-            </div>
-
-     <div class="explore-link">
-        <a href="/pages/catalog(Marwan)/genres.html">
-    EXPLORE NOW 
-    <span class="arrow">&rarr;</span> 
-  </a>
-    </div>
-
-    </div>
-    </div>
-
-
-
-
-<br>
-<br>
-
-
-
-
-
 
 
 <div class="carousel-wrapper"> 
@@ -194,11 +160,11 @@
    <div class="group">
 
     <div class="Images-carousole ">
-      <a href="/pages/product(Marwan)/product.html?title=A%20Song%20Of%20Ice%20And%20Fire">
+      <a href="/book/a-song-of-ice-and-fire">
         <img src="/resources/Books/ASongOfIceAndFire.png" alt="Book 1" style="width:90%;">
         <div class="book-info2">
           <h3>A Song Of Ice And Fire</h3>
-          <p><a href="/pages/catalog(Marwan)/authors.html?slug=george-rr-martin" class="book-author-link" style="text-decoration:none;color:inherit;">George R.R. Martin</a></p>
+          <p><a href="/author/george-rr-martin" class="book-author-link" style="text-decoration:none;color:inherit;">George R.R. Martin</a></p>
           <span class="genre-tag">Fantasy</span>
         </div>
       </a>
@@ -206,11 +172,11 @@
 
 
      <div class="Images-carousole ">
-      <a href="/pages/product(Marwan)/product.html?title=Chapterhouse%3A%20Dune">
+      <a href="/book/chapterhouse-dune">
         <img src="/resources/Books/Dune.png" alt="Book 1" style="width:90%;">
         <div class="book-info2">
           <h3>Chapterhouse: Dune</h3>
-          <p><a href="/pages/catalog(Marwan)/authors.html?slug=frank-herbert" class="book-author-link" style="text-decoration:none;color:inherit;">Frank Herbert</a></p>
+          <p><a href="/author/frank-herbert" class="book-author-link" style="text-decoration:none;color:inherit;">Frank Herbert</a></p>
           <span class="genre-tag">Science Fiction</span>
         </div>
         </a>
@@ -218,11 +184,11 @@
 
 
     <div class="Images-carousole ">
-      <a href="/pages/product(Marwan)/product.html?title=The%20Shining">
+      <a href="/book/the-shining">
         <img src="/resources/Books/TheShining.png" alt="Book 1" style="width:90%;">
         <div class="book-info2">
           <h3>The Shining</h3>
-          <p><a href="/pages/catalog(Marwan)/authors.html?slug=stephen-king" class="book-author-link" style="text-decoration:none;color:inherit;">Stephen King</a></p>
+          <p><a href="/author/stephen-king" class="book-author-link" style="text-decoration:none;color:inherit;">Stephen King</a></p>
           <span class="genre-tag">Horror</span>
         </div>
         </a>
@@ -230,11 +196,11 @@
 
 
      <div class="Images-carousole ">
-      <a href="/pages/product(Marwan)/product.html?title=Journey%20to%20the%20Center%20of%20the%20Earth">
+      <a href="/book/journey-to-the-center-of-the-earth">
         <img src="/resources/Books/JourneyToThe CentreOfTheEarth.png" alt="Book 1" style="width:90%;">
         <div class="book-info2">
           <h3>Journey to the Center of the Earth</h3>
-          <p><a href="/pages/catalog(Marwan)/authors.html?slug=jules-verne" class="book-author-link" style="text-decoration:none;color:inherit;">Jules Verne</a></p>
+          <p><a href="/author/jules-verne" class="book-author-link" style="text-decoration:none;color:inherit;">Jules Verne</a></p>
           <span class="genre-tag">Adventure</span>
         </div>
         </a>
@@ -242,22 +208,22 @@
 
        <!--the repeating books-->
      <div class="Images-carousole " aria-hidden="true">  <!--By adding aria-hidden="true" to the cloned set, you are telling the screen reader: "Hey, ignore these, they are just here for a visual trick."-->
-      <a href="/pages/product(Marwan)/product.html?title=A%20Song%20Of%20Ice%20And%20Fire">
+      <a href="/book/a-song-of-ice-and-fire">
         <img src="/resources/Books/ASongOfIceAndFire.png" alt="Book 1" style="width:90%;">
         <div class="book-info2">
           <h3>A Song Of Ice And Fire</h3>
-          <p><a href="/pages/catalog(Marwan)/authors.html?slug=george-rr-martin" class="book-author-link" style="text-decoration:none;color:inherit;">George R.R. Martin</a></p>
+          <p><a href="/author/george-rr-martin" class="book-author-link" style="text-decoration:none;color:inherit;">George R.R. Martin</a></p>
           <span class="genre-tag">Fantasy</span>
         </div>
         </a>
         </div>
 
      <div class="Images-carousole " aria-hidden="true">
-      <a href="/pages/product(Marwan)/product.html?title=Chapterhouse%3A%20Dune">
+      <a href="/book/chapterhouse-dune">
         <img src="/resources/Books/Dune.png" alt="Book 1" style="width:90%;">
         <div class="book-info2">
           <h3>Chapterhouse: Dune</h3>
-          <p><a href="/pages/catalog(Marwan)/authors.html?slug=frank-herbert" class="book-author-link" style="text-decoration:none;color:inherit;">Frank Herbert</a></p>
+          <p><a href="/author/frank-herbert" class="book-author-link" style="text-decoration:none;color:inherit;">Frank Herbert</a></p>
           <span class="genre-tag">Science Fiction</span>
         </div>
         </a>
@@ -265,11 +231,11 @@
 
 
      <div class="Images-carousole " aria-hidden="true">
-      <a href="/pages/product(Marwan)/product.html?title=The%20Shining">
+      <a href="/book/the-shining">
         <img src="/resources/Books/TheShining.png" alt="Book 1" style="width:90%;">
         <div class="book-info2">
           <h3>The Shining</h3>
-          <p><a href="/pages/catalog(Marwan)/authors.html?slug=stephen-king" class="book-author-link" style="text-decoration:none;color:inherit;">Stephen King</a></p>
+          <p><a href="/author/stephen-king" class="book-author-link" style="text-decoration:none;color:inherit;">Stephen King</a></p>
           <span class="genre-tag">Horror</span>
         </div>
         </a>
@@ -277,11 +243,11 @@
 
 
      <div class="Images-carousole " aria-hidden="true">
-      <a href="/pages/product(Marwan)/product.html?title=Journey%20to%20the%20Center%20of%20the%20Earth">
+      <a href="/book/journey-to-the-center-of-the-earth">
         <img src="/resources/Books/JourneyToThe CentreOfTheEarth.png" alt="Book 1" style="width:90%;">
         <div class="book-info2">
           <h3>Journey to the Center of the Earth</h3>
-          <p><a href="/pages/catalog(Marwan)/authors.html?slug=jules-verne" class="book-author-link" style="text-decoration:none;color:inherit;">Jules Verne</a></p>
+          <p><a href="/author/jules-verne" class="book-author-link" style="text-decoration:none;color:inherit;">Jules Verne</a></p>
           <span class="genre-tag">Adventure</span>
         </div>
         </a>
@@ -308,8 +274,8 @@
 
         <div class="season-book-details">
             <p class="season-label">BOOK OF THE SEASON</p>
-            <a href="/pages/product(Marwan)/product.html?title=The%20Shining" style="text-decoration:none;color:inherit;"><h2>THE SHINING</h2></a>
-            <p class="season-meta"><a href="/pages/catalog(Marwan)/authors.html?slug=stephen-king" class="book-author-link" style="text-decoration:none;color:inherit;">Stephen King</a> &middot; 1977</p>
+            <a href="/book/the-shining" style="text-decoration:none;color:inherit;"><h2>THE SHINING</h2></a>
+            <p class="season-meta"><a href="/author/stephen-king" class="book-author-link" style="text-decoration:none;color:inherit;">Stephen King</a> &middot; 1977</p>
             <p class="season-quote">"We all go a little mad sometimes."</p>
             <p class="season-price">L.E 380</p>
             <button id="seasonAddToCart" class="season-cta" data-title="The Shining" data-author="Stephen King" data-price="380" data-image="./resources/Books/TheShining.png">ADD TO CART</button>
@@ -371,11 +337,11 @@
         <p class="featured-overline">SINCE BOOKING, THE WORLD</p>
         <h2>FEATURED<br>AUTHORS</h2>
       </div>
-      <a href="/pages/home(fares)/AllAuthors.html" class="featured-all-authors-btn">All Authors</a>
+      <a href="/authors" class="featured-all-authors-btn">All Authors</a>
     </div>
 
     <div class="featured-authors-grid">
-      <a class="featured-author-card is-bw" href="/pages/catalog(Marwan)/authors.html?slug=ernest-hemingway">
+      <a class="featured-author-card is-bw" href="/author/ernest-hemingway">
         <img src="/resources/Authors/316be4d7f6292c317b66ec05778384b8.jpg" alt="Ernest Hemingway">
         <span class="featured-author-meta">
           <span class="featured-author-name">Ernest Hemingway</span>
@@ -383,7 +349,7 @@
         </span>
       </a>
 
-      <a class="featured-author-card" href="/pages/catalog(Marwan)/authors.html?slug=colleen-hoover">
+      <a class="featured-author-card" href="/author/colleen-hoover">
         <img src="/resources/Authors/colleen-hoover.jpg" alt="Colleen Hoover">
         <span class="featured-author-meta">
           <span class="featured-author-name">Colleen Hoover</span>
@@ -391,7 +357,7 @@
         </span>
       </a>
 
-      <a class="featured-author-card" href="/pages/catalog(Marwan)/authors.html?slug=stephen-king">
+      <a class="featured-author-card" href="/author/stephen-king">
         <img src="/resources/Authors/stephen-king.jpg" alt="Stephen King">
         <span class="featured-author-meta">
           <span class="featured-author-name">Stephen King</span>
@@ -399,7 +365,7 @@
         </span>
       </a>
 
-      <a class="featured-author-card" href="/pages/catalog(Marwan)/authors.html?slug=leo-tolstoy">
+      <a class="featured-author-card" href="/author/leo-tolstoy">
         <img src="/resources/Authors/e74a07ca003304accf7e73675621697e.jpg" alt="Leo Tolstoy">
         <span class="featured-author-meta">
           <span class="featured-author-name">Leo Tolstoy</span>
@@ -407,7 +373,7 @@
         </span>
       </a>
 
-      <a class="featured-author-card" href="/pages/catalog(Marwan)/authors.html?slug=george-rr-martin">
+      <a class="featured-author-card" href="/author/george-rr-martin">
         <img src="/resources/Authors/george-rr-martin.jpg" alt="George R.R. Martin">
         <span class="featured-author-meta">
           <span class="featured-author-name">George R.R. Martin</span>
@@ -415,7 +381,7 @@
         </span>
       </a>
 
-      <a class="featured-author-card" href="/pages/catalog(Marwan)/authors.html?slug=jules-verne">
+      <a class="featured-author-card" href="/author/jules-verne">
         <img src="/resources/Authors/jules-verne.jpg" alt="Jules Verne">
         <span class="featured-author-meta">
           <span class="featured-author-name">Jules Verne</span>
@@ -475,10 +441,10 @@
               <div class="footer-col">
                 <h4>Explore</h4>
                 <ul>
-                    <li><a href="/home.html" class="footer-link" data-target="new-releases">New Realeases</a></li>
-                    <li><a href="/home.html" class="footer-link" data-target="best-sellers">Best sellers</a></li> 
-                    <li><a href="/pages/catalog(Marwan)/collection.html" class="footer-link">Collections</a></li>
-                    <li><a href="/home.html" class="footer-link" data-target="about-uss">About Us</a></li>
+                    <li><a href="/home" class="footer-link" data-target="new-releases">New Realeases</a></li>
+                    <li><a href="/home" class="footer-link" data-target="best-sellers">Best sellers</a></li> 
+                    <li><a href="/collection" class="footer-link">Collections</a></li>
+                    <li><a href="/home" class="footer-link" data-target="about-uss">About Us</a></li>
                 </ul>
               </div>
 
@@ -487,8 +453,8 @@
               <div class="footer-col">
                 <h4>About</h4>
                 <ul>
-                     <li><a href="/pages/home(fares)/AllAuthors.html" class="footer-link">Our Authors</a></li>
-                    <li><a href="/pages/account(Mikha)/contact-us.html">Contact Us</a></li>
+                     <li><a href="/authors" class="footer-link">Our Authors</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
                 </ul>
                </div>
              
@@ -496,10 +462,10 @@
               <div class="footer-col">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="/pages/account(Mikha)/settings.html#tab-address">Shipping &amp; Delivery</a></li>
-                    <li><a href="/pages/legal(fares)/returns-policy.html">Returns</a></li>
-                    <li><a href="/pages/account(Mikha)/settings.html#tab-payment">Payment Methods</a></li>
-                    <li><a href="/pages/checkout(Rojeh)/order-success.html">Track Order</a></li>
+                    <li><a href="/settings#tab-address">Shipping &amp; Delivery</a></li>
+                    <li><a href="/returns">Returns</a></li>
+                    <li><a href="/settings#tab-payment">Payment Methods</a></li>
+                    <li><a href="/order-success">Track Order</a></li>
                 </ul>
               </div>
 
@@ -513,16 +479,16 @@
             <p>&copy; 2026 Maktaba. All rights reserved.</p>
             
             <ul class="footer-bottom-links">
-              <li><a href="/pages/legal(fares)/privacy-policy.html">Privacy Policy</a></li>
-              <li><a href="/pages/legal(fares)/terms-of-use.html">Terms of Service</a></li>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
             </ul>
         </div>
     </footer>
 
 
-    <script src="./data.js"></script>
+    <script src="/data.js"></script>
     <script src="/pages/home(fares)/home.js"></script>
-    <script src="./script.js"></script>
+    <script src="/script.js"></script>
     <script src="/pages/catalog(Marwan)/catalog.js"></script>
 
 

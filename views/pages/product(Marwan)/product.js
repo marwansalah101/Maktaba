@@ -234,10 +234,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const qty = addBookToCart();
         const original = addToCartBtn.textContent;
 
-        // Fly the book cover to the cart icon
         flyToCart(document.getElementById('main-image'));
 
-        // Brief button feedback
         addToCartBtn.textContent = `Added (${qty})`;
         addToCartBtn.style.background = '#e8f5e9';
         addToCartBtn.style.borderColor = '#4caf50';

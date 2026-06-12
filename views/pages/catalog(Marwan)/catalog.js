@@ -615,8 +615,8 @@ function renderBooks(booksToRender) {
 
             // Brief button feedback
             const addBtn = e.currentTarget;
-            addBtn.textContent    = 'Added ✓';
-            addBtn.style.background = '#5a4232';
+            addBtn.textContent    = 'ADDED';
+            // addBtn.style.background = '#5a4232';
             setTimeout(() => {
                 addBtn.textContent      = 'Add to cart';
                 addBtn.style.background = '';

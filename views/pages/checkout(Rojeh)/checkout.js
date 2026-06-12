@@ -1,4 +1,4 @@
-﻿// Checkout behavior is handled by ../../script.js to avoid duplicate global checkout code.
+// Checkout behavior is handled by ../../script.js to avoid duplicate global checkout code.
 
 
 
@@ -117,6 +117,7 @@ function renderCart() {
                     <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
                 </div>
             </div>
+            <div class="cart-item-meta cart-item-qty-control"></div>
             <div class="cart-item-price">${priceMarkup.html}</div>
             <button class="cart-remove-btn" onclick="removeItem(${index})">✕</button>
         `;
