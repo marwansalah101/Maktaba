@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,300..700;1,300..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-    <link rel="icon" type="image/svg+xml" sizes="64x64" href="/resources/asset/Logo.svg">
+    <link rel="icon" type="image/svg+xml" sizes="64x64" href="/resources/asset/BlackLogo.svg">
 </head>
 
 <body class="browse-body" data-nav-invert>
@@ -52,6 +52,7 @@
             </div>
             <div class="menu-dropdown" id="menuDropdown">
                 <a href="/authors">Authors</a>
+                <a href="/browse#bw-ai-section" class="nav-ai-link">Maktaba AI ✦</a>
                 <a href="/settings">Settings</a>
                 <a href="/contact" class="contact-placeholder">Contact Us</a>
             </div>
@@ -66,7 +67,7 @@
         <div class="bw-hero-grid" aria-hidden="true"></div>
 
         <div class="bw-hero-inner">
-            <p class="bw-eyebrow" data-enter="60">— MAKTABA · BROWSE</p>
+            <p class="bw-eyebrow" data-enter="60">MAKTABA · BROWSE</p>
 
             <h1 class="bw-hero-title" data-text-reveal data-text-delay="160">
                 <span class="bht-thin">EXPLORE</span>
@@ -79,7 +80,7 @@
             <a href="#bw-genres" class="bw-hero-cta" data-enter="740" data-magnetic="0.3">Discover the Collection</a>
         </div>
 
-        <!-- Scrolling genre marquee -->
+        <!-- Scrolling genre marquee — stays anchored at hero bottom -->
         <div class="bw-marquee" aria-hidden="true">
             <div class="bw-marquee-track">
                 <span>Fantasy</span><span class="bw-mdot">·</span>
@@ -100,12 +101,111 @@
 
 
     <!-- ═══════════════════════════════════════════════════════
+         AI ENTRANCE — dramatic editorial heading
+    ═══════════════════════════════════════════════════════ -->
+    <div class="bw-ai-entrance" id="bw-ai-section">
+        <div class="bw-ae-inner">
+            <h2 class="bw-ae-title">Ask <em>Maktaba</em> What To Read Next</h2>
+            <p class="bw-ae-script">Describe your mood. Discover your perfect story.</p>
+        </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════
+         AI RECOMMENDATION — two-column: editorial intro | chat
+    ═══════════════════════════════════════════════════════ -->
+    <section class="bw-ai">
+        <div class="bw-ai-inner">
+
+            <!-- Left: editorial header + mood chips -->
+            <div class="bw-ai-left" data-reveal="fade-left">
+                <p class="bw-eyebrow bw-eyebrow--left">AI RECOMMENDATIONS</p>
+
+                <h2 class="bw-ai-title">
+                    <span class="bht-thin">YOUR NEXT</span>
+                    <em class="bht-bold">PERFECT</em>
+                    <span class="bht-thin">READ</span>
+                </h2>
+
+                <p class="bw-ai-script">Tell us your mood. We'll find the book.</p>
+
+                <p class="bw-ai-desc">Describe what you're feeling — a theme, a book you already love, or simply a mood — and Maktaba AI will match you with your next story from our entire collection.</p>
+
+                <div class="bw-moods">
+                    <button class="bw-mood-chip" type="button" data-mood="something like The Alchemist but darker and more mysterious">Like The Alchemist</button>
+                    <button class="bw-mood-chip" type="button" data-mood="a short suspenseful thriller perfect for a weekend read">Quick thriller</button>
+                    <button class="bw-mood-chip" type="button" data-mood="something deeply emotional and heartbreaking">Deeply emotional</button>
+                    <button class="bw-mood-chip" type="button" data-mood="an epic fantasy with incredible world-building and magic">Epic fantasy</button>
+                    <button class="bw-mood-chip" type="button" data-mood="mind-bending science fiction about consciousness and the future">Mind-bending</button>
+                </div>
+            </div>
+
+            <!-- Right: chat interface -->
+            <div class="bw-ai-right" data-reveal="fade-right" data-delay="120">
+                <div class="bw-chat" id="bwChat">
+
+                    <div class="bw-chat-head">
+                        <div class="bw-chat-identity">
+                            <div class="bw-chat-avatar" aria-hidden="true">
+                                <svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 0.5L7.4 4.3H11.5L8.2 6.7L9.6 10.5L6 8.1L2.4 10.5L3.8 6.7L0.5 4.3H4.6Z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="bw-chat-name">Maktaba AI</p>
+                                <p class="bw-chat-status">
+                                    <span class="bw-status-dot" aria-hidden="true"></span>
+                                    Online · Ready to recommend
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bw-chat-messages" id="bwMessages" role="log" aria-live="polite">
+                        <div class="bw-msg bw-msg--ai bw-msg--visible">
+                            <div class="bw-bubble">Hello ✦ I'm Maktaba AI — your personal guide to our entire book collection.
+
+Describe a mood, a theme, or a book you already love, and I'll find your perfect next read from our catalogue.
+
+Try something like "a dark thriller for the weekend" or tap one of the mood chips to get started.</div>
+                            <time class="bw-msg-time">Just now</time>
+                        </div>
+                    </div>
+
+                    <div class="bw-typing" id="bwTyping" aria-hidden="true" aria-label="AI is thinking">
+                        <span></span><span></span><span></span>
+                    </div>
+
+                    <div class="bw-chat-input-row">
+                        <label for="bwInput" class="bw-sr-only">Ask for a book recommendation</label>
+                        <textarea id="bwInput" class="bw-chat-textarea" rows="1" placeholder="Describe the book you want…" aria-label="Ask Maktaba AI for book recommendations"></textarea>
+                        <button id="bwSend" class="bw-chat-send" type="button" aria-label="Send message">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M14 8L2 2l2 6-2 6 12-6z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="bw-chat-hint">Press Enter to send · Powered by OpenRouter AI</p>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         DIVIDER
+    ═══════════════════════════════════════════════════════ -->
+    <div class="bw-rule" aria-hidden="true"></div>
+
+
+    <!-- ═══════════════════════════════════════════════════════
          GENRES GRID — 6 cards, 3×2, dark/light alternation
     ═══════════════════════════════════════════════════════ -->
     <section class="bw-genres" id="bw-genres">
 
         <div class="bw-section-header" data-reveal="fade-up">
-            <p class="bw-eyebrow bw-eyebrow--left">01 — OUR COLLECTION</p>
+            <p class="bw-eyebrow bw-eyebrow--left">OUR COLLECTION</p>
             <h2 class="bw-section-title">
                 <span class="bht-thin">CHOOSE YOUR</span>
                 <em class="bht-bold">WORLD</em>
@@ -185,91 +285,10 @@
     </section>
 
 
-    <!-- ═══════════════════════════════════════════════════════
-         DIVIDER — thin rule between sections
-    ═══════════════════════════════════════════════════════ -->
-    <div class="bw-rule" aria-hidden="true"></div>
 
 
-    <!-- ═══════════════════════════════════════════════════════
-         AI RECOMMENDATION — two-column: editorial intro | chat
-    ═══════════════════════════════════════════════════════ -->
-    <section class="bw-ai">
-        <div class="bw-ai-inner">
 
-            <!-- Left: editorial header + mood chips -->
-            <div class="bw-ai-left" data-reveal="fade-left">
-                <p class="bw-eyebrow bw-eyebrow--left">02 — AI RECOMMENDATIONS</p>
-
-                <h2 class="bw-ai-title">
-                    <span class="bht-thin">YOUR NEXT</span>
-                    <em class="bht-bold">PERFECT</em>
-                    <span class="bht-thin">READ</span>
-                </h2>
-
-                <p class="bw-ai-script">Tell us your mood. We'll find the book.</p>
-
-                <p class="bw-ai-desc">Describe what you're feeling — a theme, a book you already love, or simply a mood — and Maktaba AI will match you with your next story from our entire collection.</p>
-
-                <div class="bw-moods">
-                    <button class="bw-mood-chip" type="button" data-mood="something like The Alchemist but darker and more mysterious">Like The Alchemist</button>
-                    <button class="bw-mood-chip" type="button" data-mood="a short suspenseful thriller perfect for a weekend read">Quick thriller</button>
-                    <button class="bw-mood-chip" type="button" data-mood="something deeply emotional and heartbreaking">Deeply emotional</button>
-                    <button class="bw-mood-chip" type="button" data-mood="an epic fantasy with incredible world-building and magic">Epic fantasy</button>
-                    <button class="bw-mood-chip" type="button" data-mood="mind-bending science fiction about consciousness and the future">Mind-bending</button>
-                </div>
-            </div>
-
-            <!-- Right: chat interface -->
-            <div class="bw-ai-right" data-reveal="fade-right" data-delay="120">
-                <div class="bw-chat" id="bwChat">
-
-                    <div class="bw-chat-head">
-                        <div class="bw-chat-identity">
-                            <div class="bw-chat-avatar" aria-hidden="true">
-                                <svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 0.5L7.4 4.3H11.5L8.2 6.7L9.6 10.5L6 8.1L2.4 10.5L3.8 6.7L0.5 4.3H4.6Z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="bw-chat-name">Maktaba AI</p>
-                                <p class="bw-chat-status">
-                                    <span class="bw-status-dot" aria-hidden="true"></span>
-                                    Online · Ready to recommend
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bw-chat-messages" id="bwMessages" role="log" aria-live="polite">
-                        <div class="bw-msg bw-msg--ai bw-msg--visible">
-                            <div class="bw-bubble">
-                                Hello ✦ Tell me what kind of story you're looking for — a mood, a book you already love, or a theme — and I'll find your next perfect read from our catalogue.
-                            </div>
-                            <time class="bw-msg-time">Just now</time>
-                        </div>
-                    </div>
-
-                    <div class="bw-typing" id="bwTyping" aria-hidden="true" aria-label="AI is thinking">
-                        <span></span><span></span><span></span>
-                    </div>
-
-                    <div class="bw-chat-input-row">
-                        <label for="bwInput" class="bw-sr-only">Ask for a book recommendation</label>
-                        <textarea id="bwInput" class="bw-chat-textarea" rows="1" placeholder="Describe the book you want…" aria-label="Ask Maktaba AI for book recommendations"></textarea>
-                        <button id="bwSend" class="bw-chat-send" type="button" aria-label="Send message">
-                            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                                <path d="M14 8L2 2l2 6-2 6 12-6z" fill="currentColor"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <p class="bw-chat-hint">Press Enter to send · Powered by OpenRouter AI</p>
-
-                </div>
-            </div>
-
-        </div>
-    </section>
+    <div class="bw-pre-footer" aria-hidden="true"></div>
 
 
     <!-- ═══════════════════════════════════════════════════════
@@ -336,6 +355,20 @@
     <script src="/preloader.js"></script>
 
     <script>
+    /* ─── Auto-scroll to AI section when arriving via navbar link ─── */
+    (function () {
+        if (window.location.hash === '#bw-ai-section') {
+            var aiSection = document.getElementById('bw-ai-section');
+            var input     = document.getElementById('bwInput');
+            if (aiSection) {
+                setTimeout(function () {
+                    aiSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (input) setTimeout(function () { input.focus(); }, 600);
+                }, 200);
+            }
+        }
+    })();
+
     /* ─── Browse page: genre scroll-reveal + AI chatbot ─── */
     (function () {
 

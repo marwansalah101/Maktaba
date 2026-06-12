@@ -701,3 +701,148 @@
     margin: 0;
     flex-shrink: 0;
 }
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   AI ENTRANCE — header band above chatbot
+═══════════════════════════════════════════════════════════════ */
+
+.bw-ai-entrance {
+    background: var(--white);
+    padding: 28px 0 28px 0;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    height: 100px;
+}
+
+.bw-ae-inner {
+    margin: 0 auto;
+    padding-bottom: 48px;
+}
+
+.bw-ae-title {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 4.5vw, 52px);
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin: 0;
+    text-align: center;
+    line-height: 1.1;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.bw-ae-title em {
+    font-weight: 700;
+    font-style: italic;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+}
+
+.bw-ae-script {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(16px, 1.8vw, 21px);
+    font-weight: 500;
+    color: var(--muted);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .bw-ai-entrance { padding: 40px 24px 0; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   STATS STRIP — four editorial numbers between hero and AI
+═══════════════════════════════════════════════════════════════ */
+
+.bw-stats {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+}
+
+.bw-stats-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 56px 64px;
+}
+
+.bw-stat {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.bw-stat-num {
+    font-family: 'Lora', serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.bw-stat-num em {
+    color: var(--gold);
+    font-style: italic;
+}
+
+.bw-stat-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.bw-stat-sep {
+    width: 1px;
+    height: 64px;
+    background: var(--border);
+    flex-shrink: 0;
+    margin: 0 40px;
+}
+
+
+.bw-pre-footer {
+    height: 120px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+}
+
+
+/* ─── Responsive ────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .bw-stats-inner {
+        padding: 40px 24px;
+        flex-wrap: wrap;
+        gap: 32px 0;
+    }
+
+    .bw-stat-sep { display: none; }
+
+    .bw-stat { flex: 0 0 50%; }
+
+    .bw-finale {
+        padding: 80px 24px;
+    }
+
+    .bw-finale-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .bw-finale-cta { width: 100%; max-width: 280px; text-align: center; }
+}

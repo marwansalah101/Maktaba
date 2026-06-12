@@ -1,4 +1,4 @@
-﻿  <html><head>
+  <html><head>
       <meta charset="UTF-8">
       <title>Author</title>
       <link rel="stylesheet" href="/styles.css">
@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
-        <link rel="icon" type="image/svg + xml" sizes="64x64" href="/resources/asset/Logo.svg">
+        <link rel="icon" type="image/svg + xml" sizes="64x64" href="/resources/asset/BlackLogo.svg">
         
     </head>
   <body>
@@ -35,38 +35,23 @@
               </a>
           </div>
           <ul class="navrbar-text">
-              <li>
-                  <a href="/home.html">
-                      Home
-                  </a>
-              </li>
-              <li>
-                  <a href="./genres.html">
-                      Browse
-                  </a>
-              </li>
-              <li>
-                  <a href="./collection.html">
-                      Collection
-                  </a>
-              </li>
-              <li>
-                  <a href="/pages/account(Mikha)/favorites.html">
-                      Favourites
-                  </a>
-              </li>
+              <li><a href="/home">Home</a></li>
+              <li><a href="/browse">Browse</a></li>
+              <li><a href="/collection">Collection</a></li>
+              <li><a href="/favorites">Favourites</a></li>
           </ul>
           <div class="navbar-icons">
-              <a href="/pages/checkout(Rojeh)/add-to-cart.html">
+              <a href="/cart">
                   <span class="material-symbols-outlined">shopping_bag</span>     
               </a>
               <div class="menu-dropdown-wrapper" id="menuWrapper">
                   <span class="material-symbols-outlined" id="menuBtn">menu</span>
               </div>
               <div class="menu-dropdown" id="menuDropdown">
-                <a href="/pages/home(fares)/AllAuthors.html">Authors</a>
-                  <a href="/pages/account(Mikha)/settings.html">Settings</a>
-                  <a href="/pages/account(Mikha)/contact-us.html" class="contact-placeholder">Contact Us</a>
+                  <a href="/authors">Authors</a>
+                  <a href="/browse#bw-ai-section" class="nav-ai-link">Maktaba AI &#x2726;</a>
+                  <a href="/settings">Settings</a>
+                  <a href="/contact" class="contact-placeholder">Contact Us</a>
               </div>
           </div>
       </nav>
@@ -93,7 +78,7 @@
   <div class="books-section">
     <div class="divider">
         <span class="line"></span>
-        <span class="title">Top-Rated Books</span>
+        <span class="title">Top-Rated Book</span>
         <span class="line"></span>
     </div>
     
@@ -393,7 +378,7 @@
 
       grid.innerHTML += `
         <div class="recent-book-card">
-          <a href="/pages/product(Marwan)/product.html?title=${encodeURIComponent(title)}" class="recent-book-link">
+          <a href="/book/${encodeURIComponent(title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))}" class="recent-book-link">
             <div class="recent-book-header">
               <h3 class="recent-book-title">${title}</h3>
             </div>

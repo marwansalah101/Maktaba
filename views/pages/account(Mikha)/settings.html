@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <link rel="stylesheet" href="/preloader.css">
@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href="/styles.css">
 <link rel="stylesheet" href="/pages/account(Mikha)/account.css">
-<link rel="icon" type="image/svg+xml" sizes="64x64" href="/resources/asset/Logo.svg">
+<link rel="icon" type="image/svg+xml" sizes="64x64" href="/resources/asset/BlackLogo.svg">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -181,6 +181,12 @@
 }
 #toast.show{ opacity:1; }
 </style>
+<script>
+  if (!localStorage.getItem('maktabaToken')) {
+    sessionStorage.setItem('mkFlashToast', 'Please sign in to view your settings.');
+    location.replace('/signin');
+  }
+</script>
 </head>
 
 <body>

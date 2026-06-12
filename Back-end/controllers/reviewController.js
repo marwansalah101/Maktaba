@@ -18,7 +18,8 @@ exports.addReview = async (req, res, next) => {
             return res.status(422).json({ error: 'rating must be an integer between 1 and 5.' });
         }
 
-        const { reviewer, comment } = req.body;
+        const { comment } = req.body;
+        const reviewer = req.user._id;
         await Review.create({ bookId, rating, reviewer, comment });
 
         /* Recompute average from all reviews — avoids floating-point drift */
@@ -53,7 +54,7 @@ exports.getReviews = async (req, res, next) => {
             return res.status(400).json({ error: 'Invalid book ID.' });
         }
 
-        const reviews = await Review.find({ bookId }).sort({ createdAt: -1 });
+        const reviews = await Review.find({ bookId }).populate('reviewer', 'name').sort({ createdAt: -1 });
         res.json(reviews);
     } catch (err) {
         next(err);

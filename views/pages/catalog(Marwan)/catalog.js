@@ -551,7 +551,7 @@ function renderBooks(booksToRender) {
         const productUrl  = `/book/${normalizeSlug(book.title)}`;
         const imgSrc      = book.image.startsWith('http') ? book.image : `${basePath}${book.image}`;
         const priceMarkup = (window.MKSale && window.MKSale.buildPriceMarkup)
-            ? window.MKSale.buildPriceMarkup(book, { prefix: 'L.E ', badge: false })
+            ? window.MKSale.buildPriceMarkup(book, { prefix: 'L.E ', badge: true })
             : { html: `L.E ${(Number(book.price)).toFixed(2)}`, hasSale: false };
 
         /* Card structure:
@@ -561,7 +561,6 @@ function renderBooks(booksToRender) {
            - .add-to-cart      — hidden until hover (CSS opacity trick)
         */
         card.innerHTML = `
-          ${priceMarkup.hasSale ? '<span class="book-sale-badge" aria-hidden="true" style="position:absolute;top:14px;left:14px;z-index:2;background:#9f3d35;color:#fff;font:700 11px/1 Jost,system-ui,sans-serif;letter-spacing:.08em;padding:9px 11px;text-transform:uppercase;border-radius:0;box-shadow:0 10px 24px rgba(0,0,0,.14);">ON SALE</span>' : ''}
           <div class="book-rating-row">
             <span class="book-stars">${bookStars(book.averageRating)}</span>
             <span class="book-stars-count">(${book.averageRating ? Number(book.averageRating).toFixed(1) : 'N/A'})</span>

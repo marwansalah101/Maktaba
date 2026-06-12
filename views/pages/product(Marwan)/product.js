@@ -73,14 +73,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             selectedBook = Books.find(b => toSlug(b.title) === slug) || null;
         }
     } else if (bookTitle) {
-        if (typeof Books !== 'undefined') {
+        try {
+            const res = await fetch(`/books/title/${encodeURIComponent(bookTitle)}`);
+            if (res.ok) selectedBook = await res.json();
+        } catch (_) {}
+        if (!selectedBook && typeof Books !== 'undefined') {
             selectedBook = Books.find(b => b.title === bookTitle) || null;
-        }
-        if (!selectedBook) {
-            try {
-                const res = await fetch(`/books/title/${encodeURIComponent(bookTitle)}`);
-                if (res.ok) selectedBook = await res.json();
-            } catch (_) {}
         }
     }
 
@@ -150,10 +148,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!saleBadge) {
                 saleBadge = document.createElement('span');
                 saleBadge.className = 'product-sale-badge';
-                saleBadge.style.cssText = 'position:absolute;top:14px;left:14px;z-index:2;background:#9f3d35;color:#fff;font:700 11px/1 Jost,system-ui,sans-serif;letter-spacing:.08em;padding:9px 11px;text-transform:uppercase;border-radius:0;box-shadow:0 10px 24px rgba(0,0,0,.14);';
+                saleBadge.style.cssText = 'position:absolute;top:14px;right:14px;z-index:2;background:#9f3d35;color:#fff;font:700 11px/1 Jost,system-ui,sans-serif;letter-spacing:.08em;padding:9px 11px;text-transform:uppercase;border-radius:0;box-shadow:0 10px 24px rgba(0,0,0,.14);';
                 coverStage.appendChild(saleBadge);
             }
-            saleBadge.textContent = 'ON SALE';
+            saleBadge.textContent = saleBook.salePercent > 0 ? `${saleBook.salePercent}% OFF` : 'ON SALE';
         } else if (saleBadge) {
             saleBadge.remove();
         }
@@ -255,6 +253,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     /* ── Buy Now button ────────────────────────────────────────── */
     document.querySelector('.buy-now-btn').addEventListener('click', () => {
+        const token = localStorage.getItem('maktabaToken');
+        if (!token) {
+            window.location.href = '/signin';
+            return;
+        }
         addBookToCart();
         window.location.href = '/checkout';
     });
@@ -367,7 +370,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         grid.innerHTML = dbReviews.map(r => {
             const rating = r.rating || 5;
             const stars  = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-            const name   = r.reviewer || r.author || 'Anonymous';
+            const name   = (r.reviewer && r.reviewer.name) ? r.reviewer.name : (r.reviewer || r.author || 'Anonymous');
             const text   = r.comment  || r.text   || '';
             const date   = fmtDate(r.createdAt || r.date);
             return `
@@ -392,10 +395,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         writeReviewBtn.addEventListener('click', () => {
             const token = localStorage.getItem('maktabaToken');
             if (!token) {
-                document.getElementById('review-form-error').textContent =
-                    'Please sign in to write a review.';
-                reviewFormPanel.classList.add('open');
-                writeReviewBtn.textContent = 'Cancel';
+                sessionStorage.setItem('mkFlashToast', 'Please sign in to write a review.');
+                window.location.href = '/signin';
                 return;
             }
             const isOpen = reviewFormPanel.classList.toggle('open');

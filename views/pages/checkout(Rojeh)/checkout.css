@@ -440,6 +440,7 @@
       color: #312F2C;
       min-width: 80px;
       text-align: right;
+      width: max-content;
     }
 
     .cart-remove-btn {

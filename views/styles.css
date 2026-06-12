@@ -201,6 +201,14 @@ body {
     width:100%;
 }
 
+.menu-dropdown .nav-ai-link {
+    color: #C8975A;
+}
+.menu-dropdown .nav-ai-link:hover {
+    color: #dba96a;
+    background: rgba(200, 151, 90, 0.08);
+}
+
 #Maktaba {
     margin-right: auto;
 }
