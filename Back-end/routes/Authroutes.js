@@ -8,6 +8,9 @@ router.post('/signup',    ctrl.signup);
 router.post('/login',     ctrl.login);
 router.post('/logout',    ctrl.logout);
 router.post('/recommend', ctrl.recommend);
+router.post('/google',    ctrl.googleAuth);
+router.get('/google/start',    ctrl.startGoogleAuth);
+router.get('/google/callback', ctrl.handleGoogleCallback);
 
 // ── Logged-in user's own data (session via JWT) ─────────────────────────────
 router.get('/me',         protect, ctrl.getMe);

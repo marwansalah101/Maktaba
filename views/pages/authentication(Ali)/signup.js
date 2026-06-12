@@ -2,49 +2,107 @@
 //  GOOGLE SIGN IN  (must be outside the IIFE so onclick can reach it)
 // ═══════════════════════════════════════════════════════════════
 
+const GOOGLE_CLIENT_ID = '359427593568-fp7894cehclcd6e1fnke49ca2norscai.apps.googleusercontent.com';
+
 function initGoogleSignIn() {
-    if (typeof google === 'undefined') return;
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) return;
     google.accounts.id.initialize({
-        client_id: '359427593568-fp7894cehclcd6e1fnke49ca2norscai.apps.googleusercontent.com',
+        client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleResponse
     });
 }
 
-function handleGoogleResponse(response) {
-    const base64  = response.credential.split('.')[1];
-    const decoded = JSON.parse(atob(base64));
+async function handleGoogleResponse(response) {
+    const btn = document.querySelector('.btn-social[aria-label="Sign up with Google"]');
+    const originalText = btn ? btn.textContent : '';
 
-    const googleUser = {
-        fullname: decoded.name,
-        email:    decoded.email,
-        picture:  decoded.picture,
-        provider: 'google'
-    };
+    try {
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Connecting...';
+        }
 
-    const users = JSON.parse(localStorage.getItem('maktabaUsers') || '[]');
-    const existingUser = users.find(u => u.email === googleUser.email);
-    if (!existingUser) {
-        users.push(googleUser);
-        localStorage.setItem('maktabaUsers', JSON.stringify(users));
+        const res = await fetch('/api/auth/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ credential: response.credential })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.error || 'Google sign-up failed.');
+        }
+
+        const name = data.user?.name || data.user?.email || 'reader';
+        localStorage.setItem('maktabaToken', data.token);
+        localStorage.setItem('maktabaUserRole', data.role || 'user');
+        localStorage.setItem('maktabaUserName', data.user?.name || '');
+        localStorage.setItem('maktabaUserEmail', data.user?.email || '');
+        localStorage.setItem('maktabaLoggedInUser', JSON.stringify(data.user || {}));
+
+        try {
+            sessionStorage.setItem('mkFlashToast', `Welcome, ${name}!`);
+            sessionStorage.setItem('justLoggedIn', '1');
+        } catch (e) {}
+
+        window.location.href = (data.role === 'admin') ? '/dashboard' : '/home';
+    } catch (err) {
+        alert(err.message || 'Google sign-up failed.');
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
     }
-
-    localStorage.setItem('maktabaLoggedInUser', JSON.stringify({
-        fullname: googleUser.fullname,
-        email:    googleUser.email,
-        picture:  googleUser.picture
-    }));
-    localStorage.setItem('maktabaUserName',  googleUser.fullname);
-    localStorage.setItem('maktabaUserEmail', googleUser.email);
-
-    window.location.href = '/home';
 }
 
 function googleSignIn() {
-    if (typeof google === 'undefined') {
-        alert('Google Sign-In is not loaded yet. Please wait a moment and try again.');
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+        alert('Google Sign-In is still loading. Please try again in a moment.');
         return;
     }
     google.accounts.id.prompt();
+}
+
+function consumeGoogleAuthHash() {
+    if (!window.location.hash) return false;
+
+    const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : window.location.hash;
+    const params = new URLSearchParams(hash);
+    const token = params.get('token');
+
+    if (!token) return false;
+
+    const name = params.get('name') || '';
+    const email = params.get('email') || '';
+    const role = params.get('role') || 'user';
+    const picture = params.get('picture') || '';
+
+    localStorage.setItem('maktabaToken', token);
+    localStorage.setItem('maktabaUserRole', role);
+    if (name) localStorage.setItem('maktabaUserName', name);
+    if (email) localStorage.setItem('maktabaUserEmail', email);
+    localStorage.setItem('maktabaLoggedInUser', JSON.stringify({
+        id: params.get('id') || '',
+        name,
+        email,
+        role,
+        picture,
+    }));
+
+    try {
+        sessionStorage.setItem('mkFlashToast', name ? `Welcome, ${name}!` : 'Welcome!');
+        sessionStorage.setItem('justLoggedIn', '1');
+    } catch (e) {}
+
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+
+    if (role === 'admin') {
+        window.location.href = '/dashboard';
+    } else {
+        window.location.href = '/home';
+    }
+
+    return true;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -271,6 +329,8 @@ function googleSignIn() {
 
     // ─── Init ────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
+        if (consumeGoogleAuthHash()) return;
+
         var pending = sessionStorage.getItem('mktbToast');
         if (pending) {
             try {
@@ -280,9 +340,11 @@ function googleSignIn() {
             } catch (e) {}
         }
         setupTogglePassword();
-        initSignup();
         initGoogleSignIn();
+        initSignup();
     });
+
+    window.addEventListener('load', initGoogleSignIn);
 
 })();
 

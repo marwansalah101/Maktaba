@@ -19,6 +19,21 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
+  provider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local',
+  },
+  googleId: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  picture: {
+    type: String,
+    trim: true,
+    default: '',
+  },
   phone: {
     type: String,
     trim: true,
